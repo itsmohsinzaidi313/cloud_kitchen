@@ -1,7 +1,8 @@
+import 'package:food_app/database/project_database.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Lib {
-  Future<Database> getDatabase() {
-    return null;
-  }
+
+  //GET DATABASE INSTANCE
+  Future<Database> getDatabase() => ProjectDatabase().database;
 }

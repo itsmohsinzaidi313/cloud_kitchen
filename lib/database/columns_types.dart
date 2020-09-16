@@ -1,6 +1,6 @@
 class Types{
 
-  ///LIST OF [TYPES] LIST
+  ///LIST OF [COLUMN_TYPES] LIST
   static const List<List<String>> LIST_OF_ALL_TYPES = [
     users, //1
     shiftData, //2
