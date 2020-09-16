@@ -1,6 +1,6 @@
 class Columns{
 
-  ///LIST OF [COLUMNS] LIST
+  ///LIST OF [COLUMNS_NAME] LIST
   static const List<List<String>> LIST_OF_ALL_COLUMNS = [
     users, //1
     shiftData, //2

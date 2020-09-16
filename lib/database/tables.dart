@@ -1,6 +1,8 @@
+import 'package:food_app/database/table.dart';
+
 class Tables{
 
-  //[TABLES'S] NAME VARIABLES
+  ///[TABLES'S] NAME VARIABLES
   static const String _users = 'users'; //1
   static const String _shiftData = 'shift_data'; //2
   static const String _categories = 'categories'; //3
@@ -8,7 +10,7 @@ class Tables{
   static const String _salesMaster = 'sales_master'; //5
   static const String _salesDetails = 'sales_details'; //6
 
-  ///LIST OF TABLES MAME
+  //LIST OF TABLES MAME
   static const List<String> LIST_OF_TABLES = [
     _users, //1
     _shiftData, //2
@@ -18,5 +20,16 @@ class Tables{
     _salesDetails //6
   ];
 
-
+  //TODO
+  // static List<Table> getTables() {
+  //   List<T.Table> tables = [];
+  //   for (int i = 0; i < tables.length; i++) {
+  //     tables.add(new T.Table(
+  //       name: Tables.tables[i],
+  //       columnNames: Columns.columns[i],
+  //       columnTypes: ColumnTypes.columnTypes[i],
+  //     ));
+  //   }
+  //   return tables;
+  // }
 }
