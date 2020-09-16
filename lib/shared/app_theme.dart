@@ -1,9 +1,12 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AppTheme {
   static final Color appBarColor = Colors.red;
   static final Color lisTextColor = Colors.amber[400];
+  static final Color appThemeColor = Colors.blue;
 
   static Widget appBarNormal(
       {BuildContext context,
@@ -71,5 +74,33 @@ class AppTheme {
       ),
     );
     return myText;
+  }
+
+  static ProgressDialog showProgressDialog(BuildContext context,
+      {String text = '', bool isDismissible = true}) {
+    final spinKit = new SpinKitFadingCube(
+      itemBuilder: (context, index) => DecoratedBox(
+        decoration: BoxDecoration(color: appThemeColor),
+      ),
+    );
+    ProgressDialog progressDialog = ProgressDialog(context,
+        type: ProgressDialogType.Normal,
+        isDismissible: false,
+        customBody: Container(
+          color: Colors.transparent,
+          height: 250,
+          width: 100,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                spinKit,
+                SizedBox(
+                  height: 30,
+                ),
+                Text('Loading...')
+              ]),
+        ));
+    return progressDialog;
   }
 }

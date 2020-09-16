@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/database/tables/tbl_register.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Register extends StatefulWidget {
+class ShiftScreen extends StatefulWidget {
   @override
-  _RegisterState createState() => _RegisterState();
+  _ShiftScreen createState() => _ShiftScreen();
 }
 
-class _RegisterState extends State<Register> {
+class _ShiftScreen extends State<ShiftScreen> {
   String _dropdown = 'Morning';
   bool _autoValidate = false;
 
@@ -16,34 +15,28 @@ class _RegisterState extends State<Register> {
   TextEditingController _amount = TextEditingController();
 
   List<String> _shiftList = ['Morning', 'Evening', 'Night'];
-  Map<String, dynamic> args;
-
-  final TblRegister _registerDb = TblRegister.registerInstance;
-  SharedPreferences _sharedPreferences;
 
   Future onAmountEntered() async {
-    _sharedPreferences = await SharedPreferences.getInstance();
+    SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
     final df = new DateFormat('dd-MM-yyyy hh:mm a');
-    var date = df.format(DateTime.now());
+    String date = df.format(DateTime.now());
     print(
-        'Dropdown value : $_dropdown\n Amount : ${_amount.text}\n Id : ${args['id']}\n Date : $date');
-    var regRow = await _registerDb.insertInRegister(
-        _amount.text, date.toString(), int.parse(args['id'].toString()));
-    print('Register return $regRow');
+        'Dropdown value : $_dropdown\n Amount : ${_amount.text}\n Date : $date');
+    int regRow = 0;
+    print('Shift return $regRow');
     await _sharedPreferences.setInt('regId', regRow);
     Navigator.of(context).pushReplacementNamed('/dbd', arguments: {
-      'regId': _sharedPreferences.getInt('regId'),
+      'shiftId': _sharedPreferences.getInt('shiftId'),
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    args = ModalRoute.of(context).settings.arguments;
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Register'),
+        title: Text('Shift'),
         centerTitle: true,
         backgroundColor: Colors.redAccent,
         elevation: 0.0,
@@ -173,7 +166,6 @@ class _RegisterState extends State<Register> {
           setState(() {
             if (_formKey.currentState.validate()) {
               _formKey.currentState.save();
-//              print('Dropdown value : $_dropdown and Amount : ${_amount.text} and Id : ${args['id']}')
               onAmountEntered();
             } else {
               _autoValidate = true;
