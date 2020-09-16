@@ -5,9 +5,11 @@ class AppTheme {
   static final Color appBarColor = Colors.red;
   static final Color lisTextColor = Colors.amber[400];
 
-  static Widget appBarNormal({BuildContext context, String appBarTitle,
-    Color appBarBgColor, double appBarElevation}) {
-
+  static Widget appBarNormal(
+      {BuildContext context,
+      String appBarTitle,
+      Color appBarBgColor,
+      double appBarElevation}) {
     final appBar = AppBar(
       backgroundColor: appBarBgColor,
       elevation: appBarElevation == null ? 0.0 : appBarElevation,
@@ -17,9 +19,13 @@ class AppTheme {
     return appBar;
   }
 
-  static Widget appBarWithBadge({BuildContext context, String appBarTitle, String badgeText,
-      Color appBarBgColor, double appBarElevation, Function appBarOnTap}) {
-
+  static Widget appBarWithBadge(
+      {BuildContext context,
+      String appBarTitle,
+      String badgeText,
+      Color appBarBgColor,
+      double appBarElevation,
+      Function appBarOnTap}) {
     final appBar = AppBar(
       backgroundColor: appBarBgColor,
       elevation: appBarElevation == null ? 0.0 : appBarElevation,
@@ -47,11 +53,15 @@ class AppTheme {
     return appBar;
   }
 
-  static Widget textWidget({String tText, double tFontSize, String tFontFamily,
-    FontWeight tFontWeight, double tLetterSpacing, Color tTextColor})
-  {
+  static Widget textWidget(
+      {String tText,
+      double tFontSize,
+      String tFontFamily,
+      FontWeight tFontWeight,
+      double tLetterSpacing,
+      Color tTextColor}) {
     final myText = Text(
-        tText,
+      tText,
       style: TextStyle(
         fontSize: tFontSize,
         fontFamily: tFontFamily,
@@ -62,5 +72,4 @@ class AppTheme {
     );
     return myText;
   }
-
 }
