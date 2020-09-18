@@ -107,7 +107,7 @@ class _SplashScreenState extends State<SplashScreen> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 30,
-                fontFamily: 'Ubuntu',
+                // fontFamily: 'Ubuntu',
                 color: Colors.red,
                 letterSpacing: 3.0,
               ),
