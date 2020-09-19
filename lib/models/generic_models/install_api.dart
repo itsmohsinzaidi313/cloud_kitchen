@@ -1,15 +1,15 @@
-import 'package:food_app/models/objects/mdl_categories.dart';
-import 'package:food_app/models/objects/mdl_company.dart';
-import 'package:food_app/models/objects/mdl_customers.dart';
-import 'package:food_app/models/objects/mdl_expense_categories.dart';
-import 'package:food_app/models/objects/mdl_item.dart';
-import 'package:food_app/models/objects/mdl_item_modifiers.dart';
-import 'package:food_app/models/objects/mdl_modifiers.dart';
-import 'package:food_app/models/objects/mdl_outlet.dart';
-import 'package:food_app/models/objects/mdl_payment_methods.dart';
-import 'package:food_app/models/objects/mdl_tables.dart';
-import 'package:food_app/models/objects/mdl_user.dart';
-import 'package:food_app/models/objects/mdl_vatamount.dart';
+import 'package:food_app/models/objects/categories.dart';
+import 'package:food_app/models/objects/company.dart';
+import 'package:food_app/models/objects/customers.dart';
+import 'package:food_app/models/objects/expense_categories.dart';
+import 'package:food_app/models/objects/item.dart';
+import 'package:food_app/models/objects/item_modifiers.dart';
+import 'package:food_app/models/objects/modifiers.dart';
+import 'package:food_app/models/objects/outlet.dart';
+import 'package:food_app/models/objects/payment_methods.dart';
+import 'package:food_app/models/objects/tables.dart';
+import 'package:food_app/models/objects/user.dart';
+import 'package:food_app/models/objects/vatamount.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:logger/logger.dart';
 import 'data_lists.dart';
@@ -21,7 +21,6 @@ class ApiInstall {
   final Logger _log = Config.log;
 
   ApiInstall({this.status, this.message, this.data}) {
-
     try {
       getCompanyList(data['company']);
     } catch (e) {
@@ -105,31 +104,28 @@ class ApiInstall {
     } catch (e) {
       _log.e('>>>ERROR ON getExpensesList\n$e');
     }
-
   }
 
   ///*From here............................................*/
-
 
   void getCompanyList(List<dynamic> i) {
     DataLists.listCompany = [];
     i.forEach((e) {
       DataLists.listCompany.add(new Company(
           serverId: e['id'],
-          currency : e['currency'],
-          timezone : e['timezone'],
-          dateFormat : e['date_format'],
-          outletId : e['outlet_id'],
-          name : e['name'],
-          email : e['email'],
-          phone1 : e['phone_1'],
-          phone2 : e['phone_2'],
-          address : e['address'],
-          status : e['status'],
-          dateAdded : e['date_added'],
-          expiryDate : e['expiry_date'],
-          token : e['token']
-      ));
+          currency: e['currency'],
+          timezone: e['timezone'],
+          dateFormat: e['date_format'],
+          outletId: e['outlet_id'],
+          name: e['name'],
+          email: e['email'],
+          phone1: e['phone_1'],
+          phone2: e['phone_2'],
+          address: e['address'],
+          status: e['status'],
+          dateAdded: e['date_added'],
+          expiryDate: e['expiry_date'],
+          token: e['token']));
     });
   }
 
@@ -137,20 +133,19 @@ class ApiInstall {
     DataLists.listOutlet = [];
     i.forEach((e) {
       DataLists.listOutlet.add(new Outlet(
-      serverId : e['id'],
-      outletName : e['outlet_name'],
-      outletCode : e['outlet_code'],
-      address : e['address'],
-      phone : e['phone'],
-      invoicePrint : e['invoice_print'],
-      startingDate : e['starting_date'],
-      invoiceFooter : e['invoice_footer'],
-      collectTax : e['collect_tax'],
-      preOrPostOrder : e['pre_or_post_payment'],
-      userId : e['user_id'],
-      companyId : e['company_id'],
-      delStatus : e['del_status']
-      ));
+          serverId: e['id'],
+          outletName: e['outlet_name'],
+          outletCode: e['outlet_code'],
+          address: e['address'],
+          phone: e['phone'],
+          invoicePrint: e['invoice_print'],
+          startingDate: e['starting_date'],
+          invoiceFooter: e['invoice_footer'],
+          collectTax: e['collect_tax'],
+          preOrPostOrder: e['pre_or_post_payment'],
+          userId: e['user_id'],
+          companyId: e['company_id'],
+          delStatus: e['del_status']));
     });
   }
 
@@ -158,22 +153,21 @@ class ApiInstall {
     DataLists.listUsers = [];
     i.forEach((e) {
       DataLists.listUsers.add(new Users(
-          serverId : e['id'],
-          fullName : e['full_name'],
-          phone : e['phone'],
-          emailAddress : e['email_address'],
-          password : e['password'],
-          designation : e['designation'],
-          willLogin : e['will_login'],
-          role : e['role'],
-          outletId : e['outlet_id'],
-          companyId : e['company_id'],
-          accountCreationDate : e['account_creation_date'],
-          language : e['language'],
-          lastLogin : e['last_login'],
-          activeStatus : e['active_status'],
-          delStatus : e['del_status']
-      ));
+          serverId: e['id'],
+          fullName: e['full_name'],
+          phone: e['phone'],
+          emailAddress: e['email_address'],
+          password: e['password'],
+          designation: e['designation'],
+          willLogin: e['will_login'],
+          role: e['role'],
+          outletId: e['outlet_id'],
+          companyId: e['company_id'],
+          accountCreationDate: e['account_creation_date'],
+          language: e['language'],
+          lastLogin: e['last_login'],
+          activeStatus: e['active_status'],
+          delStatus: e['del_status']));
     });
   }
 
@@ -195,16 +189,15 @@ class ApiInstall {
     DataLists.listTables = [];
     i.forEach((e) {
       DataLists.listTables.add(new Tables(
-          serverId : e['id'],
-          name : e['name'],
-          sitCapacity : e['sit_capacity'],
-          position : e['position'],
-          description : e['description'],
-          userId : e['user_id'],
-          outletId : e['outlet_id'],
-          companyId : e['company_id'],
-          delStatus : e['del_status']
-      ));
+          serverId: e['id'],
+          name: e['name'],
+          sitCapacity: e['sit_capacity'],
+          position: e['position'],
+          description: e['description'],
+          userId: e['user_id'],
+          outletId: e['outlet_id'],
+          companyId: e['company_id'],
+          delStatus: e['del_status']));
     });
   }
 
@@ -212,13 +205,12 @@ class ApiInstall {
     DataLists.listCategories = [];
     i.forEach((e) {
       DataLists.listCategories.add(new Categories(
-          serverId : e['id'],
-          categoryName : e['category_name'],
-          description : e['description'],
-          userId : e['user_id'],
-          companyId : e['company_id'],
-          delStatus : e['del_status']
-      ));
+          serverId: e['id'],
+          categoryName: e['category_name'],
+          description: e['description'],
+          userId: e['user_id'],
+          companyId: e['company_id'],
+          delStatus: e['del_status']));
     });
   }
 
@@ -226,14 +218,13 @@ class ApiInstall {
     DataLists.listModifiers = [];
     i.forEach((e) {
       DataLists.listModifiers.add(new Modifiers(
-          serverId : e['id'],
-          name : e['name'],
-          price : e['price'],
-          description : e['description'],
-          userId : e['user_id'],
-          companyId : e['company_id'],
-          delStatus : e['del_status']
-      ));
+          serverId: e['id'],
+          name: e['name'],
+          price: e['price'],
+          description: e['description'],
+          userId: e['user_id'],
+          companyId: e['company_id'],
+          delStatus: e['del_status']));
     });
   }
 
@@ -241,15 +232,14 @@ class ApiInstall {
     DataLists.listItem = [];
     i.forEach((e) {
       DataLists.listItem.add(new Item(
-          serverId : e['id'],
-          code : e['code'],
-          name : e['name'],
-          salePrice : e['sale_price'],
-          photo : e['photo'],
-          categoryName : e['category_name'],
-          quantity : 1.toString(),
-          percentage : e['percentage']
-      ));
+          serverId: e['id'],
+          code: e['code'],
+          name: e['name'],
+          salePrice: e['sale_price'],
+          photo: e['photo'],
+          categoryName: e['category_name'],
+          quantity: 1.toString(),
+          percentage: e['percentage']));
     });
   }
 
@@ -257,16 +247,15 @@ class ApiInstall {
     DataLists.listItemModifiers = [];
     i.forEach((e) {
       DataLists.listItemModifiers.add(new ItemModifiers(
-          serverId : e['id'],
-          modifierId : e['modifier_id'],
-          foodMenuId : e['food_menu_id'],
-          userId : e['user_id'],
-          outletId : e['outlet_id'],
-          companyId : e['company_id'],
-          name : e['name'],
-          price : e['price'],
-          delStatus : e['del_status']
-      ));
+          serverId: e['id'],
+          modifierId: e['modifier_id'],
+          foodMenuId: e['food_menu_id'],
+          userId: e['user_id'],
+          outletId: e['outlet_id'],
+          companyId: e['company_id'],
+          name: e['name'],
+          price: e['price'],
+          delStatus: e['del_status']));
     });
   }
 
@@ -274,19 +263,18 @@ class ApiInstall {
     DataLists.listCustomers = [];
     i.forEach((e) {
       DataLists.listCustomers.add(new Customers(
-          serverId : e['id'],
-          name : e['name'],
-          phone : e['phone'],
-          email : e['email'],
-          address : e['address'],
-          gstNumber : e['gst_number'],
-          areaId : e['area_id'],
-          userId : e['user_id'],
-          companyId : e['company_id'],
-          delStatus : e['del_status'],
-          dateOfBirth : e['date_of_birth'],
-          dateOfAnniversary : e['date_of_anniversary']
-      ));
+          serverId: e['id'],
+          name: e['name'],
+          phone: e['phone'],
+          email: e['email'],
+          address: e['address'],
+          gstNumber: e['gst_number'],
+          areaId: e['area_id'],
+          userId: e['user_id'],
+          companyId: e['company_id'],
+          delStatus: e['del_status'],
+          dateOfBirth: e['date_of_birth'],
+          dateOfAnniversary: e['date_of_anniversary']));
     });
   }
 
@@ -321,6 +309,4 @@ class ApiInstall {
   void getSalesList(List<dynamic> i) {}
 
   void getExpensesList(List<dynamic> i) {}
-
-
 }
