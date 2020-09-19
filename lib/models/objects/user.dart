@@ -1,3 +1,7 @@
+import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/tables.dart';
+import 'package:sqflite/sqflite.dart';
+
 class Users {
   final String serverId;
   final String fullName;
@@ -53,4 +57,35 @@ class Users {
   String toString() {
     return 'Users{id: $serverId, fullName: $fullName, phone: $phone, emailAddress: $emailAddress, password: $password, designation: $designation, willLogin: $willLogin, role: $role, outletId: $outletId, companyId: $companyId, accountCreationDate: $accountCreationDate, language: $language, lastLogin: $lastLogin, activeStatus: $activeStatus, delStatus: $delStatus}';
   }
+
+  List<String> getList() {
+    return [
+      this.serverId,
+      this.fullName,
+      this.phone,
+      this.emailAddress,
+      this.password,
+      this.designation,
+      this.willLogin,
+      this.role,
+      this.outletId,
+      this.companyId,
+      this.accountCreationDate,
+      this.language,
+      this.lastLogin,
+      this.activeStatus,
+      this.delStatus
+    ];
+  }
+
+  Map<String, dynamic> getValues() {
+    Map<String, dynamic> map = new Map();
+    for (int i = 0; i < Columns.users.length; i++) {
+      map[Columns.users[i]] = getList()[i];
+    }
+    return map;
+  }
+
+  Future<bool> insertIntoDatabase(Database db) async =>
+      await db.insert(Tables.users, getValues()) > 0 ? true : false;
 }

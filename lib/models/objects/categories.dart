@@ -31,7 +31,7 @@ class Categories {
     return 'Categories{id: $serverId, categoryName: $categoryName, description: $description, userId: $userId, companyId: $companyId, delStatus: $delStatus}';
   }
 
-  List<String> getValues() {
+  List<String> getList() {
     return [
       this.serverId,
       this.categoryName,
@@ -42,8 +42,14 @@ class Categories {
     ];
   }
 
-  Future<bool> insertIntoDatabase() async {
-    Database db;
-    db.insert()
+  Map<String, dynamic> getValues() {
+    Map<String, dynamic> map = new Map();
+    for (int i = 0; i < Columns.categories.length; i++) {
+      map[Columns.categories[i]] = getList()[i];
+    }
+    return map;
   }
+
+  Future<bool> insertIntoDatabase(Database db) async =>
+      await db.insert(Tables.categories, getValues()) > 0 ? true : false;
 }

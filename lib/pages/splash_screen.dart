@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/models/generic_models/data_lists.dart';
+import 'package:food_app/models/generic_models/install_api.dart';
 import 'package:food_app/pages/login_screen.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
@@ -25,7 +27,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     _progressDialog = AppTheme.showProgressDialog(context);
-    Lib.fetchData();
+    Lib.fetchData()
+        .then((value) => ApiInstall(data: value))
+        .whenComplete(() => print(DataLists.listCategories[0].getValues()));
     return Scaffold(
       backgroundColor: Colors.yellow[600],
       key: globalScaffoldKey,
