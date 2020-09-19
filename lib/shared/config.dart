@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
-class Config{
-
+class Config {
   static const String APP_TITLE = 'Cloud Kitchen';
   static const int DATABASE_VERSION = 1;
   static const String DATABASE_NAME = 'CloudKitchen.db';
 
   static const String SERVER_IP = '72.52.142.19';
-  static const String CLOUD_KITCHEN_API = 'http://$SERVER_IP/cloud-kitchen/api/install?auth=622780154&sale_limit=20&expense_limit=20';
+  static const String CLOUD_KITCHEN_API =
+      'http://$SERVER_IP/cloud-kitchen/api/install?auth=622780154&sale_limit=20&expense_limit=20';
 
   static const int SCREEN_START_TIME = 3;
 

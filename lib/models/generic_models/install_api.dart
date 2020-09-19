@@ -21,88 +21,92 @@ class ApiInstall {
   final Logger _log = Config.log;
 
   ApiInstall({this.status, this.message, this.data}) {
-    try {
-      getCompanyList(data['company']);
-    } catch (e) {
-      _log.e('>>>ERROR ON getCompanyList\n$e');
-    }
+    if (this.data != null) {
+      try {
+        getCompanyList(data['company']);
+      } catch (e) {
+        _log.e('>>>ERROR ON getCompanyList\n$e');
+      }
 
-    try {
-      getOutletList(data['outlet']);
-    } catch (e) {
-      _log.e('>>>ERROR ON getOutletList\n$e');
-    }
+      try {
+        getOutletList(data['outlet']);
+      } catch (e) {
+        _log.e('>>>ERROR ON getOutletList\n$e');
+      }
 
-    try {
-      getUsersList(data['users']);
-    } catch (e) {
-      _log.e('>>>ERROR ON getUsersList\n$e');
-    }
+      try {
+        getUsersList(data['users']);
+      } catch (e) {
+        _log.e('>>>ERROR ON getUsersList\n$e');
+      }
 
-    try {
-      getVatAmountList(data['vatamount']);
-    } catch (e) {
-      _log.e('>>>ERROR ON getVatAmountList\n$e');
-    }
+      try {
+        getVatAmountList(data['vatamount']);
+      } catch (e) {
+        _log.e('>>>ERROR ON getVatAmountList\n$e');
+      }
 
-    try {
-      getTablesList(data['tables']);
-    } catch (e) {
-      _log.e('>>>ERROR ON getTablesList\n$e');
-    }
+      try {
+        getTablesList(data['tables']);
+      } catch (e) {
+        _log.e('>>>ERROR ON getTablesList\n$e');
+      }
 
-    try {
-      getCategoriesList(data['categories']);
-    } catch (e) {
-      _log.e('>>>ERROR ON getCategoriesList\n$e');
-    }
+      try {
+        getCategoriesList(data['categories']);
+      } catch (e) {
+        _log.e('>>>ERROR ON getCategoriesList\n$e');
+      }
 
-    try {
-      getModifiersList(data['modifiers']);
-    } catch (e) {
-      _log.e('>>>ERROR ON getModifiersList\n$e');
-    }
+      try {
+        getModifiersList(data['modifiers']);
+      } catch (e) {
+        _log.e('>>>ERROR ON getModifiersList\n$e');
+      }
 
-    try {
-      getItemList(data['item_menus']);
-    } catch (e) {
-      _log.e('>>>ERROR ON getItemMenusList\n$e');
-    }
+      try {
+        getItemList(data['item_menus']);
+      } catch (e) {
+        _log.e('>>>ERROR ON getItemMenusList\n$e');
+      }
 
-    try {
-      getItemModifiersList(data['item_modifiers']);
-    } catch (e) {
-      _log.e('>>>ERROR ON getItemModifiersList\n$e');
-    }
+      try {
+        getItemModifiersList(data['item_modifiers']);
+      } catch (e) {
+        _log.e('>>>ERROR ON getItemModifiersList\n$e');
+      }
 
-    try {
-      getCustomersList(data['customers']);
-    } catch (e) {
-      _log.e('>>>ERROR ON getCustomersList\n$e');
-    }
+      try {
+        getCustomersList(data['customers']);
+      } catch (e) {
+        _log.e('>>>ERROR ON getCustomersList\n$e');
+      }
 
-    try {
-      getPaymentMethodsList(data['payment_methods']);
-    } catch (e) {
-      _log.e('>>>ERROR ON getPaymentMethodsList\n$e');
-    }
+      try {
+        getPaymentMethodsList(data['payment_methods']);
+      } catch (e) {
+        _log.e('>>>ERROR ON getPaymentMethodsList\n$e');
+      }
 
-    try {
-      getExpenseCategoriesList(data['expense_categories']);
-    } catch (e) {
-      _log.e('>>>ERROR ON getExpenseCategoriesList\n$e');
-    }
+      try {
+        getExpenseCategoriesList(data['expense_categories']);
+      } catch (e) {
+        _log.e('>>>ERROR ON getExpenseCategoriesList\n$e');
+      }
 
-    try {
-      getSalesList(data['sales']);
-    } catch (e) {
-      _log.e('>>>ERROR ON getSalesList\n$e');
-    }
+      try {
+        getSalesList(data['sales']);
+      } catch (e) {
+        _log.e('>>>ERROR ON getSalesList\n$e');
+      }
 
-    try {
-      getExpensesList(['expenses']);
-    } catch (e) {
-      _log.e('>>>ERROR ON getExpensesList\n$e');
+      try {
+        getExpensesList(['expenses']);
+      } catch (e) {
+        _log.e('>>>ERROR ON getExpensesList\n$e');
+      }
+    } else {
+      _log.i('NULL DATA PASSED TO INSTALL API');
     }
   }
 

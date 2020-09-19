@@ -1,5 +1,8 @@
-class Categories {
+import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/tables.dart';
+import 'package:sqflite/sqflite.dart';
 
+class Categories {
   final String serverId;
   final String categoryName;
   final String description;
@@ -7,20 +10,40 @@ class Categories {
   final String companyId;
   final String delStatus;
 
-  Categories({this.serverId, this.categoryName, this.description,
-      this.userId, this.companyId, this.delStatus});
+  Categories(
+      {this.serverId,
+      this.categoryName,
+      this.description,
+      this.userId,
+      this.companyId,
+      this.delStatus});
 
   Categories.fromJson(Map<String, dynamic> json)
-  :
-    serverId = json['id'],
-    categoryName = json['category_name'],
-    description = json['description'],
-    userId = json['user_id'],
-    companyId = json['company_id'],
-    delStatus = json['del_status'];
+      : serverId = json['id'],
+        categoryName = json['category_name'],
+        description = json['description'],
+        userId = json['user_id'],
+        companyId = json['company_id'],
+        delStatus = json['del_status'];
 
   @override
   String toString() {
     return 'Categories{id: $serverId, categoryName: $categoryName, description: $description, userId: $userId, companyId: $companyId, delStatus: $delStatus}';
+  }
+
+  List<String> getValues() {
+    return [
+      this.serverId,
+      this.categoryName,
+      this.description,
+      this.userId,
+      this.companyId,
+      this.delStatus
+    ];
+  }
+
+  Future<bool> insertIntoDatabase() async {
+    Database db;
+    db.insert()
   }
 }

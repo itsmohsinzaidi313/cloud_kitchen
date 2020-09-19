@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/pages/dashboard_screen.dart';
 import 'package:food_app/shared/app_theme.dart';
+import 'package:food_app/shared/lib.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -166,13 +167,7 @@ class _ShiftScreen extends State<ShiftScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
-            // if (_formKey.currentState.validate()) {
-            //   _formKey.currentState.save();
-            //   onAmountEntered();
-            // } else {
-            //   _autoValidate = true;
-            // }
-            AppTheme.timerWithNavigation(context, 0, Dashboard());
+            Lib.timerWithNavigation(context, 0, Dashboard());
           });
         },
         child: Icon(Icons.navigate_next),

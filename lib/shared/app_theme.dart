@@ -106,14 +106,7 @@ class AppTheme {
     return progressDialog;
   }
 
-  static timerWithNavigation(BuildContext context, int seconds, Widget widget){
-    Timer(
-        Duration(seconds: seconds),
-            () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => widget)));
-  }
-
-  static circularProgressIndicator(Color color){
+  static circularProgressIndicator(Color color) {
     return Center(
       child: CircularProgressIndicator(
         backgroundColor: Colors.amberAccent,
@@ -121,5 +114,4 @@ class AppTheme {
       ),
     );
   }
-
 }
