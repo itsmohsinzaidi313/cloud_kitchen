@@ -1,4 +1,6 @@
 import 'package:food_app/shared/config.dart';
+import 'package:logger/logger.dart';
+import 'package:sqflite/sqflite.dart';
 
 class Table {
   //VARIABLES
@@ -6,6 +8,8 @@ class Table {
   List<String> _listOfColumnsName;
   List<String> _listOfColumnsTypes;
   Database _database;
+
+  Logger _log = Config.log;
 
   //INITIALIZING VARIABLES IN CONSTRUCTOR
   Table(

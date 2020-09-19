@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -5,7 +7,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AppTheme {
   static final Color appBarColor = Colors.red;
-  static final Color lisTextColor = Colors.amber[400];
+  static final Color listTextColor = Colors.amber[400];
   static final Color appThemeColor = Colors.blue;
 
   static Widget appBarNormal(
@@ -103,4 +105,21 @@ class AppTheme {
         ));
     return progressDialog;
   }
+
+  static timerWithNavigation(BuildContext context, int seconds, Widget widget){
+    Timer(
+        Duration(seconds: seconds),
+            () => Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (BuildContext context) => widget)));
+  }
+
+  static circularProgressIndicator(Color color){
+    return Center(
+      child: CircularProgressIndicator(
+        backgroundColor: Colors.amberAccent,
+        valueColor: AlwaysStoppedAnimation<Color>(color),
+      ),
+    );
+  }
+
 }

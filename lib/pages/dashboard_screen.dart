@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/pos/new_sale.dart';
 import 'package:food_app/shared/app_theme.dart';
-import 'package:food_app/models/dashboard_item.dart';
+import 'file:///D:/Flutter/cloud_kitchen/lib/models/generic_models/dashboard_item.dart';
 import 'package:food_app/shared/widgets/dashboard_card.dart';
 import 'package:toast/toast.dart';
 
