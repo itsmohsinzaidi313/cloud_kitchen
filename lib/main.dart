@@ -3,6 +3,7 @@ import 'package:food_app/pages/dashboard_screen.dart';
 import 'package:food_app/pages/login_screen.dart';
 import 'package:food_app/pages/shift_screen.dart';
 import 'package:food_app/pages/splash_screen.dart';
+import 'package:food_app/pos/new_sale.dart';
 import 'package:food_app/shared/config.dart';
 
 void main() => runApp(
@@ -15,6 +16,7 @@ void main() => runApp(
       '/loginScreen': (context) => UserLogin(),
       '/shiftScreen': (context) => ShiftScreen(),
       '/dashboardScreen' : (context) => Dashboard(),
+      '/salesScreen' : (context) => NewSale(),
     },
   ),
 );

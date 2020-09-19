@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/pages/shift_screen.dart';
+import 'package:food_app/shared/app_theme.dart';
+import 'package:food_app/shared/config.dart';
+import 'package:food_app/shared/config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserLogin extends StatefulWidget {
@@ -63,6 +67,30 @@ class _UserLoginState extends State<UserLogin> {
     await _sharedPreferences.setInt('userId', user[0]['id']);
   }
 
+  void onButtonTap(){
+    setState(() {
+      // if (_formKey.currentState
+      //     .validate()) {
+      //   isLoading = true;
+      //   _formKey.currentState.save();
+      //   if (email.text.contains('\t')) {
+      //     email.text = email.text
+      //         .replaceAll(
+      //         RegExp(r'\t'), '');
+      //     getUser(
+      //         email.text, password.text);
+      //   } else {
+      //     getUser(
+      //         email.text, password.text);
+      //   }
+      // } else {
+      //   isLoading = false;
+      //   _autoValidate = true;
+      // }
+      AppTheme.timerWithNavigation(context, 0, ShiftScreen());
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -77,15 +105,15 @@ class _UserLoginState extends State<UserLogin> {
       backgroundColor: Colors.grey[100],
       body: LayoutBuilder(
         builder: (context, constraints) {
-          if (constraints.maxWidth < 700) {
+          if (constraints.maxWidth < 500) {
             return SingleChildScrollView(
               child: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
+                height: Config.getDeviceHeight(context),
+                width: Config.getDeviceWidth(context),
                 child: Column(
                   children: <Widget>[
                     Container(
-                      height: 350,
+                      height: Config.getDeviceHeight(context) * 0.4,
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image: NetworkImage(
@@ -216,17 +244,8 @@ class _UserLoginState extends State<UserLogin> {
                                 ),
                               ),
                               isLoading
-                                  ? Center(
-                                      child: CircularProgressIndicator(
-                                        backgroundColor: Colors.amberAccent,
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                Colors.redAccent),
-                                      ),
-                                    )
-                                  : SizedBox(
-                                      height: 0,
-                                    ),
+                                  ? AppTheme.circularProgressIndicator(Colors.redAccent)
+                                  : SizedBox(height: 0,),
                               SizedBox(
                                 height: 30,
                               ),
@@ -248,28 +267,7 @@ class _UserLoginState extends State<UserLogin> {
                                       color: Colors.transparent,
                                       child: InkWell(
                                         splashColor: Colors.yellow[100],
-                                        onTap: () {
-                                          setState(() {
-                                            if (_formKey.currentState
-                                                .validate()) {
-                                              isLoading = true;
-                                              _formKey.currentState.save();
-                                              if (email.text.contains('\t')) {
-                                                email.text = email.text
-                                                    .replaceAll(
-                                                        RegExp(r'\t'), '');
-                                                getUser(
-                                                    email.text, password.text);
-                                              } else {
-                                                getUser(
-                                                    email.text, password.text);
-                                              }
-                                            } else {
-                                              isLoading = false;
-                                              _autoValidate = true;
-                                            }
-                                          });
-                                        },
+                                        onTap: onButtonTap,
                                         child: Center(
                                           child: Text(
                                             'Login',
@@ -294,207 +292,186 @@ class _UserLoginState extends State<UserLogin> {
               ),
             );
           } else {
-            return Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(
-                            'https://image.freepik.com/free-photo/hands-holding-burger-yellow-background_23-2148258479.jpg'),
-                        fit: BoxFit.cover,
+            return SingleChildScrollView(
+              child: Container(
+                height: Config.getDeviceHeight(context),
+                width: Config.getDeviceWidth(context),
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      height: Config.getDeviceHeight(context),
+                      width: Config.getDeviceWidth(context) * 0.4,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(
+                              'https://image.freepik.com/free-photo/hands-holding-burger-yellow-background_23-2148258479.jpg'),
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    child: Stack(
-                      children: <Widget>[
-                        Positioned(
-                          child: Container(
-                            margin: EdgeInsets.only(top: 180),
-                            child: Center(
-                              child: Text(
-                                'Login',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 60,
-                                  fontWeight: FontWeight.bold,
-                                  // fontFamily: 'Ubuntu',
+                      child: Stack(
+                        children: <Widget>[
+                          Positioned(
+                            child: Container(
+                              margin: EdgeInsets.only(top: 180),
+                              child: Center(
+                                child: Text(
+                                  'Login',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 60,
+                                    fontWeight: FontWeight.bold,
+                                    // fontFamily: 'Ubuntu',
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.all(30.0),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey[300],
-                                    blurRadius: 20,
-                                    offset: Offset(0, 10),
-                                  ),
-                                ],
-                              ),
-                              child: Form(
-                                key: _formKey,
-                                autovalidate: _autoValidate,
-                                child: Column(
-                                  children: <Widget>[
-                                    Container(
-                                      padding: EdgeInsets.all(5),
-                                      decoration: BoxDecoration(
-                                          border: Border(
-                                              bottom: BorderSide(
-                                                  color: Colors.grey[100]))),
-                                      child: TextFormField(
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          labelText: "Enter Email",
-                                          labelStyle: TextStyle(
-                                            color: Colors.grey[400],
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(30.0),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: <Widget>[
+                              Container(
+                                padding: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey[300],
+                                      blurRadius: 20,
+                                      offset: Offset(0, 10),
+                                    ),
+                                  ],
+                                ),
+                                child: Form(
+                                  key: _formKey,
+                                  autovalidate: _autoValidate,
+                                  child: Column(
+                                    children: <Widget>[
+                                      Container(
+                                        padding: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                                    color: Colors.grey[100]))),
+                                        child: TextFormField(
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            labelText: "Enter Email",
+                                            labelStyle: TextStyle(
+                                              color: Colors.grey[400],
+                                            ),
                                           ),
+                                          textInputAction: TextInputAction.next,
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          onFieldSubmitted: (value) {
+                                            FocusScope.of(context).nextFocus();
+                                          },
+                                          validator: (value) {
+                                            if (value.isEmpty ||
+                                                !value.contains('@')) {
+                                              return errorEmail;
+                                            }
+                                            return null;
+                                          },
+                                          controller: email,
                                         ),
-                                        textInputAction: TextInputAction.next,
-                                        keyboardType:
-                                            TextInputType.emailAddress,
-                                        onFieldSubmitted: (value) {
-                                          FocusScope.of(context).nextFocus();
-                                        },
-                                        validator: (value) {
-                                          if (value.isEmpty ||
-                                              !value.contains('@')) {
-                                            return errorEmail;
-                                          }
-                                          return null;
-                                        },
-                                        controller: email,
                                       ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.all(5),
-                                      child: Stack(
-                                        children: <Widget>[
-                                          Positioned(
-                                            child: TextFormField(
-                                              decoration: InputDecoration(
-                                                border: InputBorder.none,
-                                                labelText: "Enter Password",
-                                                labelStyle: TextStyle(
-                                                  color: Colors.grey[400],
+                                      Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Stack(
+                                          children: <Widget>[
+                                            Positioned(
+                                              child: TextFormField(
+                                                decoration: InputDecoration(
+                                                  border: InputBorder.none,
+                                                  labelText: "Enter Password",
+                                                  labelStyle: TextStyle(
+                                                    color: Colors.grey[400],
+                                                  ),
                                                 ),
+                                                obscureText: _obscureText,
+                                                textInputAction:
+                                                    TextInputAction.done,
+                                                keyboardType:
+                                                    TextInputType.visiblePassword,
+                                                onFieldSubmitted: (value) {
+                                                  FocusScope.of(context)
+                                                      .unfocus();
+                                                },
+                                                controller: password,
+                                                validator: (value) {
+                                                  if (value.isEmpty ||
+                                                      value.length <= 0) {
+                                                    return errorPassword;
+                                                  }
+                                                  return null;
+                                                },
                                               ),
-                                              obscureText: _obscureText,
-                                              textInputAction:
-                                                  TextInputAction.done,
-                                              keyboardType:
-                                                  TextInputType.visiblePassword,
-                                              onFieldSubmitted: (value) {
-                                                FocusScope.of(context)
-                                                    .unfocus();
-                                              },
-                                              controller: password,
-                                              validator: (value) {
-                                                if (value.isEmpty ||
-                                                    value.length <= 0) {
-                                                  return errorPassword;
-                                                }
-                                                return null;
-                                              },
                                             ),
-                                          ),
-                                          Positioned(
-                                            right: 5,
-                                            child: IconButton(
-                                              icon: _icon,
-                                              onPressed: _toggle,
+                                            Positioned(
+                                              right: 5,
+                                              child: IconButton(
+                                                icon: _icon,
+                                                onPressed: _toggle,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            isLoading
-                                ? Center(
-                                    child: CircularProgressIndicator(
-                                      backgroundColor: Colors.amberAccent,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          Colors.redAccent),
-                                    ),
-                                  )
-                                : SizedBox(
-                                    height: 0,
+                                    ],
                                   ),
-                            Container(
-                              height: 50,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.yellow[300],
-                                    Colors.red[200],
-                                  ],
                                 ),
                               ),
-                              child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  splashColor: Colors.yellow[100],
-                                  onTap: () {
-                                    setState(() {
-                                      if (_formKey.currentState.validate()) {
-                                        isLoading = true;
-                                        _formKey.currentState.save();
-                                        if (email.text.contains('\t')) {
-                                          email.text = email.text
-                                              .replaceAll(RegExp(r'\t'), '');
-                                          getUser(email.text, password.text);
-                                        } else {
-                                          getUser(email.text, password.text);
-                                        }
-                                      } else {
-                                        isLoading = false;
-                                        _autoValidate = true;
-                                      }
-                                    });
-                                  },
-                                  child: Center(
-                                    child: Text(
-                                      'Login',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
+                              SizedBox(
+                                height: 30,
+                              ),
+                              isLoading
+                                  ? AppTheme.circularProgressIndicator(Colors.redAccent)
+                                  : SizedBox(
+                                      height: 0,
+                                    ),
+                              Container(
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.yellow[300],
+                                      Colors.red[200],
+                                    ],
+                                  ),
+                                ),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    splashColor: Colors.yellow[100],
+                                    onTap: onButtonTap,
+                                    child: Center(
+                                      child: Text(
+                                        'Login',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           }
