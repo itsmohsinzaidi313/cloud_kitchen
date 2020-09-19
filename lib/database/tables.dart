@@ -1,4 +1,8 @@
+import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/columns_types.dart';
 import 'package:food_app/database/table.dart';
+import 'package:food_app/shared/lib.dart';
+import 'package:sqflite/sqflite.dart';
 
 class Tables{
 
@@ -21,15 +25,16 @@ class Tables{
   ];
 
   //TODO
-  // static List<Table> getTables() {
-  //   List<T.Table> tables = [];
-  //   for (int i = 0; i < tables.length; i++) {
-  //     tables.add(new T.Table(
-  //       name: Tables.tables[i],
-  //       columnNames: Columns.columns[i],
-  //       columnTypes: ColumnTypes.columnTypes[i],
-  //     ));
-  //   }
-  //   return tables;
-  // }
+  static Future<List<Table>> getTables() async {
+    List<Table> tables = [];
+    Database db = await Lib().getDatabase();
+    for (int i = 0; i < tables.length; i++) {
+      tables.add(new Table(database: db,
+        tableName: LIST_OF_TABLES[i],
+        listOfColumnsName: Columns.LIST_OF_ALL_COLUMNS[i],
+        listOfColumnsTypes: Types.LIST_OF_ALL_TYPES[i]
+      ));
+    }
+    return tables;
+  }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/pages/login_screen.dart';
+import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:logger/logger.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -15,6 +17,13 @@ class _SplashScreenState extends State<SplashScreen> {
   String _msg = 'Downloading...';
   bool _isProgress = true;
   bool _isUpdate = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    AppTheme.timerWithNavigation(context, Config.SCREEN_START_TIME, UserLogin());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,8 +102,8 @@ class _SplashScreenState extends State<SplashScreen> {
           children: <Widget>[
             Container(
               alignment: Alignment.bottomCenter,
-              height: MediaQuery.of(context).size.height * 0.3,
-              width: MediaQuery.of(context).size.width * 0.5,
+              height:Config.getDeviceHeight(context) * 0.3,
+              width: Config.getDeviceWidth(context) * 0.5,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/splash_pic.png'),
@@ -103,11 +112,10 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             Text(
-              'Cloud Kitchen',
+              Config.APP_TITLE,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 30,
-                fontFamily: 'Ubuntu',
                 color: Colors.red,
                 letterSpacing: 3.0,
               ),

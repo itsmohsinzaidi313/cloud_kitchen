@@ -1,5 +1,9 @@
+import 'dart:async';
+
+import 'package:food_app/database/table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/shared/config.dart';
+import 'package:food_app/shared/lib.dart';
 import 'package:logger/logger.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -16,9 +20,15 @@ class ProjectDatabase{
   static Logger _log = Config.log;
 
   //LIST
-  static List<String> tablesList = Tables;
+  static List<Table> tablesList = [];
 
   Future<Database> get database async {
+    try{
+      getListTables();
+    }
+    catch(e){
+      _log.i('Getting tables list $e');
+    }
     if (_database != null) {
       currentVersion = await _database.getVersion();
       return _database;
@@ -42,32 +52,37 @@ class ProjectDatabase{
 
   void create(Database db) {
     _log.v('CREATING DATABASE');
-    tablesList.forEach((table) => table.crea(db));
+    tablesList.forEach((table) => table.createTable());
   }
 
   void truncate(Database db) {
-    tablesList.forEach((table) => table.delete(db));
+    tablesList.forEach((table) => table.deleteTable());
   }
 
   FutureOr<void> onCreate(Database db, int version) {
     if (version == 0) {
-      tablesList.forEach((table) => table.create(db));
+      tablesList.forEach((table) => table.createTable());
     }
   }
 
   FutureOr<void> onUpgrade(Database db, int oldVersion, int newVersion) {
     // ADD UPGRADE INSTRUCTIONS HERE
     if (oldVersion < newVersion) {
-      tablesList.forEach((table) => table.drop(db));
-      tablesList.forEach((table) => table.create(db));
+      tablesList.forEach((table) => table.dropTable());
+      tablesList.forEach((table) => table.createTable());
     }
   }
 
   FutureOr<void> onDowngrade(Database db, int oldVersion, int newVersion) {
     // ADD DOWNGRAGE INSTRUCTIONS HERE IF ANY
     if (oldVersion > newVersion) {
-      tablesList.forEach((table) => table.drop(db));
-      tablesList.forEach((table) => table.create(db));
+      tablesList.forEach((table) => table.dropTable());
+      tablesList.forEach((table) => table.createTable());
     }
+  }
+
+  Future<List<Table>> getListTables() async {
+    tablesList = await Tables.getTables();
+    return tablesList;
   }
 }

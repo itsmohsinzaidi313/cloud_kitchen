@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/shared/widgets/dashboard_card.dart';
+import 'package:food_app/pos/new_sale.dart';
+import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/models/dashboard_item.dart';
+import 'package:food_app/shared/widgets/dashboard_card.dart';
 import 'package:toast/toast.dart';
 
 class Dashboard extends StatefulWidget {
@@ -10,6 +12,9 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
 //  Map<String, dynamic> args;
+
+  DashboardItem dashboardItem = DashboardItem(
+      img: 'assets/sales.png', name: 'Sales', subtitle: 'Your daily sales');
 
   List<DashboardItem> lst = [
     DashboardItem(
@@ -37,6 +42,13 @@ class _DashboardState extends State<Dashboard> {
 //    args = ModalRoute.of(context).settings.arguments;
 //    print('Dashboard : ${args['regId']}');
 
+  void onCardTap(DashboardItem dashboardItem){
+    Toast.show(dashboardItem.name, context);
+    if (dashboardItem.name == 'Sales'){
+      AppTheme.timerWithNavigation(context, 0, NewSale());
+    }
+  }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.red,
@@ -60,7 +72,7 @@ class _DashboardState extends State<Dashboard> {
                     250.0,
                     250.0,
                     () {
-                      Toast.show(lst[position].name, context);
+                      onCardTap(dashboardItem);
                     },
                   ),
                 );
@@ -78,7 +90,7 @@ class _DashboardState extends State<Dashboard> {
                   220.0,
                   220.0,
                   () {
-                    Toast.show(lst[position].name, context);
+                    onCardTap(dashboardItem);
                   },
                 );
               },
@@ -95,7 +107,7 @@ class _DashboardState extends State<Dashboard> {
                   250.0,
                   250.0,
                   () {
-                    Toast.show(lst[position].name, context);
+                    onCardTap(dashboardItem);
                   },
                 );
               },
