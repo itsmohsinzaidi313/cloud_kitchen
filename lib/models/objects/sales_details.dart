@@ -1,9 +1,9 @@
 class SalesDetails{
 
- int id;
- int foodMenuId;
+ String id;
+ String foodMenuId;
  String menuName;
- int qty;
+ String qty;
  String menuPriceWithoutDiscount;
  String menuPriceWithDiscount;
  String menuUnitPrice;
@@ -17,11 +17,11 @@ class SalesDetails{
  String cookingStatus;
  String cookingStartTime;
  String cookingDoneTime;
- int previousId;
- int salesMasterId;
- int orderStatus;
- int userId;
- int outletId;
+ String previousId;
+ String salesMasterId;
+ String orderStatus;
+ String userId;
+ String outletId;
  String delStatus;
 
  SalesDetails({this.id, this.foodMenuId, this.menuName, this.qty,
@@ -35,10 +35,10 @@ class SalesDetails{
 
  SalesDetails.fromJson(Map<String, dynamic> json)
  :
-       id = int.parse(json['id']),
-       foodMenuId = int.parse(json['food_menu_id']),
+       id = json['id'],
+       foodMenuId = json['food_menu_id'],
        menuName = json['menu_name'],
-       qty = int.parse(json['qty']),
+       qty = json['qty'],
        menuPriceWithoutDiscount = json['menu_price_without_discount'],
        menuPriceWithDiscount = json['menu_price_with_discount'],
        menuUnitPrice = json['menu_unit_price'],
@@ -52,11 +52,11 @@ class SalesDetails{
        cookingStatus = json['cooking_status'],
        cookingStartTime = json['cooking_start_time'],
        cookingDoneTime = json['cooking_done_time'],
-       previousId = int.parse(json['previous_id']),
-       salesMasterId = int.parse(json['sales_id']),
-       orderStatus = int.parse(json['order_status']),
-       userId = int.parse(json['user_id']),
-       outletId = int.parse(json['outlet_id']),
+       previousId = json['previous_id'],
+       salesMasterId = json['sales_id'],
+       orderStatus = json['order_status'],
+       userId = json['user_id'],
+       outletId = json['outlet_id'],
        delStatus = json['del_status'];
 
  @override

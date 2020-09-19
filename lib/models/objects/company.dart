@@ -1,3 +1,8 @@
+import 'package:sqflite/sqflite.dart';
+
+import '../../database/columns.dart';
+import '../../database/tables.dart';
+
 class Company {
   final String serverId;
   final String currency;
@@ -50,4 +55,34 @@ class Company {
   String toString() {
     return 'Company{id: $serverId, currency: $currency, timezone: $timezone, dateFormat: $dateFormat, outletId: $outletId, name: $name, email: $email, phone1: $phone1, phone2: $phone2, address: $address, status: $status, dateAdded: $dateAdded, expiryDate: $expiryDate, token: $token}';
   }
+
+  List<String> getList() {
+    return [
+      this.serverId,
+      this.currency,
+      this.timezone,
+      this.dateFormat,
+      this.outletId,
+      this.name,
+      this.email,
+      this.phone1,
+      this.phone2,
+      this.address,
+      this.status,
+      this.dateAdded,
+      this.expiryDate,
+      this.token
+    ];
+  }
+
+  Map<String, dynamic> getValues() {
+    Map<String, dynamic> map = new Map();
+    for (int i = 0; i < Columns.company.length; i++) {
+      map[Columns.company[i]] = getList()[i];
+    }
+    return map;
+  }
+
+  Future<bool> insertIntoDatabase(Database db) async =>
+      await db.insert(Tables.company, getValues()) > 0 ? true : false;
 }

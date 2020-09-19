@@ -5,9 +5,12 @@ class Columns{
     users, //1
     shiftData, //2
     categories, //3
-    itemMenus, //4
+    item, //4
     salesMaster, //5
     salesDetails, //6
+    company, //7
+    customers, //8
+    expenseCategories, //9
   ];
 
   ///USER TABLE COLUMNS
@@ -58,8 +61,8 @@ class Columns{
   'del_status'
   ];
 
-  ///ITEM_MENUS TABLE COLUMNS
-  static const List<String> itemMenus = [
+  ///ITEM TABLE COLUMNS
+  static const List<String> item = [
   'id',
   'code',
   'name',
@@ -136,5 +139,49 @@ class Columns{
   'user_id',
   'outlet_id',
   'del_status'
+  ];
+
+  ///COMPANY TABLE COLUMNS
+  static const List<String> company = [
+  'id',
+  'currency',
+  'timezone',
+  'date_format',
+  'outlet_id',
+  'name',
+  'email',
+  'phone_1',
+  'phone_2',
+  'address',
+  'status',
+  'date_added',
+  'expiry_date',
+  'token'
+  ];
+
+  ///CUSTOMERS TABLE COLUMNS
+  static const List<String> customers = [
+    'id',
+    'name',
+    'phone',
+    'email',
+    'address',
+    'gst_number',
+    'area_id',
+    'user_id',
+    'company_id',
+    'del_status',
+    'date_of_birth',
+    'date_of_anniversary'
+  ];
+
+  ///EXPENSE_CATEGORIES TABLE COLUMNS
+  static const List<String> expenseCategories = [
+    'server_id',
+    'name',
+    'description',
+    'user_id',
+    'company_id',
+    'del_status'
   ];
 }

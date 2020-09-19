@@ -1,6 +1,6 @@
 class SalesMaster {
-  int id;
-  int customerId;
+  String id;
+  String customerId;
   String saleNo;
   String totalItems;
   String subTotal;
@@ -10,9 +10,9 @@ class SalesMaster {
   String discActual;
   String vat;
   String totalPayable;
-  int paymentMethodId;
+  String paymentMethodId;
   String closeTime;
-  int tableId;
+  String tableId;
   String totalItemDiscountAmount;
   String subTotalWithDiscount;
   String subTotalDiscountAmount;
@@ -26,16 +26,16 @@ class SalesMaster {
   String cookingStartTime;
   String cookingDoneTime;
   String modified;
-  int userId;
-  int waiterId;
-  int outletId;
-  int orderStatus;
-  int orderType;
+  String userId;
+  String waiterId;
+  String outletId;
+  String orderStatus;
+  String orderType;
   String delStatus;
   String saleVatObjects;
   String deviceKey;
-  int remoteId;
-  int companyId;
+  String remoteId;
+  String companyId;
 
   SalesMaster(
       {this.id,
@@ -77,8 +77,8 @@ class SalesMaster {
       this.companyId});
 
   SalesMaster.fromJson(Map<String, dynamic> json)
-      : id = int.parse(json['id']),
-        customerId = int.parse(json['customer_id']),
+      : id = json['id'],
+        customerId = json['customer_id'],
         saleNo = json['sale_no'],
         totalItems = json['total_items'],
         subTotal = json['sub_total'],
@@ -88,9 +88,9 @@ class SalesMaster {
         discActual = json['disc_actual'],
         vat = json['vat'],
         totalPayable = json['total_payable'],
-        paymentMethodId = int.parse(json['payment_method_id']),
+        paymentMethodId = json['payment_method_id'],
         closeTime = json['close_time'],
-        tableId = int.parse(json['table_id']),
+        tableId = json['table_id'],
         totalItemDiscountAmount = json['total_item_discount_amount'],
         subTotalWithDiscount = json['sub_total_with_discount'],
         subTotalDiscountAmount = json['sub_total_discount_amount'],
@@ -104,16 +104,16 @@ class SalesMaster {
         cookingStartTime = json['cooking_start_time'],
         cookingDoneTime = json['cooking_done_time'],
         modified = json['modified'],
-        userId = int.parse(json['user_id']),
-        waiterId = int.parse(json['waiter_id']),
-        outletId = int.parse(json['outlet_id']),
-        orderStatus = int.parse(json['order_status']),
-        orderType = int.parse(json['order_type']),
+        userId = json['user_id'],
+        waiterId = json['waiter_id'],
+        outletId = json['outlet_id'],
+        orderStatus = json['order_status'],
+        orderType = json['order_type'],
         delStatus = json['del_status'],
         saleVatObjects = json['sale_vat_objects'],
         deviceKey = json['device_key'],
-        remoteId = int.parse(json['remote_id']),
-        companyId = int.parse(json['company_id']);
+        remoteId = json['remote_id'],
+        companyId = json['company_id'];
 
   @override
   String toString() {

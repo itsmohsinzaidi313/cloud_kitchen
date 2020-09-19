@@ -5,14 +5,16 @@ class Types{
     users, //1
     shiftData, //2
     categories, //3
-    itemMenus, //4
+    item, //4
     salesMaster, //5
     salesDetails, //6
+    company, //7
+    customers, //8
+    expenseCategories, //9
   ];
 
   ///USER TABLE TYPES
   static const List<String> users = [
-    'INTEGER',
     'TEXT',
     'TEXT',
     'TEXT',
@@ -20,8 +22,9 @@ class Types{
     'TEXT',
     'TEXT',
     'TEXT',
-    'INTEGER',
-    'INTEGER',
+    'TEXT',
+    'TEXT',
+    'TEXT',
     'TEXT',
     'TEXT',
     'TEXT',
@@ -31,7 +34,6 @@ class Types{
 
   ///SHIFT_DATA TABLE TYPES
   static const List<String> shiftData = [
-    'INTEGER',
     'TEXT',
     'TEXT',
     'TEXT',
@@ -40,52 +42,39 @@ class Types{
     'TEXT',
     'TEXT',
     'TEXT',
-    'INTEGER',
-    'INTEGER',
-    'INTEGER',
     'TEXT',
     'TEXT',
-    'INTEGER'
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT'
   ];
 
   ///CATEGORIES TABLE TYPES
   static const List<String> categories = [
-    'INTEGER',
     'TEXT',
     'TEXT',
-    'INTEGER',
-    'INTEGER',
+    'TEXT',
+    'TEXT',
+    'TEXT',
     'TEXT'
   ];
 
   ///ITEM_MENUS TABLE TYPES
-  static const List<String> itemMenus = [
-    'INTEGER',
+  static const List<String> item = [
     'TEXT',
     'TEXT',
     'TEXT',
-    'INTEGER',
-    'INTEGER',
     'TEXT',
-    'INTEGER'
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT'
   ];
 
   ///SALES_MASTER TABLE TYPES
   static const List<String> salesMaster = [
-    'INTEGER',
-    'INTEGER',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'INTEGER',
-    'TEXT',
-    'INTEGER',
     'TEXT',
     'TEXT',
     'TEXT',
@@ -99,24 +88,34 @@ class Types{
     'TEXT',
     'TEXT',
     'TEXT',
-    'INTEGER',
-    'INTEGER',
-    'INTEGER',
-    'INTEGER',
-    'INTEGER',
     'TEXT',
     'TEXT',
     'TEXT',
-    'INTEGER',
-    'INTEGER'
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT'
   ];
 
   ///SALES_DETAILS TABLE TYPES
   static const List<String> salesDetails = [
-    'INTEGER',
-    'INTEGER',
-    'TEXT',
-    'INTEGER',
     'TEXT',
     'TEXT',
     'TEXT',
@@ -124,17 +123,65 @@ class Types{
     'TEXT',
     'TEXT',
     'TEXT',
-    'INTEGER',
     'TEXT',
     'TEXT',
     'TEXT',
     'TEXT',
     'TEXT',
-    'INTEGER',
-    'INTEGER',
-    'INTEGER',
-    'INTEGER',
-    'INTEGER',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT'
+  ];
+
+  ///COMPANY TABLE TYPES
+  static const List<String> company = [
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT'
+  ];
+
+  ///CUSTOMERS TABLE TYPES
+  static const List<String> customers = [
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT'
+  ];
+
+  ///EXPENSE_CATEGORIES TABLE TYPES
+  static const List<String> expenseCategories = [
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
     'TEXT'
   ];
 }
