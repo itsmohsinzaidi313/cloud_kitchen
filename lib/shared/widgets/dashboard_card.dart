@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'file:///D:/Flutter/cloud_kitchen/lib/models/generic_models/dashboard_item.dart';
+import 'package:food_app/models/generic_models/dashboard_item.dart';
 
 class DashboardCard extends StatelessWidget {
   final DashboardItem _dashboardItem;

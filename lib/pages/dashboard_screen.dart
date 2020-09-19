@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/pos/new_sale.dart';
 import 'package:food_app/shared/app_theme.dart';
-import 'file:///D:/Flutter/cloud_kitchen/lib/models/generic_models/dashboard_item.dart';
+import 'package:food_app/models/generic_models/dashboard_item.dart';
 import 'package:food_app/shared/widgets/dashboard_card.dart';
 import 'package:toast/toast.dart';
 
@@ -42,12 +42,12 @@ class _DashboardState extends State<Dashboard> {
 //    args = ModalRoute.of(context).settings.arguments;
 //    print('Dashboard : ${args['regId']}');
 
-  void onCardTap(DashboardItem dashboardItem){
-    Toast.show(dashboardItem.name, context);
-    if (dashboardItem.name == 'Sales'){
-      AppTheme.timerWithNavigation(context, 0, NewSale());
+    void onCardTap(DashboardItem dashboardItem) {
+      Toast.show(dashboardItem.name, context);
+      if (dashboardItem.name == 'Sales') {
+        AppTheme.timerWithNavigation(context, 0, NewSale());
+      }
     }
-  }
 
     return Scaffold(
       appBar: AppBar(
