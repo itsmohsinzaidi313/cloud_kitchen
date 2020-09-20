@@ -7,7 +7,7 @@ import 'package:food_app/models/objects/item_modifiers.dart';
 import 'package:food_app/models/objects/modifiers.dart';
 import 'package:food_app/models/objects/outlet.dart';
 import 'package:food_app/models/objects/payment_methods.dart';
-import 'package:food_app/models/objects/tables.dart';
+import 'package:food_app/models/objects/table.dart';
 import 'package:food_app/models/objects/user.dart';
 import 'package:food_app/models/objects/vatamount.dart';
 import 'package:food_app/shared/config.dart';
@@ -192,7 +192,7 @@ class ApiInstall {
   void getTablesList(List<dynamic> i) {
     DataLists.listTables = [];
     i.forEach((e) {
-      DataLists.listTables.add(new Tables(
+      DataLists.listTables.add(new Table(
           serverId: e['id'],
           name: e['name'],
           sitCapacity: e['sit_capacity'],

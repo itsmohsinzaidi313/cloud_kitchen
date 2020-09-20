@@ -1,6 +1,6 @@
 import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/columns_types.dart';
-import 'package:food_app/database/table.dart';
+import 'package:food_app/database/db_table.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -16,6 +16,12 @@ class Tables{
   static const String company = 'company'; //7
   static const String customers = 'customers'; //8
   static const String expenseCategories = 'expense_categories'; //9
+  static const String itemModifiers = 'item_modifiers'; //10
+  static const String modifiers = 'modifiers'; //11
+  static const String outlet = 'outlet'; //12
+  static const String paymentMethods = 'payment_methods'; //13
+  static const String tables = 'tables'; //14
+  static const String vatAmount = 'vat_amount'; //15
 
   //LIST OF TABLES MAME
   static const List<String> LIST_OF_TABLES = [
@@ -27,6 +33,13 @@ class Tables{
     salesDetails, //6
     company, //7
     customers, //8
+    expenseCategories, //9
+    itemModifiers, //10
+    modifiers, //11
+    outlet, //12
+    paymentMethods, //13
+    tables, //14
+    vatAmount, //15
   ];
 
   //TODO

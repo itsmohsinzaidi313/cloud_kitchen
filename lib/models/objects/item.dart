@@ -1,5 +1,6 @@
-import 'package:sqflite/sqflite.dart';
 
+import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 import '../../database/columns.dart';
 import '../../database/tables.dart';
 
@@ -61,4 +62,5 @@ class Item {
 
   Future<bool> insertIntoDatabase(Database db) async =>
       await db.insert(Tables.item, getValues()) > 0 ? true : false;
+
 }

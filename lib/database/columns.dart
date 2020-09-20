@@ -1,4 +1,4 @@
-class Columns{
+class Columns {
 
   ///LIST OF [COLUMNS_NAME] LIST
   static const List<List<String>> LIST_OF_ALL_COLUMNS = [
@@ -11,157 +11,163 @@ class Columns{
     company, //7
     customers, //8
     expenseCategories, //9
+    itemModifiers, //10
+    modifiers, //11
+    outlet, //12
+    paymentMethods, //13
+    vatAmount, //14
+    tables //15
   ];
 
   ///USER TABLE COLUMNS
   static const List<String> users = [
-  'id',
-  'full_name',
-  'phone',
-  'email_address',
-  'password',
-  'designation',
-  'will_login',
-  'role',
-  'outlet_id',
-  'company_id',
-  'account_creation_date',
-  'language',
-  'last_login',
-  'active_status',
-  'del_status'
+    'server_id',
+    'full_name',
+    'phone',
+    'email_address',
+    'password',
+    'designation',
+    'will_login',
+    'role',
+    'outlet_id',
+    'company_id',
+    'account_creation_date',
+    'language',
+    'last_login',
+    'active_status',
+    'del_status'
   ];
 
   ///SHIFT_DATA TABLE COLUMNS
   static const List<String> shiftData = [
-  'id',
-  'opening_balance',
-  'closing_balance',
-  'opening_balance_date_time',
-  'closing_balance_date_time',
-  'sale_paid_amount',
-  'customer_due_receive',
-  'payment_methods_sale',
-  'register_status',
-  'user_id',
-  'outlet_id',
-  'company_id',
-  'register_no',
-  'device_key',
-  'remote_id'
+    'id',
+    'opening_balance',
+    'closing_balance',
+    'opening_balance_date_time',
+    'closing_balance_date_time',
+    'sale_paid_amount',
+    'customer_due_receive',
+    'payment_methods_sale',
+    'register_status',
+    'user_id',
+    'outlet_id',
+    'company_id',
+    'register_no',
+    'device_key',
+    'remote_id'
   ];
 
   ///CATEGORIES TABLE COLUMNS
   static const List<String> categories = [
-  'id',
-  'category_name',
-  'description',
-  'user_id',
-  'company_id',
-  'del_status'
+    'server_id',
+    'category_name',
+    'description',
+    'user_id',
+    'company_id',
+    'del_status'
   ];
 
   ///ITEM TABLE COLUMNS
   static const List<String> item = [
-  'id',
-  'code',
-  'name',
-  'sale_price',
-  'photo',
-  'category_name',
-  'percentage',
-  'quantity'
-  ];  
-  
+    'server_id',
+    'code',
+    'name',
+    'sale_price',
+    'photo',
+    'category_name',
+    'percentage',
+    'quantity'
+  ];
+
   ///SALES_MASTER TABLE COLUMNS
   static const List<String> salesMaster = [
-  'id',
-  'customer_id',
-  'sale_no',
-  'total_items',
-  'sub_total',
-  'paid_amount',
-  'due_amount',
-  'disc',
-  'disc_actual',
-  'vat',
-  'total_payable',
-  'payment_method_id',
-  'close_time',
-  'table_id',
-  'total_item_discount_amount',
-  'sub_total_with_discount',
-  'sub_total_discount_amount',
-  'total_discount_amount',
-  'delivery_charge',
-  'sub_total_discount_value',
-  'sub_total_discount_type',
-  'sale_date',
-  'date_time',
-  'order_time',
-  'cooking_start_time',
-  'cooking_done_time',
-  'modified',
-  'user_id',
-  'waiter_id',
-  'outlet_id',
-  'order_status',
-  'order_type',
-  'del_status',
-  'sale_vat_objects',
-  'device_key',
-  'remote_id',
-  'company_id'
+    'id',
+    'customer_id',
+    'sale_no',
+    'total_items',
+    'sub_total',
+    'paid_amount',
+    'due_amount',
+    'disc',
+    'disc_actual',
+    'vat',
+    'total_payable',
+    'payment_method_id',
+    'close_time',
+    'table_id',
+    'total_item_discount_amount',
+    'sub_total_with_discount',
+    'sub_total_discount_amount',
+    'total_discount_amount',
+    'delivery_charge',
+    'sub_total_discount_value',
+    'sub_total_discount_type',
+    'sale_date',
+    'date_time',
+    'order_time',
+    'cooking_start_time',
+    'cooking_done_time',
+    'modified',
+    'user_id',
+    'waiter_id',
+    'outlet_id',
+    'order_status',
+    'order_type',
+    'del_status',
+    'sale_vat_objects',
+    'device_key',
+    'remote_id',
+    'company_id'
   ];
 
   ///SALES_DETAILS TABLE COLUMNS
   static const List<String> salesDetails = [
-  'id',
-  'food_menu_id',
-  'menu_name',
-  'qty',
-  'menu_price_without_discount',
-  'menu_price_with_discount',
-  'menu_unit_price',
-  'menu_vat_percentage',
-  'menu_taxes',
-  'menu_discount_value',
-  'discount_type',
-  'menu_note',
-  'discount_amount',
-  'item_type',
-  'cooking_status',
-  'cooking_start_time',
-  'cooking_done_time',
-  'previous_id',
-  'sales_id',
-  'order_status',
-  'user_id',
-  'outlet_id',
-  'del_status'
+    'id',
+    'food_menu_id',
+    'menu_name',
+    'qty',
+    'menu_price_without_discount',
+    'menu_price_with_discount',
+    'menu_unit_price',
+    'menu_vat_percentage',
+    'menu_taxes',
+    'menu_discount_value',
+    'discount_type',
+    'menu_note',
+    'discount_amount',
+    'item_type',
+    'cooking_status',
+    'cooking_start_time',
+    'cooking_done_time',
+    'previous_id',
+    'sales_id',
+    'order_status',
+    'user_id',
+    'outlet_id',
+    'del_status'
   ];
 
   ///COMPANY TABLE COLUMNS
   static const List<String> company = [
-  'id',
-  'currency',
-  'timezone',
-  'date_format',
-  'outlet_id',
-  'name',
-  'email',
-  'phone_1',
-  'phone_2',
-  'address',
-  'status',
-  'date_added',
-  'expiry_date',
-  'token'
+    'server_id',
+    'currency',
+    'timezone',
+    'date_format',
+    'outlet_id',
+    'name',
+    'email',
+    'phone_1',
+    'phone_2',
+    'address',
+    'status',
+    'date_added',
+    'expiry_date',
+    'token'
   ];
 
   ///CUSTOMERS TABLE COLUMNS
   static const List<String> customers = [
-    'id',
+    'server_id',
     'name',
     'phone',
     'email',
@@ -180,6 +186,80 @@ class Columns{
     'server_id',
     'name',
     'description',
+    'user_id',
+    'company_id',
+    'del_status'
+  ];
+
+  ///ITEM_MODIFIERS TABLE COLUMNS
+  static const List<String> itemModifiers = [
+    'server_id',
+    'modifier_id',
+    'food_menu_id',
+    'user_id',
+    'outlet_id',
+    'company_id',
+    'name',
+    'price',
+    'del_status'
+  ];
+
+  ///MODIFIERS TABLE COLUMNS
+  static const List<String> modifiers = [
+    'server_id',
+    'name',
+    'price',
+    'description',
+    'user_id',
+    'company_id',
+    'del_status'
+  ];
+
+  ///OUTLET TABLE COLUMNS
+  static const List<String> outlet = [
+    'server_id',
+    'outlet_name',
+    'outlet_code',
+    'address',
+    'phone',
+    'invoice_print',
+    'starting_date',
+    'invoice_footer',
+    'collect_tax',
+    'pre_or_post_payment',
+    'user_id',
+    'company_id',
+    'del_status'
+  ];
+
+  ///PAYMENT_METHODS TABLE COLUMNS
+  static const List<String> paymentMethods = [
+    'server_id',
+    'name',
+    'description',
+    'user_id',
+    'company_id',
+    'del_status'
+  ];
+
+  ///TABLES TABLE COLUMNS
+  static const List<String> tables = [
+  'server_id',
+  'name',
+  'sit_capacity',
+  'position',
+  'description',
+  'user_id',
+  'outlet_id',
+  'company_id',
+  'del_status'
+  ];
+
+  ///VAT_AMOUNT TABLE COLUMNS
+  static const List<String> vatAmount = [
+    'server_id',
+    'name',
+    'percentage',
     'user_id',
     'company_id',
     'del_status'

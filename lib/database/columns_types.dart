@@ -11,6 +11,12 @@ class Types{
     company, //7
     customers, //8
     expenseCategories, //9
+    itemModifiers, //10
+    modifiers, //11
+    outlet, //12
+    paymentMethods, //13
+    vatAmount, //13
+    tables, //13
   ];
 
   ///USER TABLE TYPES
@@ -177,6 +183,80 @@ class Types{
 
   ///EXPENSE_CATEGORIES TABLE TYPES
   static const List<String> expenseCategories = [
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT'
+  ];
+
+  ///ITEM_MODIFIERS TABLE TYPES
+  static const List<String> itemModifiers = [
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT'
+  ];
+
+  ///MODIFIERS TABLE TYPES
+  static const List<String> modifiers = [
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT'
+  ];
+
+  ///OUTLET TABLE TYPES
+  static const List<String> outlet = [
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT'
+  ];
+
+  ///PAYMENT_METHODS TABLE TYPES
+  static const List<String> paymentMethods = [
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT'
+  ];
+
+  ///TABLES TABLE TYPES
+  static const List<String> tables = [
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT',
+    'TEXT'
+  ];
+
+  ///VAT_AMOUNT TABLE TYPES
+  static const List<String> vatAmount = [
     'TEXT',
     'TEXT',
     'TEXT',

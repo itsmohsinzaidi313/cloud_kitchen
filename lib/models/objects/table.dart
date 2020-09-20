@@ -2,45 +2,53 @@ import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:sqflite/sqflite.dart';
 
-class Modifiers {
+class Table {
   final String serverId;
   final String name;
-  final String price;
+  final String sitCapacity;
+  final String position;
   final String description;
   final String userId;
+  final String outletId;
   final String companyId;
   final String delStatus;
 
-  Modifiers(
+  Table(
       {this.serverId,
       this.name,
-      this.price,
+      this.sitCapacity,
+      this.position,
       this.description,
       this.userId,
+      this.outletId,
       this.companyId,
       this.delStatus});
 
-  Modifiers.fromJson(Map<String, dynamic> json)
+  Table.fromJson(Map<String, dynamic> json)
       : serverId = json['id'],
         name = json['name'],
-        price = json['price'],
+        sitCapacity = json['sit_capacity'],
+        position = json['position'],
         description = json['description'],
         userId = json['user_id'],
+        outletId = json['outlet_id'],
         companyId = json['company_id'],
         delStatus = json['del_status'];
 
   @override
   String toString() {
-    return 'Modifiers{id: $serverId, name: $name, price: $price, description: $description, userId: $userId, companyId: $companyId, delStatus: $delStatus}';
+    return 'Tables{id: $serverId, name: $name, sitCapacity: $sitCapacity, position: $position, description: $description, userId: $userId, outletId: $outletId, companyId: $companyId, delStatus: $delStatus}';
   }
 
   List<String> getList() {
     return [
       this.serverId,
       this.name,
-      this.price,
+      this.sitCapacity,
+      this.position,
       this.description,
       this.userId,
+      this.outletId,
       this.companyId,
       this.delStatus
     ];
@@ -48,12 +56,12 @@ class Modifiers {
 
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
-    for (int i = 0; i < Columns.modifiers.length; i++) {
-      map[Columns.modifiers[i]] = getList()[i];
+    for (int i = 0; i < Columns.tables .length; i++) {
+      map[Columns.tables [i]] = getList()[i];
     }
     return map;
   }
 
   Future<bool> insertIntoDatabase(Database db) async =>
-      await db.insert(Tables.modifiers, getValues()) > 0 ? true : false;
+      await db.insert(Tables.tables, getValues()) > 0 ? true : false;
 }

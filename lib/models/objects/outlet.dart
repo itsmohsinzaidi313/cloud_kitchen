@@ -1,3 +1,7 @@
+import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/tables.dart';
+import 'package:sqflite/sqflite.dart';
+
 class Outlet {
   final String serverId;
   final String outletName;
@@ -47,4 +51,33 @@ class Outlet {
   String toString() {
     return 'Outlet{id: $serverId, outletName: $outletName, outletCode: $outletCode, address: $address, phone: $phone, invoicePrint: $invoicePrint, startingDate: $startingDate, invoiceFooter: $invoiceFooter, collectTax: $collectTax, preOrPostOrder: $preOrPostOrder, userId: $userId, companyId: $companyId, delStatus: $delStatus}';
   }
+
+  List<String> getList() {
+    return [
+      this.serverId,
+      this.outletName,
+      this.outletCode,
+      this.address,
+      this.phone,
+      this.invoicePrint,
+      this.startingDate,
+      this.invoiceFooter,
+      this.collectTax,
+      this.preOrPostOrder,
+      this.userId,
+      this.companyId,
+      this.delStatus
+    ];
+  }
+
+  Map<String, dynamic> getValues() {
+    Map<String, dynamic> map = new Map();
+    for (int i = 0; i < Columns.outlet.length; i++) {
+      map[Columns.outlet[i]] = getList()[i];
+    }
+    return map;
+  }
+
+  Future<bool> insertIntoDatabase(Database db) async =>
+      await db.insert(Tables.outlet, getValues()) > 0 ? true : false;
 }

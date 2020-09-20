@@ -1,3 +1,7 @@
+import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/tables.dart';
+import 'package:sqflite/sqflite.dart';
+
 class SalesMaster {
   String id;
   String customerId;
@@ -119,4 +123,57 @@ class SalesMaster {
   String toString() {
     return 'SalesMaster{id: $id, customerId: $customerId, saleNo: $saleNo, totalItems: $totalItems, subTotal: $subTotal, paidAmount: $paidAmount, dueAmount: $dueAmount, disc: $disc, discActual: $discActual, vat: $vat, totalPayable: $totalPayable, paymentMethodId: $paymentMethodId, closeTime: $closeTime, tableId: $tableId, totalItemDiscountAmount: $totalItemDiscountAmount, subTotalWithDiscount: $subTotalWithDiscount, subTotalDiscountAmount: $subTotalDiscountAmount, totalDiscountAmount: $totalDiscountAmount, deliveryCharge: $deliveryCharge, subTotalDiscountValue: $subTotalDiscountValue, subTotalDiscountType: $subTotalDiscountType, saleDate: $saleDate, dateTime: $dateTime, orderTime: $orderTime, cookingStartTime: $cookingStartTime, cookingDoneTime: $cookingDoneTime, modified: $modified, userId: $userId, waiterId: $waiterId, outletId: $outletId, orderStatus: $orderStatus, orderType: $orderType, delStatus: $delStatus, saleVatObjects: $saleVatObjects, deviceKey: $deviceKey, remoteId: $remoteId, companyId: $companyId}';
   }
+
+  List<String> getList() {
+    return [
+      this.id,
+      this.customerId,
+      this.saleNo,
+      this.totalItems,
+      this.subTotal,
+      this.paidAmount,
+      this.dueAmount,
+      this.disc,
+      this.discActual,
+      this.vat,
+      this.totalPayable,
+      this.paymentMethodId,
+      this.closeTime,
+      this.tableId,
+      this.totalItemDiscountAmount,
+      this.subTotalWithDiscount,
+      this.subTotalDiscountAmount,
+      this.totalDiscountAmount,
+      this.deliveryCharge,
+      this.subTotalDiscountValue,
+      this.subTotalDiscountType,
+      this.saleDate,
+      this.dateTime,
+      this.orderTime,
+      this.cookingStartTime,
+      this.cookingDoneTime,
+      this.modified,
+      this.userId,
+      this.waiterId,
+      this.outletId,
+      this.orderStatus,
+      this.orderType,
+      this.delStatus,
+      this.saleVatObjects,
+      this.deviceKey,
+      this.remoteId,
+      this.companyId
+    ];
+  }
+
+  Map<String, dynamic> getValues() {
+    Map<String, dynamic> map = new Map();
+    for (int i = 0; i < Columns.salesMaster.length; i++) {
+      map[Columns.salesMaster[i]] = getList()[i];
+    }
+    return map;
+  }
+
+  Future<bool> insertIntoDatabase(Database db) async =>
+      await db.insert(Tables.salesMaster, getValues()) > 0 ? true : false;
 }
