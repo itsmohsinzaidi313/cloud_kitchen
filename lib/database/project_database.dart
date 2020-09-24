@@ -5,7 +5,6 @@ import 'package:food_app/shared/config.dart';
 import 'package:logger/logger.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:food_app/database/db_table.dart';
 
 class ProjectDatabase {
   //VARIABLES
