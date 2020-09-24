@@ -12,7 +12,7 @@ import 'package:food_app/models/objects/user.dart';
 import 'package:food_app/models/objects/vatamount.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:logger/logger.dart';
-import 'data_lists.dart';
+import '../../shared/data_lists.dart';
 
 class ApiInstall {
   final String status;
@@ -110,12 +110,11 @@ class ApiInstall {
     }
   }
 
-  ///*From here............................................*/
+  //TODO: use fromJson method to instansiate
 
   void getCompanyList(List<dynamic> i) {
-    DataLists.listCompany = [];
     i.forEach((e) {
-      DataLists.listCompany.add(new Company(
+      DataLists.onlineInstance.listCompany.add(new Company(
           serverId: e['id'],
           currency: e['currency'],
           timezone: e['timezone'],
@@ -134,9 +133,8 @@ class ApiInstall {
   }
 
   void getOutletList(List<dynamic> i) {
-    DataLists.listOutlet = [];
     i.forEach((e) {
-      DataLists.listOutlet.add(new Outlet(
+      DataLists.onlineInstance.listOutlet.add(new Outlet(
           serverId: e['id'],
           outletName: e['outlet_name'],
           outletCode: e['outlet_code'],
@@ -154,9 +152,8 @@ class ApiInstall {
   }
 
   void getUsersList(List<dynamic> i) {
-    DataLists.listUsers = [];
     i.forEach((e) {
-      DataLists.listUsers.add(new User(
+      DataLists.onlineInstance.listUsers.add(new User(
           serverId: e['id'],
           fullName: e['full_name'],
           phone: e['phone'],
@@ -176,9 +173,8 @@ class ApiInstall {
   }
 
   void getVatAmountList(List<dynamic> i) {
-    DataLists.listVatAmount = [];
     i.forEach((e) {
-      DataLists.listVatAmount.add(new VatAmount(
+      DataLists.onlineInstance.listVatAmount.add(new VatAmount(
         serverID: e['id'],
         name: e['name'],
         percentage: e['percentage'],
@@ -190,9 +186,8 @@ class ApiInstall {
   }
 
   void getTablesList(List<dynamic> i) {
-    DataLists.listTables = [];
     i.forEach((e) {
-      DataLists.listTables.add(new Table(
+      DataLists.onlineInstance.listTables.add(new Table(
           serverId: e['id'],
           name: e['name'],
           sitCapacity: e['sit_capacity'],
@@ -206,9 +201,8 @@ class ApiInstall {
   }
 
   void getCategoriesList(List<dynamic> i) {
-    DataLists.listCategories = [];
     i.forEach((e) {
-      DataLists.listCategories.add(new Category(
+      DataLists.onlineInstance.listCategories.add(new Category(
           serverId: e['id'],
           categoryName: e['category_name'],
           description: e['description'],
@@ -219,9 +213,8 @@ class ApiInstall {
   }
 
   void getModifiersList(List<dynamic> i) {
-    DataLists.listModifiers = [];
     i.forEach((e) {
-      DataLists.listModifiers.add(new Modifier(
+      DataLists.onlineInstance.listModifiers.add(new Modifier(
           serverId: e['id'],
           name: e['name'],
           price: e['price'],
@@ -233,9 +226,8 @@ class ApiInstall {
   }
 
   void getItemList(List<dynamic> i) {
-    DataLists.listItem = [];
     i.forEach((e) {
-      DataLists.listItem.add(new Item(
+      DataLists.onlineInstance.listItem.add(new Item(
           serverId: e['id'],
           code: e['code'],
           name: e['name'],
@@ -248,9 +240,8 @@ class ApiInstall {
   }
 
   void getItemModifiersList(List<dynamic> i) {
-    DataLists.listItemModifiers = [];
     i.forEach((e) {
-      DataLists.listItemModifiers.add(new ItemModifier(
+      DataLists.onlineInstance.listItemModifiers.add(new ItemModifier(
           serverId: e['id'],
           modifierId: e['modifier_id'],
           foodMenuId: e['food_menu_id'],
@@ -264,9 +255,8 @@ class ApiInstall {
   }
 
   void getCustomersList(List<dynamic> i) {
-    DataLists.listCustomers = [];
     i.forEach((e) {
-      DataLists.listCustomers.add(new Customer(
+      DataLists.onlineInstance.listCustomers.add(new Customer(
           serverId: e['id'],
           name: e['name'],
           phone: e['phone'],
@@ -283,9 +273,8 @@ class ApiInstall {
   }
 
   void getPaymentMethodsList(List<dynamic> i) {
-    DataLists.listPaymentMethods = [];
     i.forEach((e) {
-      DataLists.listPaymentMethods.add(new PaymentMethod(
+      DataLists.onlineInstance.listPaymentMethods.add(new PaymentMethod(
         serverId: e['id'],
         name: e['name'],
         description: e['description'],
@@ -297,9 +286,8 @@ class ApiInstall {
   }
 
   void getExpenseCategoriesList(List<dynamic> i) {
-    DataLists.listExpenseCategories = [];
     i.forEach((e) {
-      DataLists.listExpenseCategories.add(new ExpenseCategory(
+      DataLists.onlineInstance.listExpenseCategories.add(new ExpenseCategory(
         serverId: e['id'],
         name: e['name'],
         description: e['description'],

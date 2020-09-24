@@ -29,7 +29,7 @@ class Table {
     _log.i('Table $_tableName created successfully.');
   }
 
-  //DROPPING A TABLE
+  //DROP TABLE
   void dropTable() async {
     await _database
         .execute(getDropTableQuery())
@@ -54,6 +54,10 @@ class Table {
     query += ');';
     return query;
   }
+
+  Future<bool> insertIntoDatabase(
+          Database db, Table table, Map<String, dynamic> values) async =>
+      await db.insert(table._tableName, values) > 0 ? true : false;
 
   //GENERATING DROP TABLE QUERY
   String getDropTableQuery() => 'DROP TABLE IF EXISTS ${this._tableName}';

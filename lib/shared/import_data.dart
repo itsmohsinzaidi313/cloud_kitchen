@@ -1,5 +1,5 @@
 import 'package:food_app/database/project_database.dart';
-import 'package:food_app/models/generic_models/data_lists.dart';
+import 'package:food_app/shared/data_lists.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:logger/logger.dart';
 
@@ -8,7 +8,7 @@ class ImportData {
   ImportData() {
     ProjectDatabase().database.then((db) {
       int count = 0;
-      DataLists.listCompany.forEach((element) => element
+      DataLists.onlineInstance.listCompany.forEach((element) => element
               .insertIntoDatabase(db)
               .then((value) => value ? count++ : 0)
               .whenComplete(() {
@@ -16,7 +16,7 @@ class ImportData {
             count = 0;
           }));
 
-      DataLists.listOutlet.forEach((element) => element
+      DataLists.onlineInstance.listOutlet.forEach((element) => element
               .insertIntoDatabase(db)
               .then((value) => value ? count++ : 0)
               .whenComplete(() {
@@ -24,7 +24,7 @@ class ImportData {
             count = 0;
           }));
 
-      DataLists.listUsers.forEach((element) => element
+      DataLists.onlineInstance.listUsers.forEach((element) => element
               .insertIntoDatabase(db)
               .then((value) => value ? count++ : 0)
               .whenComplete(() {
@@ -32,7 +32,7 @@ class ImportData {
             count = 0;
           }));
 
-      DataLists.listVatAmount.forEach((element) => element
+      DataLists.onlineInstance.listVatAmount.forEach((element) => element
               .insertIntoDatabase(db)
               .then((value) => value ? count++ : 0)
               .whenComplete(() {
@@ -40,7 +40,7 @@ class ImportData {
             count = 0;
           }));
 
-      DataLists.listTables.forEach((element) => element
+      DataLists.onlineInstance.listTables.forEach((element) => element
               .insertIntoDatabase(db)
               .then((value) => value ? count++ : 0)
               .whenComplete(() {
@@ -48,7 +48,7 @@ class ImportData {
             count = 0;
           }));
 
-      DataLists.listCategories.forEach((element) => element
+      DataLists.onlineInstance.listCategories.forEach((element) => element
               .insertIntoDatabase(db)
               .then((value) => value ? count++ : 0)
               .whenComplete(() {
@@ -56,7 +56,7 @@ class ImportData {
             count = 0;
           }));
 
-      DataLists.listModifiers.forEach((element) => element
+      DataLists.onlineInstance.listModifiers.forEach((element) => element
               .insertIntoDatabase(db)
               .then((value) => value ? count++ : 0)
               .whenComplete(() {
@@ -64,7 +64,7 @@ class ImportData {
             count = 0;
           }));
 
-      DataLists.listItem.forEach((element) => element
+      DataLists.onlineInstance.listItem.forEach((element) => element
               .insertIntoDatabase(db)
               .then((value) => value ? count++ : 0)
               .whenComplete(() {
@@ -72,7 +72,7 @@ class ImportData {
             count = 0;
           }));
 
-      DataLists.listItemModifiers.forEach((element) => element
+      DataLists.onlineInstance.listItemModifiers.forEach((element) => element
               .insertIntoDatabase(db)
               .then((value) => value ? count++ : 0)
               .whenComplete(() {
@@ -80,7 +80,7 @@ class ImportData {
             count = 0;
           }));
 
-      DataLists.listCustomers.forEach((element) => element
+      DataLists.onlineInstance.listCustomers.forEach((element) => element
               .insertIntoDatabase(db)
               .then((value) => value ? count++ : 0)
               .whenComplete(() {
@@ -88,7 +88,7 @@ class ImportData {
             count = 0;
           }));
 
-      DataLists.listPaymentMethods.forEach((element) => element
+      DataLists.onlineInstance.listPaymentMethods.forEach((element) => element
               .insertIntoDatabase(db)
               .then((value) => value ? count++ : 0)
               .whenComplete(() {
@@ -96,7 +96,8 @@ class ImportData {
             count = 0;
           }));
 
-      DataLists.listExpenseCategories.forEach((element) => element
+      DataLists.onlineInstance.listExpenseCategories.forEach((element) =>
+          element
               .insertIntoDatabase(db)
               .then((value) => value ? count++ : 0)
               .whenComplete(() {
