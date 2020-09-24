@@ -34,7 +34,6 @@ class _NewSaleState extends State<NewSale> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      
       body: Column(
         children: [
           //#region AppBar
