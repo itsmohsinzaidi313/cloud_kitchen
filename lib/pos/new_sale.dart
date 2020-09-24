@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/item.dart';
