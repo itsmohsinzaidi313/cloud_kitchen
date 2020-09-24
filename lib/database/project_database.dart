@@ -1,12 +1,10 @@
 import 'dart:async';
-
-import 'package:food_app/database/db_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/shared/config.dart';
-import 'package:food_app/shared/lib.dart';
 import 'package:logger/logger.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:food_app/database/db_table.dart';
 
 class ProjectDatabase{
 
@@ -74,7 +72,7 @@ class ProjectDatabase{
   }
 
   FutureOr<void> onDowngrade(Database db, int oldVersion, int newVersion) {
-    // ADD DOWNGRAGE INSTRUCTIONS HERE IF ANY
+    // ADD DOWNGRADE INSTRUCTIONS HERE IF ANY
     if (oldVersion > newVersion) {
       tablesList.forEach((table) => table.dropTable());
       tablesList.forEach((table) => table.createTable());

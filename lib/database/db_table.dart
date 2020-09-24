@@ -2,7 +2,7 @@ import 'package:food_app/shared/config.dart';
 import 'package:logger/logger.dart';
 import 'package:sqflite/sqflite.dart';
 
-class Table {
+class Table{
   //VARIABLES
   String _tableName;
   List<String> _listOfColumnsName;
