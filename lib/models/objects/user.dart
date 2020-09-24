@@ -2,7 +2,7 @@ import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:sqflite/sqflite.dart';
 
-class Users {
+class User {
   final String serverId;
   final String fullName;
   final String phone;
@@ -19,7 +19,7 @@ class Users {
   final String activeStatus;
   final String delStatus;
 
-  Users(
+  User(
       {this.serverId,
       this.fullName,
       this.phone,
@@ -36,7 +36,7 @@ class Users {
       this.activeStatus,
       this.delStatus});
 
-  Users.fromJson(Map<String, dynamic> json)
+  User.fromJson(Map<String, dynamic> json)
       : serverId = json['id'],
         fullName = json['full_name'],
         phone = json['phone'],

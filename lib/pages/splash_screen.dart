@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/models/generic_models/data_lists.dart';
-import 'package:food_app/models/generic_models/install_api.dart';
+import 'package:food_app/database/project_database.dart';
 import 'package:food_app/pages/login_screen.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
@@ -18,18 +17,19 @@ class _SplashScreenState extends State<SplashScreen> {
   Logger _log = Config.log;
   ProgressDialog _progressDialog;
 
-  @override
-  void initState() {
-    super.initState();
-    Lib.timerWithNavigation(context, Config.SCREEN_START_TIME, UserLogin());
+  void init() {
+    _progressDialog = AppTheme.showProgressDialog(context);
+    ProjectDatabase()
+        .database
+        .then((db) => Config.database = db)
+        .whenComplete(() {
+      Lib.timerWithNavigation(context, Config.screenStartTime, UserLogin());
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    _progressDialog = AppTheme.showProgressDialog(context);
-    Lib.fetchData()
-        .then((value) => ApiInstall(data: value))
-        .whenComplete(() => print(DataLists.listCategories[0].getValues()));
+    init();
     return Scaffold(
       backgroundColor: Colors.yellow[600],
       key: globalScaffoldKey,
@@ -49,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             Text(
-              Config.APP_TITLE,
+              Config.appTitle,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 30,

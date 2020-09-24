@@ -1,5 +1,4 @@
 class Columns {
-
   ///LIST OF [COLUMNS_NAME] LIST
   static const List<List<String>> LIST_OF_ALL_COLUMNS = [
     users, //1
@@ -11,8 +10,8 @@ class Columns {
     company, //7
     customers, //8
     expenseCategories, //9
-    itemModifiers, //10
-    modifiers, //11
+    itemModifier, //10
+    modifier, //11
     outlet, //12
     paymentMethods, //13
     vatAmount, //14
@@ -21,6 +20,7 @@ class Columns {
 
   ///USER TABLE COLUMNS
   static const List<String> users = [
+    'id',
     'server_id',
     'full_name',
     'phone',
@@ -59,6 +59,7 @@ class Columns {
 
   ///CATEGORIES TABLE COLUMNS
   static const List<String> categories = [
+    'id',
     'server_id',
     'category_name',
     'description',
@@ -69,6 +70,7 @@ class Columns {
 
   ///ITEM TABLE COLUMNS
   static const List<String> item = [
+    'id',
     'server_id',
     'code',
     'name',
@@ -149,6 +151,7 @@ class Columns {
 
   ///COMPANY TABLE COLUMNS
   static const List<String> company = [
+    'id',
     'server_id',
     'currency',
     'timezone',
@@ -167,6 +170,7 @@ class Columns {
 
   ///CUSTOMERS TABLE COLUMNS
   static const List<String> customers = [
+    'id',
     'server_id',
     'name',
     'phone',
@@ -183,6 +187,7 @@ class Columns {
 
   ///EXPENSE_CATEGORIES TABLE COLUMNS
   static const List<String> expenseCategories = [
+    'id',
     'server_id',
     'name',
     'description',
@@ -192,7 +197,8 @@ class Columns {
   ];
 
   ///ITEM_MODIFIERS TABLE COLUMNS
-  static const List<String> itemModifiers = [
+  static const List<String> itemModifier = [
+    'id',
     'server_id',
     'modifier_id',
     'food_menu_id',
@@ -205,7 +211,8 @@ class Columns {
   ];
 
   ///MODIFIERS TABLE COLUMNS
-  static const List<String> modifiers = [
+  static const List<String> modifier = [
+    'id',
     'server_id',
     'name',
     'price',
@@ -217,6 +224,7 @@ class Columns {
 
   ///OUTLET TABLE COLUMNS
   static const List<String> outlet = [
+    'id',
     'server_id',
     'outlet_name',
     'outlet_code',
@@ -234,6 +242,7 @@ class Columns {
 
   ///PAYMENT_METHODS TABLE COLUMNS
   static const List<String> paymentMethods = [
+    'id',
     'server_id',
     'name',
     'description',
@@ -244,19 +253,21 @@ class Columns {
 
   ///TABLES TABLE COLUMNS
   static const List<String> tables = [
-  'server_id',
-  'name',
-  'sit_capacity',
-  'position',
-  'description',
-  'user_id',
-  'outlet_id',
-  'company_id',
-  'del_status'
+    'id',
+    'server_id',
+    'name',
+    'sit_capacity',
+    'position',
+    'description',
+    'user_id',
+    'outlet_id',
+    'company_id',
+    'del_status'
   ];
 
   ///VAT_AMOUNT TABLE COLUMNS
   static const List<String> vatAmount = [
+    'id',
     'server_id',
     'name',
     'percentage',

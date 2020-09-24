@@ -1,38 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/pages/dashboard_screen.dart';
-import 'package:food_app/shared/app_theme.dart';
-import 'package:food_app/shared/lib.dart';
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:food_app/controller/dashboard_controller.dart';
+import 'package:food_app/models/view_models/shift_model.dart';
 
 class ShiftScreen extends StatefulWidget {
+  final ShiftModel model;
+  ShiftScreen(this.model);
   @override
-  _ShiftScreen createState() => _ShiftScreen();
+  _ShiftScreen createState() => _ShiftScreen(this.model);
 }
 
 class _ShiftScreen extends State<ShiftScreen> {
+  final ShiftModel model;
+  _ShiftScreen(this.model);
   String _dropdown = 'Morning';
   bool _autoValidate = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey();
   TextEditingController _amount = TextEditingController();
-
-  List<String> _shiftList = ['Morning', 'Evening', 'Night'];
-
-  Future onAmountEntered() async {
-    SharedPreferences _sharedPreferences =
-        await SharedPreferences.getInstance();
-    final df = new DateFormat('dd-MM-yyyy hh:mm a');
-    String date = df.format(DateTime.now());
-    print(
-        'Dropdown value : $_dropdown\n Amount : ${_amount.text}\n Date : $date');
-    int regRow = 0;
-    print('Shift return $regRow');
-    await _sharedPreferences.setInt('regId', regRow);
-    Navigator.of(context).pushReplacementNamed('/dbd', arguments: {
-      'shiftId': _sharedPreferences.getInt('shiftId'),
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,12 +94,7 @@ class _ShiftScreen extends State<ShiftScreen> {
                                         _dropdown = newValue;
                                       });
                                     },
-                                    items: _shiftList.map((value) {
-                                      return DropdownMenuItem(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
+                                    items: this.model.shiftList,
                                   ),
                                 ],
                               )),
@@ -167,7 +146,7 @@ class _ShiftScreen extends State<ShiftScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
-            Lib.timerWithNavigation(context, 0, Dashboard());
+            DashboardController().launch(context);
           });
         },
         child: Icon(Icons.navigate_next),

@@ -1,8 +1,9 @@
-import 'package:food_app/database/columns.dart';
-import 'package:food_app/database/tables.dart';
 import 'package:sqflite/sqflite.dart';
 
-class PaymentMethods {
+import '../../database/columns.dart';
+import '../../database/tables.dart';
+
+class ExpenseCategory {
   String serverId;
   String name;
   String description;
@@ -10,7 +11,7 @@ class PaymentMethods {
   String companyId;
   String delStatus;
 
-  PaymentMethods(
+  ExpenseCategory(
       {this.serverId,
       this.name,
       this.description,
@@ -31,12 +32,12 @@ class PaymentMethods {
 
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
-    for (int i = 0; i < Columns.paymentMethods.length; i++) {
-      map[Columns.paymentMethods[i]] = getList()[i];
+    for (int i = 0; i < Columns.expenseCategories.length; i++) {
+      map[Columns.expenseCategories[i]] = getList()[i];
     }
     return map;
   }
 
   Future<bool> insertIntoDatabase(Database db) async =>
-      await db.insert(Tables.paymentMethods, getValues()) > 0 ? true : false;
+      await db.insert(Tables.expenseCategories, getValues()) > 0 ? true : false;
 }

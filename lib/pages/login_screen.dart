@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/pages/shift_screen.dart';
+import 'package:food_app/controller/shift_controller.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
-import 'package:food_app/shared/config.dart';
-import 'package:food_app/shared/lib.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserLogin extends StatefulWidget {
@@ -88,15 +86,8 @@ class _UserLoginState extends State<UserLogin> {
       //   isLoading = false;
       //   _autoValidate = true;
       // }
-      Lib.timerWithNavigation(context, 0, ShiftScreen());
+      ShiftController().launch(context);
     });
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-//    getSharedPreferences();
   }
 
   @override

@@ -1,12 +1,12 @@
-import 'package:food_app/models/objects/categories.dart';
+import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/company.dart';
-import 'package:food_app/models/objects/customers.dart';
-import 'package:food_app/models/objects/expense_categories.dart';
+import 'package:food_app/models/objects/customer.dart';
+import 'package:food_app/models/objects/expense_category.dart';
 import 'package:food_app/models/objects/item.dart';
-import 'package:food_app/models/objects/item_modifiers.dart';
-import 'package:food_app/models/objects/modifiers.dart';
+import 'package:food_app/models/objects/item_modifier.dart';
+import 'package:food_app/models/objects/modifier.dart';
 import 'package:food_app/models/objects/outlet.dart';
-import 'package:food_app/models/objects/payment_methods.dart';
+import 'package:food_app/models/objects/payment_method.dart';
 import 'package:food_app/models/objects/table.dart';
 import 'package:food_app/models/objects/user.dart';
 import 'package:food_app/models/objects/vatamount.dart';
@@ -156,7 +156,7 @@ class ApiInstall {
   void getUsersList(List<dynamic> i) {
     DataLists.listUsers = [];
     i.forEach((e) {
-      DataLists.listUsers.add(new Users(
+      DataLists.listUsers.add(new User(
           serverId: e['id'],
           fullName: e['full_name'],
           phone: e['phone'],
@@ -208,7 +208,7 @@ class ApiInstall {
   void getCategoriesList(List<dynamic> i) {
     DataLists.listCategories = [];
     i.forEach((e) {
-      DataLists.listCategories.add(new Categories(
+      DataLists.listCategories.add(new Category(
           serverId: e['id'],
           categoryName: e['category_name'],
           description: e['description'],
@@ -221,7 +221,7 @@ class ApiInstall {
   void getModifiersList(List<dynamic> i) {
     DataLists.listModifiers = [];
     i.forEach((e) {
-      DataLists.listModifiers.add(new Modifiers(
+      DataLists.listModifiers.add(new Modifier(
           serverId: e['id'],
           name: e['name'],
           price: e['price'],
@@ -250,7 +250,7 @@ class ApiInstall {
   void getItemModifiersList(List<dynamic> i) {
     DataLists.listItemModifiers = [];
     i.forEach((e) {
-      DataLists.listItemModifiers.add(new ItemModifiers(
+      DataLists.listItemModifiers.add(new ItemModifier(
           serverId: e['id'],
           modifierId: e['modifier_id'],
           foodMenuId: e['food_menu_id'],
@@ -266,7 +266,7 @@ class ApiInstall {
   void getCustomersList(List<dynamic> i) {
     DataLists.listCustomers = [];
     i.forEach((e) {
-      DataLists.listCustomers.add(new Customers(
+      DataLists.listCustomers.add(new Customer(
           serverId: e['id'],
           name: e['name'],
           phone: e['phone'],
@@ -285,7 +285,7 @@ class ApiInstall {
   void getPaymentMethodsList(List<dynamic> i) {
     DataLists.listPaymentMethods = [];
     i.forEach((e) {
-      DataLists.listPaymentMethods.add(new PaymentMethods(
+      DataLists.listPaymentMethods.add(new PaymentMethod(
         serverId: e['id'],
         name: e['name'],
         description: e['description'],
@@ -299,7 +299,7 @@ class ApiInstall {
   void getExpenseCategoriesList(List<dynamic> i) {
     DataLists.listExpenseCategories = [];
     i.forEach((e) {
-      DataLists.listExpenseCategories.add(new ExpenseCategories(
+      DataLists.listExpenseCategories.add(new ExpenseCategory(
         serverId: e['id'],
         name: e['name'],
         description: e['description'],

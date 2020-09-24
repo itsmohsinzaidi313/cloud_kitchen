@@ -1,5 +1,4 @@
-class DashboardItem{
-
+class DashboardItem {
   String img, name, subtitle;
 
   DashboardItem({this.img, this.name, this.subtitle});

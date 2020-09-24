@@ -1,5 +1,4 @@
-class Types{
-
+class Types {
   ///LIST OF [COLUMN_TYPES] LIST
   static const List<List<String>> LIST_OF_ALL_TYPES = [
     users, //1
@@ -11,257 +10,276 @@ class Types{
     company, //7
     customers, //8
     expenseCategories, //9
-    itemModifiers, //10
-    modifiers, //11
+    itemModifier, //10
+    modifier, //11
     outlet, //12
     paymentMethods, //13
     vatAmount, //13
     tables, //13
   ];
 
+  static const String TEXT = 'TEXT';
+  static const String INTEGER = 'INTEGER';
+  static const String BLOB = 'BLOB';
+  static const String REAL = 'REAL';
+  static const String NUMERIC = 'NUBERIC';
+  static const String PRIMARY_KEY = 'PRIMARY KEY';
+
   ///USER TABLE TYPES
   static const List<String> users = [
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT'
+    INTEGER + PRIMARY_KEY,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT
   ];
 
   ///SHIFT_DATA TABLE TYPES
   static const List<String> shiftData = [
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT'
+    INTEGER + PRIMARY_KEY,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT
   ];
 
   ///CATEGORIES TABLE TYPES
   static const List<String> categories = [
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT'
+    INTEGER + PRIMARY_KEY,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT
   ];
 
   ///ITEM_MENUS TABLE TYPES
   static const List<String> item = [
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT'
+    INTEGER + PRIMARY_KEY,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT
   ];
 
   ///SALES_MASTER TABLE TYPES
   static const List<String> salesMaster = [
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT'
+    INTEGER + PRIMARY_KEY,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT
   ];
 
   ///SALES_DETAILS TABLE TYPES
   static const List<String> salesDetails = [
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT'
+    INTEGER + PRIMARY_KEY,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT
   ];
 
   ///COMPANY TABLE TYPES
   static const List<String> company = [
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT'
+    INTEGER + PRIMARY_KEY,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT
   ];
 
   ///CUSTOMERS TABLE TYPES
   static const List<String> customers = [
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT'
+    INTEGER + PRIMARY_KEY,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT
   ];
 
   ///EXPENSE_CATEGORIES TABLE TYPES
   static const List<String> expenseCategories = [
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT'
+    INTEGER + PRIMARY_KEY,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT
   ];
 
   ///ITEM_MODIFIERS TABLE TYPES
-  static const List<String> itemModifiers = [
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT'
+  static const List<String> itemModifier = [
+    INTEGER + PRIMARY_KEY,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT
   ];
 
   ///MODIFIERS TABLE TYPES
-  static const List<String> modifiers = [
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT'
+  static const List<String> modifier = [
+    INTEGER + PRIMARY_KEY,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT
   ];
 
   ///OUTLET TABLE TYPES
   static const List<String> outlet = [
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT'
+    INTEGER + PRIMARY_KEY,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT
   ];
 
   ///PAYMENT_METHODS TABLE TYPES
   static const List<String> paymentMethods = [
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT'
+    INTEGER + PRIMARY_KEY,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT
   ];
 
   ///TABLES TABLE TYPES
   static const List<String> tables = [
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT'
+    INTEGER + PRIMARY_KEY,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT
   ];
 
   ///VAT_AMOUNT TABLE TYPES
   static const List<String> vatAmount = [
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT',
-    'TEXT'
+    INTEGER + PRIMARY_KEY,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT
   ];
 }

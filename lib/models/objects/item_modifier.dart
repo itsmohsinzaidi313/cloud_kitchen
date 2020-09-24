@@ -2,7 +2,8 @@ import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:sqflite/sqflite.dart';
 
-class ItemModifiers {
+class ItemModifier {
+  String id;
   final String serverId;
   final String modifierId;
   final String foodMenuId;
@@ -13,7 +14,7 @@ class ItemModifiers {
   final String name;
   final String price;
 
-  ItemModifiers(
+  ItemModifier(
       {this.serverId,
       this.modifierId,
       this.foodMenuId,
@@ -24,7 +25,7 @@ class ItemModifiers {
       this.name,
       this.price});
 
-  ItemModifiers.fromJson(Map<String, dynamic> json)
+  ItemModifier.fromJson(Map<String, dynamic> json)
       : serverId = json['id'],
         modifierId = json['modifier_id'],
         foodMenuId = json['food_menu_id'],
@@ -56,8 +57,8 @@ class ItemModifiers {
 
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
-    for (int i = 0; i < Columns.itemModifiers.length; i++) {
-      map[Columns.itemModifiers[i]] = getList()[i];
+    for (int i = 0; i < Columns.itemModifier.length; i++) {
+      map[Columns.itemModifier[i]] = getList()[i];
     }
     return map;
   }

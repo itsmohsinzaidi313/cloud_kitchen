@@ -1,50 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/models/view_models/dashboard_model.dart';
 import 'package:food_app/pos/new_sale.dart';
-import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/models/generic_models/dashboard_item.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:food_app/shared/widgets/dashboard_card.dart';
 import 'package:toast/toast.dart';
 
 class Dashboard extends StatefulWidget {
+  final DashBoardModel model;
+  Dashboard(this.model);
+
   @override
-  _DashboardState createState() => _DashboardState();
+  _DashboardState createState() => _DashboardState(this.model);
 }
 
 class _DashboardState extends State<Dashboard> {
-  DashboardItem dashboardItem = DashboardItem(
-      img: 'assets/sales.png', name: 'Sales', subtitle: 'Your daily sales');
-
-  List<DashboardItem> lst = [
-    DashboardItem(
-        img: 'assets/sales.png', name: 'Sales', subtitle: 'Your daily sales'),
-    DashboardItem(
-        img: 'assets/order.png', name: 'Orders', subtitle: 'Your new orders'),
-    DashboardItem(
-        img: 'assets/report.png',
-        name: 'Reports',
-        subtitle: 'Your daily reports'),
-    DashboardItem(
-        img: 'assets/setting.png',
-        name: 'Setting',
-        subtitle: 'Application setting'),
-    DashboardItem(
-        img: 'assets/register.png',
-        name: 'Register',
-        subtitle: 'Close your register'),
-    DashboardItem(
-        img: 'assets/logout.png', name: 'Logout', subtitle: 'You can rest')
-  ];
-
+  final DashBoardModel model;
+  _DashboardState(this.model);
   @override
   Widget build(BuildContext context) {
-    void onCardTap(DashboardItem dashboardItem) {
-      Toast.show(dashboardItem.name, context);
-      if (dashboardItem.name == 'Sales') {
-        Lib.timerWithNavigation(context, 0, NewSale());
-      }
-    }
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.red,
@@ -56,19 +30,19 @@ class _DashboardState extends State<Dashboard> {
         builder: (context, constraints) {
           if (constraints.maxWidth < 400) {
             return ListView.builder(
-              itemCount: lst.length,
+              itemCount: model.listDashboardButtons.length,
               shrinkWrap: true,
               itemBuilder: (context, position) {
                 return Container(
-                  padding: position == lst.length
+                  padding: position == model.listDashboardButtons.length
                       ? const EdgeInsets.only(top: 16.0)
                       : const EdgeInsets.only(top: 16.0, bottom: 16.0),
                   child: DashboardCard(
-                    lst[position],
+                    model.listDashboardButtons[position],
                     250.0,
                     250.0,
                     () {
-                      onCardTap(dashboardItem);
+                      onCardTap(model.listDashboardButtons[0]);
                     },
                   ),
                 );
@@ -76,34 +50,34 @@ class _DashboardState extends State<Dashboard> {
             );
           } else if (constraints.maxWidth < 700) {
             return GridView.builder(
-              itemCount: lst.length,
+              itemCount: model.listDashboardButtons.length,
               shrinkWrap: true,
               gridDelegate:
                   SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
               itemBuilder: (context, position) {
                 return DashboardCard(
-                  lst[position],
+                  model.listDashboardButtons[position],
                   220.0,
                   220.0,
                   () {
-                    onCardTap(dashboardItem);
+                    onCardTap(model.listDashboardButtons[0]);
                   },
                 );
               },
             );
           } else {
             return GridView.builder(
-              itemCount: lst.length,
+              itemCount: model.listDashboardButtons.length,
               shrinkWrap: true,
               gridDelegate:
                   SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
               itemBuilder: (context, position) {
                 return DashboardCard(
-                  lst[position],
+                  model.listDashboardButtons[position],
                   250.0,
                   250.0,
                   () {
-                    onCardTap(dashboardItem);
+                    onCardTap(model.listDashboardButtons[0]);
                   },
                 );
               },
@@ -112,5 +86,12 @@ class _DashboardState extends State<Dashboard> {
         },
       ),
     );
+  }
+
+  void onCardTap(DashboardItem dashboardItem) {
+    Toast.show(dashboardItem.name, context);
+    if (dashboardItem.name == 'Sales') {
+      Lib.timerWithNavigation(context, 0, NewSale());
+    }
   }
 }

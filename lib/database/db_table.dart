@@ -26,37 +26,35 @@ class Table {
   //CREATE TABLE
   void createTable() async {
     await _database.execute(getTableQuery());
-    _log.i('TABLE $_tableName CREATED SUCCESSFULLY..');
+    _log.i('Table $_tableName created successfully.');
   }
 
   //DROPPING A TABLE
   void dropTable() async {
-    await _database.execute(getDropTableQuery());
-    _log.i('TABLE $_tableName DROPPED SUCCESSFULLY..');
+    await _database
+        .execute(getDropTableQuery())
+        .whenComplete(() => _log.i('Table $_tableName dropped successfully.'))
+        .catchError((e) => _log.e('Error on dropTable.'));
+    ;
   }
 
   //DELETING A TABLE
-  void deleteTable() async {
-    await _database.delete(this._tableName);
-    _log.i('TABLE $_tableName DELETED SUCCESSFULLY..');
-  }
+  void deleteTable() async => _database
+      .delete(this._tableName)
+      .whenComplete(() => _log.i('Table $_tableName deleted successfully.'))
+      .catchError((e) => _log.e('Error on deleteTable.', [e]));
 
   //GENERATING QUERY
   String getTableQuery() {
-    String query = 'CREATE TABLE $_tableName (';
+    String query = 'CREATE TABLE IF NOT EXISTS $_tableName (';
     for (int i = 0; i < _listOfColumnsName.length; i++) {
-      if (i < _listOfColumnsName.length) {
-        query += '${_listOfColumnsName[i]} ${_listOfColumnsTypes[i]},';
-      } else {
-        query += '${_listOfColumnsName[i]} ${_listOfColumnsTypes[i]}';
-      }
+      query += '${_listOfColumnsName[i]} ${_listOfColumnsTypes[i]},';
     }
+    query = query.substring(0, query.length - 1);
     query += ');';
     return query;
   }
 
   //GENERATING DROP TABLE QUERY
-  String getDropTableQuery() {
-    return 'DROP TABLE IF EXISTS ${this._tableName}';
-  }
+  String getDropTableQuery() => 'DROP TABLE IF EXISTS ${this._tableName}';
 }

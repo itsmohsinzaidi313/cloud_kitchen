@@ -1,32 +1,12 @@
 import 'package:flutter/material.dart';
-// import 'package:food_app/database/tables/tbl_categories.dart';
-// import 'package:food_app/model/mdl_categories.dart';
-// import 'package:food_app/model/provider/pro_item_menus.dart';
-import 'package:food_app/pos/custom_list_row/row_custom_item.dart';
-import 'package:food_app/pos/tab_bar_view.dart';
 import 'package:food_app/shared/config.dart';
-import 'package:provider/provider.dart';
 
-class NewSale extends StatelessWidget {
+class NewSale extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      // home: ChangeNotifierProvider<ProItemMenus>(
-      //   create: (context) => ProItemMenus(),
-        home: EPos(),
-      // ),
-    );
-  }
+  _NewSaleState createState() => _NewSaleState();
 }
 
-class EPos extends StatefulWidget{
-  @override
-  _EPosState createState() => _EPosState();
-}
-
-class _EPosState extends State<EPos> {
-
+class _NewSaleState extends State<NewSale> {
   // final categoryDBHelper = TblCategories.categoriesInstance;
   // String _orderType = 'Dine-In', _info = 'Table No. 1', _userName = 'ZiaUddin';
   //
@@ -79,18 +59,20 @@ class _EPosState extends State<EPos> {
                         size: 25,
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(4, 8, 10, 8),
-                        child: Text(
-                          '_orderType',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontFamily: 'Ubuntu',
-                            letterSpacing: 2.0,
-                          ),
-                        ),
-                      ),
+                          padding: const EdgeInsets.fromLTRB(4, 8, 10, 8),
+                          child: OutlineButton(
+                            child: Text(
+                              '_orderType',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontFamily: 'Ubuntu',
+                                letterSpacing: 2.0,
+                              ),
+                            ),
+                            onPressed: () {},
+                          )),
                     ],
                   ),
                 ),
