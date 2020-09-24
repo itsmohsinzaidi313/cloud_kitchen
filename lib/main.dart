@@ -14,7 +14,7 @@ void main() => runApp(
           '/loginScreen': (context) => UserLogin(),
           // '/shiftScreen': (context) => ShiftScreen(),
           // '/dashboardScreen': (context) => Dashboard(),
-          '/salesScreen': (context) => NewSale(),
+          // '/salesScreen': (context) => NewSale(),
         },
       ),
     );
