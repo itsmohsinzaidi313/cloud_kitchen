@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/item.dart';
@@ -17,9 +19,12 @@ class _NewSaleState extends State<NewSale> {
 
   String categoryName = '';
 
+  GlobalKey<ScaffoldState> _key = new GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _key,
       backgroundColor: Colors.white,
       appBar: AppBar(),
       body: Expanded(
@@ -35,7 +40,7 @@ class _NewSaleState extends State<NewSale> {
                   Container(
                     color: Colors.white,
                     child: GridView.count(
-                      crossAxisCount: 3,
+                      crossAxisCount: 5,
                       children: getCategoryWidgets(model.lstCategory),
                     ),
                   ),
@@ -44,6 +49,23 @@ class _NewSaleState extends State<NewSale> {
                     child: GridView.count(
                       crossAxisCount: 3,
                       children: getItemsWidgets(model.lstItem, categoryName),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.yellowAccent,
+                shape: BoxShape.rectangle,
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    color: Colors.white,
+                    child: GridView.count(
+                      crossAxisCount: 1,
+                      children: getCartItemsWidgets(this.model.order.itemList),
                     ),
                   ),
                 ],
@@ -95,7 +117,9 @@ class _NewSaleState extends State<NewSale> {
         widgets.add(
           InkWell(
             onTap: () {
-              setState(() {});
+              setState(() {
+                this.model.order.addItem(item);
+              });
             },
             child: Card(
               elevation: 4,
@@ -119,4 +143,24 @@ class _NewSaleState extends State<NewSale> {
     });
     return widgets;
   }
+
+  List<Widget> getCartItemsWidgets(List<Item> lstItem) {
+    List<Widget> widgets = [];
+    lstItem.forEach((item) {
+        widgets.add(
+          InkWell(
+            onTap: () {
+              setState(() {
+                _key.currentState.showSnackBar(SnackBar(content: Text('Clicked..')));
+              });
+            },
+            child: ListTile(
+              title: Text(item.name),
+            ),
+          ),
+        );
+    });
+    return widgets;
+  }
+
 }
