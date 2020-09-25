@@ -52,8 +52,8 @@ class Item {
 
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
-    for (int i = 0; i < Columns.item.length; i++) {
-      map[Columns.item[i]] = getList()[i];
+    for (int i = 1; i < Columns.item.length; i++) {
+      map[Columns.item[i]] = getList()[i - 1];
     }
     return map;
   }

@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/columns_types.dart';
 import 'package:food_app/database/db_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/shared/config.dart';
@@ -35,7 +37,6 @@ class ProjectDatabase {
     _database = await openDatabase(path);
     currentVersion = await _database.getVersion();
     _log.i('CURRENT DATABASE VERSION: $currentVersion');
-    tablesList = await Tables.getTables(_database);
     openDatabase(path,
         onCreate: onCreate(_database, currentVersion),
         onUpgrade: onUpgrade(_database, newVersion, currentVersion),
@@ -48,18 +49,21 @@ class ProjectDatabase {
   }
 
   FutureOr<void> onCreate(Database db, int version) {
-    if (status == DATABASE.STABLE) {
+    if (status == DATABASE.CREATE) {
       _log.i('ENTRY DATABASE onCreate');
-      tablesList.forEach((table) => table.createTable());
+      getTables(db)
+          .then((value) => value.forEach((table) => table.createTable()));
     }
   }
 
   FutureOr<void> onUpgrade(Database db, int oldVersion, int newVersion) {
     // ADD UPGRADE INSTRUCTIONS HERE
-    if (status == DATABASE.CREATE) {
+    if (status == DATABASE.UPGRADE) {
       _log.i('ENTRY DATABASE onUpgrade');
-      tablesList.forEach((table) => table.dropTable());
-      tablesList.forEach((table) => table.createTable());
+      getTables(db)
+          .then((value) => value.forEach((table) => table.dropTable()));
+      getTables(db)
+          .then((value) => tablesList.forEach((table) => table.createTable()));
     }
   }
 
@@ -67,13 +71,26 @@ class ProjectDatabase {
     // ADD DOWNGRAGE INSTRUCTIONS HERE IF ANY
     if (status == DATABASE.DOWNGRADE) {
       _log.i('ENTRY DATABASE onDowngrade');
-      tablesList.forEach((table) => table.dropTable());
-      tablesList.forEach((table) => table.createTable());
+      getTables(db)
+          .then((value) => value.forEach((table) => table.dropTable()));
+      getTables(db)
+          .then((value) => tablesList.forEach((table) => table.createTable()));
     }
   }
 
-  Future<List<Table>> getListTables(Database db) async {
-    tablesList = await Tables.getTables(db);
-    return tablesList;
+  static List<Table> _listTables = [];
+  static Future<List<Table>> getTables(Database db) async {
+    if (_listTables.length == 0) {
+      for (int i = 0; i < Tables.listofAllTables.length; i++) {
+        _listTables.add(new Table(
+            database: db,
+            tableName: Tables.listofAllTables[i],
+            listOfColumnsName: Columns.listofAllColumns[i],
+            listOfColumnsTypes: Types.listofAllColumnTypes[i]));
+      }
+      return _listTables;
+    } else {
+      return _listTables;
+    }
   }
 }

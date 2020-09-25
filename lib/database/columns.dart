@@ -1,21 +1,20 @@
 class Columns {
-  ///LIST OF [COLUMNS_NAME] LIST
-  static const List<List<String>> LIST_OF_ALL_COLUMNS = [
-    users, //1
-    shiftData, //2
-    categories, //3
-    item, //4
-    salesMaster, //5
-    salesDetails, //6
-    company, //7
-    customers, //8
-    expenseCategories, //9
-    itemModifier, //10
-    modifier, //11
-    outlet, //12
-    paymentMethods, //13
-    vatAmount, //14
-    tables //15
+  static const List<List<String>> listofAllColumns = [
+    users, //0
+    shiftData, //1
+    categories, //2
+    item, //3
+    salesMaster, //4
+    salesDetails, //5
+    company, //6
+    customers, //7
+    expenseCategories, //8
+    itemModifier, //9
+    modifier, //10
+    outlet, //11
+    paymentMethods, //12
+    vatAmount, //13
+    tables //14
   ];
 
   ///USER TABLE COLUMNS

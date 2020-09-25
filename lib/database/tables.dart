@@ -1,11 +1,6 @@
-import 'package:food_app/database/columns.dart';
-import 'package:food_app/database/columns_types.dart';
-import 'package:food_app/database/db_table.dart';
-import 'package:sqflite/sqflite.dart';
-
 class Tables {
   //LIST OF TABLES MAME
-  static const List<String> LIST_OF_TABLES = [
+  static const List<String> listofAllTables = [
     users, //1
     shiftData, //2
     categories, //3
@@ -23,7 +18,6 @@ class Tables {
     vatAmount, //15
   ];
 
-  ///[TABLES'S] NAME VARIABLES
   static const String users = 'users'; //1
   static const String shiftData = 'shift_data'; //2
   static const String categories = 'categories'; //3
@@ -40,15 +34,4 @@ class Tables {
   static const String tables = 'tables'; //14
   static const String vatAmount = 'vat_amount'; //15
 
-  static Future<List<Table>> getTables(Database db) async {
-    List<Table> tables = [];
-    for (int i = 0; i < LIST_OF_TABLES.length; i++) {
-      tables.add(new Table(
-          database: db,
-          tableName: LIST_OF_TABLES[i],
-          listOfColumnsName: Columns.LIST_OF_ALL_COLUMNS[i],
-          listOfColumnsTypes: Types.LIST_OF_ALL_TYPES[i]));
-    }
-    return tables;
-  }
 }

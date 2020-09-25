@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/item.dart';
@@ -147,20 +145,20 @@ class _NewSaleState extends State<NewSale> {
   List<Widget> getCartItemsWidgets(List<Item> lstItem) {
     List<Widget> widgets = [];
     lstItem.forEach((item) {
-        widgets.add(
-          InkWell(
-            onTap: () {
-              setState(() {
-                _key.currentState.showSnackBar(SnackBar(content: Text('Clicked..')));
-              });
-            },
-            child: ListTile(
-              title: Text(item.name),
-            ),
+      widgets.add(
+        InkWell(
+          onTap: () {
+            setState(() {
+              _key.currentState
+                  .showSnackBar(SnackBar(content: Text('Clicked..')));
+            });
+          },
+          child: ListTile(
+            title: Text(item.name),
           ),
-        );
+        ),
+      );
     });
     return widgets;
   }
-
 }

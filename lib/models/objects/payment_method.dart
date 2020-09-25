@@ -18,6 +18,15 @@ class PaymentMethod {
       this.companyId,
       this.delStatus});
 
+  PaymentMethod.fromJson(Map<String, dynamic> json) {
+    this.serverId = json['id'];
+    this.name = json['name'];
+    this.description = json['description'];
+    this.userId = json['user_id'];
+    this.companyId = json['company_id'];
+    this.delStatus = json['del_status'];
+  }
+
   List<String> getList() {
     return [
       this.serverId,
@@ -31,8 +40,8 @@ class PaymentMethod {
 
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
-    for (int i = 0; i < Columns.paymentMethods.length; i++) {
-      map[Columns.paymentMethods[i]] = getList()[i];
+    for (int i = 1; i < Columns.paymentMethods.length; i++) {
+      map[Columns.paymentMethods[i]] = getList()[i - 1];
     }
     return map;
   }

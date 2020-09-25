@@ -35,5 +35,8 @@ class Lib {
     }
   }
 
-  Future<dynamic> install() async => ApiInstall(data: await fetchData());
+  static Future<bool> install() async {
+    ApiInstall apiInstall = new ApiInstall(data: await fetchData());
+    return apiInstall.isInitialized;
+  }
 }

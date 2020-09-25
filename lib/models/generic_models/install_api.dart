@@ -12,99 +12,115 @@ import 'package:food_app/models/objects/user.dart';
 import 'package:food_app/models/objects/vatamount.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:logger/logger.dart';
-import '../../shared/data_lists.dart';
+import 'package:food_app/shared/data_lists.dart';
 
 class ApiInstall {
   final String status;
   final String message;
   final Map data;
   final Logger _log = Config.log;
-
+  bool _isInitialized = false;
+  bool get isInitialized => _isInitialized;
   ApiInstall({this.status, this.message, this.data}) {
     if (this.data != null) {
       try {
         getCompanyList(data['company']);
+        _log.v('DATA LIST Company Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getCompanyList\n$e');
       }
 
       try {
         getOutletList(data['outlet']);
+        _log.v('DATA LIST outlet Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getOutletList\n$e');
       }
 
       try {
         getUsersList(data['users']);
+        _log.v('DATA LIST users Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getUsersList\n$e');
       }
 
       try {
         getVatAmountList(data['vatamount']);
+        _log.v('DATA LIST vatamount Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getVatAmountList\n$e');
       }
 
       try {
         getTablesList(data['tables']);
+        _log.v('DATA LIST tables Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getTablesList\n$e');
       }
 
       try {
         getCategoriesList(data['categories']);
+        _log.v('DATA LIST categories Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getCategoriesList\n$e');
       }
 
       try {
         getModifiersList(data['modifiers']);
+        _log.v('DATA LIST modifiers Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getModifiersList\n$e');
       }
 
       try {
         getItemList(data['item_menus']);
+        _log.v('DATA LIST item_menus Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getItemMenusList\n$e');
       }
 
       try {
         getItemModifiersList(data['item_modifiers']);
+        _log.v('DATA LIST item_modifiers Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getItemModifiersList\n$e');
       }
 
       try {
         getCustomersList(data['customers']);
+        _log.v('DATA LIST customers Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getCustomersList\n$e');
       }
 
       try {
         getPaymentMethodsList(data['payment_methods']);
+        _log.v('DATA LIST payment_methods Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getPaymentMethodsList\n$e');
       }
 
       try {
         getExpenseCategoriesList(data['expense_categories']);
+        _log.v('DATA LIST expense_categories Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getExpenseCategoriesList\n$e');
       }
 
       try {
         getSalesList(data['sales']);
+        _log.v('DATA LIST sales Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getSalesList\n$e');
       }
 
       try {
         getExpensesList(['expenses']);
+        _log.v('DATA LIST expenses Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getExpensesList\n$e');
       }
+      _isInitialized = true;
     } else {
       _log.i('NULL DATA PASSED TO INSTALL API');
     }

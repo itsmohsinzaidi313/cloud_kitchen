@@ -18,6 +18,15 @@ class VatAmount {
       this.companyId,
       this.delStatus});
 
+  VatAmount.fromJson(Map<String, dynamic> json) {
+    serverID = json['id'];
+    name = json['name'];
+    percentage = json['percentage'];
+    companyId = json['company_id'];
+    userId = json['user_id'];
+    delStatus = json['del_status'];
+  }
+
   List<String> getList() {
     return [
       this.serverID,
@@ -31,7 +40,7 @@ class VatAmount {
 
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
-    for (int i = 0; i < Columns.vatAmount.length; i++) {
+    for (int i = 1; i < Columns.vatAmount.length; i++) {
       map[Columns.vatAmount[i]] = getList()[i];
     }
     return map;

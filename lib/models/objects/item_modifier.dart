@@ -1,5 +1,6 @@
 import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
+import 'package:food_app/shared/config.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ItemModifier {
@@ -49,18 +50,28 @@ class ItemModifier {
       this.userId,
       this.outletId,
       this.companyId,
-      this.delStatus,
       this.name,
-      this.price
+      this.price,
+      this.delStatus,
     ];
   }
 
   Map<String, dynamic> getValues() {
-    Map<String, dynamic> map = new Map();
-    for (int i = 0; i < Columns.itemModifier.length; i++) {
-      map[Columns.itemModifier[i]] = getList()[i];
+    try {
+      Map<String, dynamic> map = new Map<String, dynamic>();
+      print(Columns.itemModifier.length);
+      for (int i = 1; i < Columns.itemModifier.length; i++) {
+        print('---');
+        print(i);
+        print(Columns.itemModifier[i]);
+        print(getList()[i]);
+        map[Columns.itemModifier[i]] = getList()[i - 1];
+      }
+      return map;
+    } catch (e) {
+      Config.log.e('Error on getValues', [e]);
+      return null;
     }
-    return map;
   }
 
   Future<bool> insertIntoDatabase(Database db) async =>

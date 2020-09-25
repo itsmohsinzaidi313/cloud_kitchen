@@ -26,7 +26,21 @@ class DataLists {
   final List<ExpenseCategory> listExpenseCategories = [];
   final List<dynamic> listSales = []; // NOT FUNCTIONAL
   final List<dynamic> listExpenses = []; // NOT FUNCTIONAL
-
+  final int listsCount = 12;
+  List<List> getInList() => [
+        listCompany,
+        listOutlet,
+        listUsers,
+        listVatAmount,
+        listTables,
+        listCategories,
+        listModifiers,
+        listItem,
+        listItemModifiers,
+        listCustomers,
+        listPaymentMethods,
+        listExpenseCategories
+      ];
   static final DataLists onlineInstance = new DataLists();
   static final DataLists offlineInstance = new DataLists();
 }

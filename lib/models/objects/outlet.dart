@@ -1,5 +1,6 @@
 import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
+import 'package:food_app/shared/config.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Outlet {
@@ -72,12 +73,16 @@ class Outlet {
 
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
-    for (int i = 0; i < Columns.outlet.length; i++) {
-      map[Columns.outlet[i]] = getList()[i];
+    for (int i = 1; i < Columns.outlet.length; i++) {
+      map[Columns.outlet[i]] = getList()[i - 1];
     }
     return map;
   }
 
   Future<bool> insertIntoDatabase(Database db) async =>
-      await db.insert(Tables.outlet, getValues()) > 0 ? true : false;
+      await db.insert(Tables.outlet, getValues()).catchError(
+                  (onError) => Config.log.e('Error on Insert', [onError])) >
+              0
+          ? true
+          : false;
 }

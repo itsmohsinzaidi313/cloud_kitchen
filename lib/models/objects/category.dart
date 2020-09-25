@@ -44,8 +44,8 @@ class Category {
 
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
-    for (int i = 0; i < Columns.categories.length; i++) {
-      map[Columns.categories[i]] = getList()[i];
+    for (int i = 1; i < Columns.categories.length; i++) {
+      map[Columns.categories[i]] = getList()[i - 1];
     }
     return map;
   }

@@ -1,7 +1,6 @@
 import 'package:sqflite/sqflite.dart';
-
-import '../../database/columns.dart';
-import '../../database/tables.dart';
+import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/tables.dart';
 
 class Customer {
   final String serverId;
@@ -69,8 +68,8 @@ class Customer {
 
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
-    for (int i = 0; i < Columns.customers.length; i++) {
-      map[Columns.customers[i]] = getList()[i];
+    for (int i = 1; i < Columns.customers.length; i++) {
+      map[Columns.customers[i]] = getList()[i - 1];
     }
     return map;
   }

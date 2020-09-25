@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/database/project_database.dart';
-import 'package:food_app/pages/login_screen.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
-import 'package:food_app/shared/lib.dart';
 import 'package:logger/logger.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
@@ -19,12 +16,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void init() {
     _progressDialog = AppTheme.showProgressDialog(context);
-    ProjectDatabase()
-        .database
-        .then((db) => Config.database = db)
-        .whenComplete(() {
-      Lib.timerWithNavigation(context, Config.screenStartTime, UserLogin());
-    });
   }
 
   @override
