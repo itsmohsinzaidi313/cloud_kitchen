@@ -147,7 +147,7 @@ class _NewSaleState extends State<NewSale> {
     return widgets;
   }
 
-  List<Widget> getCartItemsWidgets(List<Item> lstItem) {
+  List<Widget> getCartItemsWidgets(List<Item> lstItem) {  
     List<Widget> widgets = [];
     lstItem.forEach((item) {
       widgets.add(
