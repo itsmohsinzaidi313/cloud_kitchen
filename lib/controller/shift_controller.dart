@@ -28,5 +28,5 @@ class ShiftController {
       new MaterialPageRoute(builder: (context) => new ShiftScreen(this.model)));
 
   Future<void> onAmountEntered(BuildContext context) async =>
-      DashboardController().launch(context);
+      DashboardController(context).launch();
 }

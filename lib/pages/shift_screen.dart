@@ -146,7 +146,7 @@ class _ShiftScreen extends State<ShiftScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
-            DashboardController().launch(context);
+            DashboardController(context).launch();
           });
         },
         child: Icon(Icons.navigate_next),

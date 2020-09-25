@@ -9,8 +9,8 @@ class NewSaleController {
   NewSaleModel model;
   NewSaleController() {
     model = new NewSaleModel();
-    model.lstCategory = DataLists.offlineInstance.listCategories;
-    model.lstItem = DataLists.offlineInstance.listItem;
+    model.lstCategory = DataLists.onlineInstance.listCategories;
+    model.lstItem = DataLists.onlineInstance.listItem;
     model.order = new CustomerOrder();
   }
 

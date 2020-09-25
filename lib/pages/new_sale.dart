@@ -17,15 +17,17 @@ class _NewSaleState extends State<NewSale> {
 
   String categoryName = '';
 
-  GlobalKey<ScaffoldState> _key = new GlobalKey<ScaffoldState>();
+  // GlobalKey<ScaffoldState> _key = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _key,
+      // key: _key,
       backgroundColor: Colors.white,
       appBar: AppBar(),
-      body: Expanded(
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
         child: Row(
           children: [
             Container(
@@ -38,13 +40,15 @@ class _NewSaleState extends State<NewSale> {
                   Container(
                     color: Colors.white,
                     child: GridView.count(
-                      crossAxisCount: 5,
+                      shrinkWrap: true,
+                      crossAxisCount: 3,
                       children: getCategoryWidgets(model.lstCategory),
                     ),
                   ),
                   Container(
                     color: Colors.white,
                     child: GridView.count(
+                      shrinkWrap: true,
                       crossAxisCount: 3,
                       children: getItemsWidgets(model.lstItem, categoryName),
                     ),
@@ -62,6 +66,7 @@ class _NewSaleState extends State<NewSale> {
                   Container(
                     color: Colors.white,
                     child: GridView.count(
+                      shrinkWrap: true,
                       crossAxisCount: 1,
                       children: getCartItemsWidgets(this.model.order.itemList),
                     ),
@@ -79,7 +84,7 @@ class _NewSaleState extends State<NewSale> {
     List<Widget> widgets = [];
     lstCategory.forEach((category) {
       widgets.add(
-        InkWell(
+        GestureDetector(
           onTap: () {
             setState(() {
               categoryName = category.categoryName;
@@ -113,7 +118,7 @@ class _NewSaleState extends State<NewSale> {
     lstItem.forEach((item) {
       if (item.categoryName == categoryName)
         widgets.add(
-          InkWell(
+          GestureDetector(
             onTap: () {
               setState(() {
                 this.model.order.addItem(item);
@@ -146,15 +151,15 @@ class _NewSaleState extends State<NewSale> {
     List<Widget> widgets = [];
     lstItem.forEach((item) {
       widgets.add(
-        InkWell(
+        GestureDetector(
           onTap: () {
             setState(() {
-              _key.currentState
-                  .showSnackBar(SnackBar(content: Text('Clicked..')));
+              // _key.currentState
+              //     .showSnackBar(SnackBar(content: Text('Clicked..')));
             });
           },
           child: ListTile(
-            title: Text(item.name),
+            title: Text('item.name'),
           ),
         ),
       );

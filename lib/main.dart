@@ -8,7 +8,8 @@ void main() => runApp(
         debugShowCheckedModeBanner: false,
         initialRoute: '/splashScreen',
         routes: {
-          '/splashScreen': (context) => SplashController().launchAsWidget(),
+          '/splashScreen': (context) =>
+              SplashController(context).launchAsWidget(),
         },
       ),
     );

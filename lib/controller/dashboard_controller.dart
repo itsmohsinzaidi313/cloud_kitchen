@@ -6,8 +6,9 @@ import 'package:food_app/pages/dashboard_screen.dart';
 
 class DashboardController {
   DashBoardModel model;
-  DashboardController() {
+  DashboardController(BuildContext context) {
     model = new DashBoardModel();
+    model.context = context;
     model.listDashboardButtons = [
       DashboardItem(
           img: 'assets/sales.png', name: 'Sales', subtitle: 'Your daily sales'),
@@ -30,6 +31,6 @@ class DashboardController {
     ];
   }
 
-  void launch(BuildContext context) => Navigator.of(context)
-      .push(new MaterialPageRoute(builder: (context) => new Dashboard(model)));
+  void launch() => Navigator.of(model.context).pushReplacement(
+      new MaterialPageRoute(builder: (context) => new Dashboard(model)));
 }
