@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Config {
+
   static const String appTitle = 'Cloud Kitchen';
   static const DATABASE databaseVersion = DATABASE.CREATE;
   static const String databaseName = 'CloudKitchen.db';
@@ -26,11 +28,24 @@ class Config {
           printEmojis: true,
           printTime: false,
           lineLength: 80,
-          methodCount: 0));
+          methodCount: 0),
+  );
 
   static Database _database;
   static set database(Database database) => _database = database;
   static Database get database => _database;
+
+  static String getCurrentDateTime(){
+
+    DateTime dateTime = DateTime.now();
+    DateFormat formatDateTime = DateFormat.yMd().add_jm();
+    String currentDateTime = formatDateTime.format(dateTime);
+    return currentDateTime;
+
+  }
 }
 
 enum DATABASE { STABLE, CREATE, UPGRADE, DOWNGRADE }
+  
+
+

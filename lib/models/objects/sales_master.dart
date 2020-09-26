@@ -176,4 +176,14 @@ class SalesMaster {
 
   Future<bool> insertIntoDatabase(Database db) async =>
       await db.insert(Tables.salesMaster, getValues()) > 0 ? true : false;
+
+  Future<int> insertSpecificIntoDb(Database db, Map<String, dynamic> map) async{
+    int id = await db.insert(Tables.salesMaster, map);
+    return id;
+  }
+
+  Future<List<Map<String, dynamic>>> queryAllRows(Database db) async {
+    var res = await db.query(Tables.salesMaster);
+    return res;
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:food_app/models/objects/item.dart';
 
 class CustomerOrder {
+
   List<Item> _itemList = [];
   String _tableNo, _orderType, _discount, _salesTax;
 
@@ -34,23 +35,8 @@ class CustomerOrder {
   }
 
   void addItem(Item item) {
-    Item newInstance = new Item.fromItem(item);
-    if (itemList.length == 0) {
-      itemList.add(newInstance);
-    } else {
-      for (int i = 0; i <= itemList.length; i++) {
-        if (i < itemList.length && itemList[i].code == newInstance.code) {
-          itemList.add(newInstance);
-          break;
-        }
-        // IF THE ABOVE BREAK IS NOT TRIGGERED ON THE LAST LOOP CYCLE
-        // THAT IS CONSIDERED AS A NEW PRODUCT AND THEREFORE THE IF STATEMENT
-        // WILL AND THE PRODUCT AS NEW PRODUCT
-        if (i == itemList.length) {
-          itemList.add(newInstance);
-          break;
-        }
-      }
+    if(!this.itemList.contains(item)){
+      this.itemList.add(item);
     }
   }
 

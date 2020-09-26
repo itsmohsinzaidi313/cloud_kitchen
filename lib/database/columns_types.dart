@@ -22,8 +22,8 @@ class Types {
   static const String INTEGER = 'INTEGER';
   static const String BLOB = 'BLOB';
   static const String REAL = 'REAL';
-  static const String NUMERIC = 'NUBERIC';
-  static const String PRIMARY_KEY = 'PRIMARY KEY';
+  static const String NUMERIC = 'NUMERIC';
+  static const String PRIMARY_KEY = ' PRIMARY KEY';
 
   ///USER TABLE TYPES
   static const List<String> users = [

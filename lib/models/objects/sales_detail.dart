@@ -120,4 +120,15 @@ class SalesDetails {
 
   Future<bool> insertIntoDatabase(Database db) async =>
       await db.insert(Tables.salesDetails, getValues()) > 0 ? true : false;
+
+  Future<int> insertSpecificIntoDb(Database db, Map<String, dynamic> map) async {
+    int id = await db.insert(Tables.salesDetails, map);
+    return id;
+  }
+
+  Future<List<Map<String, dynamic>>> queryAllRows(Database db) async {
+    var res = await db.query(Tables.salesDetails);
+    return res;
+  }
+
 }

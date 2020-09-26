@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/IMPORTED/new_sale.dart';
 import 'package:food_app/models/objects/item.dart';
 import 'package:food_app/models/view_models/order_model.dart';
 import 'package:food_app/pages/orders_screen.dart';
@@ -22,5 +23,8 @@ class OrderController{
   }
 
   void launch(BuildContext context) => Navigator.of(context).push(
+      new MaterialPageRoute(builder: (context) => new OrderScreen(model: model,)));
+
+  void launchAndReplacement(BuildContext context) => Navigator.of(context).pushReplacement(
       new MaterialPageRoute(builder: (context) => new OrderScreen(model: model,)));
 }
