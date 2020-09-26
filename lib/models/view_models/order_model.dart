@@ -1,9 +1,9 @@
-import 'package:food_app/models/objects/item.dart';
+import 'package:food_app/models/objects/sales_master.dart';
 
 class OrderModel{
 
   List<String> _orderTypeList;
-  List<Item> _itemHoldList;
+  List<SalesMaster> _itemHoldList;
 
    get getOrderTypeList => _orderTypeList;
 
@@ -11,6 +11,10 @@ class OrderModel{
 
    get getItemHoldList => _itemHoldList;
 
-  void setItemHoldList(List<Item> value) => _itemHoldList = value;
+  void setItemHoldList(List<SalesMaster> value) => _itemHoldList = value;
+
+  void onOrderCancelled(SalesMaster salesMaster){
+      _itemHoldList.remove(salesMaster);
+  }
 
 }

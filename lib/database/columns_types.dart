@@ -126,6 +126,7 @@ class Types {
     TEXT,
     TEXT,
     TEXT,
+    TEXT,
     TEXT
   ];
 

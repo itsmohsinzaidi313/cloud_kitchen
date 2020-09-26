@@ -118,7 +118,8 @@ class Columns {
     'sale_vat_objects',
     'device_key',
     'remote_id',
-    'company_id'
+    'company_id',
+    'is_delete'
   ];
 
   ///SALES_DETAILS TABLE COLUMNS

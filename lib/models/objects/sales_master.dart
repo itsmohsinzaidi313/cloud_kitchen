@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:sqflite/sqflite.dart';
@@ -40,6 +41,7 @@ class SalesMaster {
   String deviceKey;
   String remoteId;
   String companyId;
+  String isDelete;
 
   SalesMaster(
       {this.id,
@@ -78,10 +80,10 @@ class SalesMaster {
       this.saleVatObjects,
       this.deviceKey,
       this.remoteId,
-      this.companyId});
+      this.companyId, this.isDelete});
 
   SalesMaster.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
+      : id = json['id'].toString(),
         customerId = json['customer_id'],
         saleNo = json['sale_no'],
         totalItems = json['total_items'],
@@ -117,7 +119,8 @@ class SalesMaster {
         saleVatObjects = json['sale_vat_objects'],
         deviceKey = json['device_key'],
         remoteId = json['remote_id'],
-        companyId = json['company_id'];
+        companyId = json['company_id'],
+        isDelete = json['is_delete'];
 
   @override
   String toString() {
@@ -162,7 +165,8 @@ class SalesMaster {
       this.saleVatObjects,
       this.deviceKey,
       this.remoteId,
-      this.companyId
+      this.companyId,
+      this.isDelete
     ];
   }
 
@@ -182,8 +186,25 @@ class SalesMaster {
     return id;
   }
 
-  Future<List<Map<String, dynamic>>> queryAllRows(Database db) async {
-    var res = await db.query(Tables.salesMaster);
-    return res;
+  Future<int> updateSpecificIntoDb(Database db, Map<String, dynamic> map, String columnName, dynamic columnValue) async {
+    int updateCount = await db.update(
+        Tables.salesMaster,
+        map,
+        where: '$columnName = ?',
+        whereArgs: [columnValue]);
+
+    return updateCount;
   }
+
+  Future<List<SalesMaster>> queryAllRows(Database db) async {
+    var res = await db.query(Tables.salesMaster);
+    List<SalesMaster> _orders = [];
+    res.forEach((row) {
+      if(row['is_delete'] == 0.toString()){
+        _orders.add(SalesMaster.fromJson(row));
+      }
+    });
+    return _orders;
+  }
+
 }
