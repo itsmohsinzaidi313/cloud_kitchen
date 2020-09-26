@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
-import '../../database/columns.dart';
-import '../../database/tables.dart';
+import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/tables.dart';
 
 class Item {
   String serverId;
@@ -21,6 +21,17 @@ class Item {
       this.categoryName,
       this.percentage,
       this.quantity});
+
+  Item.fromItem(Item item) {
+    this.serverId = item.serverId;
+    this.code = item.code;
+    this.name = item.name;
+    this.salePrice = item.salePrice;
+    this.photo = item.photo;
+    this.categoryName = item.categoryName;
+    this.percentage = item.percentage;
+    this.quantity = item.quantity;
+  }
 
   Item.fromJson(Map<String, dynamic> json)
       : serverId = json['id'],
@@ -60,4 +71,13 @@ class Item {
 
   Future<bool> insertIntoDatabase(Database db) async =>
       await db.insert(Tables.item, getValues()) > 0 ? true : false;
+
+  less() {
+    int qty = int.parse(this.quantity);
+    int difference = qty - 1;
+    if (difference >= 0) {
+      qty--;
+      this.quantity = qty.toString();
+    }
+  }
 }

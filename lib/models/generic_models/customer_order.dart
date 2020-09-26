@@ -1,7 +1,6 @@
 import 'package:food_app/models/objects/item.dart';
 
-class CustomerOrder{
-
+class CustomerOrder {
   List<Item> _itemList = [];
   String _tableNo, _orderType, _discount, _salesTax;
 
@@ -17,33 +16,66 @@ class CustomerOrder{
   get discount => _discount;
   set discount(value) => _discount = value;
 
-  get itemList => _itemList;
+  List<Item> get itemList => _itemList;
 
-  void addItem(Item item){
-    _itemList.add(item);
+  void less(Item item) {
+    if (itemList.length > 0) {
+      for (int i = 0; i < itemList.length; i++) {
+        String prodId = itemList[i].code;
+        if (prodId == item.code) {
+          int productQty = int.parse(itemList[i].quantity);
+          if ((productQty - int.parse(itemList[i].quantity)) >= 0) {
+            itemList[i].less();
+          }
+          break;
+        }
+      }
+    }
   }
 
-  void removeItem(Item item){
+  void addItem(Item item) {
+    Item newInstance = new Item.fromItem(item);
+    if (itemList.length == 0) {
+      itemList.add(newInstance);
+    } else {
+      for (int i = 0; i <= itemList.length; i++) {
+        if (i < itemList.length && itemList[i].code == newInstance.code) {
+          itemList.add(newInstance);
+          break;
+        }
+        // IF THE ABOVE BREAK IS NOT TRIGGERED ON THE LAST LOOP CYCLE
+        // THAT IS CONSIDERED AS A NEW PRODUCT AND THEREFORE THE IF STATEMENT
+        // WILL AND THE PRODUCT AS NEW PRODUCT
+        if (i == itemList.length) {
+          itemList.add(newInstance);
+          break;
+        }
+      }
+    }
+  }
+
+  void removeItem(Item item) {
     _itemList.remove(item);
   }
 
-  double getOrderAmount(){
+  double getOrderAmount() {
     double orderAmount = 0;
     _itemList.forEach((item) {
-      orderAmount = orderAmount + double.parse(item.salePrice) * int.parse(item.quantity);
+      orderAmount =
+          orderAmount + double.parse(item.salePrice) * int.parse(item.quantity);
     });
     return orderAmount;
   }
 
-  double getTotalAmount(){
+  double getTotalAmount() {
     return null;
   }
 
-  double getAmountWithDiscount(){
+  double getAmountWithDiscount() {
     return null;
   }
 
-  double getAmountWithoutTax(){
+  double getAmountWithoutTax() {
     return null;
   }
 }

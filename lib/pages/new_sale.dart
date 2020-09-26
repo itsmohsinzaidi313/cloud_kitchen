@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:food_app/database/columns.dart';
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/item.dart';
-import 'package:food_app/models/objects/sales_detail.dart';
 import 'package:food_app/models/view_models/new_sale_model.dart';
 import 'package:food_app/shared/app_theme.dart';
-import 'package:food_app/shared/config.dart';
 
 class NewSale extends StatefulWidget {
   final NewSaleModel model;
@@ -36,47 +36,59 @@ class _NewSaleState extends State<NewSale> {
         appBarBgColor: AppTheme.appBarColor,
       ),
       body: Container(
-        color: Colors.green,
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Expanded(
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        child: GridView.builder(
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
-                            scrollDirection: Axis.horizontal,
-                            itemCount: model.lstCategory.length,
-                            itemBuilder: (context, index){
-                              return Container(
-                                child: Text(
-                                  model.lstCategory[index].categoryName,
-                                ),
-                              );
-                            }
-                        ),
+        child: Row(
+          children: [
+            Flexible(
+              flex: 1,
+              child: Column(
+                children: [
+                  ListTile(
+                    title: Center(child: Text('Categories')),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: Container(
+                      padding: EdgeInsets.only(top: 5),
+                      decoration: BoxDecoration(border: Border.all(width: 2)),
+                      child: GridView.count(
+                        crossAxisCount: 4,
+                        children: getCategoryWidgets(model.lstCategory),
                       ),
                     ),
-                    Expanded(
-                      flex: 4,
-                      child: Container(
-                        color: Colors.grey,
+                  ),
+                  ListTile(
+                    title: Center(child: Text('Items')),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: Container(
+                      margin: EdgeInsets.only(top: 5),
+                      padding: EdgeInsets.only(top: 5),
+                      decoration: BoxDecoration(border: Border.all(width: 2)),
+                      child: GridView.count(
+                        crossAxisCount: 4,
+                        children: getItemsWidgets(model.lstItem, categoryName),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Expanded(
-                child: Container(
-                  color: Colors.amber,
-                ),
+            ),
+            Flexible(
+              flex: 1,
+              child: Column(
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: GridView.count(
+                      crossAxisCount: 4,
+                      children: getCartItemsWidgets(model.order.itemList),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -118,33 +130,33 @@ class _NewSaleState extends State<NewSale> {
   List<Widget> getItemsWidgets(List<Item> lstItem, String categoryName) {
     List<Widget> widgets = [];
     lstItem.forEach((item) {
-      // if (item.categoryName == categoryName)
-      widgets.add(
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              this.model.order.addItem(item);
-            });
-          },
-          child: Card(
-            elevation: 4,
-            color: Colors.amberAccent,
-            child: Center(
-              child: Text(
-                item.name,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Ubuntu',
-                  letterSpacing: 1.0,
+      if (item.categoryName == categoryName)
+        widgets.add(
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                this.model.order.addItem(item);
+              });
+            },
+            child: Card(
+              elevation: 4,
+              color: Colors.amberAccent,
+              child: Center(
+                child: Text(
+                  item.name,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Ubuntu',
+                    letterSpacing: 1.0,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      );
+        );
     });
     return widgets;
   }
@@ -156,12 +168,75 @@ class _NewSaleState extends State<NewSale> {
         GestureDetector(
           onTap: () {
             setState(() {
-              // _key.currentState
-              //     .showSnackBar(SnackBar(content: Text('Clicked..')));
+              this.model.order.addItem(item);
             });
           },
-          child: ListTile(
-            title: Text('item.name'),
+          child: Stack(
+            children: [
+              Positioned(
+                top: 3,
+                right: 3,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.close,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      this.model.order.removeItem(item);
+                    });
+                  },
+                ),
+              ),
+              Card(
+                elevation: 4,
+                color: Colors.amberAccent,
+                child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: Row(
+                          children: [
+                            Text(
+                              '${item.name}',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Ubuntu',
+                                letterSpacing: 1.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Flexible(
+                        flex: 1,
+                        child: Row(
+                          children: [
+                            Text(
+                              '${item.quantity}',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Ubuntu',
+                                letterSpacing: 1.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       );
