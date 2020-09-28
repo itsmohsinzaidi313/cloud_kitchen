@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/controller/new_sale_controller.dart';
 import 'package:food_app/controller/order_controller.dart';
 import 'package:food_app/models/view_models/dashboard_model.dart';
 import 'package:food_app/models/generic_models/dashboard_item.dart';
+import 'package:food_app/pages/sql_view_page.dart';
 import 'package:food_app/shared/widgets/dashboard_card.dart';
 import 'package:toast/toast.dart';
 
@@ -32,21 +32,19 @@ class _DashboardState extends State<Dashboard> {
             return ListView.builder(
               itemCount: model.listDashboardButtons.length,
               shrinkWrap: true,
-              itemBuilder: (context, position) {
-                return Container(
-                  padding: position == model.listDashboardButtons.length
-                      ? const EdgeInsets.only(top: 16.0)
-                      : const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                  child: DashboardCard(
-                    model.listDashboardButtons[position],
-                    250.0,
-                    250.0,
-                    () {
-                      onCardTap(model.listDashboardButtons[0]);
-                    },
-                  ),
-                );
-              },
+              itemBuilder: ((context, position) => Container(
+                    padding: position == model.listDashboardButtons.length
+                        ? const EdgeInsets.only(top: 16.0)
+                        : const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                    child: DashboardCard(
+                      model.listDashboardButtons[position],
+                      250.0,
+                      250.0,
+                      () {
+                        onCardTap(model.listDashboardButtons[0]);
+                      },
+                    ),
+                  )),
             );
           } else if (constraints.maxWidth < 700) {
             return GridView.builder(
@@ -77,7 +75,7 @@ class _DashboardState extends State<Dashboard> {
                   250.0,
                   250.0,
                   () {
-                    onCardTap(model.listDashboardButtons[0]);
+                    onCardTap(model.listDashboardButtons[position]);
                   },
                 );
               },
@@ -92,6 +90,9 @@ class _DashboardState extends State<Dashboard> {
     Toast.show(dashboardItem.name, context);
     if (dashboardItem.name == 'Sales') {
       OrderController().launch(context);
+    } else if (dashboardItem.name == 'Database') {
+      Navigator.of(context)
+          .push(new MaterialPageRoute(builder: (context) => SqlView()));
     }
   }
 }

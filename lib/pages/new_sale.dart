@@ -7,7 +7,6 @@ import 'package:food_app/models/objects/item.dart';
 import 'package:food_app/models/objects/sales_detail.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/new_sale_model.dart';
-import 'package:food_app/pages/orders_screen.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:sqflite/sqflite.dart';

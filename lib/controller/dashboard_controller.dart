@@ -27,7 +27,11 @@ class DashboardController {
           name: 'Register',
           subtitle: 'Close your register'),
       DashboardItem(
-          img: 'assets/logout.png', name: 'Logout', subtitle: 'You can rest')
+          img: 'assets/logout.png', name: 'Logout', subtitle: 'You can rest'),
+      DashboardItem(
+          img: 'assets/register.png',
+          name: 'Database',
+          subtitle: 'Provides raw database access')
     ];
   }
 

@@ -5,5 +5,5 @@ class DashBoardModel {
   BuildContext context;
   List<DashboardItem> _list;
   set listDashboardButtons(List<DashboardItem> value) => this._list = value;
-  get listDashboardButtons => this._list;
+  List<DashboardItem> get listDashboardButtons => this._list;
 }
