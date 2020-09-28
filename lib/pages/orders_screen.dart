@@ -5,6 +5,7 @@ import 'package:food_app/controller/new_sale_controller.dart';
 import 'package:food_app/controller/order_controller.dart';
 import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
+import 'package:food_app/models/objects/sales_detail.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/order_model.dart';
 import 'package:food_app/shared/app_theme.dart';
@@ -70,14 +71,7 @@ class _OrderScreenState extends State<OrderScreen> {
       widgets.add(
         InkWell(
           onTap: () {
-            setState(() {
-              _key.currentState.showSnackBar(
-                SnackBar(
-                  duration: Duration(milliseconds: 500),
-                  content: Text('I am Tapped'),
-                ),
-              );
-            });
+            NewSaleController().editOrder(item, context);
           },
           child: Card(
             elevation: 5,
@@ -120,10 +114,11 @@ class _OrderScreenState extends State<OrderScreen> {
                   Icons.close,
                   color: Colors.red,
                 ),
-                onPressed: () {
+                onPressed: () async {
+                  await onOrderCancelled(item);
+                  List<SalesMaster> list = await SalesMaster().queryAllRows(Config.database);
                   setState(() {
-                    onOrderCancelled(item);
-                    model.onOrderCancelled(item);
+                    this.model.setItemHoldList(list);
                   });
                 },
               ),
@@ -189,7 +184,7 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 
   Future onOrderCompleted(SalesMaster itm) async {
-    Config.database.execute(
+    await Config.database.execute(
         'update ${Columns.salesMaster[37]} set ${Columns.salesMaster[5]} = ${Columns.salesMaster[6]} where id = ${itm.id}');
     OrderController().launchAndReplacement(context);
   }

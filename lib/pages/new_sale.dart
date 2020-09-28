@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:food_app/controller/order_controller.dart';
+import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/generic_models/customer_order.dart';
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/item.dart';
@@ -214,29 +215,39 @@ class _NewSaleState extends State<NewSale> {
   void _onFloatingButtonPressed() async {
     if (model.order.itemList.length > 0) {
       Database _db = Config.database;
-      SalesMaster _salesMaster = SalesMaster();
-      String customerOrder = this.model.order.getOrderAmount().toString();
-      Map<String, dynamic> master = {
-        'date_time': Config.getCurrentDateTime(),
-        'paid_amount': '0.0',
-        'due_amount': customerOrder,
-        'total_payable': customerOrder,
-        'is_delete': 0.toString(),
-      };
+      SalesMaster _salesMaster;
+      int masterId;
+      List<Map<String, dynamic>> count = await _db.rawQuery('SELECT COUNT(id) AS count FROM sales_details WHERE sales_master_id = ?', [model.salesMaster.id]);
+      if(count[0]['count'] > 0){
+        _salesMaster = this.model.salesMaster;
+        _db.delete(Tables.salesDetails, where: 'sales_master_id = ?', whereArgs: [_salesMaster.id]);
+        masterId = int.parse(_salesMaster.id);
+      } //IF
+      else{
+        _salesMaster = SalesMaster();
+        String customerOrderAmount = this.model.order.getOrderAmount().toString();
+        Map<String, dynamic> master = {
+          'date_time': Config.getCurrentDateTime(),
+          'paid_amount': '0.0',
+          'due_amount': customerOrderAmount,
+          'total_payable': customerOrderAmount,
+          'is_delete': 0.toString(),
+        };
 
-      int masterId = await _salesMaster.insertSpecificIntoDb(_db, master);
-      String code = codeGenerator(masterId); // GENERATES CODE FROM MASTER ID
-      print('SALES MASTER RETURN ID: $masterId');
-      print('GENERATED CODE ID: $code');
+        masterId = await _salesMaster.insertSpecificIntoDb(_db, master);
+        String code = codeGenerator(masterId); // GENERATES CODE FROM MASTER ID
+        print('SALES MASTER RETURN ID: $masterId');
+        print('GENERATED CODE ID: $code');
+        Map<String, dynamic> update = {
+          'sale_no': code,
+        };
 
-      Map<String, dynamic> update = {
-        'sale_no': code,
-      };
+        int updateId =
+            await _salesMaster.updateSpecificIntoDb(_db, update, 'id', masterId);
+        print('UPDATE RETURN ID: $updateId');
+      } //ELSE
 
-      int updateId =
-          await _salesMaster.updateSpecificIntoDb(_db, update, 'id', masterId);
-      print('UPDATE RETURN ID: $updateId');
-
+      ///insert sales_details
       this.model.order.itemList.forEach((item) {
         insertIntoSalesDetails(_db, item, masterId);
       });

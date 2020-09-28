@@ -8,23 +8,22 @@ import 'package:food_app/shared/lib.dart';
 
 class SplashController {
   BuildContext context;
+
   SplashController(BuildContext context) {
     this.context = context;
-    ProjectDatabase()
-        .database
-        .then((db) => Config.database = db)
-        .whenComplete(() {
-      Lib.install().then((value) {
-        if (value) DataLists.importToDatabase(Config.database);
-        DashboardController(context).launch();
-      });
-      // Lib.timerWithNavigation(context, Config.screenStartTime, UserLogin());
-    });
-  }
-  void launch() {
-    Navigator.of(context).pushReplacement(
-        new MaterialPageRoute(builder: (context) => new SplashScreen()));
+
+
+    // ProjectDatabase().database.then((db) => ImportOnlineData(db));
+    // DAL.dal.importFromDatabase(ProjectDatabase().database);
   }
 
-  Widget launchAsWidget() => SplashScreen();
+  // void launch() {
+  //   Navigator.of(context).pushReplacement(
+  //       new MaterialPageRoute(builder: (context) => new SplashScreen()));
+  // }
+
+  Widget launchAsWidget() {
+    return SplashScreen();
+  }
+
 }
