@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/new_sale_controller.dart';
+import 'package:food_app/controller/order_controller.dart';
 import 'package:food_app/models/view_models/dashboard_model.dart';
 import 'package:food_app/models/generic_models/dashboard_item.dart';
 import 'package:food_app/shared/widgets/dashboard_card.dart';
@@ -90,7 +91,7 @@ class _DashboardState extends State<Dashboard> {
   void onCardTap(DashboardItem dashboardItem) {
     Toast.show(dashboardItem.name, context);
     if (dashboardItem.name == 'Sales') {
-      NewSaleController().launch(context);
+      OrderController().launch(context);
     }
   }
 }

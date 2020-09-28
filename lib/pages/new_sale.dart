@@ -184,7 +184,7 @@ class _NewSaleState extends State<NewSale> {
         GestureDetector(
           onTap: () {
             setState(() {
-              item.quantity = (int.parse(item.quantity) + 1).toString();
+              model.order.addItem(item);
             });
           },
           child: Card(
@@ -213,36 +213,36 @@ class _NewSaleState extends State<NewSale> {
   }
 
   void _onFloatingButtonPressed() async {
+    if (model.order.itemList.length > 0) {
+      Database _db = Config.database;
+      SalesMaster _salesMaster = SalesMaster();
+      String customerOrder = CustomerOrder().getOrderAmount().toString();
+      Map<String, dynamic> master = {
+        'date_time': Config.getCurrentDateTime(),
+        'paid_amount': '0.0',
+        'due_amount': customerOrder,
+        'total_payable': customerOrder,
+        'is_delete': 0.toString(),
+      };
 
-    Database _db = Config.database;
-    SalesMaster _salesMaster = SalesMaster();
-    String customerOrder = CustomerOrder().getOrderAmount().toString();
-    Map<String, dynamic> master = {
-      'date_time': Config.getCurrentDateTime(),
-      'paid_amount': customerOrder,
-      'due_amount': customerOrder,
-      'total_payable': customerOrder,
-      'is_delete' : 0.toString(),
-    };
+      int masterId = await _salesMaster.insertSpecificIntoDb(_db, master);
+      String code = codeGenerator(masterId); // GENERATES CODE FROM MASTER ID
+      print('SALES MASTER RETURN ID: $masterId');
+      print('GENERATED CODE ID: $code');
 
-    int masterId = await _salesMaster.insertSpecificIntoDb(_db, master);
-    String code = codeGenerator(masterId); // GENERATES CODE FROM MASTER ID
-    print('SALES MASTER RETURN ID: $masterId');
-    print('GENERATED CODE ID: $code');
+      Map<String, dynamic> update = {
+        'sale_no': code,
+      };
 
-    Map<String, dynamic> update = {
-      'sale_no': code,
-    };
+      int updateId =
+          await _salesMaster.updateSpecificIntoDb(_db, update, 'id', masterId);
+      print('UPDATE RETURN ID: $updateId');
 
-    int updateId = await _salesMaster.updateSpecificIntoDb(_db, update, 'id', masterId);
-    print('UPDATE RETURN ID: $updateId');
-
-    this.model.order.itemList.forEach((item) {
-      insertIntoSalesDetails(_db, item, masterId);
-    });
-
+      this.model.order.itemList.forEach((item) {
+        insertIntoSalesDetails(_db, item, masterId);
+      });
+    }
     OrderController().launchAndReplacement2(context);
-
   }
 
   Future<void> insertIntoSalesDetails(
@@ -259,16 +259,16 @@ class _NewSaleState extends State<NewSale> {
   }
 
   String codeGenerator(int id) {
-    String code = 'ORD_';
+    String code = 'ORD\/';
     String digits = '';
     if (id < 10)
-      digits = '00000$id';
+      digits = '00\/000$id';
     else if (id < 100)
-      digits = '0000$id';
+      digits = '00\/00$id';
     else if (id < 1000)
-      digits = '000$id';
+      digits = '00\/0$id';
     else if (id < 10000)
-      digits = '00$id';
+      digits = '00\/$id';
     else if (id < 100000)
       digits = '0$id';
     else

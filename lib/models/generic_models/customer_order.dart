@@ -1,7 +1,6 @@
 import 'package:food_app/models/objects/item.dart';
 
 class CustomerOrder {
-
   List<Item> _itemList = [];
   String _tableNo, _orderType, _discount, _salesTax;
 
@@ -35,8 +34,21 @@ class CustomerOrder {
   }
 
   void addItem(Item item) {
-    if(!this.itemList.contains(item)){
+    if (!this.itemList.contains(item)) {
       this.itemList.add(item);
+    } else {
+      String qty = this
+          .itemList
+          .where((element) => element.code == item.code)
+          .toList()[0]
+          .quantity;
+      int qty2 = int.parse(qty);
+      qty2++;
+      this
+          .itemList
+          .where((element) => element.code == item.code)
+          .toList()[0]
+          .quantity = qty2.toString();
     }
   }
 

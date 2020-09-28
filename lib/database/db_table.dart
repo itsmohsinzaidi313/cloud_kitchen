@@ -24,17 +24,15 @@ class Table {
   }
 
   //CREATE TABLE
-  void createTable() async {
+  Future<void> createTable() async {
     await _database.execute(_getTableQuery());
-    _log.i('Table $tableName created successfully.');
+    _log.v('Table $tableName created successfully.');
   }
 
   //DROP TABLE
-  void dropTable() async {
-    await _database
-        .execute(getDropTableQuery())
-        .whenComplete(() => _log.i('Table $tableName dropped successfully.'))
-        .catchError((e) => _log.e('Error on dropTable.'));
+  Future<void> dropTable() async {
+    await _database.execute(getDropTableQuery());
+    _log.v('Table $tableName dropped successfully.');
     ;
   }
 

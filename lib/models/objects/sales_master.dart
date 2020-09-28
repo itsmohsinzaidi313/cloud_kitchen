@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:sqflite/sqflite.dart';
@@ -80,7 +79,8 @@ class SalesMaster {
       this.saleVatObjects,
       this.deviceKey,
       this.remoteId,
-      this.companyId, this.isDelete});
+      this.companyId,
+      this.isDelete});
 
   SalesMaster.fromJson(Map<String, dynamic> json)
       : id = json['id'].toString(),
@@ -178,33 +178,40 @@ class SalesMaster {
     return map;
   }
 
+  Map<String, dynamic> getValuesForUpload() {
+    Map<String, dynamic> map = new Map();
+    for (int i = 1; i < Columns.salesMaster.length - 1; i++) {
+      map[Columns.salesMaster[i]] = getList()[i];
+    }
+    return map;
+  }
+
   Future<bool> insertIntoDatabase(Database db) async =>
       await db.insert(Tables.salesMaster, getValues()) > 0 ? true : false;
 
-  Future<int> insertSpecificIntoDb(Database db, Map<String, dynamic> map) async{
+  Future<int> insertSpecificIntoDb(
+      Database db, Map<String, dynamic> map) async {
     int id = await db.insert(Tables.salesMaster, map);
     return id;
   }
 
-  Future<int> updateSpecificIntoDb(Database db, Map<String, dynamic> map, String columnName, dynamic columnValue) async {
-    int updateCount = await db.update(
-        Tables.salesMaster,
-        map,
-        where: '$columnName = ?',
-        whereArgs: [columnValue]);
+  Future<int> updateSpecificIntoDb(Database db, Map<String, dynamic> map,
+      String columnName, dynamic columnValue) async {
+    int updateCount = await db.update(Tables.salesMaster, map,
+        where: '$columnName = ?', whereArgs: [columnValue]);
 
     return updateCount;
   }
 
   Future<List<SalesMaster>> queryAllRows(Database db) async {
-    var res = await db.query(Tables.salesMaster);
+    List<Map<String, dynamic>> res = await db.query(Tables.salesMaster,
+        where: "paid_amount == '0.0' AND is_delete == '0'");
     List<SalesMaster> _orders = [];
     res.forEach((row) {
-      if(row['is_delete'] == 0.toString()){
+      if (row['is_delete'] == 0.toString()) {
         _orders.add(SalesMaster.fromJson(row));
       }
     });
     return _orders;
   }
-
 }

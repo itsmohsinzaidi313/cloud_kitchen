@@ -58,12 +58,19 @@ class ProjectDatabase {
 
   FutureOr<void> onUpgrade(Database db, int oldVersion, int newVersion) {
     // ADD UPGRADE INSTRUCTIONS HERE
-    if (status == DATABASE.UPGRADE) {
-      _log.i('ENTRY DATABASE onUpgrade');
-      getTables(db)
-          .then((value) => value.forEach((table) => table.dropTable()));
-      getTables(db)
-          .then((value) => tablesList.forEach((table) => table.createTable()));
+    upgrade(db);
+  }
+
+  Future<void> upgrade(Database db) async {
+    try {
+      if (status == DATABASE.UPGRADE) {
+        _log.i('ENTRY DATABASE onUpgrade');
+        List<Table> list = await getTables(db);
+        list.forEach((element) => element.dropTable());
+        list.forEach((element) => element.createTable());
+      }
+    } catch (e) {
+      _log.e('ERROR ON onUpgrade', [e]);
     }
   }
 
