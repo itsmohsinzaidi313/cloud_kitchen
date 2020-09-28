@@ -8,7 +8,7 @@ import 'package:sqflite/sqflite.dart';
 class OrderController{
 
   OrderModel model;
-  List<String> orderList = ['Dine-In'];
+  List<String> orderList = ['New Order'];
   List<SalesMaster> salesMasterList = [];
 
   OrderController()  {
@@ -26,10 +26,8 @@ class OrderController{
   void launch(BuildContext context) => Navigator.of(context).push(
       new MaterialPageRoute(builder: (context) => new OrderScreen(model: model,)));
 
-  void launchAndReplacement(BuildContext context) => Navigator.of(context).pushReplacement(
-      new MaterialPageRoute(builder: (context) => new OrderScreen(model: model,)));
 
-  void launchAndReplacement2(BuildContext context) => SalesMaster().queryAllRows(Config.database).then((value) {
+  void launchAndReplacement(BuildContext context) => SalesMaster().queryAllRows(Config.database).then((value) {
     this.model.setItemHoldList(value);
     Navigator.of(context).pushReplacement(
         new MaterialPageRoute(builder: (context) => new OrderScreen(model: model,)));

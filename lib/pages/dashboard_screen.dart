@@ -91,7 +91,7 @@ class _DashboardState extends State<Dashboard> {
   void onCardTap(DashboardItem dashboardItem) {
     Toast.show(dashboardItem.name, context);
     if (dashboardItem.name == 'Sales') {
-      OrderController().launch(context);
+      NewSaleController().launch(context);
     }
   }
 }

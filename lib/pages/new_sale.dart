@@ -7,7 +7,6 @@ import 'package:food_app/models/objects/item.dart';
 import 'package:food_app/models/objects/sales_detail.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/new_sale_model.dart';
-import 'package:food_app/pages/orders_screen.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:sqflite/sqflite.dart';
@@ -216,7 +215,7 @@ class _NewSaleState extends State<NewSale> {
     if (model.order.itemList.length > 0) {
       Database _db = Config.database;
       SalesMaster _salesMaster = SalesMaster();
-      String customerOrder = CustomerOrder().getOrderAmount().toString();
+      String customerOrder = this.model.order.getOrderAmount().toString();
       Map<String, dynamic> master = {
         'date_time': Config.getCurrentDateTime(),
         'paid_amount': '0.0',
@@ -242,7 +241,7 @@ class _NewSaleState extends State<NewSale> {
         insertIntoSalesDetails(_db, item, masterId);
       });
     }
-    OrderController().launchAndReplacement2(context);
+    OrderController().launchAndReplacement(context);
   }
 
   Future<void> insertIntoSalesDetails(
