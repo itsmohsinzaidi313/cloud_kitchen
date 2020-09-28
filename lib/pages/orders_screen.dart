@@ -1,6 +1,5 @@
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/new_sale_controller.dart';
 import 'package:food_app/controller/order_controller.dart';
@@ -105,10 +104,13 @@ class _OrderScreenState extends State<OrderScreen> {
                   Map<String, dynamic> json = new Map();
                   json['user_id'] = '1';
                   json['json'] = jsonEncode(values1);
-                  print(Config.addUpdateOrderApi);
+                  log(
+                    json.toString(),
+                    name: 'Order Upload Json: ',
+                  );
                   Response response =
                       await post(Config.addUpdateOrderApi, body: json);
-                  print(response.body);
+                  log(response.body, name: 'Server Response: ');
                 },
               ),
               title: Center(child: Text(item.saleNo)),

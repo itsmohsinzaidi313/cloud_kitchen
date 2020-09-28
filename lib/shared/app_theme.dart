@@ -114,4 +114,41 @@ class AppTheme {
       ),
     );
   }
+
+  static void showAlertDialogYN(BuildContext context,
+      {String title, String message, Function onYes, Function onNo}) {
+    showDialog(
+        context: context,
+        builder: (value) => AlertDialog(
+            title: text(text: title, fontWeight: FontWeight.bold, fontSize: 20),
+            content: text(text: message),
+            actions: [
+              FlatButton(
+                  child: text(text: 'Yes', color: Colors.blue),
+                  onPressed: onYes),
+              FlatButton(
+                  child: text(text: 'No', color: Colors.blue), onPressed: onNo)
+            ],
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8))));
+  }
+
+  static Text text(
+      {String text,
+      double fontSize = 15,
+      FontWeight fontWeight = FontWeight.normal,
+      Color color = Colors.black}) {
+    return Text(
+      text,
+      style:
+          textStyle(fontSize: fontSize, fontWeight: fontWeight, color: color),
+    );
+  }
+
+  static TextStyle textStyle(
+      {double fontSize = 18,
+      FontWeight fontWeight = FontWeight.normal,
+      Color color = Colors.black}) {
+    return TextStyle(fontSize: fontSize, fontWeight: fontWeight, color: color);
+  }
 }
