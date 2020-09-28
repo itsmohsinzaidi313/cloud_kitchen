@@ -143,6 +143,12 @@ class _OrderScreenState extends State<OrderScreen> {
           onTap: () {
             setState(() {
               NewSaleController().launch(context);
+              // _key.currentState.showSnackBar(
+              //   SnackBar(
+              //     duration: Duration(milliseconds: 100),
+              //     content: Text('$item Tapped'),
+              //   ),
+              // );
             });
           },
           child: Container(
@@ -185,6 +191,6 @@ class _OrderScreenState extends State<OrderScreen> {
   Future onOrderCompleted(SalesMaster itm) async {
     Config.database.execute(
         'update ${Columns.salesMaster[37]} set ${Columns.salesMaster[5]} = ${Columns.salesMaster[6]} where id = ${itm.id}');
-    OrderController().launchAndReplacement2(context);
+    OrderController().launchAndReplacement(context);
   }
 }

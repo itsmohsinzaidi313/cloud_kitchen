@@ -215,7 +215,7 @@ class _NewSaleState extends State<NewSale> {
     if (model.order.itemList.length > 0) {
       Database _db = Config.database;
       SalesMaster _salesMaster = SalesMaster();
-      String customerOrder = CustomerOrder().getOrderAmount().toString();
+      String customerOrder = this.model.order.getOrderAmount().toString();
       Map<String, dynamic> master = {
         'date_time': Config.getCurrentDateTime(),
         'paid_amount': '0.0',
@@ -241,7 +241,7 @@ class _NewSaleState extends State<NewSale> {
         insertIntoSalesDetails(_db, item, masterId);
       });
     }
-    OrderController().launchAndReplacement2(context);
+    OrderController().launchAndReplacement(context);
   }
 
   Future<void> insertIntoSalesDetails(

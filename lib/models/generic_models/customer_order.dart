@@ -1,6 +1,7 @@
 import 'package:food_app/models/objects/item.dart';
 
 class CustomerOrder {
+
   List<Item> _itemList = [];
   String _tableNo, _orderType, _discount, _salesTax;
 
@@ -17,6 +18,7 @@ class CustomerOrder {
   set discount(value) => _discount = value;
 
   List<Item> get itemList => _itemList;
+  set setItemList(List<Item> value) => _itemList = value;
 
   void less(Item item) {
     if (itemList.length > 0) {

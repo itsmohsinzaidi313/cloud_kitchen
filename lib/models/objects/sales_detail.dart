@@ -1,5 +1,8 @@
 import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
+import 'package:food_app/models/objects/item.dart';
+import 'package:food_app/models/objects/sales_master.dart';
+import 'package:food_app/shared/data_lists.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SalesDetails {
@@ -53,10 +56,10 @@ class SalesDetails {
       this.delStatus});
 
   SalesDetails.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
+      : id = json['id'].toString(),
         foodMenuId = json['food_menu_id'],
         menuName = json['menu_name'],
-        qty = json['qty'],
+        qty = json['qty'].toString(),
         menuPriceWithoutDiscount = json['menu_price_without_discount'],
         menuPriceWithDiscount = json['menu_price_with_discount'],
         menuUnitPrice = json['menu_unit_price'],
@@ -71,7 +74,7 @@ class SalesDetails {
         cookingStartTime = json['cooking_start_time'],
         cookingDoneTime = json['cooking_done_time'],
         previousId = json['previous_id'],
-        salesMasterId = json['sales_id'],
+        salesMasterId = json['sales_id'].toString(),
         orderStatus = json['order_status'],
         userId = json['user_id'],
         outletId = json['outlet_id'],
@@ -124,6 +127,29 @@ class SalesDetails {
   Future<int> insertSpecificIntoDb(Database db, Map<String, dynamic> map) async {
     int id = await db.insert(Tables.salesDetails, map);
     return id;
+  }
+
+  Future<List<Item>> getOrderWhereMasterId(Database db, SalesMaster salesMaster) async {
+    List<Map<String, dynamic>> res = await db.query(Tables.salesDetails, where: 'sales_master_id = ${salesMaster.id}');
+
+    List<Item> listItem = DataLists.onlineInstance.listItem;
+    List<Item> updateList = [];
+
+    res.forEach((json) {
+      updateList.addAll(DataLists.onlineInstance.listItem.where((element) => json['food_menu_id'] == element.code).toList());
+    });
+
+    for (int a = 0; a < listItem.length; a++){
+      String code = listItem[a].code;
+      for (int b = 0; b < res.length; b++){
+        if (code == res[b]['food_menu_id']){
+          Item item = Item.fromItem(listItem[a]);
+          item.quantity = res[b]['food_menu_id'];
+          updateList.add(item);
+        }
+      }
+    }
+    return updateList;
   }
 
   Future<List<Map<String, dynamic>>> queryAllRows(Database db) async {
