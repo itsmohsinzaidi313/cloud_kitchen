@@ -33,7 +33,6 @@ class Table {
   Future<void> dropTable() async {
     await _database.execute(getDropTableQuery());
     _log.v('Table $tableName dropped successfully.');
-    ;
   }
 
   //DELETING A TABLE
