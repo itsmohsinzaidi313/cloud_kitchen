@@ -1,12 +1,15 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
+import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/new_sale_controller.dart';
 import 'package:food_app/controller/order_controller.dart';
+import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/order_model.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
+import 'package:http/http.dart';
 import 'package:sqflite/sqflite.dart';
 
 class OrderScreen extends StatefulWidget {
@@ -65,35 +68,70 @@ class _OrderScreenState extends State<OrderScreen> {
     List<Widget> widgets = [];
     sales.forEach((item) {
       widgets.add(
-          InkWell(
-            onTap: () {
-              NewSaleController().editOrder(item, context);
-            },
-            child: Card(
-              elevation: 5,
-              child: ListTile(
-                leading: IconButton(
-                  icon: Icon(Icons.check, color: Colors.green,),
-                  onPressed: null,
+        InkWell(
+          onTap: () {
+            setState(() {
+              _key.currentState.showSnackBar(
+                SnackBar(
+                  duration: Duration(milliseconds: 500),
+                  content: Text('I am Tapped'),
                 ),
-                title: Center(child: Text(item.saleNo)),
-                subtitle: Center(child: Text(item.dueAmount)),
-                trailing: IconButton(
-                  icon: Icon(Icons.close, color: Colors.red,),
-                  onPressed: () async{
-                      await onOrderCancelled(item);
-                      List<SalesMaster> sales = await SalesMaster().queryAllRows(Config.database);
-                      this.model.setItemHoldList(sales);
-                      setState(() {
-
-                      });
-                  },
+              );
+            });
+          },
+          child: Card(
+            elevation: 5,
+            child: ListTile(
+              leading: IconButton(
+                icon: Icon(
+                  Icons.check,
+                  color: Colors.green,
                 ),
+                onPressed: () async {
+                  Map<String, dynamic> values = item.getValuesForUpload();
+                  List<Map<String, dynamic>> values1 = [];
+                  List<Map<String, dynamic>> values2 = await Config.database
+                      .query(Tables.salesDetails,
+                          where: 'sales_master_id = ?', whereArgs: [item.id]);
+                  print(values['sale_no']);
+                  values.update('sale_no', (value) => 'ORD//00//0001');
+                  print(values['sale_no']);
+                  values['device_key'] = '622780154';
+                  values['customer_id'] = '1';
+                  values['remote_id'] = '1';
+                  values['sale_details'] = values2;
+                  values1.add(values);
+                  Map<String, dynamic> json = new Map();
+                  json['user_id'] = '1';
+                  json['json'] = jsonEncode(values1);
+                  log(
+                    json.toString(),
+                    name: 'Order Upload Json: ',
+                  );
+                  Response response =
+                      await post(Config.addUpdateOrderApi, body: json);
+                  log(response.body, name: 'Server Response: ');
+                },
+              ),
+              title: Center(child: Text(item.saleNo)),
+              subtitle: Center(child: Text(item.totalPayable)),
+              trailing: IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: Colors.red,
+                ),
+                onPressed: () {
+                  setState(() {
+                    onOrderCancelled(item);
+                    model.onOrderCancelled(item);
+                  });
+                },
               ),
             ),
           ),
-        );
-      });
+        ),
+      );
+    });
     return widgets;
   }
 
@@ -145,9 +183,14 @@ class _OrderScreenState extends State<OrderScreen> {
   Future onOrderCancelled(SalesMaster itm) async {
     Database db = Config.database;
     Map<String, dynamic> update = {
-      'is_delete' : 1.toString(),
+      Columns.salesMaster[37]: 1.toString(),
     };
     await SalesMaster().updateSpecificIntoDb(db, update, 'id', itm.id);
   }
 
+  Future onOrderCompleted(SalesMaster itm) async {
+    Config.database.execute(
+        'update ${Columns.salesMaster[37]} set ${Columns.salesMaster[5]} = ${Columns.salesMaster[6]} where id = ${itm.id}');
+    OrderController().launchAndReplacement(context);
+  }
 }
