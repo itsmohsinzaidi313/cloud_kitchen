@@ -64,12 +64,7 @@ class Table {
   Map<String, dynamic> _convertToMap(List<String> values) {
     try {
       Map<String, dynamic> map = new Map<String, dynamic>();
-      print(_listOfColumnsName.length);
-      print(values.length);
       for (int i = 1; i < _listOfColumnsName.length; i++) {
-        print(i);
-        print(_listOfColumnsName[i + 1]);
-        print(values[i]);
         map[_listOfColumnsName[i]] = values[i - 1];
       }
       return map;

@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:food_app/database/project_database.dart';
 import 'package:food_app/models/generic_models/install_api.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:flutter/material.dart';
 
 class Lib {

@@ -3,6 +3,7 @@ import 'package:food_app/controller/dashboard_controller.dart';
 import 'package:food_app/database/project_database.dart';
 import 'package:food_app/pages/splash_screen.dart';
 import 'package:food_app/shared/config.dart';
+import 'package:food_app/shared/data_lists.dart';
 import 'package:food_app/shared/lib.dart';
 
 class SplashController {
@@ -14,8 +15,7 @@ class SplashController {
         .then((db) => Config.database = db)
         .whenComplete(() {
       Lib.install().then((value) {
-        // ProjectDatabase().database.then((db) => ImportOnlineData(db));
-        // DAL.dal.importFromDatabase(ProjectDatabase().database);
+        if (value) DataLists.importToDatabase(Config.database);
         DashboardController(context).launch();
       });
       // Lib.timerWithNavigation(context, Config.screenStartTime, UserLogin());

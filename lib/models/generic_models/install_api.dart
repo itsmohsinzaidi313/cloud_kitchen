@@ -23,110 +23,137 @@ class ApiInstall {
   bool get isInitialized => _isInitialized;
   ApiInstall({this.status, this.message, this.data}) {
     if (this.data != null) {
+      List<bool> x = [];
       try {
         getCompanyList(data['company']);
+        x.add(true);
         _log.v('DATA LIST Company Ready.');
       } catch (e) {
+        x.add(false);
         _log.e('>>>ERROR ON getCompanyList\n$e');
       }
 
       try {
         getOutletList(data['outlet']);
+        x.add(true);
         _log.v('DATA LIST outlet Ready.');
       } catch (e) {
+        x.add(false);
         _log.e('>>>ERROR ON getOutletList\n$e');
       }
 
       try {
         getUsersList(data['users']);
+        x.add(true);
         _log.v('DATA LIST users Ready.');
       } catch (e) {
+        x.add(false);
         _log.e('>>>ERROR ON getUsersList\n$e');
       }
 
       try {
         getVatAmountList(data['vatamount']);
+        x.add(true);
         _log.v('DATA LIST vatamount Ready.');
       } catch (e) {
+        x.add(false);
         _log.e('>>>ERROR ON getVatAmountList\n$e');
       }
 
       try {
         getTablesList(data['tables']);
+        x.add(true);
         _log.v('DATA LIST tables Ready.');
       } catch (e) {
+        x.add(false);
         _log.e('>>>ERROR ON getTablesList\n$e');
       }
 
       try {
         getCategoriesList(data['categories']);
+        x.add(true);
         _log.v('DATA LIST categories Ready.');
       } catch (e) {
+        x.add(false);
         _log.e('>>>ERROR ON getCategoriesList\n$e');
       }
 
       try {
         getModifiersList(data['modifiers']);
+        x.add(true);
         _log.v('DATA LIST modifiers Ready.');
       } catch (e) {
+        x.add(false);
         _log.e('>>>ERROR ON getModifiersList\n$e');
       }
 
       try {
         getItemList(data['item_menus']);
+        x.add(true);
         _log.v('DATA LIST item_menus Ready.');
       } catch (e) {
+        x.add(false);
         _log.e('>>>ERROR ON getItemMenusList\n$e');
       }
 
       try {
         getItemModifiersList(data['item_modifiers']);
+        x.add(true);
         _log.v('DATA LIST item_modifiers Ready.');
       } catch (e) {
+        x.add(false);
         _log.e('>>>ERROR ON getItemModifiersList\n$e');
       }
 
       try {
         getCustomersList(data['customers']);
+        x.add(true);
         _log.v('DATA LIST customers Ready.');
       } catch (e) {
+        x.add(false);
         _log.e('>>>ERROR ON getCustomersList\n$e');
       }
 
       try {
         getPaymentMethodsList(data['payment_methods']);
+        x.add(true);
         _log.v('DATA LIST payment_methods Ready.');
       } catch (e) {
+        x.add(false);
         _log.e('>>>ERROR ON getPaymentMethodsList\n$e');
       }
 
       try {
         getExpenseCategoriesList(data['expense_categories']);
+        x.add(true);
         _log.v('DATA LIST expense_categories Ready.');
       } catch (e) {
+        x.add(false);
         _log.e('>>>ERROR ON getExpenseCategoriesList\n$e');
       }
 
       try {
         getSalesList(data['sales']);
+        x.add(true);
         _log.v('DATA LIST sales Ready.');
       } catch (e) {
+        x.add(false);
         _log.e('>>>ERROR ON getSalesList\n$e');
       }
 
       try {
         getExpensesList(['expenses']);
+        x.add(true);
         _log.v('DATA LIST expenses Ready.');
       } catch (e) {
+        x.add(false);
         _log.e('>>>ERROR ON getExpensesList\n$e');
       }
-      _isInitialized = true;
     } else {
       _log.i('NULL DATA PASSED TO INSTALL API');
     }
   }
 
-  //TODO: use fromJson method to instansiate
 
   void getCompanyList(List<dynamic> i) {
     i.forEach((e) {

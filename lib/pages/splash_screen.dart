@@ -16,6 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void init() {
     _progressDialog = AppTheme.showProgressDialog(context);
+    // Lib.install();
   }
 
   @override

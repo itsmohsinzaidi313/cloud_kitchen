@@ -81,19 +81,12 @@ class Company {
   Map<String, dynamic> getValues() {
     try {
       Map<String, dynamic> map = new Map<String, dynamic>();
-      print(Columns.company);
-      print(getList());
       for (int i = 1; i < Columns.company.length; i++) {
-        print('---');
-        print(i);
-        print(Columns.company[i]);
-        print(getList()[i - 1]);
         map[Columns.company[i]] = getList()[i - 1];
       }
       return map;
     } catch (e) {
       Config.log.e('ERROR ON getValues', [e]);
-      exit(0);
       return null;
     }
   }
