@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/item.dart';
@@ -80,10 +82,10 @@ class SalesDetails {
         outletId = json['outlet_id'],
         delStatus = json['del_status'];
 
-  @override
-  String toString() {
-    return 'SalesDetails{id: $id, foodMenuId: $foodMenuId, menuName: $menuName, qty: $qty, menuPriceWithoutDiscount: $menuPriceWithoutDiscount, menuPriceWithDiscount: $menuPriceWithDiscount, menuUnitPrice: $menuUnitPrice, menuVatPercentage: $menuVatPercentage, menuTaxes: $menuTaxes, menuDiscountValue: $menuDiscountValue, discountType: $discountType, menuNote: $menuNote, discountAmount: $discountAmount, itemType: $itemType, cookingStatus: $cookingStatus, cookingStartTime: $cookingStartTime, cookingDoneTime: $cookingDoneTime, previousId: $previousId, salesMasterId: $salesMasterId, orderStatus: $orderStatus, userId: $userId, outletId: $outletId, delStatus: $delStatus}';
-  }
+  // @override
+  // String toString() {
+  //   return 'SalesDetails{id: $id, foodMenuId: $foodMenuId, menuName: $menuName, qty: $qty, menuPriceWithoutDiscount: $menuPriceWithoutDiscount, menuPriceWithDiscount: $menuPriceWithDiscount, menuUnitPrice: $menuUnitPrice, menuVatPercentage: $menuVatPercentage, menuTaxes: $menuTaxes, menuDiscountValue: $menuDiscountValue, discountType: $discountType, menuNote: $menuNote, discountAmount: $discountAmount, itemType: $itemType, cookingStatus: $cookingStatus, cookingStartTime: $cookingStartTime, cookingDoneTime: $cookingDoneTime, previousId: $previousId, salesMasterId: $salesMasterId, orderStatus: $orderStatus, userId: $userId, outletId: $outletId, delStatus: $delStatus}';
+  // }
 
   List<String> getList() {
     return [
@@ -124,31 +126,32 @@ class SalesDetails {
   Future<bool> insertIntoDatabase(Database db) async =>
       await db.insert(Tables.salesDetails, getValues()) > 0 ? true : false;
 
-  Future<int> insertSpecificIntoDb(Database db, Map<String, dynamic> map) async {
+  Future<int> insertSpecificIntoDb(
+      Database db, Map<String, dynamic> map) async {
     int id = await db.insert(Tables.salesDetails, map);
     return id;
   }
 
-  Future<List<Item>> getOrderWhereMasterId(Database db, SalesMaster salesMaster) async {
-    List<Map<String, dynamic>> res = await db.query(Tables.salesDetails, where: 'sales_master_id = ${salesMaster.id}');
+  Future<List<Item>> getOrderWhereMasterId(
+      Database db, SalesMaster salesMaster) async {
+    List<Map<String, dynamic>> res = await db.query(Tables.salesDetails,
+        where: 'sales_master_id = ${salesMaster.id}');
 
     List<Item> listItem = DataLists.onlineInstance.listItem;
     List<Item> updateList = [];
 
-    res.forEach((json) {
-      updateList.addAll(DataLists.onlineInstance.listItem.where((element) => json['food_menu_id'] == element.code).toList());
-    });
-
-    for (int a = 0; a < listItem.length; a++){
-      String code = listItem[a].code;
-      for (int b = 0; b < res.length; b++){
-        if (code == res[b]['food_menu_id']){
-          Item item = Item.fromItem(listItem[a]);
-          item.quantity = res[b]['food_menu_id'];
+    for (int i = 0; i < listItem.length; i++) {
+      for (int j = 0; j < res.length; j++) {
+        if (listItem[i].code == res[j]['food_menu_id']) {
+          log('${listItem[i].code}\n');
+          Item item = Item.fromItem(listItem[i]);
+          item.quantity = res[j]['qty'];
           updateList.add(item);
+          break;
         }
       }
     }
+
     return updateList;
   }
 
@@ -156,5 +159,4 @@ class SalesDetails {
     var res = await db.query(Tables.salesDetails);
     return res;
   }
-
 }

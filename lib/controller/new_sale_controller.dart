@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/models/generic_models/customer_order.dart';
 import 'package:food_app/models/objects/item.dart';
@@ -11,6 +10,7 @@ import 'package:food_app/shared/data_lists.dart';
 
 class NewSaleController {
   NewSaleModel model;
+
   NewSaleController() {
     model = new NewSaleModel();
     model.lstCategory = DataLists.onlineInstance.listCategories;
@@ -19,11 +19,12 @@ class NewSaleController {
   }
 
   void launch(BuildContext context) => Navigator.of(context)
-      .pushReplacement(new MaterialPageRoute(builder: (context) => new NewSale(model)));
+      .push(new MaterialPageRoute(builder: (context) => new NewSale(model)));
 
   void editOrder(SalesMaster salesMaster, BuildContext context) async{
     List<Item> updatedList = await SalesDetails().getOrderWhereMasterId(Config.database, salesMaster);
     this.model.order.setItemList = updatedList;
+    this.model.salesMaster = salesMaster;
     launch(context);
   }
 }
