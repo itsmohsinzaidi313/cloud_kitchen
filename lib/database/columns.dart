@@ -1,5 +1,4 @@
 class Columns {
-  
   static const List<List<String>> listofAllColumns = [
     users, //0
     shiftData, //1
@@ -15,7 +14,8 @@ class Columns {
     outlet, //11
     paymentMethods, //12
     vatAmount, //13
-    tables //14
+    tables, //14
+    devices//15
   ];
 
   ///USER TABLE COLUMNS
@@ -276,5 +276,17 @@ class Columns {
     'user_id',
     'company_id',
     'del_status'
+  ];
+
+  static const List<String> devices = [
+    'local_id',
+    'id',
+    'outled_id',
+    'company_id',
+    'device_key',
+    'del_status',
+    'is_installed',
+    'date_added',
+    'date_modified'
   ];
 }

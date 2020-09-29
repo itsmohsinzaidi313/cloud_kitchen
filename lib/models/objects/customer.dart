@@ -50,8 +50,8 @@ class Customer {
     return 'Customers{id: $serverId, name: $name, phone: $phone, email: $email, address: $address, gstNumber: $gstNumber, areaId: $areaId, userId: $userId, companyId: $companyId, delStatus: $delStatus, dateOfBirth: $dateOfBirth, dateOfAnniversary: $dateOfAnniversary}';
   }
 
-  List<String> getList() {
-    return [
+  List<String> getList() 
+    => [
       this.serverId,
       this.name,
       this.phone,
@@ -65,7 +65,7 @@ class Customer {
       this.dateOfBirth,
       this.dateOfAnniversary
     ];
-  }
+  
 
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();

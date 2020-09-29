@@ -1,6 +1,7 @@
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/company.dart';
 import 'package:food_app/models/objects/customer.dart';
+import 'package:food_app/models/objects/device.dart';
 import 'package:food_app/models/objects/expense_category.dart';
 import 'package:food_app/models/objects/item.dart';
 import 'package:food_app/models/objects/item_modifier.dart';
@@ -29,7 +30,7 @@ class ApiInstall {
         getCompanyList(data['company']);
         _log.v('DATA LIST Company Ready.');
       } catch (e) {
-        _log.e('>>>ERROR ON getCompanyList\n$e');
+        _log.e('>>>ERROR ON getCompanyList', [e]);
         return false;
       }
 
@@ -37,7 +38,7 @@ class ApiInstall {
         getOutletList(data['outlet']);
         _log.v('DATA LIST outlet Ready.');
       } catch (e) {
-        _log.e('>>>ERROR ON getOutletList\n$e');
+        _log.e('>>>ERROR ON getOutletList', [e]);
         return false;
       }
 
@@ -45,7 +46,7 @@ class ApiInstall {
         getUsersList(data['users']);
         _log.v('DATA LIST users Ready.');
       } catch (e) {
-        _log.e('>>>ERROR ON getUsersList\n$e');
+        _log.e('>>>ERROR ON getUsersList', [e]);
         return false;
       }
 
@@ -53,7 +54,7 @@ class ApiInstall {
         getVatAmountList(data['vatamount']);
         _log.v('DATA LIST vatamount Ready.');
       } catch (e) {
-        _log.e('>>>ERROR ON getVatAmountList\n$e');
+        _log.e('>>>ERROR ON getVatAmountList', [e]);
         return false;
       }
 
@@ -61,7 +62,7 @@ class ApiInstall {
         getTablesList(data['tables']);
         _log.v('DATA LIST tables Ready.');
       } catch (e) {
-        _log.e('>>>ERROR ON getTablesList\n$e');
+        _log.e('>>>ERROR ON getTablesList', [e]);
         return false;
       }
 
@@ -69,7 +70,7 @@ class ApiInstall {
         getCategoriesList(data['categories']);
         _log.v('DATA LIST categories Ready.');
       } catch (e) {
-        _log.e('>>>ERROR ON getCategoriesList\n$e');
+        _log.e('>>>ERROR ON getCategoriesList', [e]);
         return false;
       }
 
@@ -77,7 +78,7 @@ class ApiInstall {
         getModifiersList(data['modifiers']);
         _log.v('DATA LIST modifiers Ready.');
       } catch (e) {
-        _log.e('>>>ERROR ON getModifiersList\n$e');
+        _log.e('>>>ERROR ON getModifiersList', [e]);
         return false;
       }
 
@@ -85,7 +86,7 @@ class ApiInstall {
         getItemList(data['item_menus']);
         _log.v('DATA LIST item_menus Ready.');
       } catch (e) {
-        _log.e('>>>ERROR ON getItemMenusList\n$e');
+        _log.e('>>>ERROR ON getItemMenusList', [e]);
         return false;
       }
 
@@ -93,7 +94,7 @@ class ApiInstall {
         getItemModifiersList(data['item_modifiers']);
         _log.v('DATA LIST item_modifiers Ready.');
       } catch (e) {
-        _log.e('>>>ERROR ON getItemModifiersList\n$e');
+        _log.e('>>>ERROR ON getItemModifiersList', [e]);
         return false;
       }
 
@@ -101,7 +102,7 @@ class ApiInstall {
         getCustomersList(data['customers']);
         _log.v('DATA LIST customers Ready.');
       } catch (e) {
-        _log.e('>>>ERROR ON getCustomersList\n$e');
+        _log.e('>>>ERROR ON getCustomersList', [e]);
         return false;
       }
 
@@ -109,7 +110,7 @@ class ApiInstall {
         getPaymentMethodsList(data['payment_methods']);
         _log.v('DATA LIST payment_methods Ready.');
       } catch (e) {
-        _log.e('>>>ERROR ON getPaymentMethodsList\n$e');
+        _log.e('>>>ERROR ON getPaymentMethodsList', [e]);
         return false;
       }
 
@@ -117,7 +118,7 @@ class ApiInstall {
         getExpenseCategoriesList(data['expense_categories']);
         _log.v('DATA LIST expense_categories Ready.');
       } catch (e) {
-        _log.e('>>>ERROR ON getExpenseCategoriesList\n$e');
+        _log.e('>>>ERROR ON getExpenseCategoriesList', [e]);
         return false;
       }
 
@@ -125,17 +126,25 @@ class ApiInstall {
         getSalesList(data['sales']);
         _log.v('DATA LIST sales Ready.');
       } catch (e) {
-        _log.e('>>>ERROR ON getSalesList\n$e');
+        _log.e('>>>ERROR ON getSalesList', [e]);
         return false;
       }
 
       try {
-        getExpensesList(['expenses']);
+        getExpensesList(data['expenses']);
         _log.v('DATA LIST expenses Ready.');
       } catch (e) {
-        _log.e('>>>ERROR ON getExpensesList\n$e');
+        _log.e('>>>ERROR ON getExpensesList', [e]);
         return false;
       }
+
+      // try {
+        getDeviceList(data['device']);
+      //   _log.v('DATA LIST device Ready.');
+      // } catch (e) {
+      //   _log.e('>>>ERROR ON getDeviceList', [e]);
+      //   return false;
+      // }
       return true;
     } else {
       _log.i('NULL DATA PASSED TO INSTALL API');
@@ -332,4 +341,19 @@ class ApiInstall {
   void getSalesList(List<dynamic> i) {}
 
   void getExpensesList(List<dynamic> i) {}
+
+  void getDeviceList(List<dynamic> i) {
+    i.forEach((e) {
+      DataLists.instance.listDevices.add(new Device(
+        serverId: e['id'],
+        outletId: e['outlet_id'],
+        companyId: e['company_id'],
+        deviceKey: e['device_key'],
+        delStatus: e['del_status'],
+        isInstalled: e['is_installed'],
+        dateAdded: e['date_added'],
+        dateModified: e['date_modified'],
+      ));
+    });
+  }
 }

@@ -2,6 +2,7 @@ import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/company.dart';
 import 'package:food_app/models/objects/customer.dart';
+import 'package:food_app/models/objects/device.dart';
 import 'package:food_app/models/objects/expense_category.dart';
 import 'package:food_app/models/objects/item.dart';
 import 'package:food_app/models/objects/item_modifier.dart';
@@ -28,6 +29,7 @@ class DataLists {
   final List<Customer> listCustomers = [];
   final List<PaymentMethod> listPaymentMethods = [];
   final List<ExpenseCategory> listExpenseCategories = [];
+  final List<Device> listDevices = [];
   final List<dynamic> listSales = []; // NOT FUNCTIONAL
   final List<dynamic> listExpenses = []; // NOT FUNCTIONAL
   final int listsCount = 12;
@@ -45,7 +47,8 @@ class DataLists {
         listItemModifiers,
         listCustomers,
         listPaymentMethods,
-        listExpenseCategories
+        listExpenseCategories,
+        listDevices
       ];
 
   static Future<bool> importToDatabase(Database db) async {
@@ -137,6 +140,13 @@ class DataLists {
           .forEach((element) async => await element.insertIntoDatabase(db)));
     } catch (e) {
       _log.e('Error On ImportToDatabase listVatAmount', [e]);
+      return false;
+    }
+    try {
+      db.delete(Tables.devices).then((value) => instance.listDevices
+          .forEach((element) async => await element.insertIntoDatabase(db)));
+    } catch (e) {
+      _log.e('Error On ImportToDatabase listDevices', [e]);
       return false;
     }
     showDataCount();
@@ -268,12 +278,25 @@ class DataLists {
       _log.e('ERROR ON importToMemory listExpenseCategories', [e]);
       return false;
     }
+
+    try {
+      List<Map<String, dynamic>> listMap =
+          await db.query(Tables.devices);
+      listMap.forEach((element) {
+        DataLists.instance.listDevices
+            .add(new Device.fromJson(element));
+      });
+    } catch (e) {
+      _log.e('ERROR ON importToMemory listDevices', [e]);
+      return false;
+    }
     showDataCount();
     return true;
   }
 
   static void showDataCount() {
     _log.v('Users: ${DataLists.instance.listUsers.length.toString()}');
+    _log.v('Devics: ${DataLists.instance.listDevices.length.toString()}');
     _log.v('Categories: ${DataLists.instance.listCategories.length.toString()}');
     _log.v('Item: ${DataLists.instance.listItem.length.toString()}');
     _log.v('Modifiers: ${DataLists.instance.listModifiers.length.toString()}');

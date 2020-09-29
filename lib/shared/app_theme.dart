@@ -78,6 +78,26 @@ class AppTheme {
     return myText;
   }
 
+  static void showAlertDialog(BuildContext context,
+      {String title,
+      FontWeight fontWeight,
+      double fontSize,
+      Widget content,
+      List<FlatButton> buttons}) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              title: Container(
+                  child: Text(title,
+                      style: textStyle(
+                          fontWeight: fontWeight, fontSize: fontSize))),
+              content: content,
+              actions: buttons,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+            ));
+  }
+
   static ProgressDialog showProgressDialog(BuildContext context,
       {String text = '', bool isDismissible = true}) {
     final spinKit = new SpinKitFadingCube(
