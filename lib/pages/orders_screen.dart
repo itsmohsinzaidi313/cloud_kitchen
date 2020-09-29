@@ -135,15 +135,15 @@ class _OrderScreenState extends State<OrderScreen> {
       widgets.add(
         InkWell(
           onTap: () {
-            setState(() {
-              NewSaleController().launch(context);
+              NewSaleController().launchAndReplacement(context);
+            // setState(() {
               // _key.currentState.showSnackBar(
               //   SnackBar(
               //     duration: Duration(milliseconds: 100),
               //     content: Text('$item Tapped'),
               //   ),
               // );
-            });
+            // });
           },
           child: Container(
             padding: EdgeInsets.symmetric(

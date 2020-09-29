@@ -187,6 +187,8 @@ class _ShiftScreen extends State<ShiftScreen> {
         onPressed: () {
           setState(() {
 
+            if (_formKey.currentState.validate()) {
+              _formKey.currentState.save();
             Config().currentShift = Shift(
                 shift: _dropdown, deviceKey: _deviceKey.text, openingBalance: _amount.text,
               userId: Config().currentUser.serverId, openingBalanceDateTime: Config.getCurrentDateTime(),
@@ -195,7 +197,9 @@ class _ShiftScreen extends State<ShiftScreen> {
 
             Shift().insertSpecificIntoDatabase(Config.database, Config().currentShift)
                 .whenComplete(() => DashboardController(context).launch());
-
+            }else{
+              _autoValidate = true;
+            }
           });
         },
         child: Icon(Icons.navigate_next),

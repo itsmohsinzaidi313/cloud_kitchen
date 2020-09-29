@@ -23,8 +23,11 @@ class OrderController{
     model.setItemHoldList(list);
   }
 
-  void launch(BuildContext context) => Navigator.of(context).push(
-      new MaterialPageRoute(builder: (context) => new OrderScreen(model: model,)));
+  void launch(BuildContext context) => SalesMaster().queryAllRows(Config.database).then((value) {
+    this.model.setItemHoldList(value);
+    Navigator.of(context).push(
+        new MaterialPageRoute(builder: (context) => new OrderScreen(model: model,)));
+  });
 
 
   void launchAndReplacement(BuildContext context) => SalesMaster().queryAllRows(Config.database).then((value) {

@@ -230,6 +230,8 @@ class _NewSaleState extends State<NewSale> {
         'paid_amount': '0.0',
         'due_amount': customerOrderAmount,
         'total_payable': customerOrderAmount,
+        'user_id' : Config().currentUser.serverId,
+        'device_key' : Config().currentShift.deviceKey,
         'is_delete': 0.toString(),
       };
 
@@ -241,6 +243,7 @@ class _NewSaleState extends State<NewSale> {
         _db.update(Tables.salesMaster, master, where: '${Columns.salesMaster[0]} = ?', whereArgs: [_salesMaster.id]);
       } //IF
       else{
+
 
         ///NEW ORDER INSERTION
         _salesMaster = SalesMaster();
@@ -263,7 +266,7 @@ class _NewSaleState extends State<NewSale> {
       });
     }
     // OrderController().launchAndReplacement(context);
-    DashboardController(context).launch();
+    DashboardController(context).pushAndRemoveUntil(context);
   }
 
   Future<void> insertIntoSalesDetails(
@@ -280,18 +283,13 @@ class _NewSaleState extends State<NewSale> {
   }
 
   String codeGenerator(int id) {
-    
-    String code = 'ORD\/';
+    String code = 'ORD/${Config().currentShift.deviceKey}/';
     String digits = '';
     if (id < 10)
-      digits = '00\/000$id';
+      digits = '000$id';
     else if (id < 100)
-      digits = '00\/00$id';
+      digits = '00$id';
     else if (id < 1000)
-      digits = '00\/0$id';
-    else if (id < 10000)
-      digits = '00\/$id';
-    else if (id < 100000)
       digits = '0$id';
     else
       digits = '$id';
@@ -299,6 +297,6 @@ class _NewSaleState extends State<NewSale> {
   }
 
   void uploadOrder(SalesMaster salesMaster, SalesDetails salesDetails) {
-    
+
   }
 }

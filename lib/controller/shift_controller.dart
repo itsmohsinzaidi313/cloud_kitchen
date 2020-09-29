@@ -24,7 +24,7 @@ class ShiftController {
     ];
   }
 
-  void launch(BuildContext context) => Navigator.of(context).push(
+  void launch(BuildContext context) => Navigator.of(context).pushReplacement(
       new MaterialPageRoute(builder: (context) => new ShiftScreen(this.model)));
 
   Future<void> onAmountEntered(BuildContext context) async =>

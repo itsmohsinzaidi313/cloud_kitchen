@@ -35,8 +35,14 @@ class DashboardController {
     ];
   }
 
-  void launch() => Navigator.of(model.context).pushReplacement(
+  void launch() => Navigator.of(model.context).push(
       new MaterialPageRoute(builder: (context) => new Dashboard(model)));
 
+  void launchAndReplacement() => Navigator.of(model.context).pushReplacement(
+      new MaterialPageRoute(builder: (context) => new Dashboard(model)));
+
+  void pushAndRemoveUntil(BuildContext context) =>  Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (c) => Dashboard(model)),
+          (route) => false);
 
 }
