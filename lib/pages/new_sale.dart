@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:food_app/controller/dashboard_controller.dart';
 import 'package:food_app/controller/order_controller.dart';
+import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/item.dart';
@@ -216,23 +218,33 @@ class _NewSaleState extends State<NewSale> {
       Database _db = Config.database;
       SalesMaster _salesMaster;
       int masterId;
-      List<Map<String, dynamic>> count = await _db.rawQuery('SELECT COUNT(id) AS count FROM sales_details WHERE sales_master_id = ?', [model.salesMaster.id]);
+      if(model.salesMaster == null){
+        this.model.salesMaster = new SalesMaster();
+        this.model.salesMaster.id = "0";
+      }
+      List<Map<String, dynamic>> count = await _db.rawQuery('SELECT IFNULL(COUNT(id),0) AS count FROM sales_details WHERE sales_master_id = ?', [model.salesMaster.id]);
+
+      String customerOrderAmount = this.model.order.getOrderAmount().toString();
+
+      Map<String, dynamic> master = {
+        'date_time': Config.getCurrentDateTime(),
+        'paid_amount': '0.0',
+        'due_amount': customerOrderAmount,
+        'total_payable': customerOrderAmount,
+        'is_delete': 0.toString(),
+      };
+
+      ///EDIT ORDER
       if(count[0]['count'] > 0){
         _salesMaster = this.model.salesMaster;
         _db.delete(Tables.salesDetails, where: 'sales_master_id = ?', whereArgs: [_salesMaster.id]);
         masterId = int.parse(_salesMaster.id);
+        _db.update(Tables.salesMaster, master, where: '${Columns.salesMaster[0]} = ?', whereArgs: [_salesMaster.id]);
       } //IF
       else{
-        _salesMaster = SalesMaster();
-        String customerOrderAmount = this.model.order.getOrderAmount().toString();
-        Map<String, dynamic> master = {
-          'date_time': Config.getCurrentDateTime(),
-          'paid_amount': '0.0',
-          'due_amount': customerOrderAmount,
-          'total_payable': customerOrderAmount,
-          'is_delete': 0.toString(),
-        };
 
+        ///NEW ORDER INSERTION
+        _salesMaster = SalesMaster();
         masterId = await _salesMaster.insertSpecificIntoDb(_db, master);
         String code = codeGenerator(masterId); // GENERATES CODE FROM MASTER ID
         print('SALES MASTER RETURN ID: $masterId');
@@ -251,7 +263,8 @@ class _NewSaleState extends State<NewSale> {
         insertIntoSalesDetails(_db, item, masterId);
       });
     }
-    OrderController().launchAndReplacement(context);
+    // OrderController().launchAndReplacement(context);
+    DashboardController(context).launch();
   }
 
   Future<void> insertIntoSalesDetails(

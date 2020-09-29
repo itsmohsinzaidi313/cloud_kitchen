@@ -65,7 +65,8 @@ class _OrderScreenState extends State<OrderScreen> {
     );
   }
 
-  List<Widget> getHoldingOrderList(List<SalesMaster> sales) {
+  List<Widget>
+  getHoldingOrderList(List<SalesMaster> sales) {
     List<Widget> widgets = [];
     sales.forEach((item) {
       widgets.add(

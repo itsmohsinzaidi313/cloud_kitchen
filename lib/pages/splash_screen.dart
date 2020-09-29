@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
+import 'package:food_app/controller/login_controller.dart';
 import 'package:food_app/database/project_database.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
@@ -36,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
       });
     }).whenComplete(() {
       // Lib.timerWithNavigation(context, Config.screenStartTime, UserLogin());
-      // DashboardController(context).launch();
+      LoginController().launch(context);
     });
   }
 

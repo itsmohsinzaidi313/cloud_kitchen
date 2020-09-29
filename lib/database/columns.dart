@@ -41,6 +41,7 @@ class Columns {
   ///SHIFT_DATA TABLE COLUMNS
   static const List<String> shiftData = [
     'id',
+    'shift',
     'opening_balance',
     'closing_balance',
     'opening_balance_date_time',

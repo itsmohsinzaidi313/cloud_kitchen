@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
+import 'package:food_app/models/objects/shift.dart';
 import 'package:food_app/models/view_models/shift_model.dart';
+import 'package:food_app/shared/config.dart';
 
 class ShiftScreen extends StatefulWidget {
   final ShiftModel model;
@@ -17,6 +21,7 @@ class _ShiftScreen extends State<ShiftScreen> {
 
   final GlobalKey<FormState> _formKey = GlobalKey();
   TextEditingController _amount = TextEditingController();
+  TextEditingController _deviceKey = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -103,6 +108,40 @@ class _ShiftScreen extends State<ShiftScreen> {
                             child: TextFormField(
                               decoration: InputDecoration(
                                 border: InputBorder.none,
+                                labelText: "Device Key",
+                                prefixIcon: Icon(
+                                  Icons.device_unknown,
+                                  size: 20,
+                                  color: Colors.amber,
+                                ),
+                                hintStyle: TextStyle(
+                                  color: Colors.grey[300],
+                                ),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey[400],
+                                ),
+                              ),
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.number,
+                              onFieldSubmitted: (value) {
+                                FocusScope.of(context).unfocus();
+                              },
+                              validator: (value) {
+                                if (value.isEmpty ||
+                                    value.length < 0 ||
+                                    int.parse(value) <= 0) {
+                                  return 'Invalid Device Key';
+                                }
+                                return null;
+                              },
+                              controller: _deviceKey,
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
                                 labelText: "Amount",
                                 prefixIcon: Icon(
                                   Icons.attach_money,
@@ -133,6 +172,7 @@ class _ShiftScreen extends State<ShiftScreen> {
                               controller: _amount,
                             ),
                           ),
+
                         ],
                       ),
                     ),
@@ -146,7 +186,16 @@ class _ShiftScreen extends State<ShiftScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
-            DashboardController(context).launch();
+
+            Config().currentShift = Shift(
+                shift: _dropdown, deviceKey: _deviceKey.text, openingBalance: _amount.text,
+              userId: Config().currentUser.serverId, openingBalanceDateTime: Config.getCurrentDateTime(),
+              outletId: Config().currentUser.outletId, companyId: Config().currentUser.companyId,
+              registerStatus: 'false');
+
+            Shift().insertSpecificIntoDatabase(Config.database, Config().currentShift)
+                .whenComplete(() => DashboardController(context).launch());
+
           });
         },
         child: Icon(Icons.navigate_next),
