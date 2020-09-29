@@ -65,8 +65,7 @@ class _OrderScreenState extends State<OrderScreen> {
     );
   }
 
-  List<Widget>
-  getHoldingOrderList(List<SalesMaster> sales) {
+  List<Widget> getHoldingOrderList(List<SalesMaster> sales) {
     List<Widget> widgets = [];
     sales.forEach((item) {
       widgets.add(
@@ -88,10 +87,8 @@ class _OrderScreenState extends State<OrderScreen> {
                   List<Map<String, dynamic>> values2 = await Config.database
                       .query(Tables.salesDetails,
                           where: 'sales_master_id = ?', whereArgs: [item.id]);
-                  print(values['sale_no']);
-                  values.update('sale_no', (value) => 'ORD//00//0001');
-                  print(values['sale_no']);
-                  values['device_key'] = '622780154';
+                  values.update('sale_no', (value) => 'ORD\/01\/0001');
+                  values['device_key'] = '1626065997';
                   values['customer_id'] = '1';
                   values['remote_id'] = '1';
                   values['sale_details'] = values2;
@@ -99,10 +96,10 @@ class _OrderScreenState extends State<OrderScreen> {
                   Map<String, dynamic> json = new Map();
                   json['user_id'] = '1';
                   json['json'] = jsonEncode(values1);
-                  log(
-                    json.toString(),
-                    name: 'Order Upload Json: ',
-                  );
+                  // log(
+                  //   json.toString(),
+                  //   name: 'Order Upload Json: ',
+                  // );
                   Response response =
                       await post(Config.addUpdateOrderApi, body: json);
                   log(response.body, name: 'Server Response: ');
@@ -117,7 +114,8 @@ class _OrderScreenState extends State<OrderScreen> {
                 ),
                 onPressed: () async {
                   await onOrderCancelled(item);
-                  List<SalesMaster> list = await SalesMaster().queryAllRows(Config.database);
+                  List<SalesMaster> list =
+                      await SalesMaster().queryAllRows(Config.database);
                   setState(() {
                     this.model.setItemHoldList(list);
                   });

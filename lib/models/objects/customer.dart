@@ -69,7 +69,7 @@ class Customer {
 
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
-    for (int i = 0; i < getValues().length; i++) {
+    for (int i = 0; i < getList().length; i++) {
       map[Columns.customers[i + 1]] = getList()[i];
     }
     return map;

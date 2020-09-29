@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
-import 'package:food_app/controller/order_controller.dart';
 import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/category.dart';
@@ -281,6 +280,7 @@ class _NewSaleState extends State<NewSale> {
   }
 
   String codeGenerator(int id) {
+    
     String code = 'ORD\/';
     String digits = '';
     if (id < 10)
@@ -296,5 +296,9 @@ class _NewSaleState extends State<NewSale> {
     else
       digits = '$id';
     return code + digits;
+  }
+
+  void uploadOrder(SalesMaster salesMaster, SalesDetails salesDetails) {
+    
   }
 }

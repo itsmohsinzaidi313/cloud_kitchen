@@ -13,8 +13,8 @@ class NewSaleController {
 
   NewSaleController() {
     model = new NewSaleModel();
-    model.lstCategory = DataLists.onlineInstance.listCategories;
-    model.lstItem = DataLists.onlineInstance.listItem;
+    model.lstCategory = DataLists.instance.listCategories;
+    model.lstItem = DataLists.instance.listItem;
     model.order = new CustomerOrder();
   }
 
@@ -26,5 +26,9 @@ class NewSaleController {
     this.model.order.setItemList = updatedList;
     this.model.salesMaster = salesMaster;
     launch(context);
+  }
+
+  void uploadOrder() {
+
   }
 }

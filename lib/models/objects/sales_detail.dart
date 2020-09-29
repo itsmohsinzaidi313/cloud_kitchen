@@ -138,7 +138,7 @@ class SalesDetails {
     List<Map<String, dynamic>> res = await db.query(Tables.salesDetails,
         where: 'sales_master_id = ${salesMaster.id}');
 
-    List<Item> listItem = DataLists.onlineInstance.listItem;
+    List<Item> listItem = DataLists.instance.listItem;
     List<Item> updateList = [];
 
     for (int i = 0; i < listItem.length; i++) {

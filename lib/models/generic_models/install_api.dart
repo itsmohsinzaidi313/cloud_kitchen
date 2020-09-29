@@ -24,11 +24,9 @@ class ApiInstall {
   ApiInstall({this.status, this.message, this.data});
 
   Future<bool> init() async {
-    // List<bool> x = [];
     if (this.data != null) {
       try {
         getCompanyList(data['company']);
-        // x.add(true);
         _log.v('DATA LIST Company Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getCompanyList\n$e');
@@ -37,7 +35,6 @@ class ApiInstall {
 
       try {
         getOutletList(data['outlet']);
-        // x.add(true);
         _log.v('DATA LIST outlet Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getOutletList\n$e');
@@ -46,7 +43,6 @@ class ApiInstall {
 
       try {
         getUsersList(data['users']);
-        // x.add(true);
         _log.v('DATA LIST users Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getUsersList\n$e');
@@ -55,7 +51,6 @@ class ApiInstall {
 
       try {
         getVatAmountList(data['vatamount']);
-        // x.add(true);
         _log.v('DATA LIST vatamount Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getVatAmountList\n$e');
@@ -64,7 +59,6 @@ class ApiInstall {
 
       try {
         getTablesList(data['tables']);
-        // x.add(true);
         _log.v('DATA LIST tables Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getTablesList\n$e');
@@ -73,7 +67,6 @@ class ApiInstall {
 
       try {
         getCategoriesList(data['categories']);
-        // x.add(true);
         _log.v('DATA LIST categories Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getCategoriesList\n$e');
@@ -82,7 +75,6 @@ class ApiInstall {
 
       try {
         getModifiersList(data['modifiers']);
-        // x.add(true);
         _log.v('DATA LIST modifiers Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getModifiersList\n$e');
@@ -91,7 +83,6 @@ class ApiInstall {
 
       try {
         getItemList(data['item_menus']);
-        // x.add(true);
         _log.v('DATA LIST item_menus Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getItemMenusList\n$e');
@@ -100,7 +91,6 @@ class ApiInstall {
 
       try {
         getItemModifiersList(data['item_modifiers']);
-        // x.add(true);
         _log.v('DATA LIST item_modifiers Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getItemModifiersList\n$e');
@@ -109,7 +99,6 @@ class ApiInstall {
 
       try {
         getCustomersList(data['customers']);
-        // x.add(true);
         _log.v('DATA LIST customers Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getCustomersList\n$e');
@@ -118,7 +107,6 @@ class ApiInstall {
 
       try {
         getPaymentMethodsList(data['payment_methods']);
-        // x.add(true);
         _log.v('DATA LIST payment_methods Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getPaymentMethodsList\n$e');
@@ -127,7 +115,6 @@ class ApiInstall {
 
       try {
         getExpenseCategoriesList(data['expense_categories']);
-        // x.add(true);
         _log.v('DATA LIST expense_categories Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getExpenseCategoriesList\n$e');
@@ -136,7 +123,6 @@ class ApiInstall {
 
       try {
         getSalesList(data['sales']);
-        // x.add(true);
         _log.v('DATA LIST sales Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getSalesList\n$e');
@@ -145,137 +131,6 @@ class ApiInstall {
 
       try {
         getExpensesList(['expenses']);
-        // x.add(true);
-        _log.v('DATA LIST expenses Ready.');
-      } catch (e) {
-        _log.e('>>>ERROR ON getExpensesList\n$e');
-        return false;
-      }
-    } else {
-      _log.i('NULL DATA PASSED TO INSTALL API');
-    }
-    if (this.data != null) {
-      List<bool> x = [];
-      try {
-        getCompanyList(data['company']);
-        // x.add(true);
-        _log.v('DATA LIST Company Ready.');
-      } catch (e) {
-        _log.e('>>>ERROR ON getCompanyList\n$e');
-        return false;
-      }
-
-      try {
-        getOutletList(data['outlet']);
-        // x.add(true);
-        _log.v('DATA LIST outlet Ready.');
-      } catch (e) {
-        _log.e('>>>ERROR ON getOutletList\n$e');
-        return false;
-      }
-
-      try {
-        getUsersList(data['users']);
-        // x.add(true);
-        _log.v('DATA LIST users Ready.');
-      } catch (e) {
-        _log.e('>>>ERROR ON getUsersList\n$e');
-        return false;
-      }
-
-      try {
-        getVatAmountList(data['vatamount']);
-        // x.add(true);
-        _log.v('DATA LIST vatamount Ready.');
-      } catch (e) {
-        _log.e('>>>ERROR ON getVatAmountList\n$e');
-        return false;
-      }
-
-      try {
-        getTablesList(data['tables']);
-        // x.add(true);
-        _log.v('DATA LIST tables Ready.');
-      } catch (e) {
-        _log.e('>>>ERROR ON getTablesList\n$e');
-        return false;
-      }
-
-      try {
-        getCategoriesList(data['categories']);
-        // x.add(true);
-        _log.v('DATA LIST categories Ready.');
-      } catch (e) {
-        _log.e('>>>ERROR ON getCategoriesList\n$e');
-        return false;
-      }
-
-      try {
-        getModifiersList(data['modifiers']);
-        // x.add(true);
-        _log.v('DATA LIST modifiers Ready.');
-      } catch (e) {
-        _log.e('>>>ERROR ON getModifiersList\n$e');
-        return false;
-      }
-
-      try {
-        getItemList(data['item_menus']);
-        // x.add(true);
-        _log.v('DATA LIST item_menus Ready.');
-      } catch (e) {
-        _log.e('>>>ERROR ON getItemMenusList\n$e');
-        return false;
-      }
-
-      try {
-        getItemModifiersList(data['item_modifiers']);
-        // x.add(true);
-        _log.v('DATA LIST item_modifiers Ready.');
-      } catch (e) {
-        _log.e('>>>ERROR ON getItemModifiersList\n$e');
-        return false;
-      }
-
-      try {
-        getCustomersList(data['customers']);
-        // x.add(true);
-        _log.v('DATA LIST customers Ready.');
-      } catch (e) {
-        _log.e('>>>ERROR ON getCustomersList\n$e');
-        return false;
-      }
-
-      try {
-        getPaymentMethodsList(data['payment_methods']);
-        // x.add(true);
-        _log.v('DATA LIST payment_methods Ready.');
-      } catch (e) {
-        _log.e('>>>ERROR ON getPaymentMethodsList\n$e');
-        return false;
-      }
-
-      try {
-        getExpenseCategoriesList(data['expense_categories']);
-        // x.add(true);
-        _log.v('DATA LIST expense_categories Ready.');
-      } catch (e) {
-        _log.e('>>>ERROR ON getExpenseCategoriesList\n$e');
-        return false;
-      }
-
-      try {
-        getSalesList(data['sales']);
-        // x.add(true);
-        _log.v('DATA LIST sales Ready.');
-      } catch (e) {
-        _log.e('>>>ERROR ON getSalesList\n$e');
-        return false;
-      }
-
-      try {
-        getExpensesList(['expenses']);
-        // x.add(true);
         _log.v('DATA LIST expenses Ready.');
       } catch (e) {
         _log.e('>>>ERROR ON getExpensesList\n$e');
@@ -290,7 +145,7 @@ class ApiInstall {
 
   void getCompanyList(List<dynamic> i) {
     i.forEach((e) {
-      DataLists.onlineInstance.listCompany.add(new Company(
+      DataLists.instance.listCompany.add(new Company(
           serverId: e['id'],
           currency: e['currency'],
           timezone: e['timezone'],
@@ -310,7 +165,7 @@ class ApiInstall {
 
   void getOutletList(List<dynamic> i) {
     i.forEach((e) {
-      DataLists.onlineInstance.listOutlet.add(new Outlet(
+      DataLists.instance.listOutlet.add(new Outlet(
           serverId: e['id'],
           outletName: e['outlet_name'],
           outletCode: e['outlet_code'],
@@ -329,7 +184,7 @@ class ApiInstall {
 
   void getUsersList(List<dynamic> i) {
     i.forEach((e) {
-      DataLists.onlineInstance.listUsers.add(new User(
+      DataLists.instance.listUsers.add(new User(
           serverId: e['id'],
           fullName: e['full_name'],
           phone: e['phone'],
@@ -350,7 +205,7 @@ class ApiInstall {
 
   void getVatAmountList(List<dynamic> i) {
     i.forEach((e) {
-      DataLists.onlineInstance.listVatAmount.add(new VatAmount(
+      DataLists.instance.listVatAmount.add(new VatAmount(
         serverID: e['id'],
         name: e['name'],
         percentage: e['percentage'],
@@ -363,7 +218,7 @@ class ApiInstall {
 
   void getTablesList(List<dynamic> i) {
     i.forEach((e) {
-      DataLists.onlineInstance.listTables.add(new Table(
+      DataLists.instance.listTables.add(new Table(
           serverId: e['id'],
           name: e['name'],
           sitCapacity: e['sit_capacity'],
@@ -378,7 +233,7 @@ class ApiInstall {
 
   void getCategoriesList(List<dynamic> i) {
     i.forEach((e) {
-      DataLists.onlineInstance.listCategories.add(new Category(
+      DataLists.instance.listCategories.add(new Category(
           serverId: e['id'],
           categoryName: e['category_name'],
           description: e['description'],
@@ -390,7 +245,7 @@ class ApiInstall {
 
   void getModifiersList(List<dynamic> i) {
     i.forEach((e) {
-      DataLists.onlineInstance.listModifiers.add(new Modifier(
+      DataLists.instance.listModifiers.add(new Modifier(
           serverId: e['id'],
           name: e['name'],
           price: e['price'],
@@ -403,7 +258,7 @@ class ApiInstall {
 
   void getItemList(List<dynamic> i) {
     i.forEach((e) {
-      DataLists.onlineInstance.listItem.add(new Item(
+      DataLists.instance.listItem.add(new Item(
           serverId: e['id'],
           code: e['code'],
           name: e['name'],
@@ -417,7 +272,7 @@ class ApiInstall {
 
   void getItemModifiersList(List<dynamic> i) {
     i.forEach((e) {
-      DataLists.onlineInstance.listItemModifiers.add(new ItemModifier(
+      DataLists.instance.listItemModifiers.add(new ItemModifier(
           serverId: e['id'],
           modifierId: e['modifier_id'],
           foodMenuId: e['food_menu_id'],
@@ -432,7 +287,7 @@ class ApiInstall {
 
   void getCustomersList(List<dynamic> i) {
     i.forEach((e) {
-      DataLists.onlineInstance.listCustomers.add(new Customer(
+      DataLists.instance.listCustomers.add(new Customer(
           serverId: e['id'],
           name: e['name'],
           phone: e['phone'],
@@ -450,7 +305,7 @@ class ApiInstall {
 
   void getPaymentMethodsList(List<dynamic> i) {
     i.forEach((e) {
-      DataLists.onlineInstance.listPaymentMethods.add(new PaymentMethod(
+      DataLists.instance.listPaymentMethods.add(new PaymentMethod(
         serverId: e['id'],
         name: e['name'],
         description: e['description'],
@@ -463,7 +318,7 @@ class ApiInstall {
 
   void getExpenseCategoriesList(List<dynamic> i) {
     i.forEach((e) {
-      DataLists.onlineInstance.listExpenseCategories.add(new ExpenseCategory(
+      DataLists.instance.listExpenseCategories.add(new ExpenseCategory(
         serverId: e['id'],
         name: e['name'],
         description: e['description'],

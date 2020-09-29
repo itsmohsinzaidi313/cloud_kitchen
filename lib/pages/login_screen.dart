@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
   SharedPreferences _sharedPreferences;
 
   bool validateUser(email, pass)  {
-    List<User> listUser = DataLists.onlineInstance.listUsers;
+    List<User> listUser = DataLists.instance.listUsers;
     // if (listUser.length <= 0) {
     //   _scaffoldKey.currentState
     //       .showSnackBar(SnackBar(content: Text('No User Found!')));

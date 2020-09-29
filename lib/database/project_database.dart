@@ -23,10 +23,10 @@ class ProjectDatabase {
 
   Future<Database> get database async {
     if (_database != null) {
-      currentVersion = await _database.getVersion();
       return _database;
     } else {
-      return _initDatabase();
+      _database = await _initDatabase();
+      return _database;
     }
   }
 

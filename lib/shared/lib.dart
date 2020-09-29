@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/generic_models/install_api.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:http/http.dart';
@@ -24,9 +23,9 @@ class Lib {
       Response response =
           await get(url).timeout(Duration(seconds: 15), onTimeout: () => null);
       _log.v('ENTRY fetchData');
-      _log.v('SERVER RESPONSE: ${response.statusCode}');
       Map<String, dynamic> data;
       if (response != null) {
+        _log.v('SERVER RESPONSE: ${response.statusCode}');
         if (response.statusCode == 200) {
           data = jsonDecode(response.body);
         }
@@ -40,15 +39,14 @@ class Lib {
 
   static Future<bool> install() async {
     ApiInstall apiInstall = new ApiInstall(data: await fetchData());
-    return apiInstall.init();
+    bool value = await apiInstall.init();
+    return value;
   }
 
   static Future<bool> insertIntoDatabase(
       Database db, String table, Map<String, dynamic> values) async {
     try {
-      bool value = await db.transaction((txn) => txn.insert(table, values)) > 0
-          ? true
-          : false;
+      bool value = await db.insert(table, values) > 0 ? true : false;
       return value;
     } catch (e) {
       Config.log.e('Error on Lib insertIntoDatabase', [e]);
