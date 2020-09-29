@@ -37,4 +37,6 @@ class DashboardController {
 
   void launch() => Navigator.of(model.context).pushReplacement(
       new MaterialPageRoute(builder: (context) => new Dashboard(model)));
+
+
 }

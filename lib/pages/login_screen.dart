@@ -1,21 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/shift_controller.dart';
+import 'package:food_app/models/objects/user.dart';
+import 'package:food_app/models/view_models/login_model.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
+import 'package:food_app/shared/data_lists.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserLogin extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
+
+  final LoginModel loginModel;
+  LoginScreen(this.loginModel);
+
   @override
-  _UserLoginState createState() => _UserLoginState();
+  _LoginScreenState createState() => _LoginScreenState(this.loginModel);
 }
 
-class _UserLoginState extends State<UserLogin> {
+class _LoginScreenState extends State<LoginScreen> {
+
+  final LoginModel loginModel;
+  _LoginScreenState(this.loginModel);
+
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
 
   bool _autoValidate = false;
   bool _obscureText = true;
   bool isLoading = false;
+  bool isLogin = false;
   Icon _icon = Icon(Icons.visibility_off);
 
   String errorEmail = 'Invalid Email', errorPassword = 'Invalid Password';
@@ -32,22 +44,39 @@ class _UserLoginState extends State<UserLogin> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   SharedPreferences _sharedPreferences;
 
-  Future getUser(email, pass) async {
-    List<Map<String, dynamic>> user = [];
-    print(user[0]['id']);
-    if (user.length <= 0) {
-      _scaffoldKey.currentState
-          .showSnackBar(SnackBar(content: Text('No User Found!')));
-      setState(() {
-        isLoading = false;
-      });
-    } else {
-      setSharedPreferences(user);
-      isLoading = false;
-      Navigator.pushReplacementNamed(context, '/r', arguments: {
-        'id': user[0]['id'],
-      });
+  bool validateUser(email, pass)  {
+    List<User> listUser = DataLists.onlineInstance.listUsers;
+    // if (listUser.length <= 0) {
+    //   _scaffoldKey.currentState
+    //       .showSnackBar(SnackBar(content: Text('No User Found!')));
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // } else {
+    //   listUser.forEach((usr) {
+    //     if(usr.emailAddress == email && usr.password == pass){
+    //       // setSharedPreferences(user);
+    //       setState(() {
+    //         isLoading = false;
+    //         isLogin = true;
+    //       });
+    //       ShiftController().launch(context);
+    //     }
+    //   });
+    //   if(!isLogin){
+    //     _scaffoldKey.currentState
+    //         .showSnackBar(SnackBar(content: Text('There is no such user exists')));
+    //   }
+    // }
+    bool valid = false;
+    for( int i = 0; i < listUser.length; i++ ){
+      if(listUser[i].emailAddress == email && listUser[i].password == pass){
+        valid = true;
+        Config().currentUser = listUser[i];
+        break;
+      }
     }
+    return valid;
   }
 
   Future getSharedPreferences() async {
@@ -68,25 +97,23 @@ class _UserLoginState extends State<UserLogin> {
 
   void onButtonTap() {
     setState(() {
-      // if (_formKey.currentState
-      //     .validate()) {
-      //   isLoading = true;
-      //   _formKey.currentState.save();
-      //   if (email.text.contains('\t')) {
-      //     email.text = email.text
-      //         .replaceAll(
-      //         RegExp(r'\t'), '');
-      //     getUser(
-      //         email.text, password.text);
-      //   } else {
-      //     getUser(
-      //         email.text, password.text);
-      //   }
-      // } else {
-      //   isLoading = false;
-      //   _autoValidate = true;
-      // }
-      ShiftController().launch(context);
+      if (_formKey.currentState
+          .validate()) {
+        isLoading = true;
+        _formKey.currentState.save();
+        if (email.text.contains('\t')) {
+          email.text = email.text
+              .replaceAll(
+              RegExp(r'\t'), '');
+          validateUser(email.text, password.text) ? ShiftController().launch(context) :
+          _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('There is no such user exists')));
+        } else {
+          validateUser(email.text, password.text) ? ShiftController().launch(context) :
+          _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('There is no such user exists')));        }
+      } else {
+        isLoading = false;
+        _autoValidate = true;
+      }
     });
   }
 
@@ -108,8 +135,7 @@ class _UserLoginState extends State<UserLogin> {
                     width: Config.getDeviceWidth(context) * 0.4,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(
-                            'https://image.freepik.com/free-photo/hands-holding-burger-yellow-background_23-2148258479.jpg'),
+                        image: NetworkImage(loginModel.imageUrl),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -120,7 +146,7 @@ class _UserLoginState extends State<UserLogin> {
                             margin: EdgeInsets.only(top: 180),
                             child: Center(
                               child: Text(
-                                'Login',
+                                  loginModel.loginButtonText,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 60,
@@ -167,7 +193,7 @@ class _UserLoginState extends State<UserLogin> {
                                       child: TextFormField(
                                         decoration: InputDecoration(
                                           border: InputBorder.none,
-                                          labelText: "Enter Email",
+                                          labelText: loginModel.hintEmail,
                                           labelStyle: TextStyle(
                                             color: Colors.grey[400],
                                           ),
@@ -196,14 +222,13 @@ class _UserLoginState extends State<UserLogin> {
                                             child: TextFormField(
                                               decoration: InputDecoration(
                                                 border: InputBorder.none,
-                                                labelText: 'Enter Password',
+                                                labelText: loginModel.hintPassword,
                                                 labelStyle: TextStyle(
                                                   color: Colors.grey[400],
                                                 ),
                                               ),
                                               obscureText: _obscureText,
-                                              textInputAction:
-                                                  TextInputAction.done,
+                                              textInputAction: TextInputAction.done,
                                               keyboardType:
                                                   TextInputType.visiblePassword,
                                               onFieldSubmitted: (value) {
@@ -237,12 +262,12 @@ class _UserLoginState extends State<UserLogin> {
                             SizedBox(
                               height: 30,
                             ),
-                            isLoading
-                                ? AppTheme.circularProgressIndicator(
-                                    Colors.redAccent)
-                                : SizedBox(
-                                    height: 0,
-                                  ),
+                            // isLoading
+                            //     ? AppTheme.circularProgressIndicator(
+                            //         Colors.redAccent)
+                            //     : SizedBox(
+                            //         height: 0,
+                            //       ),
                             Container(
                               height: 50,
                               decoration: BoxDecoration(

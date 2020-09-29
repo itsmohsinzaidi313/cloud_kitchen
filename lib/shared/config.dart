@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/models/objects/shift.dart';
+import 'package:food_app/models/objects/user.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Config {
+
   static const String appTitle = 'Cloud Kitchen';
   static const DATABASE databaseVersion = DATABASE.STABLE;
   static const String databaseName = 'CloudKitchen.db';
@@ -16,6 +19,14 @@ class Config {
       'http://$serverIP/cloud-kitchen/api/order?auth=$authToken';
 
   static const int screenStartTime = 3;
+
+  static User _currentUser ;
+  set currentUser(user) => _currentUser = user;
+  User get currentUser => _currentUser;
+
+  static Shift _currentShift;
+  set currentShift(shift) => _currentShift = shift;
+  Shift get currentShift => _currentShift;
 
   static double getDeviceWidth(BuildContext context) =>
       MediaQuery.of(context).size.width;
