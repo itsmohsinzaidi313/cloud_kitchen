@@ -1,5 +1,6 @@
 import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
+import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Table {
@@ -56,12 +57,12 @@ class Table {
 
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
-    for (int i = 1; i < Columns.tables.length; i++) {
-      map[Columns.tables[i]] = getList()[i];
+    for (int i = 0; i < getList().length; i++) {
+      map[Columns.tables[i + 1]] = getList()[i];
     }
     return map;
   }
 
   Future<bool> insertIntoDatabase(Database db) async =>
-      await db.insert(Tables.tables, getValues()) > 0 ? true : false;
+      await Lib.insertIntoDatabase(db, Tables.tables, getValues());
 }

@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/generic_models/install_api.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 
 class Lib {
   static Logger _log = Config.log;
@@ -35,6 +37,19 @@ class Lib {
 
   static Future<bool> install() async {
     ApiInstall apiInstall = new ApiInstall(data: await fetchData());
-    return apiInstall.isInitialized;
+    return apiInstall.init();
+  }
+
+  static Future<bool> insertIntoDatabase(
+      Database db, String table, Map<String, dynamic> values) async {
+    try {
+      bool value = await db.transaction((txn) => txn.insert(table, values)) > 0
+          ? true
+          : false;
+      return value;
+    } catch (e) {
+      Config.log.e('Error on Lib insertIntoDatabase', [e]);
+      return false;
+    }
   }
 }

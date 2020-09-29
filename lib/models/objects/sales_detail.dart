@@ -5,6 +5,7 @@ import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/item.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/shared/data_lists.dart';
+import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SalesDetails {
@@ -117,14 +118,14 @@ class SalesDetails {
 
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
-    for (int i = 1; i < Columns.salesDetails.length; i++) {
-      map[Columns.salesDetails[i]] = getList()[i - 1];
+    for (int i = 0; i < getList().length; i++) {
+      map[Columns.salesDetails[i + 1]] = getList()[i];
     }
     return map;
   }
 
   Future<bool> insertIntoDatabase(Database db) async =>
-      await db.insert(Tables.salesDetails, getValues()) > 0 ? true : false;
+      await Lib.insertIntoDatabase(db, Tables.salesDetails, getValues());
 
   Future<int> insertSpecificIntoDb(
       Database db, Map<String, dynamic> map) async {

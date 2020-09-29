@@ -21,139 +21,272 @@ class ApiInstall {
   final Logger _log = Config.log;
   bool _isInitialized = false;
   bool get isInitialized => _isInitialized;
-  ApiInstall({this.status, this.message, this.data}) {
+  ApiInstall({this.status, this.message, this.data});
+
+  Future<bool> init() async {
+    // List<bool> x = [];
     if (this.data != null) {
-      List<bool> x = [];
       try {
         getCompanyList(data['company']);
-        x.add(true);
+        // x.add(true);
         _log.v('DATA LIST Company Ready.');
       } catch (e) {
-        x.add(false);
         _log.e('>>>ERROR ON getCompanyList\n$e');
+        return false;
       }
 
       try {
         getOutletList(data['outlet']);
-        x.add(true);
+        // x.add(true);
         _log.v('DATA LIST outlet Ready.');
       } catch (e) {
-        x.add(false);
         _log.e('>>>ERROR ON getOutletList\n$e');
+        return false;
       }
 
       try {
         getUsersList(data['users']);
-        x.add(true);
+        // x.add(true);
         _log.v('DATA LIST users Ready.');
       } catch (e) {
-        x.add(false);
         _log.e('>>>ERROR ON getUsersList\n$e');
+        return false;
       }
 
       try {
         getVatAmountList(data['vatamount']);
-        x.add(true);
+        // x.add(true);
         _log.v('DATA LIST vatamount Ready.');
       } catch (e) {
-        x.add(false);
         _log.e('>>>ERROR ON getVatAmountList\n$e');
+        return false;
       }
 
       try {
         getTablesList(data['tables']);
-        x.add(true);
+        // x.add(true);
         _log.v('DATA LIST tables Ready.');
       } catch (e) {
-        x.add(false);
         _log.e('>>>ERROR ON getTablesList\n$e');
+        return false;
       }
 
       try {
         getCategoriesList(data['categories']);
-        x.add(true);
+        // x.add(true);
         _log.v('DATA LIST categories Ready.');
       } catch (e) {
-        x.add(false);
         _log.e('>>>ERROR ON getCategoriesList\n$e');
+        return false;
       }
 
       try {
         getModifiersList(data['modifiers']);
-        x.add(true);
+        // x.add(true);
         _log.v('DATA LIST modifiers Ready.');
       } catch (e) {
-        x.add(false);
         _log.e('>>>ERROR ON getModifiersList\n$e');
+        return false;
       }
 
       try {
         getItemList(data['item_menus']);
-        x.add(true);
+        // x.add(true);
         _log.v('DATA LIST item_menus Ready.');
       } catch (e) {
-        x.add(false);
         _log.e('>>>ERROR ON getItemMenusList\n$e');
+        return false;
       }
 
       try {
         getItemModifiersList(data['item_modifiers']);
-        x.add(true);
+        // x.add(true);
         _log.v('DATA LIST item_modifiers Ready.');
       } catch (e) {
-        x.add(false);
         _log.e('>>>ERROR ON getItemModifiersList\n$e');
+        return false;
       }
 
       try {
         getCustomersList(data['customers']);
-        x.add(true);
+        // x.add(true);
         _log.v('DATA LIST customers Ready.');
       } catch (e) {
-        x.add(false);
         _log.e('>>>ERROR ON getCustomersList\n$e');
+        return false;
       }
 
       try {
         getPaymentMethodsList(data['payment_methods']);
-        x.add(true);
+        // x.add(true);
         _log.v('DATA LIST payment_methods Ready.');
       } catch (e) {
-        x.add(false);
         _log.e('>>>ERROR ON getPaymentMethodsList\n$e');
+        return false;
       }
 
       try {
         getExpenseCategoriesList(data['expense_categories']);
-        x.add(true);
+        // x.add(true);
         _log.v('DATA LIST expense_categories Ready.');
       } catch (e) {
-        x.add(false);
         _log.e('>>>ERROR ON getExpenseCategoriesList\n$e');
+        return false;
       }
 
       try {
         getSalesList(data['sales']);
-        x.add(true);
+        // x.add(true);
         _log.v('DATA LIST sales Ready.');
       } catch (e) {
-        x.add(false);
         _log.e('>>>ERROR ON getSalesList\n$e');
+        return false;
       }
 
       try {
         getExpensesList(['expenses']);
-        x.add(true);
+        // x.add(true);
         _log.v('DATA LIST expenses Ready.');
       } catch (e) {
-        x.add(false);
         _log.e('>>>ERROR ON getExpensesList\n$e');
+        return false;
       }
     } else {
       _log.i('NULL DATA PASSED TO INSTALL API');
     }
-  }
+    if (this.data != null) {
+      List<bool> x = [];
+      try {
+        getCompanyList(data['company']);
+        // x.add(true);
+        _log.v('DATA LIST Company Ready.');
+      } catch (e) {
+        _log.e('>>>ERROR ON getCompanyList\n$e');
+        return false;
+      }
 
+      try {
+        getOutletList(data['outlet']);
+        // x.add(true);
+        _log.v('DATA LIST outlet Ready.');
+      } catch (e) {
+        _log.e('>>>ERROR ON getOutletList\n$e');
+        return false;
+      }
+
+      try {
+        getUsersList(data['users']);
+        // x.add(true);
+        _log.v('DATA LIST users Ready.');
+      } catch (e) {
+        _log.e('>>>ERROR ON getUsersList\n$e');
+        return false;
+      }
+
+      try {
+        getVatAmountList(data['vatamount']);
+        // x.add(true);
+        _log.v('DATA LIST vatamount Ready.');
+      } catch (e) {
+        _log.e('>>>ERROR ON getVatAmountList\n$e');
+        return false;
+      }
+
+      try {
+        getTablesList(data['tables']);
+        // x.add(true);
+        _log.v('DATA LIST tables Ready.');
+      } catch (e) {
+        _log.e('>>>ERROR ON getTablesList\n$e');
+        return false;
+      }
+
+      try {
+        getCategoriesList(data['categories']);
+        // x.add(true);
+        _log.v('DATA LIST categories Ready.');
+      } catch (e) {
+        _log.e('>>>ERROR ON getCategoriesList\n$e');
+        return false;
+      }
+
+      try {
+        getModifiersList(data['modifiers']);
+        // x.add(true);
+        _log.v('DATA LIST modifiers Ready.');
+      } catch (e) {
+        _log.e('>>>ERROR ON getModifiersList\n$e');
+        return false;
+      }
+
+      try {
+        getItemList(data['item_menus']);
+        // x.add(true);
+        _log.v('DATA LIST item_menus Ready.');
+      } catch (e) {
+        _log.e('>>>ERROR ON getItemMenusList\n$e');
+        return false;
+      }
+
+      try {
+        getItemModifiersList(data['item_modifiers']);
+        // x.add(true);
+        _log.v('DATA LIST item_modifiers Ready.');
+      } catch (e) {
+        _log.e('>>>ERROR ON getItemModifiersList\n$e');
+        return false;
+      }
+
+      try {
+        getCustomersList(data['customers']);
+        // x.add(true);
+        _log.v('DATA LIST customers Ready.');
+      } catch (e) {
+        _log.e('>>>ERROR ON getCustomersList\n$e');
+        return false;
+      }
+
+      try {
+        getPaymentMethodsList(data['payment_methods']);
+        // x.add(true);
+        _log.v('DATA LIST payment_methods Ready.');
+      } catch (e) {
+        _log.e('>>>ERROR ON getPaymentMethodsList\n$e');
+        return false;
+      }
+
+      try {
+        getExpenseCategoriesList(data['expense_categories']);
+        // x.add(true);
+        _log.v('DATA LIST expense_categories Ready.');
+      } catch (e) {
+        _log.e('>>>ERROR ON getExpenseCategoriesList\n$e');
+        return false;
+      }
+
+      try {
+        getSalesList(data['sales']);
+        // x.add(true);
+        _log.v('DATA LIST sales Ready.');
+      } catch (e) {
+        _log.e('>>>ERROR ON getSalesList\n$e');
+        return false;
+      }
+
+      try {
+        getExpensesList(['expenses']);
+        // x.add(true);
+        _log.v('DATA LIST expenses Ready.');
+      } catch (e) {
+        _log.e('>>>ERROR ON getExpensesList\n$e');
+        return false;
+      }
+      return true;
+    } else {
+      _log.i('NULL DATA PASSED TO INSTALL API');
+      return false;
+    }
+  }
 
   void getCompanyList(List<dynamic> i) {
     i.forEach((e) {

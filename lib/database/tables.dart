@@ -1,21 +1,21 @@
 class Tables {
   //LIST OF TABLES MAME
   static const List<String> listofAllTables = [
-    users, //1
-    shiftData, //2
-    categories, //3
-    item, //4
-    salesMaster, //5
-    salesDetails, //6
-    company, //7
-    customers, //8
-    expenseCategories, //9
-    itemModifiers, //10
-    modifiers, //11
-    outlet, //12
-    paymentMethods, //13
+    users, //0
+    shiftData, //1
+    categories, //2
+    item, //3
+    salesMaster, //4
+    salesDetails, //5
+    company, //6
+    customers, //7
+    expenseCategories, //8
+    itemModifiers, //9
+    modifiers, //10
+    outlet, //11
+    paymentMethods, //12
+    vatAmount, //13
     tables, //14
-    vatAmount, //15
   ];
 
   static const String users = 'users'; //1

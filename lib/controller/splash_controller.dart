@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/controller/dashboard_controller.dart';
-import 'package:food_app/database/project_database.dart';
 import 'package:food_app/pages/splash_screen.dart';
-import 'package:food_app/shared/config.dart';
-import 'package:food_app/shared/data_lists.dart';
-import 'package:food_app/shared/lib.dart';
 
 class SplashController {
   BuildContext context;

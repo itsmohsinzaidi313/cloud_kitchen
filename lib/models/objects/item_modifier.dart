@@ -1,6 +1,7 @@
 import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/shared/config.dart';
+import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ItemModifier {
@@ -59,13 +60,8 @@ class ItemModifier {
   Map<String, dynamic> getValues() {
     try {
       Map<String, dynamic> map = new Map<String, dynamic>();
-      print(Columns.itemModifier.length);
-      for (int i = 1; i < Columns.itemModifier.length; i++) {
-        print('---');
-        print(i);
-        print(Columns.itemModifier[i]);
-        print(getList()[i]);
-        map[Columns.itemModifier[i]] = getList()[i - 1];
+      for (int i = 1; i < getList().length; i++) {
+        map[Columns.itemModifier[i + 1]] = getList()[i];
       }
       return map;
     } catch (e) {
@@ -75,5 +71,5 @@ class ItemModifier {
   }
 
   Future<bool> insertIntoDatabase(Database db) async =>
-      await db.insert(Tables.itemModifiers, getValues()) > 0 ? true : false;
+      await Lib.insertIntoDatabase(db, Tables.itemModifiers, getValues());
 }

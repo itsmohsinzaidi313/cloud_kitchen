@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:food_app/controller/order_controller.dart';
 import 'package:food_app/database/tables.dart';
-import 'package:food_app/models/generic_models/customer_order.dart';
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/item.dart';
 import 'package:food_app/models/objects/sales_detail.dart';

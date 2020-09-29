@@ -14,7 +14,6 @@ import 'package:food_app/shared/lib.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test();
   // testWidgets('Counter increments smoke test', (WidgetTester tester) async {
   //   // Build our app and trigger a frame.
   //   await tester.pumpWidget();
@@ -31,10 +30,4 @@ void main() {
   //   expect(find.text('0'), findsNothing);
   //   expect(find.text('1'), findsOneWidget);
   // });
-}
-
-void test() async {
-  Map<String, dynamic> map = await Lib.fetchData();
-  ApiInstall(data: map);
-  DAL.dal.importFromDatabase(ProjectDatabase().database);
 }

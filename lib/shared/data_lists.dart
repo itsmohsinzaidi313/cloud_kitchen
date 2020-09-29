@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/company.dart';
@@ -31,6 +32,9 @@ class DataLists {
   final List<dynamic> listSales = []; // NOT FUNCTIONAL
   final List<dynamic> listExpenses = []; // NOT FUNCTIONAL
   final int listsCount = 12;
+  static final DataLists onlineInstance = new DataLists();
+  static final DataLists offlineInstance = new DataLists();
+  static final Logger _log = Config.log;
   List<List> getInList() => [
         listCompany,
         listOutlet,
@@ -45,89 +49,116 @@ class DataLists {
         listPaymentMethods,
         listExpenseCategories
       ];
-  static final DataLists onlineInstance = new DataLists();
-  static final DataLists offlineInstance = new DataLists();
-  static final Logger _log = Config.log;
 
-  static void importToDatabase(Database db) async {
+  static Future<bool> importToDatabase(Database db) async {
     try {
-      await db.delete(Tables.users).whenComplete(() => onlineInstance.listUsers
-          .forEach((element) => element.insertIntoDatabase(db)));
+      int x = await db.delete(Tables.users);
+      onlineInstance.listUsers
+          .forEach((element) async => await element.insertIntoDatabase(db));
     } catch (e) {
       _log.e('Error On ImportToDatabase listUsers', [e]);
+      return false;
     }
     try {
-      await db.delete(Tables.item).whenComplete(() => onlineInstance.listItem
-          .forEach((element) => element.insertIntoDatabase(db)));
+      int x = await db.delete(Tables.item);
+      onlineInstance.listItem
+          .forEach((element) async => await element.insertIntoDatabase(db));
     } catch (e) {
       _log.e('Error On ImportToDatabase listItem', [e]);
+      return false;
     }
     try {
-      db.delete(Tables.categories).whenComplete(() => onlineInstance
-          .listCategories
-          .forEach((element) => element.insertIntoDatabase(db)));
+      int x = await db.delete(Tables.categories);
+      onlineInstance.listCategories
+          .forEach((element) async => await element.insertIntoDatabase(db));
     } catch (e) {
       _log.e('Error On ImportToDatabase listCategories', [e]);
+      return false;
     }
     try {
-      db.delete(Tables.company).whenComplete(() => onlineInstance.listCompany
-          .forEach((element) => element.insertIntoDatabase(db)));
+      int x = await db.delete(Tables.company);
+      onlineInstance.listCompany
+          .forEach((element) async => await element.insertIntoDatabase(db));
     } catch (e) {
       _log.e('Error On ImportToDatabase listCompany', [e]);
+      return false;
     }
     try {
-      db.delete(Tables.outlet).whenComplete(() => onlineInstance.listOutlet
-          .forEach((element) => element.insertIntoDatabase(db)));
+      db.delete(Tables.outlet).then((value) => onlineInstance.listOutlet
+          .forEach((element) async => await element.insertIntoDatabase(db)));
     } catch (e) {
       _log.e('Error On ImportToDatabase listOutlet', [e]);
+      return false;
     }
     try {
-      db.delete(Tables.customers).whenComplete(() => onlineInstance
-          .listCustomers
-          .forEach((element) => element.insertIntoDatabase(db)));
+      db.delete(Tables.customers).then((value) => onlineInstance.listCustomers
+          .forEach((element) async => await element.insertIntoDatabase(db)));
     } catch (e) {
       _log.e('Error On ImportToDatabase listCustomers', [e]);
+      return false;
     }
     try {
-      db.delete(Tables.tables).whenComplete(() => onlineInstance.listTables
-          .forEach((element) => element.insertIntoDatabase(db)));
+      db.delete(Tables.tables).then((value) => onlineInstance.listTables
+          .forEach((element) async => await element.insertIntoDatabase(db)));
     } catch (e) {
       _log.e('Error On ImportToDatabase listTables', [e]);
+      return false;
     }
     try {
-      db.delete(Tables.itemModifiers).whenComplete(() => onlineInstance
+      db.delete(Tables.itemModifiers).then((value) => onlineInstance
           .listItemModifiers
-          .forEach((element) => element.insertIntoDatabase(db)));
+          .forEach((element) async => await element.insertIntoDatabase(db)));
     } catch (e) {
       _log.e('Error On ImportToDatabase listItemModifiers', [e]);
+      return false;
     }
     try {
-      db.delete(Tables.modifiers).whenComplete(() => onlineInstance
-          .listModifiers
-          .forEach((element) => element.insertIntoDatabase(db)));
+      db.delete(Tables.modifiers).then((value) => onlineInstance.listModifiers
+          .forEach((element) async => await element.insertIntoDatabase(db)));
     } catch (e) {
       _log.e('Error On ImportToDatabase listModifiers', [e]);
+      return false;
     }
     try {
-      db.delete(Tables.expenseCategories).whenComplete(() => onlineInstance
+      db.delete(Tables.expenseCategories).then((value) => onlineInstance
           .listExpenseCategories
-          .forEach((element) => element.insertIntoDatabase(db)));
+          .forEach((element) async => await element.insertIntoDatabase(db)));
     } catch (e) {
       _log.e('Error On ImportToDatabase listExpenseCategories', [e]);
+      return false;
     }
     try {
-      db.delete(Tables.paymentMethods).whenComplete(() => onlineInstance
+      db.delete(Tables.paymentMethods).then((value) => onlineInstance
           .listPaymentMethods
-          .forEach((element) => element.insertIntoDatabase(db)));
+          .forEach((element) async => await element.insertIntoDatabase(db)));
     } catch (e) {
       _log.e('Error On ImportToDatabase listPaymentMethods', [e]);
+      return false;
     }
     try {
-      db.delete(Tables.vatAmount).whenComplete(() => onlineInstance
-          .listVatAmount
-          .forEach((element) => element.insertIntoDatabase(db)));
+      db.delete(Tables.vatAmount).then((value) => onlineInstance.listVatAmount
+          .forEach((element) async => await element.insertIntoDatabase(db)));
     } catch (e) {
       _log.e('Error On ImportToDatabase listVatAmount', [e]);
+      return false;
     }
+    return true;
+  }
+
+  static Future<bool> importToMemory(Database db) async {
+    try {
+      List<Map<String, dynamic>> listMap = await db.query(Tables.categories);
+
+      listMap.forEach((element) {
+        DataLists.offlineInstance.listCategories
+            .add(new Category.fromJson(element));
+      });
+      DataLists.offlineInstance.listCategories
+          .forEach((element) => log('${element.categoryName}'));
+    } catch (e) {
+      _log.e('ERROR ON importToMemory Categories', [e]);
+      return false;
+    }
+    return true;
   }
 }
