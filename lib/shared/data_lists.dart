@@ -33,7 +33,6 @@ class DataLists {
   final List<dynamic> listExpenses = []; // NOT FUNCTIONAL
   final int listsCount = 12;
   static final DataLists onlineInstance = new DataLists();
-  static final DataLists offlineInstance = new DataLists();
   static final Logger _log = Config.log;
   List<List> getInList() => [
         listCompany,
@@ -148,15 +147,32 @@ class DataLists {
   static Future<bool> importToMemory(Database db) async {
     try {
       List<Map<String, dynamic>> listMap = await db.query(Tables.categories);
-
       listMap.forEach((element) {
-        DataLists.offlineInstance.listCategories
+        DataLists.onlineInstance.listCategories
             .add(new Category.fromJson(element));
       });
-      DataLists.offlineInstance.listCategories
+      DataLists.onlineInstance.listCategories
           .forEach((element) => log('${element.categoryName}'));
     } catch (e) {
-      _log.e('ERROR ON importToMemory Categories', [e]);
+      _log.e('ERROR ON importToMemory listCategories', [e]);
+      return false;
+    }
+    try {
+      List<Map<String, dynamic>> listMap = await db.query(Tables.users);
+      listMap.forEach((element) {
+        DataLists.onlineInstance.listUsers.add(new User.fromJson(element));
+      });
+    } catch (e) {
+      _log.e('ERROR ON importToMemory listUsers', [e]);
+      return false;
+    }
+    try {
+      List<Map<String, dynamic>> listMap = await db.query(Tables.categories);
+      listMap.forEach((element) {
+        DataLists.onlineInstance.listUsers.add(new User.fromJson(element));
+      });
+    } catch (e) {
+      _log.e('ERROR ON importToMemory listUsers', [e]);
       return false;
     }
     return true;

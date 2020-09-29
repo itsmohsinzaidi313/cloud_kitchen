@@ -32,40 +32,40 @@ class DAL {
               table.getDataFromDatabase().then((listMap) {
                 listMap.forEach((map) {
                   if (table.tableName == Tables.listofAllTables[0])
-                    DataLists.offlineInstance.listUsers
+                    DataLists.onlineInstance.listUsers
                         .add(new User.fromJson(map));
                   else if (table.tableName == Tables.listofAllTables[2])
-                    DataLists.offlineInstance.listCategories
+                    DataLists.onlineInstance.listCategories
                         .add(new Category.fromJson(map));
                   else if (table.tableName == Tables.listofAllTables[3])
-                    DataLists.offlineInstance.listItem
+                    DataLists.onlineInstance.listItem
                         .add(new Item.fromJson(map));
                   else if (table.tableName == Tables.listofAllTables[7])
-                    DataLists.offlineInstance.listCompany
+                    DataLists.onlineInstance.listCompany
                         .add(new Company.fromJson(map));
                   else if (table.tableName == Tables.listofAllTables[8])
-                    DataLists.offlineInstance.listCustomers
+                    DataLists.onlineInstance.listCustomers
                         .add(new Customer.fromJson(map));
                   else if (table.tableName == Tables.listofAllTables[9])
-                    DataLists.offlineInstance.listExpenseCategories
+                    DataLists.onlineInstance.listExpenseCategories
                         .add(new ExpenseCategory.fromJson(map));
                   else if (table.tableName == Tables.listofAllTables[10])
-                    DataLists.offlineInstance.listItemModifiers
+                    DataLists.onlineInstance.listItemModifiers
                         .add(new ItemModifier.fromJson(map));
                   else if (table.tableName == Tables.listofAllTables[11])
-                    DataLists.offlineInstance.listModifiers
+                    DataLists.onlineInstance.listModifiers
                         .add(new Modifier.fromJson(map));
                   else if (table.tableName == Tables.listofAllTables[12])
-                    DataLists.offlineInstance.listOutlet
+                    DataLists.onlineInstance.listOutlet
                         .add(new Outlet.fromJson(map));
                   else if (table.tableName == Tables.listofAllTables[13])
-                    DataLists.offlineInstance.listPaymentMethods
+                    DataLists.onlineInstance.listPaymentMethods
                         .add(new PaymentMethod.fromJson(map));
                   else if (table.tableName == Tables.listofAllTables[14])
-                    DataLists.offlineInstance.listTables
+                    DataLists.onlineInstance.listTables
                         .add(new Table.fromJson(map));
                   else if (table.tableName == Tables.listofAllTables[15])
-                    DataLists.offlineInstance.listVatAmount
+                    DataLists.onlineInstance.listVatAmount
                         .add(new VatAmount.fromJson(map));
                 });
               });
@@ -74,8 +74,8 @@ class DAL {
         })
         .whenComplete(() => _isInitialized = true)
         .catchError((onError) => _log.e('Error on DAL import', [onError]));
-    for (int i = 0; i < DataLists.offlineInstance.getInList().length; i++) {
-      _log.i(DataLists.offlineInstance.getInList()[i].length);
+    for (int i = 0; i < DataLists.onlineInstance.getInList().length; i++) {
+      _log.i(DataLists.onlineInstance.getInList()[i].length);
     }
   }
 }

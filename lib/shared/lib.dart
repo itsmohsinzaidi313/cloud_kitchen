@@ -21,16 +21,19 @@ class Lib {
   static Future<Map<String, dynamic>> fetchData() async {
     try {
       String url = Config.installApi;
-      Response response = await get(url);
+      Response response =
+          await get(url).timeout(Duration(seconds: 15), onTimeout: () => null);
       _log.v('ENTRY fetchData');
       _log.v('SERVER RESPONSE: ${response.statusCode}');
       Map<String, dynamic> data;
-      if (response.statusCode == 200) {
-        data = jsonDecode(response.body);
+      if (response != null) {
+        if (response.statusCode == 200) {
+          data = jsonDecode(response.body);
+        }
       }
       return data;
     } catch (e) {
-      print(e.toString());
+      _log.e('ERROR ON FetchData', [e]);
       return null;
     }
   }
