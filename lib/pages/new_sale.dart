@@ -249,8 +249,6 @@ class _NewSaleState extends State<NewSale> {
         _salesMaster = SalesMaster();
         masterId = await _salesMaster.insertSpecificIntoDb(_db, master);
         String code = codeGenerator(masterId); // GENERATES CODE FROM MASTER ID
-        print('SALES MASTER RETURN ID: $masterId');
-        print('GENERATED CODE ID: $code');
         Map<String, dynamic> update = {
           'sale_no': code,
         };

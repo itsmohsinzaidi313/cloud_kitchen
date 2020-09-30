@@ -6,13 +6,12 @@ import 'package:logger/logger.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Config {
-
   static const String appTitle = 'Cloud Kitchen';
   static const DATABASE databaseVersion = DATABASE.STABLE;
   static const String databaseName = 'CloudKitchen.db';
 
   static const String serverIP = '72.52.142.19';
-  static const String authToken = '622780154';
+  static const String authToken = '1626065997';
   static const String installApi =
       'http://$serverIP/cloud-kitchen/api/install?auth=$authToken&sale_limit=20&expense_limit=20';
   static const String addUpdateOrderApi =
@@ -20,7 +19,7 @@ class Config {
 
   static const int screenStartTime = 3;
 
-  static User _currentUser ;
+  static User _currentUser;
   set currentUser(user) => _currentUser = user;
   User get currentUser => _currentUser;
 
