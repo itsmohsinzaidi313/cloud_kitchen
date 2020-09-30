@@ -7,6 +7,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AppTheme {
   static final Color appBarColor = Colors.red;
+  static final Color dialogButtonColor = Colors.amberAccent;
   static final Color listTextColor = Colors.amber[400];
   static final Color appThemeColor = Colors.blue;
 
@@ -78,13 +79,13 @@ class AppTheme {
     return myText;
   }
 
-  static void showAlertDialog(BuildContext context,
+  static Future<Widget> showAlertDialog(BuildContext context,
       {String title,
       FontWeight fontWeight,
       double fontSize,
       Widget content,
-      List<FlatButton> buttons}) {
-    showDialog(
+      List<FlatButton> buttons}) =>
+      showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
               title: Container(
@@ -96,7 +97,7 @@ class AppTheme {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
             ));
-  }
+
 
   static ProgressDialog showProgressDialog(BuildContext context,
       {String text = '', bool isDismissible = true}) {

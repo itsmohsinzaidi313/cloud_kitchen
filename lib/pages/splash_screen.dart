@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/controller/dashboard_controller.dart';
 import 'package:food_app/controller/login_controller.dart';
 import 'package:food_app/database/project_database.dart';
 import 'package:food_app/shared/config.dart';
@@ -35,7 +36,8 @@ class _SplashScreenState extends State<SplashScreen> {
             _log.v('Offline data load failed');
         });
       }
-      LoginController().launch(context);
+        // LoginController().launch(context);
+        DashboardController(context).launch();
     });
   }
 

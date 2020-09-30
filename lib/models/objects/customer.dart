@@ -31,6 +31,23 @@ class Customer {
         dateOfBirth = json['date_of_birth'],
         dateOfAnniversary = json['date_of_anniversary'];
 
+  Map<String,dynamic> toMap (Customer customer){
+    return{
+      'id' : customer.serverId,
+      'name' : customer.name,
+      'phone' : customer.phone,
+      'email' : customer.email,
+      'address' : customer.address,
+      'gst_number' : customer.gstNumber,
+      'area_id' : customer.areaId,
+      'user_id' : customer.userId,
+      'company_id' : customer.companyId,
+      'del_status' : customer.delStatus,
+      'date_of_birth' : customer.dateOfBirth,
+      'date_of_anniversary' : customer.dateOfAnniversary,
+    };
+  }
+
   Customer(
       {this.serverId,
       this.name,
@@ -77,4 +94,12 @@ class Customer {
 
   Future<bool> insertIntoDatabase(Database db) async =>
       await Lib.insertIntoDatabase(db, Tables.customers, getValues());
+
+  Future<int> insertCustomer(Database db,  Customer customer) async{
+    Map<String, dynamic> row = Customer().toMap(customer);
+    int id = await db.insert(Tables.customers, row);
+    return id;
+  }
+
+
 }
