@@ -17,6 +17,7 @@ class Types {
     vatAmount, //13
     tables, //14
     devices, //15
+    ordersTable //16
   ];
 
   static const String TEXT = 'TEXT';
@@ -290,6 +291,17 @@ class Types {
   static const List<String> devices = [
     INTEGER + PRIMARY_KEY,
     TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT,
+    TEXT
+  ];
+
+  static const List<String> ordersTable = [
+    INTEGER + PRIMARY_KEY,
     TEXT,
     TEXT,
     TEXT,

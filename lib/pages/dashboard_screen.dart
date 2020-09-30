@@ -167,13 +167,13 @@ class _DashboardState extends State<Dashboard> {
 
 alertDialogButtonOnPressed(String str) {
   switch (str) {
-    case 'DINE-IN':
+    case '1':
       NewSaleController().launchDinein(context, str);
       break;
-    case 'TAKEAWAY':
+    case '2':
       NewSaleController().launchTakeaway(context, str);
       break;
-    case 'DELIVERY':
+    case '3':
       // Navigator.pop(context);
       NewSaleController().launchDelivery(context, str);
       break;

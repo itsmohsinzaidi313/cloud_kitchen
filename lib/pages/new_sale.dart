@@ -219,62 +219,65 @@ class _NewSaleState extends State<NewSale> {
       SalesMaster _salesMaster;
       int masterId;
       if (model.salesMaster == null) {
-        this.model.salesMaster = new SalesMaster();
-        this.model.salesMaster.id = "0";
+        model.salesMaster = new SalesMaster();
+        model.salesMaster.id = "0";
       }
+      if (model.salesMaster.id == null) model.salesMaster.id = '0';
       List<Map<String, dynamic>> count = await _db.rawQuery(
-          'SELECT IFNULL(COUNT(id),0) AS count FROM sales_details WHERE sales_master_id = ?',
+          'SELECT IFNULL(COUNT(id),0) AS count FROM ${Tables.salesDetails} WHERE ${Columns.salesDetails[0]} = ?',
           [model.salesMaster.id]);
 
       CustomerOrder customerOrder = this.model.order;
-
+      //MASTER DATA
       Map<String, dynamic> master = {
         // Columns.salesMaster[0] :  ,
-        Columns.salesMaster[1] :  this.model.order.customerId,
+        Columns.salesMaster[1]: this.model.order.customerId,
         // Columns.salesMaster[2] :  ,
-        Columns.salesMaster[3] :  customerOrder.totalItem().toString(),
-        Columns.salesMaster[4] :  customerOrder.getSubTotal().toString(),
-        Columns.salesMaster[5] :  '0.0',
-        Columns.salesMaster[6] :  customerOrder.getSubTotal().toString(),
+        Columns.salesMaster[3]: customerOrder.totalItem().toString(),
+        Columns.salesMaster[4]: customerOrder.getSubTotal().toString(),
+        Columns.salesMaster[5]: '0.0',
+        Columns.salesMaster[6]: customerOrder.getSubTotal().toString(),
         // Columns.salesMaster[7] :  ,
         // Columns.salesMaster[8] :  ,
-        Columns.salesMaster[9] :  '0.0',
-        Columns.salesMaster[10] :  customerOrder.getSubTotal().toString(),
-        Columns.salesMaster[11] :  '1',
-        Columns.salesMaster[12] :  Config.getCurrentTime24Format(),
+        Columns.salesMaster[9]: '0.0',
+        Columns.salesMaster[10]: customerOrder.getSubTotal().toString(),
+        Columns.salesMaster[11]: '1',
+        Columns.salesMaster[12]: Config.getCurrentTime24Format(),
         // Columns.salesMaster[13] :  ,
-        Columns.salesMaster[14] :  customerOrder.discount ?? 0,
-        Columns.salesMaster[15] :  customerOrder.getNetAmount(),
-        Columns.salesMaster[16] :  customerOrder.discount ?? 0,
-        Columns.salesMaster[17] :  customerOrder.discount ?? 0,
-        Columns.salesMaster[18] :  '0.0',
-        Columns.salesMaster[19] :  '',
-        Columns.salesMaster[20] :  'plain',
-        Columns.salesMaster[21] :  Config.getCurrentDate(),
-        Columns.salesMaster[22] :  Config.getCurrentDateTimeDBFormat(),
-        Columns.salesMaster[23] :  Config.getCurrentTime24Format(),
-        Columns.salesMaster[24] :  Config.getCurrentDateTimeDBFormat(),
-        Columns.salesMaster[25] :  Config.getCurrentDateTimeDBFormat(),
-        Columns.salesMaster[26] :  'No',
-        Columns.salesMaster[27] :  Config().currentUser.serverId,
+        Columns.salesMaster[14]: customerOrder.discount ?? 0,
+        Columns.salesMaster[15]: customerOrder.getNetAmount(),
+        Columns.salesMaster[16]: customerOrder.discount ?? 0,
+        Columns.salesMaster[17]: customerOrder.discount ?? 0,
+        Columns.salesMaster[18]: '0.0',
+        Columns.salesMaster[19]: '',
+        Columns.salesMaster[20]: 'plain',
+        Columns.salesMaster[21]: Config.getCurrentDate(),
+        Columns.salesMaster[22]: Config.getCurrentDateTimeDBFormat(),
+        Columns.salesMaster[23]: Config.getCurrentTime24Format(),
+        Columns.salesMaster[24]: Config.getCurrentDateTimeDBFormat(),
+        Columns.salesMaster[25]: Config.getCurrentDateTimeDBFormat(),
+        Columns.salesMaster[26]: 'No',
+        Columns.salesMaster[27]: Config().currentUser.serverId,
         // Columns.salesMaster[28] :  ,
-        Columns.salesMaster[29] :  Config().currentUser.outletId,
-        Columns.salesMaster[30] :  '1',
-        Columns.salesMaster[31] :  this.model.salesMaster.orderType,
-        Columns.salesMaster[32] :  Config().currentUser.delStatus,
+        Columns.salesMaster[29]: Config().currentUser.outletId,
+        Columns.salesMaster[30]: '1',
+        Columns.salesMaster[31]: this.model.salesMaster.orderType,
+        Columns.salesMaster[32]: Config().currentUser.delStatus,
         // Columns.salesMaster[33] :  ,
-        Columns.salesMaster[34] :  Config().currentShift.deviceKey,
+        Columns.salesMaster[34]: Config().currentShift.deviceKey,
         // Columns.salesMaster[35] :  ,
-        Columns.salesMaster[36] :  Config().currentUser.companyId,
-        Columns.salesMaster[37] :  0.toString(),
+        Columns.salesMaster[36]: Config().currentUser.companyId,
+        Columns.salesMaster[37]: 0.toString(),
       };
 
       ///EDIT ORDER
       if (count[0]['count'] > 0) {
         _salesMaster = this.model.salesMaster;
         _db.delete(Tables.salesDetails,
-            where: 'sales_master_id = ?', whereArgs: [_salesMaster.id]);
+            where: '${Columns.salesDetails[0]} = ?',
+            whereArgs: [_salesMaster.id]);
         masterId = int.parse(_salesMaster.id);
+
         _db.update(Tables.salesMaster, master,
             where: '${Columns.salesMaster[0]} = ?',
             whereArgs: [_salesMaster.id]);
@@ -283,6 +286,11 @@ class _NewSaleState extends State<NewSale> {
         ///NEW ORDER INSERTION
         _salesMaster = SalesMaster();
         masterId = await _salesMaster.insertSpecificIntoDb(_db, master);
+        _salesMaster.updateSpecificIntoDb(
+            _db,
+            {Columns.salesMaster[35]: masterId.toString()},
+            Columns.salesMaster[0],
+            masterId);
         String code = codeGenerator(masterId); // GENERATES CODE FROM MASTER ID
         Map<String, dynamic> update = {
           'sale_no': code,
@@ -302,32 +310,38 @@ class _NewSaleState extends State<NewSale> {
     DashboardController(context).pushAndRemoveUntil(context);
   }
 
+  //DETAIL DATA
   Future<void> insertIntoSalesDetails(
       Database db, Item item, int masterId) async {
     Map<String, dynamic> details = {
       // Columns.salesDetails[0] : ,
-      Columns.salesDetails[1] : int.parse(item.code).toString(),
-      Columns.salesDetails[2] : item.name,
-      Columns.salesDetails[3] : item.quantity.toString(),
-      Columns.salesDetails[4] : (int.parse(item.quantity) * double.parse(item.salePrice)).toString(),
-      Columns.salesDetails[5] : (int.parse(item.quantity) * double.parse(item.salePrice) - int.parse(this.model.order.discount) ?? 0).toString(),
-      Columns.salesDetails[6] : item.salePrice.toString(),
-      Columns.salesDetails[7] : '0.0',
+      Columns.salesDetails[1]: int.parse(item.code).toString(),
+      Columns.salesDetails[2]: item.name,
+      Columns.salesDetails[3]: item.quantity.toString(),
+      Columns.salesDetails[4]:
+          (int.parse(item.quantity) * double.parse(item.salePrice)).toString(),
+      Columns.salesDetails[5]:
+          (int.parse(item.quantity) * double.parse(item.salePrice) -
+                      double.parse(this.model.order.discount) ??
+                  0)
+              .toString(),
+      Columns.salesDetails[6]: item.salePrice.toString(),
+      Columns.salesDetails[7]: '0.0',
       // Columns.salesDetails[8] : ,
-      Columns.salesDetails[9] : '0',
-      Columns.salesDetails[10] : 'plain',
+      Columns.salesDetails[9]: '0',
+      Columns.salesDetails[10]: 'plain',
       // Columns.salesDetails[11] : ,
-      Columns.salesDetails[12] : this.model.order.discount ?? 0,
-      Columns.salesDetails[13] : 'Kitchen Item',
-      Columns.salesDetails[14] : 'Done',
-      Columns.salesDetails[15] : Config.getCurrentDateTimeDBFormat(),
-      Columns.salesDetails[16] : Config.getCurrentDateTimeDBFormat(),
+      Columns.salesDetails[12]: this.model.order.discount ?? 0,
+      Columns.salesDetails[13]: 'Kitchen Item',
+      Columns.salesDetails[14]: 'Done',
+      Columns.salesDetails[15]: Config.getCurrentDateTimeDBFormat(),
+      Columns.salesDetails[16]: Config.getCurrentDateTimeDBFormat(),
       // Columns.salesDetails[17] : ,
-      Columns.salesDetails[18] : masterId,
-      Columns.salesDetails[19] : '0',
-      Columns.salesDetails[20] : Config().currentUser.serverId,
-      Columns.salesDetails[21] : Config().currentUser.outletId,
-      Columns.salesDetails[22] : Config().currentUser.delStatus,
+      Columns.salesDetails[18]: masterId,
+      Columns.salesDetails[19]: '0',
+      Columns.salesDetails[20]: Config().currentUser.serverId,
+      Columns.salesDetails[21]: Config().currentUser.outletId,
+      Columns.salesDetails[22]: Config().currentUser.delStatus,
     };
     int detailsId = await SalesDetails().insertSpecificIntoDb(db, details);
     print('SALES DETAILS RETURN ID: $detailsId');

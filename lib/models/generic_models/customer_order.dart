@@ -1,11 +1,14 @@
 import 'package:food_app/models/objects/item.dart';
 
 class CustomerOrder {
-
   List<Item> _itemList = [];
   String _tableNo, _orderType, _discount, _salesTax, _customerId;
 
-  get customerId => _customerId;
+  get customerId {
+    if (_customerId == null) _customerId = '1';
+    return _customerId;
+  }
+
   set customerId(value) {
     _customerId = value;
   }
@@ -16,10 +19,18 @@ class CustomerOrder {
   get orderType => _orderType;
   set orderType(value) => _orderType = value;
 
-  get salesTax => _salesTax;
+  get salesTax {
+    if (_salesTax == null) _salesTax = '0.0';
+    return _salesTax;
+  }
+
   set salesTax(value) => _salesTax = value;
 
-  get discount => _discount;
+  get discount {
+    if (_discount == null) _discount = '0.0';
+    return _discount;
+  }
+
   set discount(value) => _discount = value;
 
   List<Item> get itemList => _itemList;
@@ -66,15 +77,16 @@ class CustomerOrder {
   double getSubTotal() {
     double subTotalAmount = 0;
     _itemList.forEach((item) {
-      subTotalAmount =
-          subTotalAmount + double.parse(item.salePrice) * int.parse(item.quantity);
+      subTotalAmount = subTotalAmount +
+          double.parse(item.salePrice) * int.parse(item.quantity);
     });
     return subTotalAmount;
   }
 
   double getNetAmount() {
     double netAmount = 0;
-    netAmount = getSubTotal() + salesTax - discount ?? 0;
+    netAmount =
+        getSubTotal() + double.parse(salesTax) - double.parse(discount) ?? 0;
     return netAmount;
   }
 
@@ -90,7 +102,7 @@ class CustomerOrder {
     return withoutTax;
   }
 
-  int totalItem(){
+  int totalItem() {
     int totalItem = 0;
     _itemList.forEach((items) {
       totalItem += int.parse(items.quantity);

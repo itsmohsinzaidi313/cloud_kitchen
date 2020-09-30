@@ -167,7 +167,7 @@ class NewSaleController {
                           }
                         } catch (e){
                           Config.log.e('CUSTOMER PHONE ENTER\n $e');
-                        };
+                        }
                       },
                     ),
                   ),

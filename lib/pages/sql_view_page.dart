@@ -20,7 +20,7 @@ class _SqlViewState extends State<SqlView> {
       body: LayoutBuilder(builder: (context, constraints) {
         return SingleChildScrollView(
           child: Container(
-            height: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.height - 80,
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: <Widget>[

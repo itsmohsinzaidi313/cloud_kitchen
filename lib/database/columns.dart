@@ -15,7 +15,8 @@ class Columns {
     paymentMethods, //12
     vatAmount, //13
     tables, //14
-    devices//15
+    devices, //15
+    ordersTables, //16
   ];
 
   ///USER TABLE COLUMNS
@@ -84,12 +85,12 @@ class Columns {
 
   ///SALES_MASTER TABLE COLUMNS
   static const List<String> salesMaster = [
-    'id',
-    'customer_id',
-    'sale_no',
-    'total_items',
-    'sub_total',
-    'paid_amount',
+    'id',//0
+    'customer_id',//1
+    'sale_no',//2
+    'total_items',//3
+    'sub_total',//4
+    'paid_amount',//5
     'due_amount',
     'disc',
     'disc_actual',
@@ -114,14 +115,14 @@ class Columns {
     'user_id',
     'waiter_id',
     'outlet_id',
-    'order_status',
-    'order_type',
-    'del_status',
-    'sale_vat_objects',
-    'device_key',
-    'remote_id',
-    'company_id',
-    'is_delete'
+    'order_status', //30
+    'order_type', //31
+    'del_status', //32
+    'sale_vat_objects', //33
+    'device_key', //34
+    'remote_id', //35
+    'company_id', //36
+    'is_delete' //37
   ];
 
   ///SALES_DETAILS TABLE COLUMNS
@@ -144,9 +145,11 @@ class Columns {
     'cooking_start_time',
     'cooking_done_time',
     'previous_id',
+    'sales_id', //18
+    'order_status',
     'user_id',
+    'outlet_id',
     'del_status',
-    'sales_id',
   ];
 
   ///COMPANY TABLE COLUMNS
@@ -286,5 +289,16 @@ class Columns {
     'is_installed',
     'date_added',
     'date_modified'
+  ];
+
+  static const List<String> ordersTables = [
+    'local_id',
+    'persons',
+    'booking_time',
+    'sale_id',
+    'sale_no',
+    'outlet_id',
+    'table_id',
+    'del_status'
   ];
 }

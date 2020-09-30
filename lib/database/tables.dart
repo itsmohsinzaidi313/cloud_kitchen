@@ -17,6 +17,7 @@ class Tables {
     vatAmount, //13
     tables, //14
     devices, //15
+    orderTable //16
   ];
 
   static const String users = 'users'; //0
@@ -35,4 +36,5 @@ class Tables {
   static const String tables = 'tables'; //13
   static const String vatAmount = 'vat_amount'; //14
   static const String devices = 'devices'; //15
+  static const String orderTable = 'orders_table'; //16
 }

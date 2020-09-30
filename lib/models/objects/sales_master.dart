@@ -206,10 +206,11 @@ class SalesMaster {
 
   Future<List<SalesMaster>> queryAllRows(Database db) async {
     List<Map<String, dynamic>> res = await db.query(Tables.salesMaster,
-        where: "paid_amount == '0.0' AND is_delete == '0'");
+        where:
+            "${Columns.salesMaster[5]} == '0.0' AND ${Columns.salesMaster[37]} == '0'");
     List<SalesMaster> _orders = [];
     res.forEach((row) {
-      if (row['is_delete'] == 0.toString()) {
+      if (row['${Columns.salesMaster[37]}'] == 0.toString()) {
         _orders.add(SalesMaster.fromJson(row));
       }
     });
