@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
 import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
+import 'package:food_app/models/generic_models/customer_order.dart';
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/item.dart';
 import 'package:food_app/models/objects/sales_detail.dart';
@@ -223,16 +224,47 @@ class _NewSaleState extends State<NewSale> {
       }
       List<Map<String, dynamic>> count = await _db.rawQuery('SELECT IFNULL(COUNT(id),0) AS count FROM sales_details WHERE sales_master_id = ?', [model.salesMaster.id]);
 
-      String customerOrderAmount = this.model.order.getOrderAmount().toString();
+      CustomerOrder customerOrder = this.model.order;
 
       Map<String, dynamic> master = {
-        'date_time': Config.getCurrentDateTime(),
-        'paid_amount': '0.0',
-        'due_amount': customerOrderAmount,
-        'total_payable': customerOrderAmount,
-        'user_id' : Config().currentUser.serverId,
-        'device_key' : Config().currentShift.deviceKey,
-        'is_delete': 0.toString(),
+        // Columns.salesMaster[0] :  ,
+        Columns.salesMaster[1] :  this.model.order.customerId,
+        // Columns.salesMaster[2] :  ,
+        Columns.salesMaster[3] :  customerOrder.totalItem().toString(),
+        Columns.salesMaster[4] :  customerOrder.getSubTotal().toString(),
+        Columns.salesMaster[5] :  '0.0',
+        Columns.salesMaster[6] :  customerOrder.getSubTotal().toString(),
+        // Columns.salesMaster[7] :  ,
+        // Columns.salesMaster[8] :  ,
+        Columns.salesMaster[9] :  '0.0',
+        Columns.salesMaster[10] :  customerOrder.getSubTotal().toString(),
+        Columns.salesMaster[11] :  '1',
+        Columns.salesMaster[12] :  Config.getCurrentTime24Format(),
+        // Columns.salesMaster[13] :  ,
+        Columns.salesMaster[14] :  customerOrder.discount ?? 0,
+        Columns.salesMaster[15] :  customerOrder.getNetAmount(),
+        Columns.salesMaster[16] :  customerOrder.discount ?? 0,
+        Columns.salesMaster[17] :  customerOrder.discount ?? 0,
+        Columns.salesMaster[18] :  '0.0',
+        Columns.salesMaster[19] :  '',
+        Columns.salesMaster[20] :  'plain',
+        Columns.salesMaster[21] :  Config.getCurrentDate(),
+        Columns.salesMaster[22] :  Config.getCurrentDateTimeDBFormat(),
+        Columns.salesMaster[23] :  Config.getCurrentTime24Format(),
+        Columns.salesMaster[24] :  Config.getCurrentDateTimeDBFormat(),
+        Columns.salesMaster[25] :  Config.getCurrentDateTimeDBFormat(),
+        Columns.salesMaster[26] :  'No',
+        Columns.salesMaster[27] :  Config().currentUser.serverId,
+        // Columns.salesMaster[28] :  ,
+        Columns.salesMaster[29] :  Config().currentUser.outletId,
+        Columns.salesMaster[30] :  '1',
+        Columns.salesMaster[31] :  this.model.salesMaster.orderType,
+        Columns.salesMaster[32] :  Config().currentUser.delStatus,
+        // Columns.salesMaster[33] :  ,
+        Columns.salesMaster[34] :  Config().currentShift.deviceKey,
+        // Columns.salesMaster[35] :  ,
+        Columns.salesMaster[36] :  Config().currentUser.companyId,
+        Columns.salesMaster[37] :  0.toString(),
       };
 
       ///EDIT ORDER
@@ -272,11 +304,29 @@ class _NewSaleState extends State<NewSale> {
   Future<void> insertIntoSalesDetails(
       Database db, Item item, int masterId) async {
     Map<String, dynamic> details = {
-      'food_menu_id': item.code,
-      'qty': item.quantity,
-      'menu_price_without_discount':
-          (int.parse(item.quantity) * double.parse(item.salePrice)).toString(),
-      'sales_master_id': masterId,
+      // Columns.salesDetails[0] : ,
+      Columns.salesDetails[1] : int.parse(item.code).toString(),
+      Columns.salesDetails[2] : item.name,
+      Columns.salesDetails[3] : item.quantity.toString(),
+      Columns.salesDetails[4] : (int.parse(item.quantity) * double.parse(item.salePrice)).toString(),
+      Columns.salesDetails[5] : (int.parse(item.quantity) * double.parse(item.salePrice) - int.parse(this.model.order.discount) ?? 0).toString(),
+      Columns.salesDetails[6] : item.salePrice.toString(),
+      Columns.salesDetails[7] : '0.0',
+      // Columns.salesDetails[8] : ,
+      Columns.salesDetails[9] : '0',
+      Columns.salesDetails[10] : 'plain',
+      // Columns.salesDetails[11] : ,
+      Columns.salesDetails[12] : this.model.order.discount ?? 0,
+      Columns.salesDetails[13] : 'Kitchen Item',
+      Columns.salesDetails[14] : 'Done',
+      Columns.salesDetails[15] : Config.getCurrentDateTimeDBFormat(),
+      Columns.salesDetails[16] : Config.getCurrentDateTimeDBFormat(),
+      // Columns.salesDetails[17] : ,
+      Columns.salesDetails[18] : masterId,
+      Columns.salesDetails[19] : '0',
+      Columns.salesDetails[20] : Config().currentUser.serverId,
+      Columns.salesDetails[21] : Config().currentUser.outletId,
+      Columns.salesDetails[22] : Config().currentUser.delStatus,
     };
     int detailsId = await SalesDetails().insertSpecificIntoDb(db, details);
     print('SALES DETAILS RETURN ID: $detailsId');
