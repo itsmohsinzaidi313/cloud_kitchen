@@ -87,22 +87,29 @@ class _OrderScreenState extends State<OrderScreen> {
                   List<Map<String, dynamic>> values2 = await Config.database
                       .query(Tables.salesDetails,
                           where: 'sales_master_id = ?', whereArgs: [item.id]);
-                  values.update('sale_no', (value) => 'ORD\/01\/0001');
-                  values['device_key'] = '1626065997';
-                  values['customer_id'] = '1';
-                  values['remote_id'] = '1';
+                  values['date_time'] = '2020-09-30 12:13:47';
+                  values['sale_date'] = '2020-09-30';
+                  values['order_type'] = '1';
+                  values.remove('sales_master_id');
                   values['sale_details'] = values2;
+                  values['remote_id'] = '1';
                   values1.add(values);
                   Map<String, dynamic> json = new Map();
                   json['user_id'] = '1';
                   json['json'] = jsonEncode(values1);
-                  // log(
-                  //   json.toString(),
-                  //   name: 'Order Upload Json: ',
-                  // );
+                  log(
+                    json.toString(),
+                    name: 'Order Upload Json: ',
+                  );
                   Response response =
-                      await post(Config.addUpdateOrderApi, body: json);
-                  log(response.body, name: 'Server Response: ');
+                      await post(Config.addUpdateOrderApi, body: json).timeout(
+                    Duration(seconds: 5),
+                    onTimeout: () => null,
+                  );
+                  if (response != null)
+                    log(response.body, name: 'Server Response: ');
+                  else
+                    log('Response Timeout', name: 'Request Timeout');
                 },
               ),
               title: Center(child: Text(item.saleNo)),
@@ -135,14 +142,14 @@ class _OrderScreenState extends State<OrderScreen> {
       widgets.add(
         InkWell(
           onTap: () {
-              NewSaleController().launchAndReplacement(context);
+            NewSaleController().launchAndReplacement(context);
             // setState(() {
-              // _key.currentState.showSnackBar(
-              //   SnackBar(
-              //     duration: Duration(milliseconds: 100),
-              //     content: Text('$item Tapped'),
-              //   ),
-              // );
+            // _key.currentState.showSnackBar(
+            //   SnackBar(
+            //     duration: Duration(milliseconds: 100),
+            //     content: Text('$item Tapped'),
+            //   ),
+            // );
             // });
           },
           child: Container(
@@ -188,3 +195,8 @@ class _OrderScreenState extends State<OrderScreen> {
     OrderController().launchAndReplacement(context);
   }
 }
+
+/*
+{user_id: 1, json: [{"customer_id":"1","sale_no":"ORD/01/0001","total_items":"1","sub_total":null,"paid_amount":"0.0","due_amount":"1600.0","disc":null,"disc_actual":null,"vat":null,"total_payable":"1600.0","payment_method_id":"1","close_time":null,"table_id":"1","total_item_discount_amount":null,"sub_total_with_discount":null,"sub_total_discount_amount":null,"total_discount_amount":null,"delivery_charge":null,"sub_total_discount_value":null,"sub_total_discount_type":null,"sale_date":null,"date_time":"9/30/2020 1:50 PM","order_time":null,"cooking_start_time":null,"cooking_done_time":null,"modified":null,"user_id":"1","waiter_id":"1","outlet_id":"1","order_status":null,"order_type":"DINEIN","del_status":null,"sale_vat_objects":null,"device_key":"1","remote_id":null,"company_id":"1","sale_details":[{"id":1,"food_menu_id":"001","menu_name":null,"qty":"4","menu_price_without_discount":"1600.0","menu_price_with_discount":null,"menu_unit_price":"400.00","menu_vat_percentage":null,"menu_taxes":null,"menu_discount_value":null,"discount_type":null,"menu_note":null,"discount_amount":null,"item_type":null,"cooking_status":null,"cooking_start_time":null,"cooking_done_time":null,"previous_id":null,"sales_master_id":"1","order_status":null,"user_id":"1","outlet_id":"1","del_status":null}]}]}
+*/
+//1 dinein 2 takeaway 3 delivery
