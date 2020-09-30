@@ -36,8 +36,8 @@ class _SplashScreenState extends State<SplashScreen> {
             _log.v('Offline data load failed');
         });
       }
-        // LoginController().launch(context);
-        DashboardController(context).launch();
+      LoginController().launch(context);
+      // DashboardController(context).launch();
     });
   }
 

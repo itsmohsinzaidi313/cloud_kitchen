@@ -86,13 +86,17 @@ class _OrderScreenState extends State<OrderScreen> {
                   List<Map<String, dynamic>> values1 = [];
                   List<Map<String, dynamic>> values2 = await Config.database
                       .query(Tables.salesDetails,
-                          where: 'sales_master_id = ?', whereArgs: [item.id]);
+                          columns: Columns.salesDetails
+                              .getRange(1, Columns.salesDetails.length - 1)
+                              .toList(),
+                          where: 'sales_master_id = ?',
+                          whereArgs: [item.id]);
                   values['date_time'] = '2020-09-30 12:13:47';
                   values['sale_date'] = '2020-09-30';
                   values['order_type'] = '1';
-                  values.remove('sales_master_id');
                   values['sale_details'] = values2;
                   values['remote_id'] = '1';
+                  values2.remove('sales_master_id');
                   values1.add(values);
                   Map<String, dynamic> json = new Map();
                   json['user_id'] = '1';

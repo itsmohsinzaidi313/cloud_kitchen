@@ -217,11 +217,13 @@ class _NewSaleState extends State<NewSale> {
       Database _db = Config.database;
       SalesMaster _salesMaster;
       int masterId;
-      if(model.salesMaster == null){
+      if (model.salesMaster == null) {
         this.model.salesMaster = new SalesMaster();
         this.model.salesMaster.id = "0";
       }
-      List<Map<String, dynamic>> count = await _db.rawQuery('SELECT IFNULL(COUNT(id),0) AS count FROM sales_details WHERE sales_master_id = ?', [model.salesMaster.id]);
+      List<Map<String, dynamic>> count = await _db.rawQuery(
+          'SELECT IFNULL(COUNT(id),0) AS count FROM sales_details WHERE sales_master_id = ?',
+          [model.salesMaster.id]);
 
       String customerOrderAmount = this.model.order.getOrderAmount().toString();
 
@@ -230,21 +232,22 @@ class _NewSaleState extends State<NewSale> {
         'paid_amount': '0.0',
         'due_amount': customerOrderAmount,
         'total_payable': customerOrderAmount,
-        'user_id' : Config().currentUser.serverId,
-        'device_key' : Config().currentShift.deviceKey,
+        'user_id': Config().currentUser.serverId,
+        'device_key': Config().currentShift.deviceKey,
         'is_delete': 0.toString(),
       };
 
       ///EDIT ORDER
-      if(count[0]['count'] > 0){
+      if (count[0]['count'] > 0) {
         _salesMaster = this.model.salesMaster;
-        _db.delete(Tables.salesDetails, where: 'sales_master_id = ?', whereArgs: [_salesMaster.id]);
+        _db.delete(Tables.salesDetails,
+            where: 'sales_master_id = ?', whereArgs: [_salesMaster.id]);
         masterId = int.parse(_salesMaster.id);
-        _db.update(Tables.salesMaster, master, where: '${Columns.salesMaster[0]} = ?', whereArgs: [_salesMaster.id]);
+        _db.update(Tables.salesMaster, master,
+            where: '${Columns.salesMaster[0]} = ?',
+            whereArgs: [_salesMaster.id]);
       } //IF
-      else{
-
-
+      else {
         ///NEW ORDER INSERTION
         _salesMaster = SalesMaster();
         masterId = await _salesMaster.insertSpecificIntoDb(_db, master);
@@ -253,8 +256,8 @@ class _NewSaleState extends State<NewSale> {
           'sale_no': code,
         };
 
-        int updateId =
-            await _salesMaster.updateSpecificIntoDb(_db, update, 'id', masterId);
+        int updateId = await _salesMaster.updateSpecificIntoDb(
+            _db, update, 'id', masterId);
         print('UPDATE RETURN ID: $updateId');
       } //ELSE
 
@@ -281,7 +284,12 @@ class _NewSaleState extends State<NewSale> {
   }
 
   String codeGenerator(int id) {
-    String code = 'ORD/${Config().currentShift.deviceKey}/';
+    String code = 'ORD/';
+    // String deviceId = Config().currentShift.deviceKey;
+    String deviceId = '1';
+    if (int.parse(deviceId) < 10) {
+      deviceId = '0$deviceId/';
+    }
     String digits = '';
     if (id < 10)
       digits = '000$id';
@@ -291,10 +299,8 @@ class _NewSaleState extends State<NewSale> {
       digits = '0$id';
     else
       digits = '$id';
-    return code + digits;
+    return code + deviceId + digits;
   }
 
-  void uploadOrder(SalesMaster salesMaster, SalesDetails salesDetails) {
-
-  }
+  void uploadOrder(SalesMaster salesMaster, SalesDetails salesDetails) {}
 }
