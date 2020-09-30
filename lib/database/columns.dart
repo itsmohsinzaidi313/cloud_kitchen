@@ -144,9 +144,7 @@ class Columns {
     'cooking_start_time',
     'cooking_done_time',
     'previous_id',
-    'order_status',
     'user_id',
-    'outlet_id',
     'del_status',
     'sales_id',
   ];

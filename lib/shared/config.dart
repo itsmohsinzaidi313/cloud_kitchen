@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/models/objects/device.dart';
 import 'package:food_app/models/objects/shift.dart';
 import 'package:food_app/models/objects/user.dart';
 import 'package:intl/intl.dart';
@@ -27,6 +28,10 @@ class Config {
   set currentShift(shift) => _currentShift = shift;
   Shift get currentShift => _currentShift;
 
+  static Device _currentDevice;
+  set currentDevice(device) => _currentDevice = device;
+  Device get currentDevice => _currentDevice;
+
   static double getDeviceWidth(BuildContext context) =>
       MediaQuery.of(context).size.width;
 
@@ -52,6 +57,27 @@ class Config {
     DateFormat formatDateTime = DateFormat.yMd().add_jm();
     String currentDateTime = formatDateTime.format(dateTime);
     return currentDateTime;
+  }
+
+  static String getCurrentDateTimeDBFormat() {
+    DateTime dateTime = DateTime.now();
+    DateFormat formatDateTime = DateFormat("yyyy-MM-dd HH:mm:ss");
+    String currentDateTime = formatDateTime.format(dateTime);
+    return currentDateTime;
+  }
+
+  static String getCurrentDate() {
+    DateTime dateTime = DateTime.now();
+    DateFormat formatDateTime = DateFormat("yyyy-MM-dd");
+    String currentDate = formatDateTime.format(dateTime);
+    return currentDate;
+  }
+
+  static String getCurrentTime24Format() {
+    DateTime dateTime = DateTime.now();
+    DateFormat formatDateTime = DateFormat("HH:mm:ss");
+    String currentTime = formatDateTime.format(dateTime);
+    return currentTime;
   }
 }
 

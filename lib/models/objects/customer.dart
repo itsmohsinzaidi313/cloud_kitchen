@@ -101,5 +101,14 @@ class Customer {
     return id;
   }
 
+  Future<List<Customer>> getCustomer(Database db) async{
+    List<Customer> customerList = [];
+    List<Map<String, dynamic>> customerMap = await db.query(Tables.customers);
+    customerMap.forEach((customer) {
+      customerList.add(Customer.fromJson(customer));
+    });
+    return customerList;
+  }
+
 
 }

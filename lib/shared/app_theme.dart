@@ -83,10 +83,12 @@ class AppTheme {
       {String title,
       FontWeight fontWeight,
       double fontSize,
+      bool barrier,
       Widget content,
       List<FlatButton> buttons}) =>
       showDialog(
         context: context,
+        barrierDismissible: barrier,
         builder: (BuildContext context) => AlertDialog(
               title: Container(
                   child: Text(title,

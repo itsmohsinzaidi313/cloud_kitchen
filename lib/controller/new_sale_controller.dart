@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/models/generic_models/customer_order.dart';
+import 'package:food_app/models/objects/customer.dart';
 import 'package:food_app/models/objects/item.dart';
 import 'package:food_app/models/objects/sales_detail.dart';
 import 'package:food_app/models/objects/sales_master.dart';
+import 'package:food_app/models/objects/user.dart';
 import 'package:food_app/models/view_models/new_sale_model.dart';
 import 'package:food_app/pages/new_sale.dart';
 import 'package:food_app/shared/app_theme.dart';
@@ -13,6 +15,7 @@ class NewSaleController {
   NewSaleModel model;
   bool _autoValidate = false;
   bool _userPhoneValidate = false;
+  Customer _customer;
   final GlobalKey<FormState> _formKey = GlobalKey();
   TextEditingController userName = TextEditingController();
   TextEditingController userPhone = TextEditingController();
@@ -52,6 +55,7 @@ class NewSaleController {
       fontSize: 20,
       fontWeight: FontWeight.bold,
       content: customerAlertDialog(),
+      barrier: true
     );
     Navigator.of(context)
         .push(new MaterialPageRoute(builder: (context) => new NewSale(model)));
@@ -131,9 +135,39 @@ class NewSaleController {
                     flex: 1,
                     child: IconButton(
                       icon: Icon(Icons.search),
-                      onPressed: (){
+                      onPressed: () async {
                         // userPhone.text.isEmpty ?  _userPhoneValidate = true : _userPhoneValidate = false;
-                        userPhone.text = '0,1,2,3,4';
+                        if(userPhone.text.isEmpty){
+                         userPhone.text = 'Please Enter Phone No.';
+                         return;
+                        }
+                        try{
+                          List<Customer> customerList = await Customer().getCustomer(Config.database);
+                          if(customerList.length > 0){
+                            for (int i = 0; i < customerList.length; i++){
+                              if(customerList[i].phone == userPhone.text){
+                                this._customer = customerList[i];
+                                this.model.order.customerId = customerList[i].serverId;
+                                userName.text = _customer.name;
+                                userPhone.text = _customer.phone;
+                                userAddress.text = _customer.address;
+                                break;
+                              }
+                            }
+                          }else{
+                            User cUser = Config().currentUser;
+                            Customer inputFromPopup = Customer(name: userName.text,
+                                phone: userPhone.text, address: userAddress.text, userId: cUser.serverId,
+                              companyId: cUser.companyId, delStatus: cUser.delStatus);
+                            int id = await Customer().insertCustomer(Config.database, inputFromPopup);
+                            if(id > 0){
+                              this.model.order.customerId = id;
+                              print('Customer inserted successfully...');
+                            }
+                          }
+                        } catch (e){
+                          Config.log.e('CUSTOMER PHONE ENTER\n $e');
+                        };
                       },
                     ),
                   ),
@@ -167,8 +201,8 @@ class NewSaleController {
               ),
               RaisedButton(onPressed: (){
                 if(_formKey.currentState.validate()){
-                  userPhone.text.isEmpty ?  _userPhoneValidate = true : _userPhoneValidate = false;
                   _formKey.currentState.save();
+                  userPhone.text.isEmpty ? userPhone.text = 'Please Enter Cell Phone' : userPhone.text = userPhone.text;
                 }
               },
                 child: Text('OK'),

@@ -101,6 +101,7 @@ class _DashboardState extends State<Dashboard> {
         fontSize: 20,
         fontWeight: FontWeight.bold,
         content: alertDialogContent(),
+        barrier: false
       );
       // NewSaleController().launch(context);
     } else if (dashboardItem.name == 'Orders') {
@@ -117,7 +118,7 @@ class _DashboardState extends State<Dashboard> {
     children: [
       RaisedButton(
         onPressed: () {
-          alertDialogButtonOnPressed('DINE-IN');
+          alertDialogButtonOnPressed('1');
         },
         color: Colors.redAccent,
         child: Text(
@@ -133,7 +134,7 @@ class _DashboardState extends State<Dashboard> {
       ),
       RaisedButton(
         onPressed: () {
-          alertDialogButtonOnPressed('TAKEAWAY');
+          alertDialogButtonOnPressed('2');
         },
         color: Colors.redAccent,
         child: Text(
@@ -149,7 +150,7 @@ class _DashboardState extends State<Dashboard> {
       ),
       RaisedButton(
         onPressed: () {
-          alertDialogButtonOnPressed('DELIVERY');
+          alertDialogButtonOnPressed('3');
         },
         color: Colors.redAccent,
         child: Text(

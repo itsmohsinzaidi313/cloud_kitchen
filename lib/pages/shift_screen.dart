@@ -5,6 +5,7 @@ import 'package:food_app/controller/dashboard_controller.dart';
 import 'package:food_app/models/objects/shift.dart';
 import 'package:food_app/models/view_models/shift_model.dart';
 import 'package:food_app/shared/config.dart';
+import 'package:food_app/shared/data_lists.dart';
 
 class ShiftScreen extends StatefulWidget {
   final ShiftModel model;
@@ -189,14 +190,24 @@ class _ShiftScreen extends State<ShiftScreen> {
 
             if (_formKey.currentState.validate()) {
               _formKey.currentState.save();
-            Config().currentShift = Shift(
-                shift: _dropdown, deviceKey: _deviceKey.text, openingBalance: _amount.text,
-              userId: Config().currentUser.serverId, openingBalanceDateTime: Config.getCurrentDateTime(),
-              outletId: Config().currentUser.outletId, companyId: Config().currentUser.companyId,
-              registerStatus: 'false');
 
-            Shift().insertSpecificIntoDatabase(Config.database, Config().currentShift)
-                .whenComplete(() => DashboardController(context).launch());
+              DataLists.instance.listDevices.forEach((d) {
+                if(_deviceKey.text == d.deviceKey){
+                  Config().currentDevice = d;
+
+                  Config().currentShift = Shift(
+                      shift: _dropdown, deviceKey: _deviceKey.text, openingBalance: _amount.text,
+                      userId: Config().currentUser.serverId, openingBalanceDateTime: Config.getCurrentDateTime(),
+                      outletId: Config().currentUser.outletId, companyId: Config().currentUser.companyId,
+                      registerStatus: 'false');
+
+                  Shift().insertSpecificIntoDatabase(Config.database, Config().currentShift)
+                      .whenComplete(() => DashboardController(context).launch());
+                }
+                else{
+                  Config.log.e('Device not found');
+                }
+              });
             }else{
               _autoValidate = true;
             }
