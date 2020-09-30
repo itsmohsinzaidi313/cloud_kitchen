@@ -46,28 +46,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool validateUser(email, pass)  {
     List<User> listUser = DataLists.instance.listUsers;
-    // if (listUser.length <= 0) {
-    //   _scaffoldKey.currentState
-    //       .showSnackBar(SnackBar(content: Text('No User Found!')));
-    //   setState(() {
-    //     isLoading = false;
-    //   });
-    // } else {
-    //   listUser.forEach((usr) {
-    //     if(usr.emailAddress == email && usr.password == pass){
-    //       // setSharedPreferences(user);
-    //       setState(() {
-    //         isLoading = false;
-    //         isLogin = true;
-    //       });
-    //       ShiftController().launch(context);
-    //     }
-    //   });
-    //   if(!isLogin){
-    //     _scaffoldKey.currentState
-    //         .showSnackBar(SnackBar(content: Text('There is no such user exists')));
-    //   }
-    // }
     bool valid = false;
     for( int i = 0; i < listUser.length; i++ ){
       if(listUser[i].emailAddress == email && listUser[i].password == pass){
