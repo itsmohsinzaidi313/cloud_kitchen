@@ -80,26 +80,25 @@ class AppTheme {
   }
 
   static Future<Widget> showAlertDialog(BuildContext context,
-      {String title,
-      FontWeight fontWeight,
-      double fontSize,
-      bool barrier,
-      Widget content,
-      List<FlatButton> buttons}) =>
+          {String title,
+          FontWeight fontWeight,
+          double fontSize,
+          bool barrier,
+          Widget content,
+          List<FlatButton> buttons}) =>
       showDialog(
-        context: context,
-        barrierDismissible: barrier,
-        builder: (BuildContext context) => AlertDialog(
-              title: Container(
-                  child: Text(title,
-                      style: textStyle(
-                          fontWeight: fontWeight, fontSize: fontSize))),
-              content: content,
-              actions: buttons,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-            ));
-
+          context: context,
+          barrierDismissible: barrier,
+          builder: (BuildContext context) => AlertDialog(
+                title: Container(
+                    child: Text(title,
+                        style: textStyle(
+                            fontWeight: fontWeight, fontSize: fontSize))),
+                content: content,
+                actions: buttons,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+              ));
 
   static ProgressDialog showProgressDialog(BuildContext context,
       {String text = '', bool isDismissible = true}) {
@@ -173,5 +172,23 @@ class AppTheme {
       FontWeight fontWeight = FontWeight.normal,
       Color color = Colors.black}) {
     return TextStyle(fontSize: fontSize, fontWeight: fontWeight, color: color);
+  }
+
+  static void showAlertDialogOK(BuildContext context,
+      {String title, String message, Function onOK}) {
+    showDialog(
+        context: context,
+        builder: (value) => AlertDialog(
+              title:
+                  text(text: title, fontWeight: FontWeight.bold, fontSize: 20),
+              content: text(text: message),
+              actions: [
+                FlatButton(
+                    child: text(text: 'OK', color: Colors.blue),
+                    onPressed: onOK),
+              ],
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+            ));
   }
 }
