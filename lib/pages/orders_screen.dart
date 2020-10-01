@@ -87,6 +87,7 @@ class _OrderScreenState extends State<OrderScreen> {
                       whereArgs: [item.id]);
                   Map<String, dynamic> values = item.getValuesForUpload();
                   List<Map<String, dynamic>> values1 = [];
+                  //COLUMNS 
                   List<Map<String, dynamic>> values2 = await Config.database
                       .query(Tables.salesDetails,
                           columns: Columns.salesDetails
@@ -143,17 +144,7 @@ class _OrderScreenState extends State<OrderScreen> {
     type.forEach((item) {
       widgets.add(
         InkWell(
-          onTap: () {
-            NewSaleController().launchAndReplacement(context);
-            // setState(() {
-            // _key.currentState.showSnackBar(
-            //   SnackBar(
-            //     duration: Duration(milliseconds: 100),
-            //     content: Text('$item Tapped'),
-            //   ),
-            // );
-            // });
-          },
+          onTap: () => NewSaleController().launchAndReplacement(context),
           child: Container(
             padding: EdgeInsets.symmetric(
               horizontal: 16,

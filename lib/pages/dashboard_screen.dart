@@ -4,6 +4,7 @@ import 'package:food_app/controller/new_sale_controller.dart';
 import 'package:food_app/controller/order_controller.dart';
 import 'package:food_app/models/view_models/dashboard_model.dart';
 import 'package:food_app/models/generic_models/dashboard_item.dart';
+import 'package:food_app/pages/order_type_screen.dart';
 import 'package:food_app/pages/sql_view_page.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/widgets/dashboard_card.dart';
@@ -168,7 +169,8 @@ class _DashboardState extends State<Dashboard> {
 alertDialogButtonOnPressed(String str) {
   switch (str) {
     case '1':
-      NewSaleController().launchDinein(context, str);
+    Navigator.of(context).push(new MaterialPageRoute(builder: (context) => OrderTypeScreen()));
+      // NewSaleController().launchDinein(context, str);
       break;
     case '2':
       NewSaleController().launchTakeaway(context, str);

@@ -85,12 +85,12 @@ class Columns {
 
   ///SALES_MASTER TABLE COLUMNS
   static const List<String> salesMaster = [
-    'id',//0
-    'customer_id',//1
-    'sale_no',//2
-    'total_items',//3
-    'sub_total',//4
-    'paid_amount',//5
+    'id', //0
+    'customer_id', //1
+    'sale_no', //2
+    'total_items', //3
+    'sub_total', //4
+    'paid_amount', //5
     'due_amount',
     'disc',
     'disc_actual',
@@ -173,19 +173,19 @@ class Columns {
 
   ///CUSTOMERS TABLE COLUMNS
   static const List<String> customers = [
-    'local_id',
-    'id',
-    'name',
-    'phone',
-    'email',
-    'address',
-    'gst_number',
-    'area_id',
-    'user_id',
-    'company_id',
-    'del_status',
-    'date_of_birth',
-    'date_of_anniversary'
+    'local_id', //0
+    'id', //1
+    'name', //2
+    'phone', //3
+    'email', //4
+    'address', //5
+    'gst_number', //6
+    'area_id', //7
+    'user_id', //8
+    'company_id', //9
+    'del_status', //10
+    'date_of_birth', //11
+    'date_of_anniversary' //12
   ];
 
   ///EXPENSE_CATEGORIES TABLE COLUMNS
