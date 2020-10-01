@@ -8,6 +8,7 @@ import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/data_lists.dart';
 import 'package:food_app/models/objects/table.dart' as T;
+import 'package:food_app/shared/lib.dart';
 
 class OrderTypeScreen extends StatefulWidget {
   @override
@@ -19,6 +20,8 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
   int _viewType = 0;
   bool customerExists = true;
   int customerId = 0;
+  T.Table table;
+  User waiter;
 
   List<TextEditingController> controllers = [
     new TextEditingController(),
@@ -174,11 +177,18 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                     setState(() {
                       check[0] = controllers[0].text == '' ? true : false;
                       check[1] = controllers[1].text == '' ? true : false;
-                      // NewSaleController().launchDineIn(
-                      //   context,
-                      //   _viewType.toString(),
-                      // );
                     });
+                    Config.database.insert(Tables.orderTable, {
+                      Columns.ordersTables[1]: controllers[1].text,
+                      Columns.ordersTables[2]: Config.getCurrentTime24Format(),
+                      Columns.ordersTables[5]: waiter.outletId,
+                      Columns.ordersTables[6]: table.serverId,
+                      Columns.ordersTables[7]: 'Live'
+                    }).then((value) => NewSaleController().launchDineIn(
+                        context,
+                        _viewType.toString(),
+                        value.toString(),
+                        waiter.serverId));
                   },
                 ),
               ),
@@ -423,6 +433,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
             ),
           ),
           onTap: () {
+            table = element;
             setState(() {
               gridViewType = 2;
             });
@@ -446,7 +457,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
             ),
           ),
           onTap: () {
-
+            waiter = element;
           },
         ));
       });

@@ -292,13 +292,13 @@ class Columns {
   ];
 
   static const List<String> ordersTables = [
-    'local_id',
-    'persons',
-    'booking_time',
-    'sale_id',
-    'sale_no',
-    'outlet_id',
-    'table_id',
-    'del_status'
+    'local_id', //0
+    'persons', //1
+    'booking_time', //2
+    'sale_id', //3
+    'sale_no', //4
+    'outlet_id', //5
+    'table_id', //6
+    'del_status' //7
   ];
 }
