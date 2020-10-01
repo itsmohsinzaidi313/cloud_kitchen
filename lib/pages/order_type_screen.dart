@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/controller/new_sale_controller.dart';
 import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
+import 'package:food_app/models/objects/customer.dart';
+import 'package:food_app/models/objects/user.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
+import 'package:food_app/shared/data_lists.dart';
+import 'package:food_app/models/objects/table.dart' as T;
 
 class OrderTypeScreen extends StatefulWidget {
   @override
@@ -12,6 +17,8 @@ class OrderTypeScreen extends StatefulWidget {
 class _OrderTypeScreenState extends State<OrderTypeScreen> {
   GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   int _viewType = 0;
+  bool customerExists = true;
+  int customerId = 0;
 
   List<TextEditingController> controllers = [
     new TextEditingController(),
@@ -23,6 +30,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
     new TextEditingController(),
   ];
   List<bool> check = [false, false, false, false, false, false, false];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,21 +143,36 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
     );
   }
 
+  @override
+  void initState() {
+    super.initState();
+    gridViewType = 1;
+  }
+
+  int gridViewType;
+  int listLength = DataLists.instance.listTables.length;
+
   Widget getLayout(int viewType) {
     switch (viewType) {
       case 1:
         return Container(
           child: Column(
             children: [
-              ListTile(
-                leading: Icon(Icons.image_aspect_ratio),
-                title: TextField(
-                  controller: controllers[0],
-                  decoration: InputDecoration(
-                      hintText: 'Table#',
-                      errorText: check[0] ? 'Required' : null),
-                ),
-              ),
+              //   ListTile(
+              //     leading: Icon(Icons.image_aspect_ratio),
+              //     title: TextField(
+              //       controller: controllers[0],
+              //       decoration: InputDecoration(
+              //           hintText: 'Table#',
+              //           errorText: check[0] ? 'Required' : null),
+              //     ),
+              //     trailing: IconButton(
+              //       icon: Icon(Icons.search),
+              //       onPressed: () {
+              //         check[0] = controllers[0].text == '' ? true : false;
+              //       },
+              //     ),
+              //   ),
               ListTile(
                 leading: Icon(Icons.group),
                 title: TextField(
@@ -166,10 +189,20 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                     setState(() {
                       check[0] = controllers[0].text == '' ? true : false;
                       check[1] = controllers[1].text == '' ? true : false;
+                      NewSaleController().launchDinein(
+                        context,
+                        _viewType.toString(),
+                      );
                     });
                   },
                 ),
               ),
+              Expanded(
+                  child: GridView(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4),
+                children: getGridViewWidget(gridViewType),
+              ))
             ],
           ),
         );
@@ -190,6 +223,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
               ListTile(
                 leading: Icon(Icons.dialpad),
                 title: TextField(
+                  keyboardType: TextInputType.number,
                   controller: controllers[3],
                   decoration: InputDecoration(
                       hintText: 'Contact',
@@ -207,17 +241,20 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                         "select count(id) as count from ${Tables.customers} where ${Columns.customers[3]} = '${controllers[3].text}'",
                       )
                           .then((value) {
-                        int count = int.parse(value[0]['count']);
+                        int count = value[0]['count'] as int;
                         if (count > 0) {
                           Config.database
                               .query(Tables.customers,
                                   columns: [
+                                    Columns.customers[0],
                                     Columns.customers[2],
                                     Columns.customers[3],
                                   ],
                                   where: '${Columns.customers[3]} = ?',
                                   whereArgs: [controllers[3].text])
                               .then((value2) {
+                            this.customerId =
+                                value2[0][Columns.customers[0] as int];
                             controllers[2].text =
                                 value2[0][Columns.customers[2]];
                             controllers[3].text =
@@ -225,6 +262,12 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                           });
                         }
                       });
+                    } else {
+                      this.customerExists = false;
+                      AppTheme.showAlertDialogOK(context,
+                          title: 'Attention',
+                          message: 'Customer does not exists',
+                          onOK: () => Navigator.pop(context));
                     }
                   },
                 ),
@@ -236,6 +279,24 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                     setState(() {
                       check[2] = controllers[2].text == '' ? true : false;
                       check[3] = controllers[3].text == '' ? true : false;
+                      if (customerExists) {
+                        NewSaleController().launchTakeaway(context,
+                            _viewType.toString(), customerId.toString());
+                      } else {
+                        User cUser = Config().currentUser;
+                        Customer inputFromPopup = Customer(
+                            name: controllers[2].text,
+                            phone: controllers[3].text,
+                            userId: cUser.serverId,
+                            companyId: cUser.companyId,
+                            delStatus: cUser.delStatus);
+                        Customer()
+                            .insertCustomer(Config.database, inputFromPopup)
+                            .then((value) => NewSaleController().launchTakeaway(
+                                context,
+                                _viewType.toString(),
+                                value.toString()));
+                      }
                     });
                   },
                 ),
@@ -260,6 +321,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
               ListTile(
                 leading: Icon(Icons.dialpad),
                 title: TextField(
+                  keyboardType: TextInputType.number,
                   controller: controllers[5],
                   decoration: InputDecoration(
                       hintText: 'Contact',
@@ -277,11 +339,12 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                         "select count(id) as count from ${Tables.customers} where ${Columns.customers[3]} = '${controllers[5].text}'",
                       )
                           .then((value) {
-                        int count = int.parse(value[0]['count']);
+                        int count = value[0]['count'] as int;
                         if (count > 0) {
                           Config.database
                               .query(Tables.customers,
                                   columns: [
+                                    Columns.customers[0],
                                     Columns.customers[2],
                                     Columns.customers[3],
                                     Columns.customers[5],
@@ -289,6 +352,8 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                                   where: '${Columns.customers[3]} = ?',
                                   whereArgs: [controllers[5].text])
                               .then((value2) {
+                            this.customerId =
+                                value2[0][Columns.customers[0] as int];
                             controllers[4].text =
                                 value2[0][Columns.customers[2]];
                             controllers[5].text =
@@ -296,6 +361,12 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                             controllers[6].text =
                                 value2[0][Columns.customers[5]];
                           });
+                        } else {
+                          this.customerExists = false;
+                          AppTheme.showAlertDialogOK(context,
+                              title: 'Attention',
+                              message: 'Customer does not exists',
+                              onOK: () => Navigator.pop(context));
                         }
                       });
                     }
@@ -319,6 +390,25 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                       check[4] = controllers[4].text == '' ? true : false;
                       check[5] = controllers[5].text == '' ? true : false;
                       check[6] = controllers[6].text == '' ? true : false;
+                      if (customerExists) {
+                        NewSaleController().launchDelivery(context,
+                            _viewType.toString(), customerId.toString());
+                      } else {
+                        User cUser = Config().currentUser;
+                        Customer inputFromPopup = Customer(
+                            name: controllers[4].text,
+                            phone: controllers[5].text,
+                            address: controllers[6].text,
+                            userId: cUser.serverId,
+                            companyId: cUser.companyId,
+                            delStatus: cUser.delStatus);
+                        Customer()
+                            .insertCustomer(Config.database, inputFromPopup)
+                            .then((value) => NewSaleController().launchDelivery(
+                                context,
+                                _viewType.toString(),
+                                value.toString()));
+                      }
                     });
                   },
                 ),
@@ -331,5 +421,51 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
         return Container();
         break;
     }
+  }
+
+  List<Widget> getGridViewWidget(int viewType) {
+    List<Widget> listWidget = [];
+    List<T.Table> listTables = DataLists.instance.listTables;
+    List<User> listWaiters = DataLists.instance.listUsers
+        .where((element) => element.designation == 'Waiter')
+        .toList();
+    if (viewType == 1) {
+      listTables.forEach((element) {
+        listWidget.add(InkWell(
+          child: Container(
+            child: Card(
+              child: Center(child: Text(element.name)),
+            ),
+          ),
+          onTap: () {
+            setState(() {
+              gridViewType = 2;
+            });
+          },
+        ));
+      });
+    } else if (viewType == 2) {
+      listWidget.add(Card(
+        child: Center(
+          child: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => setState(() => gridViewType = 1),
+          ),
+        ),
+      ));
+      listWaiters.forEach((element) {
+        listWidget.add(InkWell(
+          child: Container(
+            child: Card(
+              child: Center(child: Text(element.fullName)),
+            ),
+          ),
+          onTap: () {
+
+          },
+        ));
+      });
+    }
+    return listWidget;
   }
 }

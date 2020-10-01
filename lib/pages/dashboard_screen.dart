@@ -96,14 +96,15 @@ class _DashboardState extends State<Dashboard> {
   void onCardTap(DashboardItem dashboardItem) {
     Toast.show(dashboardItem.name, context);
     if (dashboardItem.name == 'Sales') {
-      AppTheme.showAlertDialog(
-        context,
-        title: 'SELECT Order Type'.toUpperCase(),
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        content: alertDialogContent(),
-        barrier: false
-      );
+      Navigator.of(context).push(new MaterialPageRoute(builder: (context) => OrderTypeScreen()));
+      // AppTheme.showAlertDialog(
+      //   context,
+      //   title: 'SELECT Order Type'.toUpperCase(),
+      //   fontSize: 20,
+      //   fontWeight: FontWeight.bold,
+      //   content: alertDialogContent(),
+      //   barrier: false
+      // );
       // NewSaleController().launch(context);
     } else if (dashboardItem.name == 'Orders') {
       OrderController().launch(context);
@@ -173,11 +174,11 @@ alertDialogButtonOnPressed(String str) {
       // NewSaleController().launchDinein(context, str);
       break;
     case '2':
-      NewSaleController().launchTakeaway(context, str);
+      // NewSaleController().launchTakeaway(context, str);
       break;
     case '3':
       // Navigator.pop(context);
-      NewSaleController().launchDelivery(context, str);
+      // NewSaleController().launchDelivery(context, str);
       break;
   }
 }
