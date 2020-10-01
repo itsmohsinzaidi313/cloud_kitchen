@@ -7,8 +7,15 @@ class OrderModel{
   List<SalesMaster> _dineInList;
   List<SalesMaster> _takeawayList;
   List<SalesMaster> _deliveryList;
+  List<String> _dineInColumns;
+  List<String> _takeawayAndDeliveryColumns;
 
 
+  List<String> get dineInColumns => _dineInColumns;
+
+  set dineInColumns(List<String> value) {
+    _dineInColumns = value;
+  }
 
   get getOrderTypeList => _orderTypeList;
 
@@ -38,5 +45,11 @@ class OrderModel{
 
   set dineInList(List<SalesMaster> value) {
     _dineInList = value;
+  }
+
+  List<String> get takeawayAndDeliveryColumns => _takeawayAndDeliveryColumns;
+
+  set takeawayAndDeliveryColumns(List<String> value) {
+    _takeawayAndDeliveryColumns = value;
   }
 }
