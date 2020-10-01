@@ -101,17 +101,7 @@ class _OrderScreenState extends State<OrderScreen> {
                         DataColumn(label : Text(model.dineInColumns[4])),
                         DataColumn(label: Text(model.dineInColumns[5])),
                       ],
-                      rows: [
-                        DataRow(cells: [
-                          DataCell(IconButton(icon: Icon(Icons.check), onPressed: (){})),
-                          DataCell(Text('e.saleNo')),
-                          DataCell(Text('e.tableId')),
-                          DataCell(Text('e.waiterId')),
-                          DataCell(Text('e.dueAmount')),
-                          DataCell(IconButton(icon: Icon(Icons.close), onPressed: (){})),
-                          ],
-                        ),
-                      ],
+                      rows: getDineInList(model.dineInList),
                     ),
                 ),
                 ),

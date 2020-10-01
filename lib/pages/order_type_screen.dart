@@ -385,24 +385,25 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                       check[4] = controllers[4].text == '' ? true : false;
                       check[5] = controllers[5].text == '' ? true : false;
                       check[6] = controllers[6].text == '' ? true : false;
-                      if (customerExists) {
-                        NewSaleController().launchDelivery(context,
-                            _viewType.toString(), customerId.toString());
-                      } else {
-                        User cUser = Config().currentUser;
-                        Customer inputFromPopup = Customer(
-                            name: controllers[4].text,
-                            phone: controllers[5].text,
-                            address: controllers[6].text,
-                            userId: cUser.serverId,
-                            companyId: cUser.companyId,
-                            delStatus: cUser.delStatus);
-                        Customer()
-                            .insertCustomer(Config.database, inputFromPopup)
-                            .then((value) => NewSaleController().launchDelivery(
-                                context,
-                                _viewType.toString(),
-                                value.toString()));
+                      if (!check[4] && !check[5] && !check[6]) {
+                        if (customerExists) {
+                          NewSaleController().launchDelivery(context,
+                              _viewType.toString(), customerId.toString());
+                        } else {
+                          User cUser = Config().currentUser;
+                          Customer inputFromPopup = Customer(
+                              name: controllers[4].text,
+                              phone: controllers[5].text,
+                              address: controllers[6].text,
+                              userId: cUser.serverId,
+                              companyId: cUser.companyId,
+                              delStatus: cUser.delStatus);
+                          Customer()
+                              .insertCustomer(Config.database, inputFromPopup)
+                              .then((value) => NewSaleController()
+                                  .launchDelivery(context, _viewType.toString(),
+                                      value.toString()));
+                        }
                       }
                     });
                   },
