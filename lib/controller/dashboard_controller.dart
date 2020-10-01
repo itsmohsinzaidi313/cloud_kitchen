@@ -11,9 +11,9 @@ class DashboardController {
     model.context = context;
     model.listDashboardButtons = [
       DashboardItem(
-          img: 'assets/sales.png', name: 'Sales', subtitle: 'Your daily sales'),
+          img: 'assets/sales.png', name: 'New Orders', subtitle: 'Your new sales'),
       DashboardItem(
-          img: 'assets/order.png', name: 'Orders', subtitle: 'Your new orders'),
+          img: 'assets/order.png', name: 'Pending Orders', subtitle: 'Your pending orders'),
       DashboardItem(
           img: 'assets/report.png',
           name: 'Reports',

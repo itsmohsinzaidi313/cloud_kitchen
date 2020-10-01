@@ -2,7 +2,13 @@ import 'package:food_app/models/objects/item.dart';
 
 class CustomerOrder {
   List<Item> _itemList = [];
-  String _tableNo, _orderType, _discount, _salesTax, _customerId;
+  String _tableNo, _orderType, _discount, _salesTax, _customerId, _orderTableId, _waiterId;
+
+  get orderTableId => _orderTableId;
+
+  set orderTableId(value) {
+    _orderTableId = value;
+  }
 
   get customerId {
     if (_customerId == null) _customerId = '1';
@@ -108,5 +114,11 @@ class CustomerOrder {
       totalItem += int.parse(items.quantity);
     });
     return totalItem;
+  }
+
+  get waiterId => _waiterId;
+
+  set waiterId(value) {
+    _waiterId = value;
   }
 }

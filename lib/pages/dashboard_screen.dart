@@ -1,12 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:food_app/controller/new_sale_controller.dart';
 import 'package:food_app/controller/order_controller.dart';
 import 'package:food_app/models/view_models/dashboard_model.dart';
 import 'package:food_app/models/generic_models/dashboard_item.dart';
 import 'package:food_app/pages/order_type_screen.dart';
 import 'package:food_app/pages/sql_view_page.dart';
-import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/widgets/dashboard_card.dart';
 import 'package:toast/toast.dart';
 
@@ -95,7 +92,7 @@ class _DashboardState extends State<Dashboard> {
 
   void onCardTap(DashboardItem dashboardItem) {
     Toast.show(dashboardItem.name, context);
-    if (dashboardItem.name == 'Sales') {
+    if (dashboardItem.name == 'New Orders') {
       Navigator.of(context).push(new MaterialPageRoute(builder: (context) => OrderTypeScreen()));
       // AppTheme.showAlertDialog(
       //   context,
@@ -106,7 +103,7 @@ class _DashboardState extends State<Dashboard> {
       //   barrier: false
       // );
       // NewSaleController().launch(context);
-    } else if (dashboardItem.name == 'Orders') {
+    } else if (dashboardItem.name == 'Pending Orders') {
       OrderController().launch(context);
     } else if (dashboardItem.name == 'Database') {
       Navigator.of(context)
