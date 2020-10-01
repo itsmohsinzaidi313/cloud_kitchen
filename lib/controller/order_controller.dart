@@ -14,7 +14,9 @@ class OrderController{
   OrderController()  {
     this.model = new OrderModel();
     model.setOrderTypeList(orderList);
-    getHoldingOrders();
+    model.dineInColumns = ['...', 'Sale No', 'Table No', 'Waiter Name', 'DueAmount', '...'];
+    model.takeawayAndDeliveryColumns = ['...', 'Sale No', 'Cell No', 'Customer Name', 'DueAmount', '...'];
+    // getHoldingOrders();
     getDineInList();
     getTakeawayList();
     getDeliveryList();

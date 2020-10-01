@@ -91,30 +91,30 @@ class Columns {
     'total_items', //3
     'sub_total', //4
     'paid_amount', //5
-    'due_amount',
-    'disc',
-    'disc_actual',
-    'vat',
-    'total_payable',
-    'payment_method_id',
-    'close_time',
-    'table_id',
-    'total_item_discount_amount',
-    'sub_total_with_discount',
-    'sub_total_discount_amount',
-    'total_discount_amount',
-    'delivery_charge',
-    'sub_total_discount_value',
-    'sub_total_discount_type',
-    'sale_date',
-    'date_time',
-    'order_time',
-    'cooking_start_time',
-    'cooking_done_time',
-    'modified',
-    'user_id',
-    'waiter_id',
-    'outlet_id',
+    'due_amount', //6
+    'disc', //7
+    'disc_actual', //8
+    'vat', //9
+    'total_payable', //10
+    'payment_method_id', //11
+    'close_time', //12
+    'table_id', //13
+    'total_item_discount_amount', //14
+    'sub_total_with_discount', //15
+    'sub_total_discount_amount', //16
+    'total_discount_amount', //17
+    'delivery_charge', //18
+    'sub_total_discount_value', //19
+    'sub_total_discount_type', //20
+    'sale_date', //21
+    'date_time', //22
+    'order_time', //23
+    'cooking_start_time', //24
+    'cooking_done_time', //25
+    'modified', //26
+    'user_id', //27
+    'waiter_id', //28
+    'outlet_id', //29
     'order_status', //30
     'order_type', //31
     'del_status', //32

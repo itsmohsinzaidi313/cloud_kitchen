@@ -94,14 +94,24 @@ class _OrderScreenState extends State<OrderScreen> {
                 child: Card(
                   child: DataTable(
                       columns: <DataColumn>[
-                        DataColumn(label: Text('...')),
-                        DataColumn(label : Text('Order No')),
-                        DataColumn(label : Text('Table No')),
-                        DataColumn(label : Text('Waiter Name')),
-                        DataColumn(label : Text('Due Amount')),
-                        DataColumn(label: Text('...')),
+                        DataColumn(label: Text(model.dineInColumns[0])),
+                        DataColumn(label : Text(model.dineInColumns[1])),
+                        DataColumn(label : Text(model.dineInColumns[2])),
+                        DataColumn(label : Text(model.dineInColumns[3])),
+                        DataColumn(label : Text(model.dineInColumns[4])),
+                        DataColumn(label: Text(model.dineInColumns[5])),
                       ],
-                      rows: getDineInList(),
+                      rows: [
+                        DataRow(cells: [
+                          DataCell(IconButton(icon: Icon(Icons.check), onPressed: (){})),
+                          DataCell(Text('e.saleNo')),
+                          DataCell(Text('e.tableId')),
+                          DataCell(Text('e.waiterId')),
+                          DataCell(Text('e.dueAmount')),
+                          DataCell(IconButton(icon: Icon(Icons.close), onPressed: (){})),
+                          ],
+                        ),
+                      ],
                     ),
                 ),
                 ),
@@ -116,6 +126,40 @@ class _OrderScreenState extends State<OrderScreen> {
   List<DataRow> getDineInList(List<SalesMaster> dineIn){
     List<DataRow> rows = [];
     dineIn.forEach((e) {
+      rows.add(DataRow(
+        cells: <DataCell>[
+          DataCell(IconButton(icon: Icon(Icons.check), onPressed: (){})),
+          DataCell(Text(e.saleNo)),
+          DataCell(Text(e.tableId)),
+          DataCell(Text(e.waiterId)),
+          DataCell(Text(e.dueAmount)),
+          DataCell(IconButton(icon: Icon(Icons.close), onPressed: (){})),
+        ],
+      ));
+    });
+    return rows;
+  }
+
+  List<DataRow> getTakeawayList(List<SalesMaster> takeaway){
+    List<DataRow> rows = [];
+    takeaway.forEach((e) {
+      rows.add(DataRow(
+        cells: <DataCell>[
+          DataCell(IconButton(icon: Icon(Icons.check), onPressed: (){})),
+          DataCell(Text(e.saleNo)),
+          DataCell(Text(e.tableId)),
+          DataCell(Text(e.waiterId)),
+          DataCell(Text(e.dueAmount)),
+          DataCell(IconButton(icon: Icon(Icons.close), onPressed: (){})),
+        ],
+      ));
+    });
+    return rows;
+  }
+
+  List<DataRow> getDeliveryList(List<SalesMaster> delivery){
+    List<DataRow> rows = [];
+    delivery.forEach((e) {
       rows.add(DataRow(
         cells: <DataCell>[
           DataCell(IconButton(icon: Icon(Icons.check), onPressed: (){})),
