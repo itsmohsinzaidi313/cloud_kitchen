@@ -216,4 +216,37 @@ class SalesMaster {
     });
     return _orders;
   }
+
+  Future<List<SalesMaster>> getDineInList(Database db) async {
+    List<Map<String, dynamic>> res = await db.query(Tables.salesMaster,
+        where:
+        "${Columns.salesMaster[5]} == '0.0' AND ${Columns.salesMaster[37]} == '0' AND ${Columns.salesMaster[31]} == '1");
+    List<SalesMaster> dineInList = [];
+    res.forEach((row) {
+      dineInList.add(SalesMaster.fromJson(row));
+    });
+    return dineInList;
+  }
+
+  Future<List<SalesMaster>> getTakeawayList(Database db) async {
+    List<Map<String, dynamic>> res = await db.query(Tables.salesMaster,
+        where:
+        "${Columns.salesMaster[5]} == '0.0' AND ${Columns.salesMaster[37]} == '0' AND ${Columns.salesMaster[31]} == '2");
+    List<SalesMaster> takeawayList = [];
+    res.forEach((row) {
+      takeawayList.add(SalesMaster.fromJson(row));
+    });
+    return takeawayList;
+  }
+
+  Future<List<SalesMaster>> getDeliveryList(Database db) async {
+    List<Map<String, dynamic>> res = await db.query(Tables.salesMaster,
+        where:
+        "${Columns.salesMaster[5]} == '0.0' AND ${Columns.salesMaster[37]} == '0' AND ${Columns.salesMaster[31]} == '3");
+    List<SalesMaster> deliveryList = [];
+    res.forEach((row) {
+      deliveryList.add(SalesMaster.fromJson(row));
+    });
+    return deliveryList;
+  }
 }

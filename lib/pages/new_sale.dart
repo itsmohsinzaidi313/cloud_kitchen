@@ -243,7 +243,7 @@ class _NewSaleState extends State<NewSale> {
         Columns.salesMaster[10]: customerOrder.getSubTotal().toString(),
         Columns.salesMaster[11]: '1',
         Columns.salesMaster[12]: Config.getCurrentTime24Format(),
-        // Columns.salesMaster[13] :  ,
+        Columns.salesMaster[13] :  this.model.order.orderTableId,
         Columns.salesMaster[14]: customerOrder.discount ?? 0,
         Columns.salesMaster[15]: customerOrder.getNetAmount(),
         Columns.salesMaster[16]: customerOrder.discount ?? 0,
@@ -258,7 +258,7 @@ class _NewSaleState extends State<NewSale> {
         Columns.salesMaster[25]: Config.getCurrentDateTimeDBFormat(),
         Columns.salesMaster[26]: 'No',
         Columns.salesMaster[27]: Config().currentUser.serverId,
-        // Columns.salesMaster[28] :  ,
+        Columns.salesMaster[28] :  this.model.order.waiterId,
         Columns.salesMaster[29]: Config().currentUser.outletId,
         Columns.salesMaster[30]: '1',
         Columns.salesMaster[31]: this.model.salesMaster.orderType,
@@ -295,6 +295,13 @@ class _NewSaleState extends State<NewSale> {
         Map<String, dynamic> update = {
           'sale_no': code,
         };
+
+        ///UPDATE ORDER TABLE
+        _db.update(Tables.orderTable, {
+          Columns.ordersTables[3] : masterId,
+          Columns.ordersTables[4] : code,
+        }, where: '${Columns.ordersTables[0]} = ?', whereArgs: [this.model.order.orderTableId]
+        );
 
         int updateId = await _salesMaster.updateSpecificIntoDb(
             _db, update, 'id', masterId);

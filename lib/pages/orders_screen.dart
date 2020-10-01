@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/new_sale_controller.dart';
 import 'package:food_app/controller/order_controller.dart';
@@ -40,156 +41,224 @@ class _OrderScreenState extends State<OrderScreen> {
       body: Container(
         height: Config.getDeviceHeight(context),
         width: Config.getDeviceWidth(context),
-        child: Row(
+        child: Column(
           children: [
-            Expanded(
-              child: Container(
-                child: ListView(
-                  scrollDirection: Axis.vertical,
-                  children: getHoldingOrderList(model.getItemHoldList),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: RaisedButton.icon(onPressed: (){},
+                      color: AppTheme.listTextColor,
+                      icon: Icon(
+                            Icons.local_dining,
+                        ),
+                        label: Text('Dine-In'.toUpperCase()),
+                    ),
+                  ),
                 ),
-              ),
+                Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: RaisedButton.icon(onPressed: (){},
+                      color: AppTheme.listTextColor,
+                        icon: Icon(
+                            Icons.directions_walk,
+                        ),
+                        label: Text('Takeaway'.toUpperCase()),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: RaisedButton.icon(onPressed: (){},
+                      color: AppTheme.listTextColor,
+                      icon: Icon(
+                            Icons.directions_bike,
+                        ),
+                        label: Text('Delivery'.toUpperCase()),
+                    ),
+                  ),
+                ),
+              ],
             ),
             Expanded(
+              flex: 1,
               child: Container(
-                child: ListView(
-                  scrollDirection: Axis.vertical,
-                  children: getOrderTypeList(model.getOrderTypeList),
+                child: Card(
+                  child: DataTable(
+                      columns: <DataColumn>[
+                        DataColumn(label: Text('...')),
+                        DataColumn(label : Text('Order No')),
+                        DataColumn(label : Text('Table No')),
+                        DataColumn(label : Text('Waiter Name')),
+                        DataColumn(label : Text('Due Amount')),
+                        DataColumn(label: Text('...')),
+                      ],
+                      rows: getDineInList(),
+                    ),
+                ),
                 ),
               ),
-            ),
           ],
         ),
       ),
     );
   }
 
-  List<Widget> getHoldingOrderList(List<SalesMaster> sales) {
-    List<Widget> widgets = [];
-    sales.forEach((item) {
-      widgets.add(
-        InkWell(
-          onTap: () {
-            NewSaleController().editOrder(item, context);
-          },
-          child: Card(
-            elevation: 5,
-            child: ListTile(
-              leading: IconButton(
-                icon: Icon(
-                  Icons.check,
-                  color: Colors.green,
-                ),
-                onPressed: () async {
-                  Config.database.update(
-                      Tables.salesMaster, {Columns.salesMaster[30]: '3'},
-                      where: '${Columns.salesMaster[0]} = ?',
-                      whereArgs: [item.id]);
-                  Map<String, dynamic> values = item.getValuesForUpload();
-                  List<Map<String, dynamic>> values1 = [];
-                  //COLUMNS 
-                  List<Map<String, dynamic>> values2 = await Config.database
-                      .query(Tables.salesDetails,
-                          columns: Columns.salesDetails
-                              .getRange(1, Columns.salesDetails.length - 1)
-                              .toList(),
-                          where: '${Columns.salesDetails[18]} = ?',
-                          whereArgs: [item.id]);
-                  values['sale_details'] = values2;
-                  values1.add(values);
-                  Map<String, dynamic> json = new Map();
-                  json['user_id'] = '1';
-                  json['json'] = jsonEncode(values1);
-                  log(
-                    json.toString(),
-                    name: 'Order Upload Json: ',
-                  );
-                  Response response =
-                      await post(Config.addUpdateOrderApi, body: json).timeout(
-                    Duration(seconds: 5),
-                    onTimeout: () => null,
-                  );
-                  if (response != null)
-                    log(response.body, name: 'Server Response: ');
-                  else
-                    log('Response Timeout', name: 'Request Timeout');
-                },
-              ),
-              title: Center(child: Text(item.saleNo)),
-              subtitle: Center(child: Text(item.totalPayable)),
-              trailing: IconButton(
-                icon: Icon(
-                  Icons.close,
-                  color: Colors.red,
-                ),
-                onPressed: () async {
-                  await onOrderCancelled(item);
-                  List<SalesMaster> list =
-                      await SalesMaster().queryAllRows(Config.database);
-                  setState(() {
-                    this.model.setItemHoldList(list);
-                  });
-                },
-              ),
-            ),
-          ),
-        ),
-      );
+
+  List<DataRow> getDineInList(List<SalesMaster> dineIn){
+    List<DataRow> rows = [];
+    dineIn.forEach((e) {
+      rows.add(DataRow(
+        cells: <DataCell>[
+          DataCell(IconButton(icon: Icon(Icons.check), onPressed: (){})),
+          DataCell(Text(e.saleNo)),
+          DataCell(Text(e.tableId)),
+          DataCell(Text(e.waiterId)),
+          DataCell(Text(e.dueAmount)),
+          DataCell(IconButton(icon: Icon(Icons.close), onPressed: (){})),
+        ],
+      ));
     });
-    return widgets;
+    return rows;
   }
 
-  List<Widget> getOrderTypeList(List<String> type) {
-    List<Widget> widgets = [];
-    type.forEach((item) {
-      widgets.add(
-        InkWell(
-          onTap: () => NewSaleController().launchAndReplacement(context),
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 2,
-            ),
-            height: Config.getDeviceHeight(context) * 0.25,
-            width: Config.getDeviceWidth(context),
-            child: Card(
-              color: Colors.amberAccent,
-              elevation: 5,
-              child: Center(
-                child: Text(
-                  item.toUpperCase(),
-                  style: TextStyle(
-                    fontSize: 30,
-                    letterSpacing: 2.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    });
-    return widgets;
-  }
 
-  Future onOrderCancelled(SalesMaster itm) async {
-    Database db = Config.database;
-    Map<String, dynamic> update = {
-      Columns.salesMaster[37]: 1.toString(),
-    };
-    await SalesMaster().updateSpecificIntoDb(db, update, 'id', itm.id);
-  }
-
-  Future onOrderCompleted(SalesMaster itm) async {
-    await Config.database.execute(
-        'update ${Columns.salesMaster[37]} set ${Columns.salesMaster[5]} = ${Columns.salesMaster[6]} where id = ${itm.id}');
-    OrderController().launchAndReplacement(context);
-  }
+  // List<Widget> getHoldingOrderList(List<SalesMaster> sales) {
+  //   List<Widget> widgets = [];
+  //   sales.forEach((item) {
+  //     widgets.add(
+  //       InkWell(
+  //         onTap: () {
+  //           NewSaleController().editOrder(item, context);
+  //         },
+  //         child: Card(
+  //           elevation: 5,
+  //           child: ListTile(
+  //             leading: IconButton(
+  //               icon: Icon(
+  //                 Icons.check,
+  //                 color: Colors.green,
+  //               ),
+  //               onPressed: () async {
+  //                 Config.database.update(
+  //                     Tables.salesMaster, {Columns.salesMaster[30]: '3'},
+  //                     where: '${Columns.salesMaster[0]} = ?',
+  //                     whereArgs: [item.id]);
+  //                 Map<String, dynamic> values = item.getValuesForUpload();
+  //                 List<Map<String, dynamic>> values1 = [];
+  //                 //COLUMNS
+  //                 List<Map<String, dynamic>> values2 = await Config.database
+  //                     .query(Tables.salesDetails,
+  //                         columns: Columns.salesDetails
+  //                             .getRange(1, Columns.salesDetails.length - 1)
+  //                             .toList(),
+  //                         where: '${Columns.salesDetails[18]} = ?',
+  //                         whereArgs: [item.id]);
+  //                 values['sale_details'] = values2;
+  //                 values1.add(values);
+  //                 Map<String, dynamic> json = new Map();
+  //                 json['user_id'] = '1';
+  //                 json['json'] = jsonEncode(values1);
+  //                 log(
+  //                   json.toString(),
+  //                   name: 'Order Upload Json: ',
+  //                 );
+  //                 Response response =
+  //                     await post(Config.addUpdateOrderApi, body: json).timeout(
+  //                   Duration(seconds: 5),
+  //                   onTimeout: () => null,
+  //                 );
+  //                 if (response != null)
+  //                   log(response.body, name: 'Server Response: ');
+  //                 else
+  //                   log('Response Timeout', name: 'Request Timeout');
+  //               },
+  //             ),
+  //             title: Center(child: Text(item.saleNo)),
+  //             subtitle: Center(child: Text(item.totalPayable)),
+  //             trailing: IconButton(
+  //               icon: Icon(
+  //                 Icons.close,
+  //                 color: Colors.red,
+  //               ),
+  //               onPressed: () async {
+  //                 await onOrderCancelled(item);
+  //                 List<SalesMaster> list =
+  //                     await SalesMaster().queryAllRows(Config.database);
+  //                 setState(() {
+  //                   this.model.setItemHoldList(list);
+  //                 });
+  //               },
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     );
+  //   });
+  //   return widgets;
+  // }
+  //
+  // List<Widget> getOrderTypeList(List<String> type) {
+  //   List<Widget> widgets = [];
+  //   type.forEach((item) {
+  //     widgets.add(
+  //       InkWell(
+  //         onTap: () => NewSaleController().launchAndReplacement(context),
+  //         child: Container(
+  //           padding: EdgeInsets.symmetric(
+  //             horizontal: 16,
+  //             vertical: 2,
+  //           ),
+  //           height: Config.getDeviceHeight(context) * 0.25,
+  //           width: Config.getDeviceWidth(context),
+  //           child: Card(
+  //             color: Colors.amberAccent,
+  //             elevation: 5,
+  //             child: Center(
+  //               child: Text(
+  //                 item.toUpperCase(),
+  //                 style: TextStyle(
+  //                   fontSize: 30,
+  //                   letterSpacing: 2.0,
+  //                   fontWeight: FontWeight.bold,
+  //                   color: Colors.white,
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     );
+  //   });
+  //   return widgets;
+  // }
+  //
+  // Future onOrderCancelled(SalesMaster itm) async {
+  //   Database db = Config.database;
+  //   Map<String, dynamic> update = {
+  //     Columns.salesMaster[37]: 1.toString(),
+  //   };
+  //   await SalesMaster().updateSpecificIntoDb(db, update, 'id', itm.id);
+  // }
+  //
+  // Future onOrderCompleted(SalesMaster itm) async {
+  //   await Config.database.execute(
+  //       'update ${Columns.salesMaster[37]} set ${Columns.salesMaster[5]} = ${Columns.salesMaster[6]} where id = ${itm.id}');
+  //   OrderController().launchAndReplacement(context);
+  // }
 }
 
 /*
 {user_id: 1, json: [{"customer_id":"1","sale_no":"ORD/01/0001","total_items":"1","sub_total":null,"paid_amount":"0.0","due_amount":"1600.0","disc":null,"disc_actual":null,"vat":null,"total_payable":"1600.0","payment_method_id":"1","close_time":null,"table_id":"1","total_item_discount_amount":null,"sub_total_with_discount":null,"sub_total_discount_amount":null,"total_discount_amount":null,"delivery_charge":null,"sub_total_discount_value":null,"sub_total_discount_type":null,"sale_date":null,"date_time":"9/30/2020 1:50 PM","order_time":null,"cooking_start_time":null,"cooking_done_time":null,"modified":null,"user_id":"1","waiter_id":"1","outlet_id":"1","order_status":null,"order_type":"DINEIN","del_status":null,"sale_vat_objects":null,"device_key":"1","remote_id":null,"company_id":"1","sale_details":[{"id":1,"food_menu_id":"001","menu_name":null,"qty":"4","menu_price_without_discount":"1600.0","menu_price_with_discount":null,"menu_unit_price":"400.00","menu_vat_percentage":null,"menu_taxes":null,"menu_discount_value":null,"discount_type":null,"menu_note":null,"discount_amount":null,"item_type":null,"cooking_status":null,"cooking_start_time":null,"cooking_done_time":null,"previous_id":null,"sales_id":"1","order_status":null,"user_id":"1","outlet_id":"1","del_status":null}]}]}
 */
 //1 dinein 2 takeaway 3 delivery
+
+

@@ -189,10 +189,10 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                     setState(() {
                       check[0] = controllers[0].text == '' ? true : false;
                       check[1] = controllers[1].text == '' ? true : false;
-                      NewSaleController().launchDinein(
-                        context,
-                        _viewType.toString(),
-                      );
+                      // NewSaleController().launchDineIn(
+                      //   context,
+                      //   _viewType.toString(),
+                      // );
                     });
                   },
                 ),

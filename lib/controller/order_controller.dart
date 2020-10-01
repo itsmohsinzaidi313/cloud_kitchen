@@ -15,6 +15,24 @@ class OrderController{
     this.model = new OrderModel();
     model.setOrderTypeList(orderList);
     getHoldingOrders();
+    getDineInList();
+    getTakeawayList();
+    getDeliveryList();
+  }
+
+  void getDineInList() async{
+    List<SalesMaster> list = await SalesMaster().getDineInList(Config.database);
+    model.dineInList = list;
+  }
+
+  void getTakeawayList() async{
+    List<SalesMaster> list = await SalesMaster().getTakeawayList(Config.database);
+    model.takeawayList = list;
+  }
+
+  void getDeliveryList() async{
+    List<SalesMaster> list = await SalesMaster().getDeliveryList(Config.database);
+    model.deliveryList = list;
   }
 
    void getHoldingOrders() async{
