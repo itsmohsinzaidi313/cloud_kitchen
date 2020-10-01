@@ -158,21 +158,6 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
         return Container(
           child: Column(
             children: [
-              //   ListTile(
-              //     leading: Icon(Icons.image_aspect_ratio),
-              //     title: TextField(
-              //       controller: controllers[0],
-              //       decoration: InputDecoration(
-              //           hintText: 'Table#',
-              //           errorText: check[0] ? 'Required' : null),
-              //     ),
-              //     trailing: IconButton(
-              //       icon: Icon(Icons.search),
-              //       onPressed: () {
-              //         check[0] = controllers[0].text == '' ? true : false;
-              //       },
-              //     ),
-              //   ),
               ListTile(
                 leading: Icon(Icons.group),
                 title: TextField(
