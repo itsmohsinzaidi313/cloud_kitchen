@@ -1,6 +1,8 @@
+import 'package:food_app/models/objects/payment_method.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 
 class OrderModel {
+
   List<String> _orderTypeList;
   List<SalesMaster> _itemHoldList;
   List<SalesMaster> _dineInList;
@@ -8,8 +10,15 @@ class OrderModel {
   List<SalesMaster> _deliveryList;
   List<String> _dineInColumns;
   List<String> _takeawayAndDeliveryColumns;
+  List<PaymentMethod> _paymentMethodList;
 
-  
+
+  List<PaymentMethod> get paymentMethodList => _paymentMethodList;
+
+  set paymentMethodList(List<PaymentMethod> value) {
+    _paymentMethodList = value;
+  }
+
   List<String> get dineInColumns => _dineInColumns;
 
   set dineInColumns(List<String> value) {

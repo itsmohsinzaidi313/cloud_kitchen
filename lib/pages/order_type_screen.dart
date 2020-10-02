@@ -171,7 +171,8 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                 ),
               ),
               ListTile(
-                title: OutlineButton(
+                title:
+                OutlineButton(
                   child: Text('Ok'),
                   onPressed: () {
                     setState(() {
@@ -257,14 +258,14 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                             controllers[3].text =
                                 value2[0][Columns.customers[3]];
                           });
+                        } else {
+                          this.customerExists = false;
+                          AppTheme.showAlertDialogOK(context,
+                              title: 'Attention',
+                              message: 'Customer does not exists',
+                              onOK: () => Navigator.pop(context));
                         }
                       });
-                    } else {
-                      this.customerExists = false;
-                      AppTheme.showAlertDialogOK(context,
-                          title: 'Attention',
-                          message: 'Customer does not exists',
-                          onOK: () => Navigator.pop(context));
                     }
                   },
                 ),
