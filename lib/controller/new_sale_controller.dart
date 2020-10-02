@@ -29,28 +29,45 @@ class NewSaleController {
   void launch(BuildContext context) => Navigator.of(context)
       .push(new MaterialPageRoute(builder: (context) => new NewSale(model)));
 
-  void launchDineIn(BuildContext context, String orderType, String orderTableId, String waiterId) {
+  void launchDineIn(BuildContext context, String orderType, String orderTableId,
+      String waiterId, List<String> titleStrings) {
     this.model.salesMaster = SalesMaster();
     this.model.salesMaster.orderType = orderType;
     this.model.order.orderTableId = orderTableId;
     this.model.order.waiterId = waiterId;
 
+    this.model.leadingString = titleStrings[0];
+    this.model.titleString = titleStrings[1];
+    this.model.trailingString = titleStrings[2];
+
     Navigator.of(context)
         .push(new MaterialPageRoute(builder: (context) => new NewSale(model)));
   }
 
-  void launchTakeaway(BuildContext context, String orderType, String customerId) {
+  void launchTakeaway(BuildContext context, String orderType, String customerId,
+      List<String> titleStrings) {
     this.model.salesMaster = SalesMaster();
     this.model.salesMaster.orderType = orderType;
     this.model.order.customerId = customerId;
+
+    this.model.leadingString = titleStrings[0];
+    this.model.titleString = titleStrings[1];
+    this.model.trailingString = titleStrings[2];
+
     Navigator.of(context)
         .push(new MaterialPageRoute(builder: (context) => new NewSale(model)));
   }
 
-  void launchDelivery(BuildContext context, String orderType, String customerId) async {
+  void launchDelivery(BuildContext context, String orderType, String customerId,
+      List<String> titleStrings) async {
     this.model.salesMaster = SalesMaster();
     this.model.salesMaster.orderType = orderType;
     this.model.order.customerId = customerId;
+
+    this.model.leadingString = titleStrings[0];
+    this.model.titleString = titleStrings[1];
+    this.model.trailingString = titleStrings[2];
+
     Navigator.of(context)
         .push(new MaterialPageRoute(builder: (context) => new NewSale(model)));
   }
@@ -66,5 +83,4 @@ class NewSaleController {
     this.model.salesMaster = salesMaster;
     launchAndReplacement(context);
   }
-
 }

@@ -1,21 +1,14 @@
-import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:food_app/controller/new_sale_controller.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:food_app/controller/order_controller.dart';
-import 'package:food_app/database/columns.dart';
-import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/order_model.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
-import 'package:http/http.dart';
-import 'package:sqflite/sqflite.dart';
 
 class OrderScreen extends StatefulWidget {
   final OrderModel model;
-
   OrderScreen({this.model});
 
   @override
@@ -25,7 +18,7 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen> {
   GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   final OrderModel model;
-
+  int orderType = 1;
   _OrderScreenState(this.model);
 
   @override
@@ -51,12 +44,17 @@ class _OrderScreenState extends State<OrderScreen> {
                   flex: 1,
                   child: Padding(
                     padding: const EdgeInsets.all(3.0),
-                    child: RaisedButton.icon(onPressed: (){},
+                    child: RaisedButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          orderType = 1;
+                        });
+                      },
                       color: AppTheme.listTextColor,
                       icon: Icon(
-                            Icons.local_dining,
-                        ),
-                        label: Text('Dine-In'.toUpperCase()),
+                        Icons.local_dining,
+                      ),
+                      label: Text('Dine-In'.toUpperCase()),
                     ),
                   ),
                 ),
@@ -64,12 +62,17 @@ class _OrderScreenState extends State<OrderScreen> {
                   flex: 1,
                   child: Padding(
                     padding: const EdgeInsets.all(3.0),
-                    child: RaisedButton.icon(onPressed: (){},
+                    child: RaisedButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          orderType = 2;
+                        });
+                      },
                       color: AppTheme.listTextColor,
-                        icon: Icon(
-                            Icons.directions_walk,
-                        ),
-                        label: Text('Takeaway'.toUpperCase()),
+                      icon: Icon(
+                        Icons.directions_walk,
+                      ),
+                      label: Text('Takeaway'.toUpperCase()),
                     ),
                   ),
                 ),
@@ -77,12 +80,17 @@ class _OrderScreenState extends State<OrderScreen> {
                   flex: 1,
                   child: Padding(
                     padding: const EdgeInsets.all(3.0),
-                    child: RaisedButton.icon(onPressed: (){},
+                    child: RaisedButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          orderType = 3;
+                        });
+                      },
                       color: AppTheme.listTextColor,
                       icon: Icon(
-                            Icons.directions_bike,
-                        ),
-                        label: Text('Delivery'.toUpperCase()),
+                        Icons.directions_bike,
+                      ),
+                      label: Text('Delivery'.toUpperCase()),
                     ),
                   ),
                 ),
@@ -90,80 +98,118 @@ class _OrderScreenState extends State<OrderScreen> {
             ),
             Expanded(
               flex: 1,
-              child: Container(
-                child: Card(
-                  child: DataTable(
-                      columns: <DataColumn>[
-                        DataColumn(label: Text(model.dineInColumns[0])),
-                        DataColumn(label : Text(model.dineInColumns[1])),
-                        DataColumn(label : Text(model.dineInColumns[2])),
-                        DataColumn(label : Text(model.dineInColumns[3])),
-                        DataColumn(label : Text(model.dineInColumns[4])),
-                        DataColumn(label: Text(model.dineInColumns[5])),
-                      ],
-                      rows: getDineInList(model.dineInList),
-                    ),
-                ),
-                ),
-              ),
+              child: GestureDetector(
+                  child: Card(
+                      child: FutureBuilder(
+                          future: getOrdersList(orderType),
+                          initialData: Container(
+                            child: SpinKitRing(
+                              color: Colors.yellow,
+                            ),
+                          ),
+                          builder: (context, snapshot) => snapshot.data)),
+                          onTap: (){
+                            
+                          },
+            )),
           ],
         ),
       ),
     );
   }
 
+  Future<Widget> getOrdersList(int orderType) async {
+    Widget widget;
+    switch (orderType) {
+      case 1:
+        widget = await OrderController.getDineInOrders();
+        break;
+      case 2:
+        widget = await OrderController.getTakeAwayOrders();
+        break;
+      case 3:
+        widget = await OrderController.getDeliveryOrders();
+        break;
+      default:
+        break;
+    }
+    return widget;
+  }
 
-  List<DataRow> getDineInList(List<SalesMaster> dineIn){
+  List<DataColumn> getDataTableColumnsList(int orderType) {
+    List<DataColumn> cols = [];
+    switch (orderType) {
+      case 1:
+        model.dineInColumns.forEach((element) {
+          cols.add(DataColumn(label: Text(element)));
+        });
+        break;
+      case 2:
+        model.takeawayAndDeliveryColumns.forEach((element) {
+          cols.add(DataColumn(label: Text(element)));
+        });
+        break;
+      case 3:
+        model.takeawayAndDeliveryColumns.forEach((element) {
+          cols.add(DataColumn(label: Text(element)));
+        });
+        break;
+      default:
+        break;
+    }
+    return cols;
+  }
+
+  List<DataRow> getDineInList(List<SalesMaster> dineIn) {
     List<DataRow> rows = [];
     dineIn.forEach((e) {
       rows.add(DataRow(
         cells: <DataCell>[
-          DataCell(IconButton(icon: Icon(Icons.check), onPressed: (){})),
+          DataCell(IconButton(icon: Icon(Icons.check), onPressed: () {})),
           DataCell(Text(e.saleNo)),
           DataCell(Text(e.tableId)),
           DataCell(Text(e.waiterId)),
           DataCell(Text(e.dueAmount)),
-          DataCell(IconButton(icon: Icon(Icons.close), onPressed: (){})),
+          DataCell(IconButton(icon: Icon(Icons.close), onPressed: () {})),
         ],
       ));
     });
     return rows;
   }
 
-  List<DataRow> getTakeawayList(List<SalesMaster> takeaway){
+  List<DataRow> getTakeawayList(List<SalesMaster> takeaway) {
     List<DataRow> rows = [];
     takeaway.forEach((e) {
       rows.add(DataRow(
         cells: <DataCell>[
-          DataCell(IconButton(icon: Icon(Icons.check), onPressed: (){})),
+          DataCell(IconButton(icon: Icon(Icons.check), onPressed: () {})),
           DataCell(Text(e.saleNo)),
-          DataCell(Text(e.tableId)),
-          DataCell(Text(e.waiterId)),
+          DataCell(Text(e.customerId)),
+          DataCell(Text(e.customerId)),
           DataCell(Text(e.dueAmount)),
-          DataCell(IconButton(icon: Icon(Icons.close), onPressed: (){})),
+          DataCell(IconButton(icon: Icon(Icons.close), onPressed: () {})),
         ],
       ));
     });
     return rows;
   }
 
-  List<DataRow> getDeliveryList(List<SalesMaster> delivery){
+  List<DataRow> getDeliveryList(List<SalesMaster> delivery) {
     List<DataRow> rows = [];
     delivery.forEach((e) {
       rows.add(DataRow(
         cells: <DataCell>[
-          DataCell(IconButton(icon: Icon(Icons.check), onPressed: (){})),
+          DataCell(IconButton(icon: Icon(Icons.check), onPressed: () {})),
           DataCell(Text(e.saleNo)),
-          DataCell(Text(e.tableId)),
-          DataCell(Text(e.waiterId)),
+          DataCell(Text(e.customerId)),
+          DataCell(Text(e.customerId)),
           DataCell(Text(e.dueAmount)),
-          DataCell(IconButton(icon: Icon(Icons.close), onPressed: (){})),
+          DataCell(IconButton(icon: Icon(Icons.close), onPressed: () {})),
         ],
       ));
     });
     return rows;
   }
-
 
   // List<Widget> getHoldingOrderList(List<SalesMaster> sales) {
   //   List<Widget> widgets = [];
@@ -289,10 +335,3 @@ class _OrderScreenState extends State<OrderScreen> {
   //   OrderController().launchAndReplacement(context);
   // }
 }
-
-/*
-{user_id: 1, json: [{"customer_id":"1","sale_no":"ORD/01/0001","total_items":"1","sub_total":null,"paid_amount":"0.0","due_amount":"1600.0","disc":null,"disc_actual":null,"vat":null,"total_payable":"1600.0","payment_method_id":"1","close_time":null,"table_id":"1","total_item_discount_amount":null,"sub_total_with_discount":null,"sub_total_discount_amount":null,"total_discount_amount":null,"delivery_charge":null,"sub_total_discount_value":null,"sub_total_discount_type":null,"sale_date":null,"date_time":"9/30/2020 1:50 PM","order_time":null,"cooking_start_time":null,"cooking_done_time":null,"modified":null,"user_id":"1","waiter_id":"1","outlet_id":"1","order_status":null,"order_type":"DINEIN","del_status":null,"sale_vat_objects":null,"device_key":"1","remote_id":null,"company_id":"1","sale_details":[{"id":1,"food_menu_id":"001","menu_name":null,"qty":"4","menu_price_without_discount":"1600.0","menu_price_with_discount":null,"menu_unit_price":"400.00","menu_vat_percentage":null,"menu_taxes":null,"menu_discount_value":null,"discount_type":null,"menu_note":null,"discount_amount":null,"item_type":null,"cooking_status":null,"cooking_start_time":null,"cooking_done_time":null,"previous_id":null,"sales_id":"1","order_status":null,"user_id":"1","outlet_id":"1","del_status":null}]}]}
-*/
-//1 dinein 2 takeaway 3 delivery
-
-

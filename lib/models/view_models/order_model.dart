@@ -1,7 +1,6 @@
 import 'package:food_app/models/objects/sales_master.dart';
 
-class OrderModel{
-
+class OrderModel {
   List<String> _orderTypeList;
   List<SalesMaster> _itemHoldList;
   List<SalesMaster> _dineInList;
@@ -10,7 +9,7 @@ class OrderModel{
   List<String> _dineInColumns;
   List<String> _takeawayAndDeliveryColumns;
 
-
+  
   List<String> get dineInColumns => _dineInColumns;
 
   set dineInColumns(List<String> value) {
@@ -21,12 +20,12 @@ class OrderModel{
 
   void setOrderTypeList(List<String> value) => _orderTypeList = value;
 
-   get getItemHoldList => _itemHoldList;
+  get getItemHoldList => _itemHoldList;
 
   void setItemHoldList(List<SalesMaster> value) => _itemHoldList = value;
 
-  void onOrderCancelled(SalesMaster salesMaster){
-      _itemHoldList.remove(salesMaster);
+  void onOrderCancelled(SalesMaster salesMaster) {
+    _itemHoldList.remove(salesMaster);
   }
 
   List<SalesMaster> get dineInList => _dineInList;

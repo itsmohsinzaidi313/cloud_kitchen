@@ -8,7 +8,6 @@ import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/data_lists.dart';
 import 'package:food_app/models/objects/table.dart' as T;
-import 'package:food_app/shared/lib.dart';
 
 class OrderTypeScreen extends StatefulWidget {
   @override
@@ -22,6 +21,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
   int customerId = 0;
   T.Table table;
   User waiter;
+  List<String> titleStrings = [];
 
   List<TextEditingController> controllers = [
     new TextEditingController(),
@@ -178,6 +178,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                       check[0] = controllers[0].text == '' ? true : false;
                       check[1] = controllers[1].text == '' ? true : false;
                     });
+                    titleStrings.add('Persons: ${controllers[1].text}');
                     Config.database.insert(Tables.orderTable, {
                       Columns.ordersTables[1]: controllers[1].text,
                       Columns.ordersTables[2]: Config.getCurrentTime24Format(),
@@ -188,7 +189,8 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                         context,
                         _viewType.toString(),
                         value.toString(),
-                        waiter.serverId));
+                        waiter.serverId,
+                        titleStrings));
                   },
                 ),
               ),
@@ -274,23 +276,27 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                     setState(() {
                       check[2] = controllers[2].text == '' ? true : false;
                       check[3] = controllers[3].text == '' ? true : false;
-                      if (customerExists) {
-                        NewSaleController().launchTakeaway(context,
-                            _viewType.toString(), customerId.toString());
-                      } else {
-                        User cUser = Config().currentUser;
-                        Customer inputFromPopup = Customer(
-                            name: controllers[2].text,
-                            phone: controllers[3].text,
-                            userId: cUser.serverId,
-                            companyId: cUser.companyId,
-                            delStatus: cUser.delStatus);
-                        Customer()
-                            .insertCustomer(Config.database, inputFromPopup)
-                            .then((value) => NewSaleController().launchTakeaway(
-                                context,
-                                _viewType.toString(),
-                                value.toString()));
+                      if (!check[2] && !check[3]) {
+                        if (customerExists) {
+                          NewSaleController().launchTakeaway(
+                              context,
+                              _viewType.toString(),
+                              customerId.toString(),
+                              titleStrings);
+                        } else {
+                          User cUser = Config.currentUser;
+                          Customer inputFromPopup = Customer(
+                              name: controllers[2].text,
+                              phone: controllers[3].text,
+                              userId: cUser.serverId,
+                              companyId: cUser.companyId,
+                              delStatus: cUser.delStatus);
+                          Customer()
+                              .insertCustomer(Config.database, inputFromPopup)
+                              .then((value) => NewSaleController()
+                                  .launchTakeaway(context, _viewType.toString(),
+                                      value.toString(), titleStrings));
+                        }
                       }
                     });
                   },
@@ -381,16 +387,21 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                 title: OutlineButton(
                   child: Text('Ok'),
                   onPressed: () {
+                    titleStrings.add('Customer: ${controllers[4].text}');
+                    titleStrings.add('Phone: ${controllers[5].text}');
                     setState(() {
                       check[4] = controllers[4].text == '' ? true : false;
                       check[5] = controllers[5].text == '' ? true : false;
                       check[6] = controllers[6].text == '' ? true : false;
                       if (!check[4] && !check[5] && !check[6]) {
                         if (customerExists) {
-                          NewSaleController().launchDelivery(context,
-                              _viewType.toString(), customerId.toString());
+                          NewSaleController().launchDelivery(
+                              context,
+                              _viewType.toString(),
+                              customerId.toString(),
+                              titleStrings);
                         } else {
-                          User cUser = Config().currentUser;
+                          User cUser = Config.currentUser;
                           Customer inputFromPopup = Customer(
                               name: controllers[4].text,
                               phone: controllers[5].text,
@@ -402,7 +413,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                               .insertCustomer(Config.database, inputFromPopup)
                               .then((value) => NewSaleController()
                                   .launchDelivery(context, _viewType.toString(),
-                                      value.toString()));
+                                      value.toString(), titleStrings));
                         }
                       }
                     });
@@ -437,6 +448,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
             table = element;
             setState(() {
               gridViewType = 2;
+              titleStrings.add('Table: ${element.name}');
             });
           },
         ));
@@ -459,6 +471,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
           ),
           onTap: () {
             waiter = element;
+            titleStrings.add('Waiter: ${element.fullName}');
           },
         ));
       });

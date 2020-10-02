@@ -42,56 +42,104 @@ class _NewSaleState extends State<NewSale> {
         appBarBgColor: AppTheme.appBarColor,
       ),
       body: Container(
-        child: Row(
+        child: Column(
           children: [
-            Flexible(
-              flex: 1,
-              child: Column(
+            Container(
+              color: Colors.red,
+              child: Row(
                 children: [
-                  ListTile(
-                    title: Center(child: Text('Categories'.toUpperCase())),
-                  ),
-                  Container(
-                    height: Config.getDeviceHeight(context) * 0.1,
-                    padding: EdgeInsets.only(top: 5),
-                    // decoration: BoxDecoration(border: Border.all(width: 2)),
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: getCategoryWidgets(model.lstCategory),
+                  Flexible(
+                      flex: 1,
+                      child: ListTile(
+                        leading: Container(
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(color: Colors.yellow),
+                          child: Text(
+                            model.leadingString,
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        title: Container(
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(color: Colors.yellow),
+                          child: Center(
+                            child: Text(model.titleString,
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                        trailing: Container(
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(color: Colors.yellow),
+                          child: Text(model.trailingString,
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      ))
+                ],
+              ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title:
+                              Center(child: Text('Categories'.toUpperCase())),
+                        ),
+                        Container(
+                          height: Config.getDeviceHeight(context) * 0.1,
+                          padding: EdgeInsets.only(top: 5),
+                          // decoration: BoxDecoration(border: Border.all(width: 2)),
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: getCategoryWidgets(model.lstCategory),
+                          ),
+                        ),
+                        ListTile(
+                          title: Center(child: Text('Items'.toUpperCase())),
+                        ),
+                        Flexible(
+                          flex: 1,
+                          child: Container(
+                            margin: EdgeInsets.only(top: 5),
+                            padding: EdgeInsets.only(top: 5),
+                            // decoration: BoxDecoration(border: Border.all(width: 2)),
+                            child: GridView.count(
+                              crossAxisCount: 4,
+                              children:
+                                  getItemsWidgets(model.lstItem, categoryName),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  ListTile(
-                    title: Center(child: Text('Items'.toUpperCase())),
                   ),
                   Flexible(
                     flex: 1,
-                    child: Container(
-                      margin: EdgeInsets.only(top: 5),
-                      padding: EdgeInsets.only(top: 5),
-                      // decoration: BoxDecoration(border: Border.all(width: 2)),
-                      child: GridView.count(
-                        crossAxisCount: 4,
-                        children: getItemsWidgets(model.lstItem, categoryName),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            child: ListView(
+                              children:
+                                  getCartItemsWidgets(model.order.itemList),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ],
-              ),
-            ),
-            Flexible(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Flexible(
-                      flex: 1,
-                      child: ListView(
-                        children: getCartItemsWidgets(model.order.itemList),
-                      ),
-                    ),
-                  ],
-                ),
               ),
             ),
           ],
@@ -243,7 +291,7 @@ class _NewSaleState extends State<NewSale> {
         Columns.salesMaster[10]: customerOrder.getSubTotal().toString(),
         Columns.salesMaster[11]: '1',
         Columns.salesMaster[12]: Config.getCurrentTime24Format(),
-        Columns.salesMaster[13] :  this.model.order.orderTableId,
+        Columns.salesMaster[13]: this.model.order.orderTableId,
         Columns.salesMaster[14]: customerOrder.discount ?? 0,
         Columns.salesMaster[15]: customerOrder.getNetAmount(),
         Columns.salesMaster[16]: customerOrder.discount ?? 0,
@@ -257,16 +305,16 @@ class _NewSaleState extends State<NewSale> {
         Columns.salesMaster[24]: Config.getCurrentDateTimeDBFormat(),
         Columns.salesMaster[25]: Config.getCurrentDateTimeDBFormat(),
         Columns.salesMaster[26]: 'No',
-        Columns.salesMaster[27]: Config().currentUser.serverId,
-        Columns.salesMaster[28] :  this.model.order.waiterId,
-        Columns.salesMaster[29]: Config().currentUser.outletId,
+        Columns.salesMaster[27]: Config.currentUser.serverId,
+        Columns.salesMaster[28]: this.model.order.waiterId,
+        Columns.salesMaster[29]: Config.currentUser.outletId,
         Columns.salesMaster[30]: '1',
         Columns.salesMaster[31]: this.model.salesMaster.orderType,
-        Columns.salesMaster[32]: Config().currentUser.delStatus,
+        Columns.salesMaster[32]: Config.currentUser.delStatus,
         // Columns.salesMaster[33] :  ,
-        Columns.salesMaster[34]: Config().currentShift.deviceKey,
+        Columns.salesMaster[34]: Config.currentShift.deviceKey,
         // Columns.salesMaster[35] :  ,
-        Columns.salesMaster[36]: Config().currentUser.companyId,
+        Columns.salesMaster[36]: Config.currentUser.companyId,
         Columns.salesMaster[37]: 0.toString(),
       };
 
@@ -297,11 +345,14 @@ class _NewSaleState extends State<NewSale> {
         };
 
         ///UPDATE ORDER TABLE
-        _db.update(Tables.orderTable, {
-          Columns.ordersTables[3] : masterId,
-          Columns.ordersTables[4] : code,
-        }, where: '${Columns.ordersTables[0]} = ?', whereArgs: [this.model.order.orderTableId]
-        );
+        _db.update(
+            Tables.orderTable,
+            {
+              Columns.ordersTables[3]: masterId,
+              Columns.ordersTables[4]: code,
+            },
+            where: '${Columns.ordersTables[0]} = ?',
+            whereArgs: [this.model.order.orderTableId]);
 
         int updateId = await _salesMaster.updateSpecificIntoDb(
             _db, update, 'id', masterId);
@@ -346,9 +397,9 @@ class _NewSaleState extends State<NewSale> {
       // Columns.salesDetails[17] : ,
       Columns.salesDetails[18]: masterId,
       Columns.salesDetails[19]: '0',
-      Columns.salesDetails[20]: Config().currentUser.serverId,
-      Columns.salesDetails[21]: Config().currentUser.outletId,
-      Columns.salesDetails[22]: Config().currentUser.delStatus,
+      Columns.salesDetails[20]: Config.currentUser.serverId,
+      Columns.salesDetails[21]: Config.currentUser.outletId,
+      Columns.salesDetails[22]: Config.currentUser.delStatus,
     };
     int detailsId = await SalesDetails().insertSpecificIntoDb(db, details);
     print('SALES DETAILS RETURN ID: $detailsId');

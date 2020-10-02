@@ -12,25 +12,27 @@ class Config {
   static const String databaseName = 'CloudKitchen.db';
 
   static const String serverIP = '72.52.142.19';
-  static const String authToken = '1626065997';
-  static const String installApi =
+  static final String authToken = _currentDevice.deviceKey;
+  static final String installApi =
       'http://$serverIP/cloud-kitchen/api/install?auth=$authToken&sale_limit=20&expense_limit=20';
-  static const String addUpdateOrderApi =
+  static final String addUpdateOrderApi =
       'http://$serverIP/cloud-kitchen/api/order?auth=$authToken';
+  static final customerUploadApi =
+      'http://$serverIP/cloud-kitchen/api/customer?auth=$authToken';
 
   static const int screenStartTime = 3;
 
   static User _currentUser;
-  set currentUser(user) => _currentUser = user;
-  User get currentUser => _currentUser;
+  static set currentUser(user) => _currentUser = user;
+  static User get currentUser => _currentUser;
 
   static Shift _currentShift;
-  set currentShift(shift) => _currentShift = shift;
-  Shift get currentShift => _currentShift;
+  static set currentShift(shift) => _currentShift = shift;
+  static Shift get currentShift => _currentShift;
 
   static Device _currentDevice;
-  set currentDevice(device) => _currentDevice = device;
-  Device get currentDevice => _currentDevice;
+  static set currentDevice(device) => _currentDevice = device;
+  static Device get currentDevice => _currentDevice;
 
   static double getDeviceWidth(BuildContext context) =>
       MediaQuery.of(context).size.width;

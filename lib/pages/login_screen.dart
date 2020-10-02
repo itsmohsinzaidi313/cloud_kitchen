@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
     for( int i = 0; i < listUser.length; i++ ){
       if(listUser[i].emailAddress == email && listUser[i].password == pass){
         valid = true;
-        Config().currentUser = listUser[i];
+        Config.currentUser = listUser[i];
         break;
       }
     }

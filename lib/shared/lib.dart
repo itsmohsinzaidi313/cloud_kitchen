@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:food_app/models/generic_models/install_api.dart';
+import 'package:food_app/models/objects/customer.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
@@ -52,5 +53,17 @@ class Lib {
       Config.log.e('Error on Lib insertIntoDatabase', [e]);
       return false;
     }
+  }
+
+  Future<bool> uploadCustomer(Customer customer) async {
+    Map<String, dynamic> data = new Map<String, dynamic>();
+    Map<String, dynamic> map = customer.toMap(customer);
+    data['user_id'] = Config.currentUser.serverId;
+    Response response = await post(Config.customerUploadApi)
+        .timeout(Duration(seconds: 10), onTimeout: () => null);
+    if (response != null)
+      return true;
+    else
+      return false;
   }
 }

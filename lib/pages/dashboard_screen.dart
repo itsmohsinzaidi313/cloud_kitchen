@@ -104,7 +104,7 @@ class _DashboardState extends State<Dashboard> {
       // );
       // NewSaleController().launch(context);
     } else if (dashboardItem.name == 'Pending Orders') {
-      OrderController().launch(context);
+      OrderController(1).launch(context);
     } else if (dashboardItem.name == 'Database') {
       Navigator.of(context)
           .push(new MaterialPageRoute(builder: (context) => SqlView()));

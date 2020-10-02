@@ -9,4 +9,7 @@ class NewSaleModel {
   List<Item> lstItem;
   String categoryName;
   CustomerOrder order;
+  String leadingString;
+  String titleString;
+  String trailingString;
 }
