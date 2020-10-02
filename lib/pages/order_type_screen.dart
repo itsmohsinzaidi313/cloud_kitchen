@@ -8,6 +8,7 @@ import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/data_lists.dart';
 import 'package:food_app/models/objects/table.dart' as T;
+import 'package:food_app/shared/lib.dart';
 
 class OrderTypeScreen extends StatefulWidget {
   @override
@@ -250,21 +251,20 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                                   where: '${Columns.customers[3]} = ?',
                                   whereArgs: [controllers[3].text])
                               .then((value2) {
-                            this.customerId =
-                                value2[0][Columns.customers[0] as int];
+                            this.customerId = value2[0][Columns.customers[0]];
                             controllers[2].text =
                                 value2[0][Columns.customers[2]];
                             controllers[3].text =
                                 value2[0][Columns.customers[3]];
                           });
+                        } else {
+                          this.customerExists = false;
+                          AppTheme.showAlertDialogOK(context,
+                              title: 'Attention',
+                              message: 'Customer does not exists',
+                              onOK: () => Navigator.pop(context));
                         }
                       });
-                    } else {
-                      this.customerExists = false;
-                      AppTheme.showAlertDialogOK(context,
-                          title: 'Attention',
-                          message: 'Customer does not exists',
-                          onOK: () => Navigator.pop(context));
                     }
                   },
                 ),
@@ -273,6 +273,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                 title: OutlineButton(
                   child: Text('Ok'),
                   onPressed: () {
+                    titleStrings = [];
                     setState(() {
                       check[2] = controllers[2].text == '' ? true : false;
                       check[3] = controllers[3].text == '' ? true : false;
@@ -282,20 +283,27 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                               context,
                               _viewType.toString(),
                               customerId.toString(),
-                              titleStrings);
+                              [controllers[2].text, controllers[3].text, '']);
                         } else {
                           User cUser = Config.currentUser;
-                          Customer inputFromPopup = Customer(
+                          Customer customer = Customer(
                               name: controllers[2].text,
                               phone: controllers[3].text,
                               userId: cUser.serverId,
                               companyId: cUser.companyId,
                               delStatus: cUser.delStatus);
+
                           Customer()
-                              .insertCustomer(Config.database, inputFromPopup)
-                              .then((value) => NewSaleController()
-                                  .launchTakeaway(context, _viewType.toString(),
-                                      value.toString(), titleStrings));
+                              .insertCustomer(Config.database, customer)
+                              .then((value) {
+                            customer.id = value.toString();
+                            Lib.uploadCustomer(customer);
+                            NewSaleController().launchTakeaway(
+                                context,
+                                _viewType.toString(),
+                                value.toString(),
+                                [controllers[2].text, controllers[3].text, '']);
+                          });
                         }
                       }
                     });
@@ -353,8 +361,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                                   where: '${Columns.customers[3]} = ?',
                                   whereArgs: [controllers[5].text])
                               .then((value2) {
-                            this.customerId =
-                                value2[0][Columns.customers[0] as int];
+                            this.customerId = value2[0][Columns.customers[0]];
                             controllers[4].text =
                                 value2[0][Columns.customers[2]];
                             controllers[5].text =
@@ -387,33 +394,40 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                 title: OutlineButton(
                   child: Text('Ok'),
                   onPressed: () {
-                    titleStrings.add('Customer: ${controllers[4].text}');
-                    titleStrings.add('Phone: ${controllers[5].text}');
                     setState(() {
                       check[4] = controllers[4].text == '' ? true : false;
                       check[5] = controllers[5].text == '' ? true : false;
                       check[6] = controllers[6].text == '' ? true : false;
                       if (!check[4] && !check[5] && !check[6]) {
                         if (customerExists) {
-                          NewSaleController().launchDelivery(
-                              context,
-                              _viewType.toString(),
-                              customerId.toString(),
-                              titleStrings);
+                          NewSaleController().launchDelivery(context,
+                              _viewType.toString(), customerId.toString(), [
+                            'Customer: ${controllers[4].text}',
+                            'Phone: ${controllers[5].text}',
+                            ''
+                          ]);
                         } else {
                           User cUser = Config.currentUser;
-                          Customer inputFromPopup = Customer(
+                          Customer customer = Customer(
                               name: controllers[4].text,
                               phone: controllers[5].text,
                               address: controllers[6].text,
                               userId: cUser.serverId,
                               companyId: cUser.companyId,
                               delStatus: cUser.delStatus);
+
                           Customer()
-                              .insertCustomer(Config.database, inputFromPopup)
-                              .then((value) => NewSaleController()
-                                  .launchDelivery(context, _viewType.toString(),
-                                      value.toString(), titleStrings));
+                              .insertCustomer(Config.database, customer)
+                              .then((value) {
+                            customer.id = value.toString();
+                            Lib.uploadCustomer(customer);
+                            NewSaleController().launchDelivery(context,
+                                _viewType.toString(), value.toString(), [
+                              'Customer: ${controllers[4].text}',
+                              'Phone: ${controllers[5].text}',
+                              ''
+                            ]);
+                          });
                         }
                       }
                     });

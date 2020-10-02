@@ -41,7 +41,7 @@ class Columns {
 
   ///SHIFT_DATA TABLE COLUMNS
   static const List<String> shiftData = [
-    'id',
+    'local_id',
     'shift',
     'opening_balance',
     'closing_balance',
@@ -56,7 +56,7 @@ class Columns {
     'company_id',
     'register_no',
     'device_key',
-    'remote_id'
+    'id'
   ];
 
   ///CATEGORIES TABLE COLUMNS
@@ -85,7 +85,7 @@ class Columns {
 
   ///SALES_MASTER TABLE COLUMNS
   static const List<String> salesMaster = [
-    'id', //0
+    'local_id', //0
     'customer_id', //1
     'sale_no', //2
     'total_items', //3
@@ -120,7 +120,7 @@ class Columns {
     'del_status', //32
     'sale_vat_objects', //33
     'device_key', //34
-    'remote_id', //35
+    'id', //35
     'company_id', //36
     'is_delete' //37
   ];

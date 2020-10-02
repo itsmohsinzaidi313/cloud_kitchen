@@ -97,8 +97,8 @@ class _OrderScreenState extends State<OrderScreen> {
               ],
             ),
             Expanded(
-              flex: 1,
-              child: GestureDetector(
+                flex: 1,
+                child: GestureDetector(
                   child: Card(
                       child: FutureBuilder(
                           future: getOrdersList(orderType),
@@ -108,10 +108,8 @@ class _OrderScreenState extends State<OrderScreen> {
                             ),
                           ),
                           builder: (context, snapshot) => snapshot.data)),
-                          onTap: (){
-                            
-                          },
-            )),
+                  onTap: () {},
+                )),
           ],
         ),
       ),

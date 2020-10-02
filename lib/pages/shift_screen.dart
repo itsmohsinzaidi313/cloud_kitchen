@@ -24,6 +24,7 @@ class _ShiftScreen extends State<ShiftScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _deviceKey.text = Config.authToken;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

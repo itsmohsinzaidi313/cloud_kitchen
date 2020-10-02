@@ -193,8 +193,14 @@ class OrderController {
   }
 
   static dynamic uploadOrder(Map<String, dynamic> element) async {
-    Config.database.update(Tables.salesMaster, {Columns.salesMaster[30]: '3'},
-        where: '${Columns.salesMaster[0]} = ?', whereArgs: [element['id']]);
+    Config.database.update(
+        Tables.salesMaster,
+        {
+          Columns.salesMaster[30]: '3',
+          Columns.salesMaster[5]: element[Columns.salesMaster[6]]
+        },
+        where: '${Columns.salesMaster[0]} = ?',
+        whereArgs: [element[Columns.salesMaster[0]]]);
     Map<String, dynamic> values =
         new SalesMaster.fromJson(element).getValuesForUpload();
     List<Map<String, dynamic>> values1 = [];
@@ -220,10 +226,20 @@ class OrderController {
       Duration(seconds: 5),
       onTimeout: () => null,
     );
-    if (response != null)
+    if (response != null) {
       log(response.body, name: 'Server Response: ');
-    else
+      Map<String, dynamic> x = jsonDecode(response.body);
+      if (x['status']) {
+        List<dynamic> y = x['orders_synced'];
+        String id = y[0]['id'];
+        String remoteId = y[0]['remote_id'];
+        Config.database.update(
+            Tables.salesMaster, {'${Columns.salesMaster[35]}': '$id'},
+            where: '${Columns.salesMaster[0]} = ?', whereArgs: [remoteId]);
+      }
+    } else {
       log('Response Timeout', name: 'Request Timeout');
+    }
   }
 
   static Future onOrderCancelled(SalesMaster salesMaster) async {

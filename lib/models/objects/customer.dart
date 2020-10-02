@@ -4,6 +4,7 @@ import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
 
 class Customer {
+  String id;
   final String serverId;
   final String name;
   final String phone;

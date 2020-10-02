@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/generic_models/install_api.dart';
 import 'package:food_app/models/objects/customer.dart';
 import 'package:food_app/shared/config.dart';
@@ -55,15 +57,39 @@ class Lib {
     }
   }
 
-  Future<bool> uploadCustomer(Customer customer) async {
+  
+
+  static Future<bool> uploadCustomer(Customer customer) async {
     Map<String, dynamic> data = new Map<String, dynamic>();
-    Map<String, dynamic> map = customer.toMap(customer);
+    List<Map<String, dynamic>> map = [];
+
+    map.add({
+      'remote_id': customer.id,
+      'name': customer.name,
+      'phone': customer.phone,
+      'address': customer.address,
+      'device_key': Config.currentDevice.deviceKey,
+      'user_id': customer.userId,
+      'company_id': Config.currentDevice.companyId,
+      'outlet_id': Config.currentDevice.outletId
+    });
+
     data['user_id'] = Config.currentUser.serverId;
-    Response response = await post(Config.customerUploadApi)
-        .timeout(Duration(seconds: 10), onTimeout: () => null);
-    if (response != null)
+    data['json'] = jsonEncode(map);
+    print(data);
+    print(Config.customerUploadApi);
+    Response response = await post(Config.customerUploadApi, body: data)
+        .timeout(Duration(seconds: 5), onTimeout: () => null);
+    if (response != null) {
+      Config.log.i(response.body);
+      Map<String, dynamic> result = jsonDecode(response.body);
+      List<Map<String, dynamic>> x = result['customer_synced'];
+      String id = x[0]['id'];
+      String remoteId = x[0]['remote_id'];
+      Config.database.update(Tables.customers, {'${Columns.customers[1]}': id},
+          where: '${Columns.customers[0]} = ?', whereArgs: [remoteId]);
       return true;
-    else
+    } else
       return false;
   }
 }

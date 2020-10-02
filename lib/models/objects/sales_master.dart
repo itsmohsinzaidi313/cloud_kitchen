@@ -84,7 +84,7 @@ class SalesMaster {
       this.isDelete});
 
   SalesMaster.fromJson(Map<String, dynamic> json)
-      : id = json['id'].toString(),
+      : id = json['local_id'].toString(),
         customerId = json['customer_id'],
         saleNo = json['sale_no'],
         totalItems = json['total_items'],
@@ -119,7 +119,7 @@ class SalesMaster {
         delStatus = json['del_status'],
         saleVatObjects = json['sale_vat_objects'],
         deviceKey = json['device_key'],
-        remoteId = json['remote_id'],
+        remoteId = json['id'],
         companyId = json['company_id'],
         isDelete = json['is_delete'];
 
@@ -182,7 +182,11 @@ class SalesMaster {
   Map<String, dynamic> getValuesForUpload() {
     Map<String, dynamic> map = new Map();
     for (int i = 1; i < Columns.salesMaster.length - 1; i++) {
-      map[Columns.salesMaster[i]] = getList()[i];
+      if (i == 35) {
+        map['remote_id'] = getList()[i];
+      } else {
+        map[Columns.salesMaster[i]] = getList()[i];
+      }
     }
     return map;
   }
@@ -218,11 +222,15 @@ class SalesMaster {
   }
 
   Future<List<SalesMaster>> getDineInList(Database db) async {
-    List<Map<String, dynamic>> res = await db.query(Tables.salesMaster, columns: [
-      Columns.salesMaster[2], Columns.salesMaster[13], Columns.salesMaster[28], Columns.salesMaster[6]
-    ],
+    List<Map<String, dynamic>> res = await db.query(Tables.salesMaster,
+        columns: [
+          Columns.salesMaster[2],
+          Columns.salesMaster[13],
+          Columns.salesMaster[28],
+          Columns.salesMaster[6]
+        ],
         where:
-        "${Columns.salesMaster[5]} == '0.0' AND ${Columns.salesMaster[37]} == '0' AND ${Columns.salesMaster[31]} == '1'");
+            "${Columns.salesMaster[5]} == '0.0' AND ${Columns.salesMaster[37]} == '0' AND ${Columns.salesMaster[31]} == '1'");
     List<SalesMaster> dineInList = [];
     res.forEach((row) {
       dineInList.add(SalesMaster.fromJson(row));
@@ -233,7 +241,7 @@ class SalesMaster {
   Future<List<SalesMaster>> getTakeawayList(Database db) async {
     List<Map<String, dynamic>> res = await db.query(Tables.salesMaster,
         where:
-        "${Columns.salesMaster[5]} == '0.0' AND ${Columns.salesMaster[37]} == '0' AND ${Columns.salesMaster[31]} == '2'");
+            "${Columns.salesMaster[5]} == '0.0' AND ${Columns.salesMaster[37]} == '0' AND ${Columns.salesMaster[31]} == '2'");
     List<SalesMaster> takeawayList = [];
     res.forEach((row) {
       takeawayList.add(SalesMaster.fromJson(row));
@@ -244,7 +252,7 @@ class SalesMaster {
   Future<List<SalesMaster>> getDeliveryList(Database db) async {
     List<Map<String, dynamic>> res = await db.query(Tables.salesMaster,
         where:
-        "${Columns.salesMaster[5]} == '0.0' AND ${Columns.salesMaster[37]} == '0' AND ${Columns.salesMaster[31]} == '3'");
+            "${Columns.salesMaster[5]} == '0.0' AND ${Columns.salesMaster[37]} == '0' AND ${Columns.salesMaster[31]} == '3'");
     List<SalesMaster> deliveryList = [];
     res.forEach((row) {
       deliveryList.add(SalesMaster.fromJson(row));

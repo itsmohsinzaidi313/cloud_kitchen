@@ -40,7 +40,7 @@ class Shift {
       this.remoteId});
 
   Shift.fromJson(Map<String, dynamic> map)
-    : id = map['id'],
+    : id = map['local_id'],
     shift = map['shift'],
     openingBalance = map['opening_balance'],
     closingBalance = map['closing_balance'],
@@ -55,7 +55,7 @@ class Shift {
     companyId = map['company_id'],
     registerNo = map['register_no'],
     deviceKey = map['device_key'],
-    remoteId = map['remote_id'];
+    remoteId = map['id'];
 
   Map<String, dynamic> toMap(Shift shift){
     return {
