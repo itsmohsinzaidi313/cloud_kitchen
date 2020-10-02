@@ -201,7 +201,8 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4),
                 children: getGridViewWidget(gridViewType),
-              ))
+                ),
+              ),
             ],
           ),
         );
