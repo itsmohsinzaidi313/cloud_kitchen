@@ -282,7 +282,7 @@ class Columns {
   static const List<String> devices = [
     'local_id',
     'id',
-    'outled_id',
+    'outlet_id',
     'company_id',
     'device_key',
     'del_status',

@@ -172,7 +172,8 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                 ),
               ),
               ListTile(
-                title: OutlineButton(
+                title:
+                OutlineButton(
                   child: Text('Ok'),
                   onPressed: () {
                     setState(() {
