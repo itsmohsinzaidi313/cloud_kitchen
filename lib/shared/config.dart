@@ -8,7 +8,7 @@ import 'package:sqflite/sqflite.dart';
 
 class Config {
   static const String appTitle = 'Cloud Kitchen';
-  static const DATABASE databaseVersion = DATABASE.UPGRADE;
+  static const DATABASE databaseVersion = DATABASE.STABLE;
   static const String databaseName = 'CloudKitchen.db';
 
   static const String serverIP = '72.52.142.19';

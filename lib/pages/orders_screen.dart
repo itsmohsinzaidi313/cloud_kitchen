@@ -120,13 +120,13 @@ class _OrderScreenState extends State<OrderScreen> {
     Widget widget;
     switch (orderType) {
       case 1:
-        widget = await OrderController.getDineInOrders();
+        widget = await OrderController.getDineInOrders(context, model);
         break;
       case 2:
-        widget = await OrderController.getTakeAwayOrders();
+        widget = await OrderController.getTakeAwayOrders(context);
         break;
       case 3:
-        widget = await OrderController.getDeliveryOrders();
+        widget = await OrderController.getDeliveryOrders(context);
         break;
       default:
         break;

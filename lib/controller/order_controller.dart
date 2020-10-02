@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:food_app/controller/payment_controller.dart';
 import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/payment_method.dart';
@@ -17,11 +18,6 @@ class OrderController {
   OrderModel model;
   List<SalesMaster> salesMasterList = [];
   List<PaymentMethod> paymentMethodList = [];
-  List<TextEditingController> controllers = [
-    new TextEditingController(),
-    new TextEditingController()
-  ];
-  List<bool> check = [false, false];
 
   OrderController(int orderType) {
     this.model = new OrderModel();
@@ -100,59 +96,76 @@ class OrderController {
                 )));
       });
 
-  static Future<DataTable> getDineInOrders() async {
-    List<Map<String, dynamic>> data = await Config.database.rawQuery(
-        "select *, a.id, a.sale_no, (select name from tables where id = a.table_id) as tables, (select full_name from users where id = a.user_id) as waiter, a.due_amount from sales_master a where a.order_type = '1' and a.paid_amount = '0.0' and a.is_delete = '0'");
+  static Future<Widget> getDineInOrders(
+      BuildContext context, OrderModel model) async {
+    try {
+      List<Map<String, dynamic>> data = await Config.database.rawQuery(
+          "select a.id, a.sale_no, ifnull((select name from tables where id = a.table_id),'x') as tables, (select full_name from users where id = a.user_id) as waiter, a.due_amount from sales_master a where a.order_type = '1' and a.paid_amount = '0.0' and a.is_delete = '0'");
 
-    List<DataRow> rows = [];
-    data.forEach((element) {
-      rows.add(DataRow(cells: [
-        DataCell(IconButton(
-            icon: Icon(
-              Icons.check,
-              color: Colors.green,
-            ),
-            onPressed: () => uploadOrder(element))),
-        DataCell(Text(element['sale_no'])),
-        DataCell(Text(element['tables'])),
-        DataCell(Text(element['waiter'])),
-        DataCell(Text(element['due_amount'])),
-        DataCell(IconButton(
-            icon: Icon(
-              Icons.close,
-              color: Colors.red,
-            ),
-            onPressed: () {})),
-      ]));
-    });
-    return DataTable(
-      columns: [
-        DataColumn(label: Text('...')),
-        DataColumn(label: Text('Sale No')),
-        DataColumn(label: Text('Table#')),
-        DataColumn(label: Text('Waiter')),
-        DataColumn(label: Text('Amount')),
-        DataColumn(label: Text('...')),
-      ],
-      rows: rows,
-    );
+      List<DataRow> rows = [];
+      data.forEach((element) {
+        rows.add(DataRow(cells: [
+          DataCell(IconButton(
+              icon: Icon(
+                Icons.check,
+                color: Colors.green,
+              ),
+              onPressed: () {
+                // AppTheme.showAlertDialog(context,
+                //     title: 'Payment',
+                //     barrier: true,
+                //     fontSize: 20,
+                //     fontWeight: FontWeight.bold,
+                //     content: dialogContent(element, model));
+                PaymentController(element).launch(context);
+              })),
+          DataCell(Text(element['sale_no'])),
+          DataCell(Text(element['tables'])),
+          DataCell(Text(element['waiter'])),
+          DataCell(Text(element['due_amount'])),
+          DataCell(IconButton(
+              icon: Icon(
+                Icons.close,
+                color: Colors.red,
+              ),
+              onPressed: () {})),
+        ]));
+      });
+      return DataTable(
+        columns: [
+          DataColumn(label: Text('...')),
+          DataColumn(label: Text('Sale No')),
+          DataColumn(label: Text('Table#')),
+          DataColumn(label: Text('Waiter')),
+          DataColumn(label: Text('Amount')),
+          DataColumn(label: Text('...')),
+        ],
+        rows: rows,
+      );
+    } catch (e) {
+      return Container(
+        child: Text('An error has occured \n$e'),
+      );
+    }
   }
 
-  static Future<DataTable> getTakeAwayOrders() async {
+  static Future<DataTable> getTakeAwayOrders(BuildContext context) async {
     List<Map<String, dynamic>> data = await Config.database.rawQuery(
         "select a.sale_no, IFNULL((select name from customers where id = a.customer_id),'') as customer_name, IFNULL((select phone from customers where id = a.customer_id),'') as contact, a.due_amount from sales_master a where a.order_type = '2' and a.paid_amount = '0.0' and a.is_delete = '0'");
     List<DataRow> rows = [];
     data.forEach((element) {
       rows.add(DataRow(cells: [
         DataCell(IconButton(
-            icon: Icon(Icons.check, color: Colors.green),
-            onPressed: () => uploadOrder(element))),
+            icon: Icon(Icons.check, color: Colors.green), onPressed: () {})),
         DataCell(Text(element['sale_no'])),
         DataCell(Text(element['customer_name'])),
         DataCell(Text(element['contact'])),
         DataCell(Text(element['due_amount'])),
         DataCell(IconButton(
-            icon: Icon(Icons.close, color: Colors.red), onPressed: () {})),
+            icon: Icon(Icons.close, color: Colors.red),
+            onPressed: () {
+              PaymentController(element).launch(context);
+            })),
       ]));
     });
     return DataTable(
@@ -168,7 +181,7 @@ class OrderController {
     );
   }
 
-  static Future<DataTable> getDeliveryOrders() async {
+  static Future<DataTable> getDeliveryOrders(BuildContext context) async {
     List<Map<String, dynamic>> data = await Config.database.rawQuery(
         "select *, a.sale_no, IFNULL((select full_name from users where id = a.user_id),'') as customer_name,IFNULL((select phone from customers where id = a.customer_id),'') as contact, a.due_amount from sales_master a where a.order_type = '3' and a.paid_amount = '0.0' and a.is_delete = '0'");
 
@@ -176,14 +189,16 @@ class OrderController {
     data.forEach((element) {
       rows.add(DataRow(cells: [
         DataCell(IconButton(
-            icon: Icon(Icons.check, color: Colors.green),
-            onPressed: () => uploadOrder(element))),
+            icon: Icon(Icons.check, color: Colors.green), onPressed: () {})),
         DataCell(Text(element['sale_no'])),
         DataCell(Text(element['customer_name'])),
         DataCell(Text(element['contact'])),
         DataCell(Text(element['due_amount'])),
         DataCell(IconButton(
-            icon: Icon(Icons.close, color: Colors.red), onPressed: () {})),
+            icon: Icon(Icons.close, color: Colors.red),
+            onPressed: () {
+              PaymentController(element).launch(context);
+            })),
       ]));
     });
     return DataTable(
@@ -252,7 +267,7 @@ class OrderController {
   static Future onOrderCancelled(SalesMaster salesMaster) async {
     Database db = Config.database;
     Map<String, dynamic> update = {
-      Columns.salesMaster[37] : 1.toString(),
+      Columns.salesMaster[37]: 1.toString(),
     };
     await SalesMaster().updateSpecificIntoDb(db, update, 'id', salesMaster.id);
   }
@@ -262,83 +277,97 @@ class OrderController {
         'update ${Columns.salesMaster[37]} set ${Columns.salesMaster[5]} = ${Columns.salesMaster[6]} where id = ${itm.id}');
   }
 
-   Future<Widget> paymentDialog(BuildContext context) async{
-    final dialog = await AppTheme.showAlertDialog
-      (
-        context, title: 'Payment', barrier: true, fontSize: 20,
-        fontWeight: FontWeight.bold, content: dialogContent()
-    );
-    return dialog;
+  static void paymentDialog(BuildContext context, Map<String, dynamic> map) {
+    AppTheme.showAlertDialog(context,
+        title: 'Payment',
+        barrier: true,
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        content: dialogContent(map, null));
   }
 
-  Widget dialogContent() {
+  static Widget dialogContent(Map<String, dynamic> map, OrderModel model) {
+    List<TextEditingController> controllers = [
+      new TextEditingController(),
+      new TextEditingController()
+    ];
+    List<bool> check = [false, false];
     PaymentMethod selectedPayment;
-    final content = Container(
-      padding: EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          Container(
-            child: DropdownButton<PaymentMethod>(
-              hint:  Text("Select Payment Method"),
-              value: selectedPayment,
-              onChanged: (PaymentMethod payment) {
-                // setState(() {
+    return SingleChildScrollView(
+      child: Container(
+        padding: EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Container(
+              child: DropdownButton<PaymentMethod>(
+                hint: Text("Select Payment Method"),
+                value: selectedPayment,
+                onChanged: (PaymentMethod payment) {
+                  // setState(() {
                   selectedPayment.name = payment.name;
-                // });
-              },
-              items: model.paymentMethodList.map((PaymentMethod payment) {
-                return  DropdownMenuItem<PaymentMethod>(
-                  value: payment,
-                  child: Row(
-                    children: <Widget>[
-                      Icon(Icons.style, color: Colors.green,),
-                      SizedBox(width: 10,),
-                      Text(
-                        payment.name,
-                        style:  TextStyle(color: Colors.black),
-                      ),
-                    ],
+                  // });
+                },
+                items: model.paymentMethodList.map((PaymentMethod payment) {
+                  return DropdownMenuItem<PaymentMethod>(
+                    value: payment,
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.style,
+                          color: Colors.green,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          payment.name,
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+            Container(
+              child: Card(
+                child: ListTile(
+                  leading: Icon(Icons.monetization_on),
+                  title: TextField(
+                    keyboardType: TextInputType.number,
+                    controller: controllers[0],
+                    decoration: InputDecoration(
+                        hintText: 'Amount',
+                        errorText: check[0] ? 'Required' : null),
                   ),
-                );
-              }).toList(),
-            ),
-          ),
-          Container(
-            child: Card(
-              child: ListTile(
-                leading: Icon(Icons.monetization_on),
-                title: TextField(
-                  keyboardType: TextInputType.number,
-                  controller: controllers[0],
-                  decoration: InputDecoration(
-                      hintText: 'Amount',
-                      errorText: check[0] ? 'Required' : null),
                 ),
               ),
             ),
-          ),
-          Container(
-            child: Card(
-              child: ListTile(
-                leading: Icon(Icons.credit_card),
-                title: TextField(
-                  keyboardType: TextInputType.number,
-                  controller: controllers[1],
-                  decoration: InputDecoration(
-                      hintText: 'Credit Number',
-                      errorText: check[1] ? 'Required' : null),
+            Container(
+              child: Card(
+                child: ListTile(
+                  leading: Icon(Icons.credit_card),
+                  title: TextField(
+                    keyboardType: TextInputType.number,
+                    controller: controllers[1],
+                    decoration: InputDecoration(
+                        hintText: 'Credit Number',
+                        errorText: check[1] ? 'Required' : null),
+                  ),
                 ),
               ),
             ),
-          ),
-          RaisedButton(onPressed: (){
-            print('${selectedPayment.name}\n${controllers[0].text}\n${controllers[1].text}');}
-            ,child: Text('OK'),
-          ),
-        ],
+            RaisedButton(
+              onPressed: () {
+                uploadOrder(map);
+                print(
+                    '${selectedPayment.name}\n${controllers[0].text}\n${controllers[1].text}');
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
       ),
     );
-    return content;
   }
-
 }

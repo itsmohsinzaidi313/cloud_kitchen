@@ -59,7 +59,7 @@ class Shift {
 
   Map<String, dynamic> toMap(Shift shift){
     return {
-      'id' : shift.id,
+      'local_id' : shift.id,
       'shift' : shift.shift,
       'opening_balance' : shift.openingBalance,
       'closing_balance' : shift.closingBalance,
@@ -74,7 +74,7 @@ class Shift {
       'company_id' : shift.companyId,
       'register_no' : shift.registerNo,
       'device_key' : shift.deviceKey,
-      'remote_id' : shift.remoteId,
+      'id' : shift.remoteId,
     };
   }
 
