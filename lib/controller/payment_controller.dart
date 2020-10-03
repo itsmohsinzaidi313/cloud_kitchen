@@ -42,7 +42,7 @@ class PaymentController {
             .getRange(1, Columns.salesDetails.length - 1)
             .toList(),
         where: '${Columns.salesDetails[18]} = ?',
-        whereArgs: [new SalesMaster.fromJson(element).id]);
+        whereArgs: [new SalesMaster.fromJson(element).remoteId]);
     values['sale_details'] = values2;
     values1.add(values);
     Map<String, dynamic> json = new Map();

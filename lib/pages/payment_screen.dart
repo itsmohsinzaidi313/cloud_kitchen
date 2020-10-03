@@ -8,29 +8,36 @@ import 'package:food_app/shared/config.dart';
 
 class PaymentScreen extends StatefulWidget {
   PaymentViewModel model;
+
   PaymentScreen(this.model);
+
   @override
   _PaymentScreenState createState() => _PaymentScreenState(model);
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
   PaymentViewModel model;
+
   _PaymentScreenState(this.model) {}
-  PaymentMethod selectedPayment = new PaymentMethod();
+  PaymentMethod selectedPayment;
   List<TextEditingController> controllers = [
     new TextEditingController(),
     new TextEditingController()
   ];
   List<bool> check = [false, false];
+  String _type;
+
   @override
   void initState() {
     super.initState();
+    _type = '0';
   }
 
   @override
   Widget build(BuildContext context) {
     controllers[0].text = model.map['due_amount'];
-    String _type = '0';
+    // selectedPayment = model.paymentMethodList[0];
+
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
@@ -101,7 +108,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         value: selectedPayment,
                         onChanged: (PaymentMethod payment) {
                           setState(() {
-                            selectedPayment.name = payment.name;
+                            selectedPayment = payment;
                             _type = payment.serverId;
                           });
                         },
@@ -136,7 +143,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   child: RaisedButton(
                     elevation: 0.0,
                     onPressed: () {
-                      PaymentController.uploadOrder(model.map);
+                      setState(() {
+                        check[0] = controllers[0].text == '' ? true : false;
+                        check[1] = controllers[1].text == '' ? true : false;
+
+                        AppTheme.showAlertDialogYN(context, title: 'Question',
+                          message: 'Are you sure?',
+                          onYes:(){
+                            if (!check[0] || !check[1]) {
+                              PaymentController.uploadOrder(model.map);
+                            }
+                          },
+                          onNo: () => Navigator.pop(context),
+                        );
+                      });
                     },
                     color: AppTheme.listTextColor,
                     child: Text(
@@ -159,8 +179,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Widget getWidget(String type) {
-    if (type == '1') {
+    if (type == '2') {
       return Container(
+        margin: EdgeInsets.only(
+          top: 20,
+        ),
         child: Card(
           color: Colors.grey[100],
           child: ListTile(
@@ -181,8 +204,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
           ),
         ),
       );
-    } else {
+    } else if (type == '1') {
       return Container(
+        margin: EdgeInsets.only(
+          top: 20,
+        ),
         child: Card(
           color: Colors.grey[100],
           child: ListTile(
@@ -199,6 +225,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
           ),
         ),
+      );
+    } else {
+      return SizedBox(
+        height: 40,
       );
     }
   }
