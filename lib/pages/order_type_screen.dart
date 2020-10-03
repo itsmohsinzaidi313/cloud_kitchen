@@ -456,19 +456,19 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
         .toList();
     if (viewType == 1) {
       listTables.forEach((element) {
-        listWidget.add(InkWell(
-          child: Container(
-            child: Card(
+        listWidget.add(Container(
+          child: Card(
+            child: InkWell(
               child: Center(child: Text(element.name)),
+              onTap: () {
+                table = element;
+                setState(() {
+                  gridViewType = 2;
+                  titleStrings.add('Table: ${element.name}');
+                });
+              },
             ),
           ),
-          onTap: () {
-            table = element;
-            setState(() {
-              gridViewType = 2;
-              titleStrings.add('Table: ${element.name}');
-            });
-          },
         ));
       });
     } else if (viewType == 2) {
@@ -481,16 +481,16 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
         ),
       ));
       listWaiters.forEach((element) {
-        listWidget.add(InkWell(
-          child: Container(
-            child: Card(
+        listWidget.add(Container(
+          child: Card(
+            child: InkWell(
               child: Center(child: Text(element.fullName)),
+              onTap: () {
+                waiter = element;
+                titleStrings.add('Waiter: ${element.fullName}');
+              },
             ),
           ),
-          onTap: () {
-            waiter = element;
-            titleStrings.add('Waiter: ${element.fullName}');
-          },
         ));
       });
     }

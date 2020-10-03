@@ -147,7 +147,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       setState(() {
                         check[0] = controllers[0].text == '' ? true : false;
                         check[1] = controllers[1].text == '' ? true : false;
-
                         AppTheme.showAlertDialogYN(
                           context,
                           title: 'Question',
