@@ -172,35 +172,37 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                 ),
               ),
               ListTile(
-                title:
-                OutlineButton(
+                title: OutlineButton(
                   child: Text('Ok'),
                   onPressed: () {
                     setState(() {
-                      check[0] = controllers[0].text == '' ? true : false;
+                      // check[0] = controllers[0].text == '' ? true : false;
                       check[1] = controllers[1].text == '' ? true : false;
                     });
-                    titleStrings.add('Persons: ${controllers[1].text}');
-                    Config.database.insert(Tables.orderTable, {
-                      Columns.ordersTables[1]: controllers[1].text,
-                      Columns.ordersTables[2]: Config.getCurrentTime24Format(),
-                      Columns.ordersTables[5]: waiter.outletId,
-                      Columns.ordersTables[6]: table.serverId,
-                      Columns.ordersTables[7]: 'Live'
-                    }).then((value) => NewSaleController().launchDineIn(
-                        context,
-                        _viewType.toString(),
-                        value.toString(),
-                        waiter.serverId,
-                        titleStrings));
+                    if (!check[1]) {
+                      titleStrings.add('Persons: ${controllers[1].text}');
+                      Config.database.insert(Tables.orderTable, {
+                        Columns.ordersTables[1]: controllers[1].text,
+                        Columns.ordersTables[2]:
+                            Config.getCurrentTime24Format(),
+                        Columns.ordersTables[5]: waiter.outletId,
+                        Columns.ordersTables[6]: table.serverId,
+                        Columns.ordersTables[7]: 'Live'
+                      }).then((value) => NewSaleController().launchDineIn(
+                          context,
+                          _viewType.toString(),
+                          value.toString(),
+                          waiter.serverId,
+                          titleStrings));
+                    }
                   },
                 ),
               ),
               Expanded(
-                  child: GridView(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4),
-                children: getGridViewWidget(gridViewType),
+                child: GridView(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4),
+                  children: getGridViewWidget(gridViewType),
                 ),
               ),
             ],

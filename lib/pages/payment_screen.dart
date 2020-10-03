@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:food_app/controller/dashboard_controller.dart';
 import 'package:food_app/controller/payment_controller.dart';
 import 'package:food_app/models/objects/payment_method.dart';
 import 'package:food_app/models/view_models/payment_view_model.dart';
@@ -147,11 +148,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         check[0] = controllers[0].text == '' ? true : false;
                         check[1] = controllers[1].text == '' ? true : false;
 
-                        AppTheme.showAlertDialogYN(context, title: 'Question',
+                        AppTheme.showAlertDialogYN(
+                          context,
+                          title: 'Question',
                           message: 'Are you sure?',
-                          onYes:(){
+                          onYes: () {
                             if (!check[0] || !check[1]) {
                               PaymentController.uploadOrder(model.map);
+                              DashboardController(context).launchAndReplacement();
                             }
                           },
                           onNo: () => Navigator.pop(context),
