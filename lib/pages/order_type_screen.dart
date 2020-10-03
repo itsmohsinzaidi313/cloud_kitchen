@@ -189,11 +189,14 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                         Columns.ordersTables[6]: table.serverId,
                         Columns.ordersTables[7]: 'Live'
                       }).then((value) => NewSaleController().launchDineIn(
-                          context,
-                          _viewType.toString(),
-                          value.toString(),
-                          waiter.serverId,
-                          titleStrings));
+                              context,
+                              _viewType.toString(),
+                              value.toString(),
+                              waiter.serverId, [
+                            'Persons: ${controllers[1].text}',
+                            'Table: ${table.name}',
+                            'Waiter: ${waiter.fullName}'
+                          ]));
                     }
                   },
                 ),

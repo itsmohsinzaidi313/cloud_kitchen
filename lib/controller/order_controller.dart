@@ -100,7 +100,7 @@ class OrderController {
       BuildContext context, OrderModel model) async {
     try {
       List<Map<String, dynamic>> data = await Config.database.rawQuery(
-          "select a.id, a.sale_no, ifnull((select name from tables where id = a.table_id),'x') as tables, (select full_name from users where id = a.user_id) as waiter, a.due_amount from sales_master a where a.order_type = '1' and a.paid_amount = '0.0' and a.is_delete = '0'");
+          "select *, a.id, a.sale_no, ifnull((select name from tables where id = a.table_id),'x') as tables, (select full_name from users where id = a.user_id) as waiter, a.due_amount from sales_master a where a.order_type = '1' and a.paid_amount = '0.0' and a.is_delete = '0'");
 
       List<DataRow> rows = [];
       data.forEach((element) {
@@ -111,12 +111,6 @@ class OrderController {
                 color: Colors.green,
               ),
               onPressed: () {
-                // AppTheme.showAlertDialog(context,
-                //     title: 'Payment',
-                //     barrier: true,
-                //     fontSize: 20,
-                //     fontWeight: FontWeight.bold,
-                //     content: dialogContent(element, model));
                 PaymentController(element).launch(context);
               })),
           DataCell(Text(element['sale_no'])),
