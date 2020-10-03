@@ -22,7 +22,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
   int customerId = 0;
   T.Table table;
   User waiter;
-
+  String errorMsg;
   List<TextEditingController> controllers = [
     new TextEditingController(),
     new TextEditingController(),
@@ -150,6 +150,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
   void initState() {
     super.initState();
     gridViewType = 1;
+    errorMsg = '';
   }
 
   int gridViewType;
@@ -168,7 +169,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       hintText: 'Persons',
-                      errorText: check[1] ? 'Required' : null),
+                      errorText: check[1] ? errorMsg : null),
                 ),
               ),
               ListTile(
@@ -176,26 +177,34 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                   child: Text('Ok'),
                   onPressed: () {
                     setState(() {
-                      // check[0] = controllers[0].text == '' ? true : false;
                       check[1] = controllers[1].text == '' ? true : false;
+                      errorMsg = controllers[1].text == '' ? 'Required' : '';
                     });
                     if (!check[1]) {
-                      Config.database.insert(Tables.orderTable, {
-                        Columns.ordersTables[1]: controllers[1].text,
-                        Columns.ordersTables[2]:
-                            Config.getCurrentTime24Format(),
-                        Columns.ordersTables[5]: waiter.outletId,
-                        Columns.ordersTables[6]: table.serverId,
-                        Columns.ordersTables[7]: 'Live'
-                      }).then((value) => NewSaleController().launchDineIn(
-                              context,
-                              _viewType.toString(),
-                              value.toString(),
-                              waiter.serverId, [
-                            'Persons: ${controllers[1].text}',
-                            'Table: ${table.name}',
-                            'Waiter: ${waiter.fullName}'
-                          ]));
+                      int persons = int.parse(controllers[1].text);
+                      if (persons > 0) {
+                        Config.database.insert(Tables.orderTable, {
+                          Columns.ordersTables[1]: controllers[1].text,
+                          Columns.ordersTables[2]:
+                              Config.getCurrentTime24Format(),
+                          Columns.ordersTables[5]: waiter.outletId,
+                          Columns.ordersTables[6]: table.serverId,
+                          Columns.ordersTables[7]: 'Live'
+                        }).then((value) => NewSaleController().launchDineIn(
+                                context,
+                                _viewType.toString(),
+                                value.toString(),
+                                waiter.serverId, [
+                              'Persons: ${controllers[1].text}',
+                              'Table: ${table.name}',
+                              'Waiter: ${waiter.fullName}'
+                            ]));
+                      } else {
+                        setState(() {
+                          check[1] = true;
+                          errorMsg = 'Invalid no of persons.';
+                        });
+                      }
                     }
                   },
                 ),
@@ -222,13 +231,14 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                   controller: controllers[3],
                   decoration: InputDecoration(
                       hintText: 'Contact',
-                      errorText: check[3] ? 'Required' : null),
+                      errorText: check[3] ? errorMsg : null),
                 ),
                 trailing: IconButton(
                   icon: Icon(Icons.search),
                   onPressed: () {
                     setState(() {
                       check[3] = controllers[3].text == '' ? true : false;
+                      errorMsg = controllers[3].text == '' ? 'Required' : '';
                     });
                     if (!check[3]) {
                       Config.database
@@ -271,8 +281,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                 title: TextField(
                   controller: controllers[2],
                   decoration: InputDecoration(
-                      hintText: 'Name',
-                      errorText: check[2] ? 'Required' : null),
+                      hintText: 'Name', errorText: check[2] ? errorMsg : null),
                 ),
               ),
               ListTile(
@@ -282,13 +291,16 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                     setState(() {
                       check[2] = controllers[2].text == '' ? true : false;
                       check[3] = controllers[3].text == '' ? true : false;
+                      errorMsg = controllers[2].text == '' ? 'Required' : '';
+                      errorMsg = controllers[3].text == '' ? 'Required' : '';
                       if (!check[2] && !check[3]) {
                         if (customerExists) {
-                          NewSaleController().launchTakeaway(
-                              context,
-                              _viewType.toString(),
-                              customerId.toString(),
-                              [controllers[2].text, controllers[3].text, '']);
+                          NewSaleController().launchTakeaway(context,
+                              _viewType.toString(), customerId.toString(), [
+                            'Customer: ${controllers[2].text}',
+                            'Contact: ${controllers[3].text}',
+                            ''
+                          ]);
                         } else {
                           User cUser = Config.currentUser;
                           Customer customer = Customer(
@@ -303,11 +315,12 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                               .then((value) {
                             customer.id = value.toString();
                             Lib.uploadCustomer(customer);
-                            NewSaleController().launchTakeaway(
-                                context,
-                                _viewType.toString(),
-                                value.toString(),
-                                [controllers[2].text, controllers[3].text, '']);
+                            NewSaleController().launchTakeaway(context,
+                                _viewType.toString(), value.toString(), [
+                              'Customer: ${controllers[2].text}',
+                              'Contact: ${controllers[3].text}',
+                              ''
+                            ]);
                           });
                         }
                       }
@@ -403,6 +416,10 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                       check[4] = controllers[4].text == '' ? true : false;
                       check[5] = controllers[5].text == '' ? true : false;
                       check[6] = controllers[6].text == '' ? true : false;
+
+                      errorMsg = controllers[4].text == '' ? 'Required' : '';
+                      errorMsg = controllers[5].text == '' ? 'Required' : '';
+                      errorMsg = controllers[6].text == '' ? 'Required' : '';
                       if (!check[4] && !check[5] && !check[6]) {
                         if (customerExists) {
                           NewSaleController().launchDelivery(context,

@@ -2,10 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:food_app/controller/order_controller.dart';
+import 'package:food_app/controller/payment_controller.dart';
+import 'package:food_app/database/columns.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/order_model.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
+import 'package:sqflite/sqflite.dart';
 
 class OrderScreen extends StatefulWidget {
   final OrderModel model;
@@ -120,17 +123,34 @@ class _OrderScreenState extends State<OrderScreen> {
     Widget widget;
     switch (orderType) {
       case 1:
-        widget = await OrderController.getDineInOrders(context, model);
+        widget = await OrderController.getDineInOrders(
+            context,
+            (element) => PaymentController(element).launch(context),
+            (id) => onOrderCancelled(id));
         break;
       case 2:
-        widget = await OrderController.getTakeAwayOrders(context);
+        widget = await OrderController.getTakeAwayOrders(
+            context,
+            (element) => PaymentController(element).launch(context),
+            (id) => onOrderCancelled(id));
         break;
       case 3:
-        widget = await OrderController.getDeliveryOrders(context);
+        widget = await OrderController.getDeliveryOrders(
+            context,
+            (element) => PaymentController(element).launch(context),
+            (id) => onOrderCancelled(id));
         break;
       default:
         break;
     }
     return widget;
+  }
+
+  static void onOrderCancelled(String orderId) async {
+    Database db = Config.database;
+    Map<String, dynamic> update = {
+      Columns.salesMaster[37]: 1.toString(),
+    };
+    await SalesMaster().updateSpecificIntoDb(db, update, 'id', orderId);
   }
 }

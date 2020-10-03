@@ -96,8 +96,8 @@ class OrderController {
                 )));
       });
 
-  static Future<Widget> getDineInOrders(
-      BuildContext context, OrderModel model) async {
+  static Future<Widget> getDineInOrders(BuildContext context,
+      void onOk(Map<String, dynamic> id), void onNo(String id)) async {
     try {
       List<Map<String, dynamic>> data = await Config.database.rawQuery(
           "select *, a.id, a.sale_no, ifnull((select name from tables where id = a.table_id),'x') as tables, (select full_name from users where id = a.user_id) as waiter, a.due_amount from sales_master a where a.order_type = '1' and a.paid_amount = '0.0' and a.is_delete = '0'");
@@ -110,9 +110,7 @@ class OrderController {
                 Icons.check,
                 color: Colors.green,
               ),
-              onPressed: () {
-                PaymentController(element).launch(context);
-              })),
+              onPressed: () => onOk(element))),
           DataCell(Text(element['sale_no'])),
           DataCell(Text(element['tables'])),
           DataCell(Text(element['waiter'])),
@@ -122,7 +120,9 @@ class OrderController {
                 Icons.close,
                 color: Colors.red,
               ),
-              onPressed: () {})),
+              onPressed: () {
+                onOrderCancelled(element['local_id']);
+              })),
         ]));
       });
       return DataTable(
@@ -143,23 +143,23 @@ class OrderController {
     }
   }
 
-  static Future<DataTable> getTakeAwayOrders(BuildContext context) async {
+  static Future<DataTable> getTakeAwayOrders(BuildContext context,
+      void onOk(Map<String, dynamic> id), void onNo(String id)) async {
     List<Map<String, dynamic>> data = await Config.database.rawQuery(
-        "select a.sale_no, IFNULL((select name from customers where id = a.customer_id),'') as customer_name, IFNULL((select phone from customers where id = a.customer_id),'') as contact, a.due_amount from sales_master a where a.order_type = '2' and a.paid_amount = '0.0' and a.is_delete = '0'");
+        "select *, a.sale_no, IFNULL((select name from customers where id = a.customer_id),'') as customer_name, IFNULL((select phone from customers where id = a.customer_id),'') as contact, a.due_amount from sales_master a where a.order_type = '2' and a.paid_amount = '0.0' and a.is_delete = '0'");
     List<DataRow> rows = [];
     data.forEach((element) {
       rows.add(DataRow(cells: [
         DataCell(IconButton(
-            icon: Icon(Icons.check, color: Colors.green), onPressed: () {})),
+            icon: Icon(Icons.check, color: Colors.green),
+            onPressed: () => onOk(element))),
         DataCell(Text(element['sale_no'])),
         DataCell(Text(element['customer_name'])),
         DataCell(Text(element['contact'])),
         DataCell(Text(element['due_amount'])),
         DataCell(IconButton(
             icon: Icon(Icons.close, color: Colors.red),
-            onPressed: () {
-              PaymentController(element).launch(context);
-            })),
+            onPressed: () => onNo(element['local_id']))),
       ]));
     });
     return DataTable(
@@ -175,7 +175,8 @@ class OrderController {
     );
   }
 
-  static Future<DataTable> getDeliveryOrders(BuildContext context) async {
+  static Future<DataTable> getDeliveryOrders(BuildContext context,
+      void onOk(Map<String, dynamic> id), void onNo(String id)) async {
     List<Map<String, dynamic>> data = await Config.database.rawQuery(
         "select *, a.sale_no, IFNULL((select full_name from users where id = a.user_id),'') as customer_name,IFNULL((select phone from customers where id = a.customer_id),'') as contact, a.due_amount from sales_master a where a.order_type = '3' and a.paid_amount = '0.0' and a.is_delete = '0'");
 
@@ -183,16 +184,15 @@ class OrderController {
     data.forEach((element) {
       rows.add(DataRow(cells: [
         DataCell(IconButton(
-            icon: Icon(Icons.check, color: Colors.green), onPressed: () {})),
+            icon: Icon(Icons.check, color: Colors.green),
+            onPressed: () => onOk(element))),
         DataCell(Text(element['sale_no'])),
         DataCell(Text(element['customer_name'])),
         DataCell(Text(element['contact'])),
         DataCell(Text(element['due_amount'])),
         DataCell(IconButton(
             icon: Icon(Icons.close, color: Colors.red),
-            onPressed: () {
-              PaymentController(element).launch(context);
-            })),
+            onPressed: () => onNo(element['local_id']))),
       ]));
     });
     return DataTable(
@@ -208,16 +208,16 @@ class OrderController {
     );
   }
 
-  static Future onOrderCancelled(SalesMaster salesMaster) async {
+  static Future onOrderCompleted(SalesMaster itm) async {
+    await Config.database.execute(
+        'update ${Columns.salesMaster[37]} set ${Columns.salesMaster[5]} = ${Columns.salesMaster[6]} where id = ${itm.id}');
+  }
+
+  static void onOrderCancelled(String orderId) async {
     Database db = Config.database;
     Map<String, dynamic> update = {
       Columns.salesMaster[37]: 1.toString(),
     };
-    await SalesMaster().updateSpecificIntoDb(db, update, 'id', salesMaster.id);
-  }
-
-  static Future onOrderCompleted(SalesMaster itm) async {
-    await Config.database.execute(
-        'update ${Columns.salesMaster[37]} set ${Columns.salesMaster[5]} = ${Columns.salesMaster[6]} where id = ${itm.id}');
+    await SalesMaster().updateSpecificIntoDb(db, update, 'id', orderId);
   }
 }
