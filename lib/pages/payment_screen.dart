@@ -7,7 +7,6 @@ import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 
 class PaymentScreen extends StatefulWidget {
-
   PaymentViewModel model;
   PaymentScreen(this.model);
   @override
@@ -16,18 +15,22 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   PaymentViewModel model;
-  _PaymentScreenState(this.model);
-  PaymentMethod selectedPayment;
+  _PaymentScreenState(this.model) {}
+  PaymentMethod selectedPayment = new PaymentMethod();
   List<TextEditingController> controllers = [
     new TextEditingController(),
     new TextEditingController()
   ];
   List<bool> check = [false, false];
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     controllers[0].text = model.map['due_amount'];
-
+    String _type = '0';
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
@@ -48,7 +51,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             child: Column(
               children: [
                 Text(
-                    'Payment'.toUpperCase(),
+                  'Payment'.toUpperCase(),
                   style: TextStyle(
                     color: Colors.redAccent,
                     fontSize: 30,
@@ -56,7 +59,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     letterSpacing: 3.0,
                   ),
                 ),
-                SizedBox(height: 40,),
+                SizedBox(
+                  height: 40,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -71,7 +76,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ),
                     ),
                     Text(
-                        model.map['due_amount'],
+                      model.map['due_amount'],
                       style: TextStyle(
                         color: Colors.grey[400],
                         fontSize: 20,
@@ -82,7 +87,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 Container(
                   width: double.infinity,
                   child: Card(
@@ -93,11 +100,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         hint: Center(child: Text("Select Your Payment Method")),
                         value: selectedPayment,
                         onChanged: (PaymentMethod payment) {
-                          // setState(() {
-                          selectedPayment.name = payment.name;
-                          // });
+                          setState(() {
+                            selectedPayment.name = payment.name;
+                            _type = payment.serverId;
+                          });
                         },
-                        items: model.paymentMethodList.map((PaymentMethod payment) {
+                        items: model.paymentMethodList
+                            .map((PaymentMethod payment) {
                           return DropdownMenuItem<PaymentMethod>(
                             value: payment,
                             child: Row(
@@ -121,42 +130,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     ),
                   ),
                 ),
-                Container(
-                  child: Card(
-                    color: Colors.grey[100],
-                    child: ListTile(
-                      leading: Icon(Icons.monetization_on, color: Colors.grey),
-                      title: TextField(
-                        keyboardType: TextInputType.number,
-                        controller: controllers[0],
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.amberAccent, width: 1),
-                          ),
-                            hintText: 'Amount',
-                            errorText: check[0] ? 'Required' : null),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Card(
-                    color: Colors.grey[100],
-                    child: ListTile(
-                      leading: Icon(Icons.credit_card, color: Colors.grey,),
-                      title: TextField(
-                        keyboardType: TextInputType.number,
-                        controller: controllers[1],
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                               borderSide: BorderSide(color: Colors.amberAccent, width: 1),
-                            ),
-                            hintText: 'Credit Number',
-                            errorText: check[1] ? 'Required' : null),
-                      ),
-                    ),
-                  ),
-                ),
+                getWidget(_type),
                 SizedBox(
                   width: double.infinity,
                   child: RaisedButton(
@@ -166,7 +140,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     },
                     color: AppTheme.listTextColor,
                     child: Text(
-                        'SUBMIT',
+                      'SUBMIT',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -182,5 +156,50 @@ class _PaymentScreenState extends State<PaymentScreen> {
         ),
       ),
     );
+  }
+
+  Widget getWidget(String type) {
+    if (type == '1') {
+      return Container(
+        child: Card(
+          color: Colors.grey[100],
+          child: ListTile(
+            leading: Icon(
+              Icons.credit_card,
+              color: Colors.grey,
+            ),
+            title: TextField(
+              keyboardType: TextInputType.number,
+              controller: controllers[1],
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.amberAccent, width: 1),
+                  ),
+                  hintText: 'Credit Number',
+                  errorText: check[1] ? 'Required' : null),
+            ),
+          ),
+        ),
+      );
+    } else {
+      return Container(
+        child: Card(
+          color: Colors.grey[100],
+          child: ListTile(
+            leading: Icon(Icons.monetization_on, color: Colors.grey),
+            title: TextField(
+              keyboardType: TextInputType.number,
+              controller: controllers[0],
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.amberAccent, width: 1),
+                  ),
+                  hintText: 'Amount',
+                  errorText: check[0] ? 'Required' : null),
+            ),
+          ),
+        ),
+      );
+    }
   }
 }
