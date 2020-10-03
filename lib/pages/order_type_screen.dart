@@ -216,15 +216,6 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
           child: Column(
             children: [
               ListTile(
-                leading: Icon(Icons.person),
-                title: TextField(
-                  controller: controllers[2],
-                  decoration: InputDecoration(
-                      hintText: 'Name',
-                      errorText: check[2] ? 'Required' : null),
-                ),
-              ),
-              ListTile(
                 leading: Icon(Icons.dialpad),
                 title: TextField(
                   keyboardType: TextInputType.number,
@@ -276,6 +267,15 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                 ),
               ),
               ListTile(
+                leading: Icon(Icons.person),
+                title: TextField(
+                  controller: controllers[2],
+                  decoration: InputDecoration(
+                      hintText: 'Name',
+                      errorText: check[2] ? 'Required' : null),
+                ),
+              ),
+              ListTile(
                 title: OutlineButton(
                   child: Text('Ok'),
                   onPressed: () {
@@ -323,15 +323,6 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
         return Container(
           child: Column(
             children: [
-              ListTile(
-                leading: Icon(Icons.person),
-                title: TextField(
-                  controller: controllers[4],
-                  decoration: InputDecoration(
-                      hintText: 'Name',
-                      errorText: check[4] ? 'Required' : null),
-                ),
-              ),
               ListTile(
                 leading: Icon(Icons.dialpad),
                 title: TextField(
@@ -384,6 +375,15 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                       });
                     }
                   },
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.person),
+                title: TextField(
+                  controller: controllers[4],
+                  decoration: InputDecoration(
+                      hintText: 'Name',
+                      errorText: check[4] ? 'Required' : null),
                 ),
               ),
               ListTile(
