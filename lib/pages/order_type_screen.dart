@@ -22,7 +22,6 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
   int customerId = 0;
   T.Table table;
   User waiter;
-  List<String> titleStrings = [];
 
   List<TextEditingController> controllers = [
     new TextEditingController(),
@@ -166,6 +165,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                 leading: Icon(Icons.group),
                 title: TextField(
                   controller: controllers[1],
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       hintText: 'Persons',
                       errorText: check[1] ? 'Required' : null),
@@ -180,7 +180,6 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                       check[1] = controllers[1].text == '' ? true : false;
                     });
                     if (!check[1]) {
-                      titleStrings.add('Persons: ${controllers[1].text}');
                       Config.database.insert(Tables.orderTable, {
                         Columns.ordersTables[1]: controllers[1].text,
                         Columns.ordersTables[2]:
@@ -280,7 +279,6 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                 title: OutlineButton(
                   child: Text('Ok'),
                   onPressed: () {
-                    titleStrings = [];
                     setState(() {
                       check[2] = controllers[2].text == '' ? true : false;
                       check[3] = controllers[3].text == '' ? true : false;
@@ -467,7 +465,6 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                 table = element;
                 setState(() {
                   gridViewType = 2;
-                  titleStrings.add('Table: ${element.name}');
                 });
               },
             ),
@@ -490,7 +487,6 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
               child: Center(child: Text(element.fullName)),
               onTap: () {
                 waiter = element;
-                titleStrings.add('Waiter: ${element.fullName}');
               },
             ),
           ),
