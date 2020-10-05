@@ -37,12 +37,12 @@ class SalesMasterTable{
   static const String delStatus = 'del_status';
   static const String saleVatObjects = 'sale_vat_objects';
   static const String deviceKey = 'device_key';
-  static const String serverId = 'server_id';
+  static const String serverId = 'id';
   static const String companyId = 'company_id';
   static const String isDelete = 'is_delete';
-  static const String isUpdate = 'is_update';
+  static const String isUpload = 'is_upload';
 
-  static const List<String> columnNames = [
+  static const List<String> columnsName = [
     localId,
     customerId,
     saleNo,
@@ -81,10 +81,10 @@ class SalesMasterTable{
     serverId,
     companyId,
     isDelete,
-    isUpdate
+    isUpload
   ];
 
-    static const List<String> columnTypes = [
+    static const List<String> columnsType = [
       SqlStructure.integer + SqlStructure.primaryKey,
       SqlStructure.text,
       SqlStructure.text,

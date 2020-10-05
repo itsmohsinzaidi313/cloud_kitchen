@@ -1,16 +1,21 @@
+import 'package:food_app/database/table_object/category_table.dart';
+import 'package:food_app/database/table_object/company_table.dart';
+import 'package:food_app/database/table_object/item_table.dart';
+import 'package:food_app/database/table_object/sales_detail_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
+import 'package:food_app/database/table_object/user_table.dart';
 
 class Types {
   ///LIST OF [COLUMN_TYPES] LIST
-  static const List<List<String>> listofAllColumnTypes = [
-    users, //0
-    ShiftTable.columnTypes, //1
-    categories, //2
-    item, //3
-    SalesMasterTable.columnTypes, //4
-    salesDetails, //5
-    company, //6
+  static const List<List<String>> listOfAllColumnTypes = [
+    UserTable.columnsType, //0
+    ShiftTable.columnsType, //1
+    CategoryTable.columnsType, //2
+    ItemTable.columnsType, //3
+    SalesMasterTable.columnsType, //4
+    SalesDetailTable.columnsType, //5
+    CompanyTable.columnsType, //6
     customers, //7
     expenseCategories, //8
     itemModifier, //9

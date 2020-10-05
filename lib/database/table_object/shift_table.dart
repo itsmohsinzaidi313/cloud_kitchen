@@ -17,10 +17,10 @@ class ShiftTable{
   static const String companyId = 'company_id';
   static const String registerNo = 'register_no';
   static const String deviceKey = 'device_key';
-  static const String serverId = 'server_id';
-  static const String isUpdate = 'is_update';
+  static const String serverId = 'id';
+  static const String isUpload = 'is_upload';
 
-  static const List<String> columnNames = [
+  static const List<String> columnsName = [
     localId,
     shift,
     openingBalance,
@@ -37,10 +37,10 @@ class ShiftTable{
     registerNo,
     deviceKey,
     serverId,
-    isUpdate
+    isUpload
   ];
 
-  static const List<String> columnTypes = [
+  static const List<String> columnsType = [
     SqlStructure.integer + SqlStructure.primaryKey,
     SqlStructure.text,
     SqlStructure.text,
