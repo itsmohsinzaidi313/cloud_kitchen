@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_app/controller/shift_controller.dart';
 import 'package:food_app/models/objects/user.dart';
 import 'package:food_app/models/view_models/login_model.dart';
+import 'package:food_app/pages/sql_view_page.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/data_lists.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -72,27 +73,34 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void onButtonTap() {
-    setState(() {
-      if (_formKey.currentState.validate()) {
-        isLoading = true;
-        _formKey.currentState.save();
-        if (email.text.contains('\t')) {
-          email.text = email.text.replaceAll(RegExp(r'\t'), '');
+    if (false) {
+      Navigator.of(context)
+          .push(new MaterialPageRoute(builder: (context) => SqlView()));
+    } else {
+      setState(() {
+        if (_formKey.currentState.validate()) {
+          isLoading = true;
+          _formKey.currentState.save();
+          // if (email.text.contains('\t')) {
+          //   email.text = email.text.replaceAll(RegExp(r'\t'), '');
+          //   validateUser(email.text, password.text)
+          //       ? ShiftController(1).launch(context)
+          //       : _scaffoldKey.currentState.showSnackBar(
+          //           SnackBar(content: Text('There is no such user exists')));
+          // } else {
+          email.text = email.text.trim();
+          password.text = password.text.trim();
           validateUser(email.text, password.text)
               ? ShiftController(1).launch(context)
               : _scaffoldKey.currentState.showSnackBar(
-                  SnackBar(content: Text('There is no such user exists')));
+                  SnackBar(content: Text('Invalid email or password')));
+          // }
         } else {
-          validateUser(email.text, password.text)
-              ? ShiftController(1).launch(context)
-              : _scaffoldKey.currentState.showSnackBar(
-                  SnackBar(content: Text('There is no such user exists')));
+          isLoading = false;
+          _autoValidate = true;
         }
-      } else {
-        isLoading = false;
-        _autoValidate = true;
-      }
-    });
+      });
+    }
   }
 
   @override

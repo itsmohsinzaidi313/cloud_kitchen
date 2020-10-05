@@ -25,6 +25,8 @@ class Config {
       'http://$serverIP/cloud-kitchen/api/closeRegister?auth=$authToken';
   static const int screenStartTime = 3;
 
+  static const int serviceCycleDelay = 5; // SECONDS
+
   static User _currentUser;
   static set currentUser(user) => _currentUser = user;
   static User get currentUser => _currentUser;

@@ -100,23 +100,35 @@ class Lib {
         'json': jsonEncode({
           'device_key': shift.deviceKey,
           'remote_id': shift.remoteId,
-          'register_no': shift.registerNo,
+          'register_no': codeGenerator('REG', int.parse(shift.remoteId)),
           'opening_balance': shift.openingBalance,
           'opening_balance_date_time': shift.openingBalanceDateTime
         })
       };
-      Response response = await post(Config.openRegisterApi, body: json);
+      Response response =
+          await post(Config.openRegisterApi, body: json).timeout(
+        Duration(seconds: 10),
+        onTimeout: () => null,
+      );
+      log('Status Code: ${response.statusCode}\n${response.body}',
+          name: 'Open Register Response');
       if (response != null) {
         Map<String, dynamic> result = jsonDecode(response.body);
-        String status = result['status'];
-        if (status == 'true') {
-          Config.database.update(
-              Tables.shiftData, {Columns.shiftData[0]: result['id']},
-              where: '${Columns.shiftData[0]} = ?',
-              whereArgs: [shift.remoteId]);
+        bool status = result['status'];
+        if (status) {
+          Config.currentShift.registerNo =
+              codeGenerator('REG', int.parse(shift.remoteId));
+          Config.currentShift.id = result['id'];
+          int id =
+              await Shift().insertSpecificIntoDatabase(Config.database, shift);
+          //
+          if (id > 0)
+            return true;
+          else
+            return false;
+        } else {
+          return false;
         }
-        log(response.body, name: 'Open Register Response');
-        return true;
       } else {
         return false;
       }
@@ -131,24 +143,37 @@ class Lib {
         'user_id': shift.userId,
         'json': jsonEncode({
           'device_key': shift.deviceKey,
-          'remote_id': shift.id,
+          'remote_id': shift.remoteId,
           'closing_balance': shift.closingBalance,
           'closing_balance_date_time': shift.closingBalanceDateTime
         })
       };
-      Response response = await post(Config.closeRegisterApi, body: json);
+      Response response =
+          await post(Config.closeRegisterApi, body: json).timeout(
+        Duration(seconds: 5),
+        onTimeout: () => null,
+      );
+      log(response.body, name: 'Close Register Response');
       if (response != null) {
-        log(response.body, name: 'Close Register Response');
-        Config.database.update(
-            Tables.shiftData,
-            {
-              Columns.shiftData[3]: shift.closingBalance,
-              Columns.shiftData[5]: shift.closingBalanceDateTime,
-              Columns.shiftData[9]: '2'
-            },
-            where: '${Columns.shiftData[0]} = ?',
-            whereArgs: [shift.id]);
-        return true;
+        Map<String, dynamic> result = jsonDecode(response.body);
+        bool status = result['status'];
+        if (status) {
+          int rowsUpdated = await Config.database.update(
+              Tables.shiftData,
+              {
+                Columns.shiftData[3]: shift.closingBalance,
+                Columns.shiftData[5]: shift.closingBalanceDateTime,
+                Columns.shiftData[9]: '2'
+              },
+              where: '${Columns.shiftData[0]} = ?',
+              whereArgs: [shift.id]);
+          if (rowsUpdated > 0)
+            return true;
+          else
+            return false;
+        } else {
+          return false;
+        }
       } else {
         return false;
       }
@@ -174,5 +199,9 @@ class Lib {
     else
       digits = '$id';
     return code + deviceId + digits;
+  }
+
+  void shiftMech(Database db) async {
+    
   }
 }

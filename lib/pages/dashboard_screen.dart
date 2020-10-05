@@ -36,7 +36,14 @@ class _DashboardState extends State<Dashboard> {
       appBar: AppBar(
         backgroundColor: Colors.red,
         elevation: 0.0,
-        title: Text('My Dashboard'),
+        title: Row(
+          children: [
+            Expanded(
+              child: SizedBox(),
+            ),
+            Text('Shift#: ${Config.currentShift.registerNo}')
+          ],
+        ),
         centerTitle: true,
       ),
       body: LayoutBuilder(
@@ -110,9 +117,15 @@ class _DashboardState extends State<Dashboard> {
       Navigator.of(context)
           .push(new MaterialPageRoute(builder: (context) => SqlView()));
     } else if (dashboardItem.name == 'Register') {
-      ShiftController shiftController = ShiftController(0);
-      shiftController.model.layoutType = 2;
-      shiftController.launchShiftClosing(context);
+      AppTheme.showAlertDialogYN(context,
+          title: 'Close Register',
+          message: 'Are you sure?',
+          onYes: () {
+            ShiftController shiftController = ShiftController(0);
+            shiftController.model.layoutType = 2;
+            shiftController.launchShiftClosing(context);
+          },
+          onNo: () => Navigator.pop(context));
     } else if (dashboardItem.name == 'Logout') {
       AppTheme.showAlertDialogYN(context,
           title: 'Logout',

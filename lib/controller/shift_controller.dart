@@ -37,7 +37,7 @@ class ShiftController {
 
   void launch(BuildContext context) async {
     List<Map<String, dynamic>> data = await Config.database.rawQuery(
-        "select count(${Columns.shiftData[0]}) as count from ${Tables.shiftData} where ${Columns.shiftData[9]} = '1'");
+        "select count(${Columns.shiftData[0]}) as count from ${Tables.shiftData} where ${Columns.shiftData[9]} = '1' order by id desc");
     int count = data[0]['count'];
     if (count > 0) {
       List<Map<String, dynamic>> map = await Config.database.query(

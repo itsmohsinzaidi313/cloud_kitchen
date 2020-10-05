@@ -302,8 +302,8 @@ class _ShiftScreen extends State<ShiftScreen> {
                     Config.currentDevice = d;
                     Config.currentShift = Shift(
                         shift: _dropdown,
-                        deviceKey: _deviceKey.text,
-                        openingBalance: openingAmount.text,
+                        deviceKey: _deviceKey.text.trim(),
+                        openingBalance: openingAmount.text.trim(),
                         userId: Config.currentUser.serverId,
                         openingBalanceDateTime:
                             Config.getCurrentDateTimeDBFormat(),
@@ -311,26 +311,19 @@ class _ShiftScreen extends State<ShiftScreen> {
                         companyId: Config.currentUser.companyId,
                         registerStatus: '1');
 
-                    Shift()
-                        .insertSpecificIntoDatabase(
-                            Config.database, Config.currentShift)
-                        .then((value) {
-                      Config.currentShift.remoteId = value.toString();
-                      Config.currentShift.registerNo =
-                          Lib.codeGenerator('REG', value);
-                      Config.database.update(
-                          Tables.shiftData,
-                          {
-                            Columns.shiftData[13]:
-                                Lib.codeGenerator('REG', value),
-                            Columns.shiftData[15]: value
-                          },
-                          where: '${Columns.shiftData[0]} = ?',
-                          whereArgs: [value]);
-                      Lib.openRegister(Config.currentShift).then((value) {
-                        if (value)
-                          DashboardController(context).launchAndReplacement();
-                      });
+                    Shift().getNextShiftRemoteId(Config.database).then((value) {
+                      if (value > 0) {
+                        Config.currentShift.remoteId = value.toString();
+                        Lib.openRegister(Config.currentShift).then((value) {
+                          if (value)
+                            DashboardController(context).launchAndReplacement();
+                          else
+                            AppTheme.showAlertDialogOK(context,
+                                title: 'Error',
+                                message:
+                                    'Your request is not accepted by Server. Please Try Again!');
+                        });
+                      }
                     });
                   } else {
                     Config.log.e('Device not found');
@@ -360,16 +353,7 @@ class _ShiftScreen extends State<ShiftScreen> {
                   Config.currentShift.closingBalance = closingAmount.text;
                   Config.currentShift.closingBalanceDateTime =
                       Config.getCurrentDateTimeDBFormat();
-                  Config.database.update(
-                      Tables.shiftData,
-                      {
-                        Columns.shiftData[3]: closingAmount.text,
-                        Columns.shiftData[5]:
-                            Config.getCurrentDateTimeDBFormat(),
-                        Columns.shiftData[9]: '2'
-                      },
-                      where: '${Columns.shiftData[0]} = ?',
-                      whereArgs: [Config.currentShift.remoteId]);
+                  Config.currentShift.closingBalance = closingAmount.text;
                   Lib.closeRegister(Config.currentShift).then((value) {
                     if (value) LoginController().pushAndRemoveUntil(context);
                   });

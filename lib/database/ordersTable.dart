@@ -8,8 +8,8 @@ class OrdersTable {
   static const String outletId = 'outlet_id';
   static const String tableId = 'table_id';
   static const String delStatus = 'del_status';
-  
-  static const List<String> ordersTables = [
+
+  static const List<String> ordersColumns = [
     localId,
     persons,
     bookingTime,
@@ -20,7 +20,7 @@ class OrdersTable {
     delStatus
   ];
 
-  static const List<String> ordersTable = [
+  static const List<String> ordersColumnTypes = [
     INTEGER + PRIMARY_KEY,
     TEXT,
     TEXT,
