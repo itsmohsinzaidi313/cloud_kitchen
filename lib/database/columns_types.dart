@@ -1,11 +1,14 @@
+import 'package:food_app/database/table_object/sales_master_table.dart';
+import 'package:food_app/database/table_object/shift_table.dart';
+
 class Types {
   ///LIST OF [COLUMN_TYPES] LIST
   static const List<List<String>> listofAllColumnTypes = [
     users, //0
-    shiftData, //1
+    ShiftTable.columnTypes, //1
     categories, //2
     item, //3
-    salesMaster, //4
+    SalesMasterTable.columnTypes, //4
     salesDetails, //5
     company, //6
     customers, //7

@@ -1,10 +1,13 @@
+import 'package:food_app/database/table_object/sales_master_table.dart';
+import 'package:food_app/database/table_object/shift_table.dart';
+
 class Columns {
   static const List<List<String>> listofAllColumns = [
     users, //0
-    shiftData, //1
+    ShiftTable.columnNames, //1
     categories, //2
     item, //3
-    salesMaster, //4
+    SalesMasterTable.columnNames, //4
     salesDetails, //5
     company, //6
     customers, //7

@@ -1,4 +1,7 @@
-class OrdersTable {
+import 'package:food_app/database/sql_structure.dart';
+
+class OrdersTable{
+
   static const String tableName = 'orders_table';
   static const String localId = 'local_id';
   static const String persons = 'persons';
@@ -8,8 +11,8 @@ class OrdersTable {
   static const String outletId = 'outlet_id';
   static const String tableId = 'table_id';
   static const String delStatus = 'del_status';
-  
-  static const List<String> ordersTables = [
+
+  static const List<String> columnNames = [
     localId,
     persons,
     bookingTime,
@@ -20,21 +23,15 @@ class OrdersTable {
     delStatus
   ];
 
-  static const List<String> ordersTable = [
-    INTEGER + PRIMARY_KEY,
-    TEXT,
-    TEXT,
-    TEXT,
-    TEXT,
-    TEXT,
-    TEXT,
-    TEXT
+  static const List<String> columnTypes = [
+    SqlStructure.integer + SqlStructure.primaryKey,
+    SqlStructure.text,
+    SqlStructure.text,
+    SqlStructure.text,
+    SqlStructure.text,
+    SqlStructure.text,
+    SqlStructure.text,
+    SqlStructure.text
   ];
 
-  static const String TEXT = 'TEXT';
-  static const String INTEGER = 'INTEGER';
-  static const String BLOB = 'BLOB';
-  static const String REAL = 'REAL';
-  static const String NUMERIC = 'NUMERIC';
-  static const String PRIMARY_KEY = ' PRIMARY KEY';
 }
