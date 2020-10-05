@@ -92,8 +92,8 @@ class ProjectDatabase {
         _listTables.add(new Table(
             database: db,
             tableName: Tables.listofAllTables[i],
-            listOfColumnsName: Columns.listofAllColumns[i],
-            listOfColumnsTypes: Types.listofAllColumnTypes[i]));
+            listOfColumnsName: Columns.listOfAllColumns[i],
+            listOfColumnsTypes: Types.listOfAllColumnTypes[i]));
       }
       return _listTables;
     } else {

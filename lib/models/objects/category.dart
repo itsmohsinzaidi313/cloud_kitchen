@@ -1,6 +1,5 @@
 import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
-import 'package:food_app/shared/data_lists.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
 
