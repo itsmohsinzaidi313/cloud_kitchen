@@ -40,7 +40,7 @@ class Shift {
       this.remoteId});
 
   Shift.fromJson(Map<String, dynamic> map)
-    : id = map['local_id'],
+    : id = map['local_id'].toString(),
     shift = map['shift'],
     openingBalance = map['opening_balance'],
     closingBalance = map['closing_balance'],

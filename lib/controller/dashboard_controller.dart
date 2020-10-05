@@ -42,7 +42,7 @@ class DashboardController {
       new MaterialPageRoute(builder: (context) => new Dashboard(model)));
 
   void pushAndRemoveUntil(BuildContext context) =>  Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (c) => Dashboard(model)),
+      MaterialPageRoute(builder: (context) => Dashboard(model)),
           (route) => false);
 
 }

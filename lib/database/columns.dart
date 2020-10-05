@@ -41,22 +41,22 @@ class Columns {
 
   ///SHIFT_DATA TABLE COLUMNS
   static const List<String> shiftData = [
-    'local_id',
-    'shift',
-    'opening_balance',
-    'closing_balance',
-    'opening_balance_date_time',
-    'closing_balance_date_time',
-    'sale_paid_amount',
-    'customer_due_receive',
-    'payment_methods_sale',
-    'register_status',
-    'user_id',
-    'outlet_id',
-    'company_id',
-    'register_no',
-    'device_key',
-    'id'
+    'local_id', //0
+    'shift', //1
+    'opening_balance', //2
+    'closing_balance', //3
+    'opening_balance_date_time', //4
+    'closing_balance_date_time', //5
+    'sale_paid_amount', //6
+    'customer_due_receive', //7
+    'payment_methods_sale', //8
+    'register_status', //9
+    'user_id', //10
+    'outlet_id', //11
+    'company_id', //12
+    'register_no', //13
+    'device_key', //14
+    'id' //15
   ];
 
   ///CATEGORIES TABLE COLUMNS

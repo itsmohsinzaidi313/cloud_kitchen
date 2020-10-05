@@ -8,7 +8,7 @@ import 'package:sqflite/sqflite.dart';
 
 class Config {
   static const String appTitle = 'Cloud Kitchen';
-  static const DATABASE databaseVersion = DATABASE.UPGRADE;
+  static const DATABASE databaseVersion = DATABASE.STABLE;
   static const String databaseName = 'CloudKitchen.db';
 
   static const String serverIP = '72.52.142.19';
@@ -19,7 +19,10 @@ class Config {
       'http://$serverIP/cloud-kitchen/api/order?auth=$authToken';
   static final customerUploadApi =
       'http://$serverIP/cloud-kitchen/api/customer?auth=$authToken';
-
+  static final String openRegisterApi =
+      'http://$serverIP/cloud-kitchen/api/openRegister?auth=$authToken';
+  static final String closeRegisterApi =
+      'http://$serverIP/cloud-kitchen/api/closeRegister?auth=$authToken';
   static const int screenStartTime = 3;
 
   static User _currentUser;

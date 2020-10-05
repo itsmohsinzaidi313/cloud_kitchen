@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/generic_models/install_api.dart';
 import 'package:food_app/models/objects/customer.dart';
+import 'package:food_app/models/objects/shift.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
@@ -57,8 +59,6 @@ class Lib {
     }
   }
 
-  
-
   static Future<bool> uploadCustomer(Customer customer) async {
     Map<String, dynamic> data = new Map<String, dynamic>();
     List<Map<String, dynamic>> map = [];
@@ -91,5 +91,88 @@ class Lib {
       return true;
     } else
       return false;
+  }
+
+  static Future<bool> openRegister(Shift shift) async {
+    try {
+      Map<String, dynamic> json = {
+        'user_id': shift.userId,
+        'json': jsonEncode({
+          'device_key': shift.deviceKey,
+          'remote_id': shift.remoteId,
+          'register_no': shift.registerNo,
+          'opening_balance': shift.openingBalance,
+          'opening_balance_date_time': shift.openingBalanceDateTime
+        })
+      };
+      Response response = await post(Config.openRegisterApi, body: json);
+      if (response != null) {
+        Map<String, dynamic> result = jsonDecode(response.body);
+        String status = result['status'];
+        if (status == 'true') {
+          Config.database.update(
+              Tables.shiftData, {Columns.shiftData[0]: result['id']},
+              where: '${Columns.shiftData[0]} = ?',
+              whereArgs: [shift.remoteId]);
+        }
+        log(response.body, name: 'Open Register Response');
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> closeRegister(Shift shift) async {
+    try {
+      Map<String, dynamic> json = {
+        'user_id': shift.userId,
+        'json': jsonEncode({
+          'device_key': shift.deviceKey,
+          'remote_id': shift.id,
+          'closing_balance': shift.closingBalance,
+          'closing_balance_date_time': shift.closingBalanceDateTime
+        })
+      };
+      Response response = await post(Config.closeRegisterApi, body: json);
+      if (response != null) {
+        log(response.body, name: 'Close Register Response');
+        Config.database.update(
+            Tables.shiftData,
+            {
+              Columns.shiftData[3]: shift.closingBalance,
+              Columns.shiftData[5]: shift.closingBalanceDateTime,
+              Columns.shiftData[9]: '2'
+            },
+            where: '${Columns.shiftData[0]} = ?',
+            whereArgs: [shift.id]);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static String codeGenerator(String prefix, int id) {
+    String code = '$prefix/';
+    // String deviceId = Config().currentShift.deviceKey;
+    String deviceId = '1';
+    if (int.parse(deviceId) < 10) {
+      deviceId = '0$deviceId/';
+    }
+    String digits = '';
+    if (id < 10)
+      digits = '000$id';
+    else if (id < 100)
+      digits = '00$id';
+    else if (id < 1000)
+      digits = '0$id';
+    else
+      digits = '$id';
+    return code + deviceId + digits;
   }
 }

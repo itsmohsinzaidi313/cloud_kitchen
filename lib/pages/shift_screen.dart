@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
+import 'package:food_app/controller/login_controller.dart';
+import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/shift.dart';
 import 'package:food_app/models/view_models/shift_model.dart';
+import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/data_lists.dart';
+import 'package:food_app/shared/lib.dart';
 
 class ShiftScreen extends StatefulWidget {
   final ShiftModel model;
@@ -17,208 +22,372 @@ class _ShiftScreen extends State<ShiftScreen> {
   _ShiftScreen(this.model);
   String _dropdown = 'Morning';
   bool _autoValidate = false;
+  TextEditingController closingAmount = TextEditingController();
+  TextEditingController openingAmount = TextEditingController();
+  bool checkField = false;
+  String errorMessage = 'Required';
 
   final GlobalKey<FormState> _formKey = GlobalKey();
-  TextEditingController _amount = TextEditingController();
   TextEditingController _deviceKey = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     _deviceKey.text = Config.authToken;
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text('Shift'),
-        centerTitle: true,
-        backgroundColor: Colors.redAccent,
-        elevation: 0.0,
-      ),
-      body: Center(
-        child: Container(
-          child: SingleChildScrollView(
-            child: Column(children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: CircleAvatar(
-                    radius: 90.0,
-                    backgroundColor: Colors.yellow[600],
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text('Shift'),
+          centerTitle: true,
+          backgroundColor: Colors.redAccent,
+          elevation: 0.0,
+        ),
+        body: Center(
+          child: Container(
+            child: SingleChildScrollView(
+              child: Column(children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
                     child: CircleAvatar(
-                      radius: 80.0,
-                      backgroundImage: NetworkImage(
-                          'https://image.freepik.com/free-vector/money-bag_16734-108.jpg'),
+                      radius: 90.0,
+                      backgroundColor: Colors.yellow[600],
+                      child: CircleAvatar(
+                        radius: 80.0,
+                        backgroundImage: NetworkImage(
+                            'https://image.freepik.com/free-vector/money-bag_16734-108.jpg'),
+                      ),
                     ),
                   ),
                 ),
+                bodyLayoutController(model.layoutType)
+              ]),
+            ),
+          ),
+        ),
+        floatingActionButton: floatingButtonLayoutController(model.layoutType));
+  }
+
+  Widget bodyLayoutController(int layoutType) {
+    switch (layoutType) {
+      case 1:
+        return Container(
+          margin: EdgeInsets.symmetric(horizontal: 16.0),
+          child: Card(
+            child: Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey[300],
+                    blurRadius: 20,
+                  ),
+                ],
               ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Card(
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey[300],
-                          blurRadius: 20,
-                        ),
-                      ],
-                    ),
-                    child: Form(
-                      key: _formKey,
-                      autovalidate: _autoValidate,
-                      child: Column(
-                        children: [
-                          Container(
-                              padding: EdgeInsets.all(8),
-                              child: Column(
-                                children: [
-                                  Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        'Select Shift',
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.normal,
-                                          color: Colors.grey,
-                                        ),
-                                      )),
-                                  DropdownButton<String>(
-                                    value: _dropdown,
-                                    icon: Icon(Icons.arrow_drop_down_circle),
-                                    iconSize: 24,
-                                    elevation: 16,
-                                    isExpanded: true,
-                                    style: TextStyle(
-                                      color: Colors.grey[700],
-                                    ),
-                                    onChanged: (newValue) {
-                                      setState(() {
-                                        _dropdown = newValue;
-                                      });
-                                    },
-                                    items: this.model.shiftList,
+              child: Form(
+                key: _formKey,
+                autovalidate: _autoValidate,
+                child: Column(
+                  children: [
+                    Container(
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          children: [
+                            Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  'Select Shift',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.grey,
                                   ),
-                                ],
-                              )),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8.0),
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                labelText: "Device Key",
-                                prefixIcon: Icon(
-                                  Icons.device_unknown,
-                                  size: 20,
-                                  color: Colors.amber,
-                                ),
-                                hintStyle: TextStyle(
-                                  color: Colors.grey[300],
-                                ),
-                                labelStyle: TextStyle(
-                                  color: Colors.grey[400],
-                                ),
+                                )),
+                            DropdownButton<String>(
+                              value: _dropdown,
+                              icon: Icon(Icons.arrow_drop_down_circle),
+                              iconSize: 24,
+                              elevation: 16,
+                              isExpanded: true,
+                              style: TextStyle(
+                                color: Colors.grey[700],
                               ),
-                              textInputAction: TextInputAction.next,
-                              keyboardType: TextInputType.number,
-                              onFieldSubmitted: (value) {
-                                FocusScope.of(context).unfocus();
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _dropdown = newValue;
+                                });
                               },
-                              validator: (value) {
-                                if (value.isEmpty ||
-                                    value.length < 0 ||
-                                    int.parse(value) <= 0) {
-                                  return 'Invalid Device Key';
-                                }
-                                return null;
-                              },
-                              controller: _deviceKey,
+                              items: this.model.shiftList,
                             ),
+                          ],
+                        )),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: "Device Key",
+                          prefixIcon: Icon(
+                            Icons.device_unknown,
+                            size: 20,
+                            color: Colors.amber,
                           ),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8.0),
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                labelText: "Amount",
-                                prefixIcon: Icon(
-                                  Icons.attach_money,
-                                  size: 20,
-                                  color: Colors.amber,
-                                ),
-                                hintText: "10,000",
-                                hintStyle: TextStyle(
-                                  color: Colors.grey[300],
-                                ),
-                                labelStyle: TextStyle(
-                                  color: Colors.grey[400],
-                                ),
-                              ),
-                              textInputAction: TextInputAction.done,
-                              keyboardType: TextInputType.number,
-                              onFieldSubmitted: (value) {
-                                FocusScope.of(context).unfocus();
-                              },
-                              validator: (value) {
-                                if (value.isEmpty ||
-                                    value.length < 0 ||
-                                    int.parse(value) <= 0) {
-                                  return 'Invalid Amount';
-                                }
-                                return null;
-                              },
-                              controller: _amount,
-                            ),
+                          hintStyle: TextStyle(
+                            color: Colors.grey[300],
                           ),
-                        ],
+                          labelStyle: TextStyle(
+                            color: Colors.grey[400],
+                          ),
+                        ),
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.number,
+                        onFieldSubmitted: (value) {
+                          FocusScope.of(context).unfocus();
+                        },
+                        validator: (value) {
+                          if (value.isEmpty ||
+                              value.length < 0 ||
+                              int.parse(value) <= 0) {
+                            return 'Invalid Device Key';
+                          }
+                          return null;
+                        },
+                        controller: _deviceKey,
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: "Amount",
+                          prefixIcon: Icon(
+                            Icons.attach_money,
+                            size: 20,
+                            color: Colors.amber,
+                          ),
+                          hintText: "1000",
+                          hintStyle: TextStyle(
+                            color: Colors.grey[300],
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey[400],
+                          ),
+                        ),
+                        textInputAction: TextInputAction.done,
+                        keyboardType: TextInputType.number,
+                        onFieldSubmitted: (value) {
+                          FocusScope.of(context).unfocus();
+                        },
+                        validator: (value) {
+                          if (value.isEmpty ||
+                              value.length < 0 ||
+                              int.parse(value) <= 0) {
+                            return 'Invalid Amount';
+                          }
+                          return null;
+                        },
+                        controller: openingAmount,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+        break;
+      case 2:
+        return Container(
+          // padding: EdgeInsets.all(10.0),
+          // margin: EdgeInsets.only(top: 30),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          width: Config.getDeviceWidth(context) * 0.4,
+          child: Wrap(
+            children: [
+              Container(
+                child: Card(
+                  color: Colors.grey[100],
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.monetization_on,
+                      color: Colors.grey[600],
+                    ),
+                    title: TextField(
+                      keyboardType: TextInputType.number,
+                      controller: closingAmount,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.amberAccent, width: 1),
+                          ),
+                          hintText: 'Closing Amount',
+                          errorText: checkField ? errorMessage : null),
+                    ),
+                    trailing: RaisedButton(
+                      elevation: 2.0,
+                      onPressed: () {
+                        setState(() {
+                          checkField = closingAmount.text == '' ? true : false;
+                          errorMessage = 'Required.';
+                        });
+
+                        if (!checkField) {
+                          double amount = double.parse(closingAmount.text);
+                          if (amount > 0) {
+                            Config.currentShift.closingBalance =
+                                closingAmount.text;
+                            Config.currentShift.closingBalanceDateTime =
+                                Config.getCurrentDateTimeDBFormat();
+                            Config.database.update(
+                                Tables.shiftData,
+                                {
+                                  Columns.shiftData[3]: closingAmount.text,
+                                  Columns.shiftData[5]:
+                                      Config.getCurrentDateTimeDBFormat(),
+                                  Columns.shiftData[9]: '2'
+                                },
+                                where: '${Columns.shiftData[0]} = ?',
+                                whereArgs: [Config.currentShift.remoteId]);
+                            Lib.closeRegister(Config.currentShift);
+                            LoginController().pushAndRemoveUntil(context);
+                          } else {
+                            checkField = true;
+                            errorMessage = 'Invalid Amount.';
+                          }
+                        }
+                      },
+                      color: AppTheme.listTextColor,
+                      child: Text(
+                        'SUBMIT',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          // fontStyle: FontStyle.italic,
+                          letterSpacing: 2.0,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ]),
+            ],
           ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            if (_formKey.currentState.validate()) {
-              _formKey.currentState.save();
+        );
+        break;
+      default:
+        return Container(
+          child: Text('Invalid Layout Type'),
+        );
+        break;
+    }
+  }
 
-              DataLists.instance.listDevices.forEach((d) {
-                if (_deviceKey.text == d.deviceKey) {
-                  Config.currentDevice = d;
+  Widget floatingButtonLayoutController(int layoutType) {
+    switch (layoutType) {
+      case 1:
+        return FloatingActionButton(
+          onPressed: () {
+            setState(() {
+              if (_formKey.currentState.validate()) {
+                _formKey.currentState.save();
 
-                  Config.currentShift = Shift(
-                      shift: _dropdown,
-                      deviceKey: _deviceKey.text,
-                      openingBalance: _amount.text,
-                      userId: Config.currentUser.serverId,
-                      openingBalanceDateTime: Config.getCurrentDateTime(),
-                      outletId: Config.currentUser.outletId,
-                      companyId: Config.currentUser.companyId,
-                      registerStatus: 'false');
+                DataLists.instance.listDevices.forEach((d) {
+                  if (_deviceKey.text == d.deviceKey) {
+                    Config.currentDevice = d;
+                    Config.currentShift = Shift(
+                        shift: _dropdown,
+                        deviceKey: _deviceKey.text,
+                        openingBalance: openingAmount.text,
+                        userId: Config.currentUser.serverId,
+                        openingBalanceDateTime:
+                            Config.getCurrentDateTimeDBFormat(),
+                        outletId: Config.currentUser.outletId,
+                        companyId: Config.currentUser.companyId,
+                        registerStatus: '1');
 
-                  Shift()
-                      .insertSpecificIntoDatabase(
-                          Config.database, Config.currentShift)
-                      .whenComplete(
-                          () => DashboardController(context).launch());
-                } else {
-                  Config.log.e('Device not found');
-                }
+                    Shift()
+                        .insertSpecificIntoDatabase(
+                            Config.database, Config.currentShift)
+                        .then((value) {
+                      Config.currentShift.remoteId = value.toString();
+                      Config.currentShift.registerNo =
+                          Lib.codeGenerator('REG', value);
+                      Config.database.update(
+                          Tables.shiftData,
+                          {
+                            Columns.shiftData[13]:
+                                Lib.codeGenerator('REG', value),
+                            Columns.shiftData[15]: value
+                          },
+                          where: '${Columns.shiftData[0]} = ?',
+                          whereArgs: [value]);
+                      Lib.openRegister(Config.currentShift).then((value) {
+                        if (value)
+                          DashboardController(context).launchAndReplacement();
+                      });
+                    });
+                  } else {
+                    Config.log.e('Device not found');
+                  }
+                });
+              } else {
+                _autoValidate = true;
+              }
+            });
+          },
+          child: Icon(Icons.check),
+          backgroundColor: Colors.yellow[600],
+        );
+        break;
+      case 2:
+        return FloatingActionButton(
+          onPressed: () {
+            try {
+              setState(() {
+                checkField = closingAmount.text == '' ? true : false;
+                errorMessage = 'Required.';
               });
-            } else {
-              _autoValidate = true;
+
+              if (!checkField) {
+                double amount = double.parse(closingAmount.text);
+                if (amount > 0) {
+                  Config.currentShift.closingBalance = closingAmount.text;
+                  Config.currentShift.closingBalanceDateTime =
+                      Config.getCurrentDateTimeDBFormat();
+                  Config.database.update(
+                      Tables.shiftData,
+                      {
+                        Columns.shiftData[3]: closingAmount.text,
+                        Columns.shiftData[5]:
+                            Config.getCurrentDateTimeDBFormat(),
+                        Columns.shiftData[9]: '2'
+                      },
+                      where: '${Columns.shiftData[0]} = ?',
+                      whereArgs: [Config.currentShift.remoteId]);
+                  Lib.closeRegister(Config.currentShift).then((value) {
+                    if (value) LoginController().pushAndRemoveUntil(context);
+                  });
+                } else {
+                  checkField = true;
+                  errorMessage = 'Invalid Amount.';
+                }
+              }
+            } catch (e) {
+              Config.log.e(e);
             }
-          });
-        },
-        child: Icon(Icons.navigate_next),
-        backgroundColor: Colors.yellow[600],
-      ),
-    );
+          },
+          child: Icon(Icons.close),
+          backgroundColor: Colors.yellow[600],
+        );
+        break;
+      default:
+        break;
+    }
   }
 }

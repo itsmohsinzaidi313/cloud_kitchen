@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/controller/login_controller.dart';
 import 'package:food_app/controller/order_controller.dart';
+import 'package:food_app/controller/shift_controller.dart';
+import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/view_models/dashboard_model.dart';
 import 'package:food_app/models/generic_models/dashboard_item.dart';
 import 'package:food_app/pages/order_type_screen.dart';
 import 'package:food_app/pages/sql_view_page.dart';
+import 'package:food_app/shared/app_theme.dart';
+import 'package:food_app/shared/config.dart';
+import 'package:food_app/shared/lib.dart';
 import 'package:food_app/shared/widgets/dashboard_card.dart';
 import 'package:toast/toast.dart';
 
@@ -18,7 +25,9 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   final DashBoardModel model;
-
+  TextEditingController closingAmount = TextEditingController();
+  bool checkField = false;
+  String errorMessage = 'Required';
   _DashboardState(this.model);
 
   @override
@@ -93,90 +102,106 @@ class _DashboardState extends State<Dashboard> {
   void onCardTap(DashboardItem dashboardItem) {
     Toast.show(dashboardItem.name, context);
     if (dashboardItem.name == 'New Orders') {
-      Navigator.of(context).push(new MaterialPageRoute(builder: (context) => OrderTypeScreen()));
-      // AppTheme.showAlertDialog(
-      //   context,
-      //   title: 'SELECT Order Type'.toUpperCase(),
-      //   fontSize: 20,
-      //   fontWeight: FontWeight.bold,
-      //   content: alertDialogContent(),
-      //   barrier: false
-      // );
-      // NewSaleController().launch(context);
+      Navigator.of(context)
+          .push(new MaterialPageRoute(builder: (context) => OrderTypeScreen()));
     } else if (dashboardItem.name == 'Pending Orders') {
       OrderController(1).launch(context);
     } else if (dashboardItem.name == 'Database') {
       Navigator.of(context)
           .push(new MaterialPageRoute(builder: (context) => SqlView()));
+    } else if (dashboardItem.name == 'Register') {
+      ShiftController shiftController = ShiftController(0);
+      shiftController.model.layoutType = 2;
+      shiftController.launchShiftClosing(context);
+    } else if (dashboardItem.name == 'Logout') {
+      AppTheme.showAlertDialogYN(context,
+          title: 'Logout',
+          message: 'Are you sure?',
+          onYes: () {
+            LoginController().pushAndRemoveUntil(context);
+          },
+          onNo: () => Navigator.pop(context));
     }
   }
 
-  Widget alertDialogContent() {
-  return Wrap(
-    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-      RaisedButton(
-        onPressed: () {
-          alertDialogButtonOnPressed('1');
-        },
-        color: Colors.redAccent,
-        child: Text(
-          'DINE-IN',
-          style: TextStyle(
-            fontSize: 20,
-            color: Colors.white,
-          ),
-        ),
+  Widget registerPopupContent() {
+    return Container(
+      // padding: EdgeInsets.all(10.0),
+      // margin: EdgeInsets.only(top: 30),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(10),
       ),
-      SizedBox(
-        width: 10,
-      ),
-      RaisedButton(
-        onPressed: () {
-          alertDialogButtonOnPressed('2');
-        },
-        color: Colors.redAccent,
-        child: Text(
-          'TAKEAWAY',
-          style: TextStyle(
-            fontSize: 20,
-            color: Colors.white,
-          ),
-        ),
-      ),
-      SizedBox(
-        width: 10,
-      ),
-      RaisedButton(
-        onPressed: () {
-          alertDialogButtonOnPressed('3');
-        },
-        color: Colors.redAccent,
-        child: Text(
-          'DELIVERY',
-          style: TextStyle(
-            fontSize: 20,
-            color: Colors.white,
-          ),
-        ),
-      ),
-    ],
-  );
-}
+      width: Config.getDeviceWidth(context) * 0.4,
+      child: Wrap(
+        children: [
+          Container(
+            child: Card(
+              color: Colors.grey[100],
+              child: ListTile(
+                leading: Icon(
+                  Icons.monetization_on,
+                  color: Colors.grey[600],
+                ),
+                title: TextField(
+                  keyboardType: TextInputType.number,
+                  controller: closingAmount,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.amberAccent, width: 1),
+                      ),
+                      hintText: 'Closing Amount',
+                      errorText: checkField ? errorMessage : null),
+                ),
+                trailing: RaisedButton(
+                  elevation: 2.0,
+                  onPressed: () {
+                    setState(() {
+                      checkField = closingAmount.text == '' ? true : false;
+                      errorMessage = 'Required.';
+                    });
 
-alertDialogButtonOnPressed(String str) {
-  switch (str) {
-    case '1':
-    Navigator.of(context).push(new MaterialPageRoute(builder: (context) => OrderTypeScreen()));
-      // NewSaleController().launchDinein(context, str);
-      break;
-    case '2':
-      // NewSaleController().launchTakeaway(context, str);
-      break;
-    case '3':
-      // Navigator.pop(context);
-      // NewSaleController().launchDelivery(context, str);
-      break;
+                    if (!checkField) {
+                      double amount = double.parse(closingAmount.text);
+                      if (amount > 0) {
+                        Config.currentShift.closingBalance = closingAmount.text;
+                        Config.currentShift.closingBalanceDateTime =
+                            Config.getCurrentDateTimeDBFormat();
+                        Config.database.update(
+                            Tables.shiftData,
+                            {
+                              Columns.shiftData[3]: closingAmount.text,
+                              Columns.shiftData[5]:
+                                  Config.getCurrentDateTimeDBFormat(),
+                              Columns.shiftData[9]: '2'
+                            },
+                            where: '${Columns.shiftData[0]} = ?',
+                            whereArgs: [Config.currentShift.remoteId]);
+                        Lib.closeRegister(Config.currentShift);
+                      } else {
+                        checkField = true;
+                        errorMessage = 'Invalid Amount.';
+                      }
+                    }
+                  },
+                  color: AppTheme.listTextColor,
+                  child: Text(
+                    'SUBMIT',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      // fontStyle: FontStyle.italic,
+                      letterSpacing: 2.0,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
-}
 }

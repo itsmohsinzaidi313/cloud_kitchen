@@ -7,7 +7,6 @@ import 'package:food_app/shared/data_lists.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
-
   final LoginModel loginModel;
   LoginScreen(this.loginModel);
 
@@ -16,7 +15,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   final LoginModel loginModel;
   _LoginScreenState(this.loginModel);
 
@@ -43,13 +41,14 @@ class _LoginScreenState extends State<LoginScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   SharedPreferences _sharedPreferences;
 
-  bool validateUser(email, pass)  {
+  bool validateUser(email, pass) {
     List<User> listUser = DataLists.instance.listUsers;
     bool valid = false;
-    for( int i = 0; i < listUser.length; i++ ){
-      if(listUser[i].emailAddress == email && listUser[i].password == pass){
+    for (int i = 0; i < listUser.length; i++) {
+      if (listUser[i].emailAddress == email && listUser[i].password == pass) {
         valid = true;
         Config.currentUser = listUser[i];
+        print(Config.currentUser.serverId);
         break;
       }
     }
@@ -74,19 +73,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void onButtonTap() {
     setState(() {
-      if (_formKey.currentState
-          .validate()) {
+      if (_formKey.currentState.validate()) {
         isLoading = true;
         _formKey.currentState.save();
         if (email.text.contains('\t')) {
-          email.text = email.text
-              .replaceAll(
-              RegExp(r'\t'), '');
-          validateUser(email.text, password.text) ? ShiftController().launch(context) :
-          _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('There is no such user exists')));
+          email.text = email.text.replaceAll(RegExp(r'\t'), '');
+          validateUser(email.text, password.text)
+              ? ShiftController(1).launch(context)
+              : _scaffoldKey.currentState.showSnackBar(
+                  SnackBar(content: Text('There is no such user exists')));
         } else {
-          validateUser(email.text, password.text) ? ShiftController().launch(context) :
-          _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('There is no such user exists')));        }
+          validateUser(email.text, password.text)
+              ? ShiftController(1).launch(context)
+              : _scaffoldKey.currentState.showSnackBar(
+                  SnackBar(content: Text('There is no such user exists')));
+        }
       } else {
         isLoading = false;
         _autoValidate = true;
@@ -123,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             margin: EdgeInsets.only(top: 180),
                             child: Center(
                               child: Text(
-                                  loginModel.loginButtonText,
+                                loginModel.loginButtonText,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 60,
@@ -199,13 +200,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                             child: TextFormField(
                                               decoration: InputDecoration(
                                                 border: InputBorder.none,
-                                                labelText: loginModel.hintPassword,
+                                                labelText:
+                                                    loginModel.hintPassword,
                                                 labelStyle: TextStyle(
                                                   color: Colors.grey[400],
                                                 ),
                                               ),
                                               obscureText: _obscureText,
-                                              textInputAction: TextInputAction.done,
+                                              textInputAction:
+                                                  TextInputAction.done,
                                               keyboardType:
                                                   TextInputType.visiblePassword,
                                               onFieldSubmitted: (value) {

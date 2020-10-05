@@ -83,17 +83,20 @@ class AppTheme {
           {String title,
           FontWeight fontWeight,
           double fontSize,
-          bool barrier,
+          Color color,
+          bool barrier = true,
           Widget content,
+          Widget widget,
           List<FlatButton> buttons}) =>
       showDialog(
           context: context,
           barrierDismissible: barrier,
           builder: (BuildContext context) => AlertDialog(
                 title: Container(
-                    child: Text(title,
-                        style: textStyle(
-                            fontWeight: fontWeight, fontSize: fontSize))),
+                    color: Colors.red,
+                    child: Center(
+                      child: widget,
+                    )),
                 content: content,
                 actions: buttons,
                 shape: RoundedRectangleBorder(

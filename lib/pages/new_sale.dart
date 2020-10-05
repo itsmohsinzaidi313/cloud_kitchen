@@ -11,6 +11,7 @@ import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/new_sale_model.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
+import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
 
 class NewSale extends StatefulWidget {
@@ -57,8 +58,7 @@ class _NewSaleState extends State<NewSale> {
                           child: Text(
                             model.leadingString,
                             style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold),
+                                color: Colors.red, fontWeight: FontWeight.bold),
                           ),
                         ),
                         title: Container(
@@ -339,7 +339,8 @@ class _NewSaleState extends State<NewSale> {
             {Columns.salesMaster[35]: masterId.toString()},
             Columns.salesMaster[0],
             masterId);
-        String code = codeGenerator(masterId); // GENERATES CODE FROM MASTER ID
+        String code =
+            Lib.codeGenerator('ORD', masterId); // GENERATES CODE FROM MASTER ID
         Map<String, dynamic> update = {
           'sale_no': code,
         };
@@ -403,25 +404,6 @@ class _NewSaleState extends State<NewSale> {
     };
     int detailsId = await SalesDetails().insertSpecificIntoDb(db, details);
     print('SALES DETAILS RETURN ID: $detailsId');
-  }
-
-  String codeGenerator(int id) {
-    String code = 'ORD/';
-    // String deviceId = Config().currentShift.deviceKey;
-    String deviceId = '1';
-    if (int.parse(deviceId) < 10) {
-      deviceId = '0$deviceId/';
-    }
-    String digits = '';
-    if (id < 10)
-      digits = '000$id';
-    else if (id < 100)
-      digits = '00$id';
-    else if (id < 1000)
-      digits = '0$id';
-    else
-      digits = '$id';
-    return code + deviceId + digits;
   }
 
   void uploadOrder(SalesMaster salesMaster, SalesDetails salesDetails) {}
