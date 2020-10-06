@@ -1,25 +1,28 @@
 import 'package:food_app/database/sql_structure.dart';
 
-class OrdersTable{
+class TablesTable{
 
-  static const String tableName = 'orders_table';
   static const String localId = 'local_id';
-  static const String persons = 'persons';
-  static const String bookingTime = 'booking_time';
-  static const String saleId = 'sale_id';
-  static const String saleNo = 'sale_no';
+  static const String serverId = 'id';
+  static const String name = 'name';
+  static const String sitCapacity = 'sit_capacity';
+  static const String position = 'position';
+  static const String description = 'description';
+  static const String userId = 'user_id';
   static const String outletId = 'outlet_id';
-  static const String tableId = 'table_id';
+  static const String companyId = 'company_id';
   static const String delStatus = 'del_status';
 
   static const List<String> columnsName = [
     localId,
-    persons,
-    bookingTime,
-    saleId,
-    saleNo,
+    serverId,
+    name,
+    sitCapacity,
+    position,
+    description,
+    userId,
     outletId,
-    tableId,
+    companyId,
     delStatus
   ];
 
@@ -31,7 +34,8 @@ class OrdersTable{
     SqlStructure.text,
     SqlStructure.text,
     SqlStructure.text,
+    SqlStructure.text,
+    SqlStructure.text,
     SqlStructure.text
   ];
-
 }

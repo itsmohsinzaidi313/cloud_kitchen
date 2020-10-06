@@ -1,8 +1,7 @@
 import 'package:food_app/database/sql_structure.dart';
 
-class OrdersTable{
+class OrderTable{
 
-  static const String tableName = 'orders_table';
   static const String localId = 'local_id';
   static const String persons = 'persons';
   static const String bookingTime = 'booking_time';
@@ -23,7 +22,7 @@ class OrdersTable{
     delStatus
   ];
 
-  static const List<String> columnsType = [
+  static const List<String> columnType = [
     SqlStructure.integer + SqlStructure.primaryKey,
     SqlStructure.text,
     SqlStructure.text,
@@ -33,5 +32,4 @@ class OrdersTable{
     SqlStructure.text,
     SqlStructure.text
   ];
-
 }

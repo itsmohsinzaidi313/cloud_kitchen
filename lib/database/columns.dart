@@ -1,10 +1,20 @@
 import 'package:food_app/database/table_object/category_table.dart';
 import 'package:food_app/database/table_object/company_table.dart';
+import 'package:food_app/database/table_object/customer_table.dart';
+import 'package:food_app/database/table_object/device_table.dart';
+import 'package:food_app/database/table_object/expense_categories_table.dart';
+import 'package:food_app/database/table_object/item_modifier_table.dart';
 import 'package:food_app/database/table_object/item_table.dart';
+import 'package:food_app/database/table_object/modifier_table.dart';
+import 'package:food_app/database/table_object/orders_table.dart';
+import 'package:food_app/database/table_object/outlet_table.dart';
+import 'package:food_app/database/table_object/payment_method_table.dart';
 import 'package:food_app/database/table_object/sales_detail_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
+import 'package:food_app/database/table_object/tables_table.dart';
 import 'package:food_app/database/table_object/user_table.dart';
+import 'package:food_app/database/table_object/vat_amount_table.dart';
 
 class Columns {
   static const List<List<String>> listOfAllColumns = [
@@ -15,16 +25,16 @@ class Columns {
     SalesMasterTable.columnsName, //4
     SalesDetailTable.columnsName, //5
     CompanyTable.columnsName, //6
-    customers, //7
-    expenseCategories, //8
-    itemModifier, //9
-    modifier, //10
-    outlet, //11
-    paymentMethods, //12
-    vatAmount, //13
-    tables, //14
-    devices, //15
-    ordersTables, //16
+    CustomerTable.columnsName, //7
+    ExpenseCategoryTable.columnsName, //8
+    ItemModifierTable.columnsName, //9
+    ModifierTable.columnsName, //10
+    OutletTable.columnsName, //11
+    PaymentMethodTable.columnsName, //12
+    VatAmountTable.columnsName, //13
+    TablesTable.columnsName, //14
+    DeviceTable.columnsName, //15
+    OrdersTable.columnsName, //16
   ];
 
   ///USER TABLE COLUMNS
