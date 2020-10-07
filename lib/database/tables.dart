@@ -1,6 +1,6 @@
 class Tables {
   //LIST OF TABLES MAME
-  static const List<String> listofAllTables = [
+  static const List<String> listOfAllTables = [
     users, //0
     shiftData, //1
     categories, //2

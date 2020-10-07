@@ -2,6 +2,8 @@ import 'package:food_app/database/sql_structure.dart';
 
 class SalesMasterTable{
 
+  static const String tableName = 'sales_master';
+
   static const String localId = 'local_id';
   static const String customerId = 'customer_id';
   static const String saleNo = 'sale_no';

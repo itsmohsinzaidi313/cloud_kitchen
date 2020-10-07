@@ -88,10 +88,10 @@ class ProjectDatabase {
   static List<Table> _listTables = [];
   static Future<List<Table>> getTables(Database db) async {
     if (_listTables.length == 0) {
-      for (int i = 0; i < Tables.listofAllTables.length; i++) {
+      for (int i = 0; i < Tables.listOfAllTables.length; i++) {
         _listTables.add(new Table(
             database: db,
-            tableName: Tables.listofAllTables[i],
+            tableName: Tables.listOfAllTables[i],
             listOfColumnsName: Columns.listOfAllColumns[i],
             listOfColumnsTypes: Types.listOfAllColumnTypes[i]));
       }

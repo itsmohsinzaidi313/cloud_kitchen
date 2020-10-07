@@ -2,6 +2,8 @@ import 'package:food_app/database/sql_structure.dart';
 
 class DeviceTable{
 
+  static const String tableName = 'devices'; //15
+
   static const String localId = 'local_id';
   static const String serverId = 'id';
   static const String outletId = 'outlet_id';

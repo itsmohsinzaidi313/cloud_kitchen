@@ -2,6 +2,8 @@ import 'package:food_app/database/sql_structure.dart';
 
 class UserTable{
 
+  static const String tableName = 'users';
+
   static const String localId = 'local_id';
   static const String serverId = 'id';
   static const String fullName = 'full_name';

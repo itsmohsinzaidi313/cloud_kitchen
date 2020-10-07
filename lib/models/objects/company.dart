@@ -1,7 +1,6 @@
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
-
 import '../../database/columns.dart';
 import '../../database/tables.dart';
 

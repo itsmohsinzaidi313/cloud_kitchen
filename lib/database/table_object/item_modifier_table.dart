@@ -2,6 +2,8 @@ import 'package:food_app/database/sql_structure.dart';
 
 class ItemModifierTable {
 
+  static const String tableName = 'item_modifiers'; //9
+
   static const String localId = 'local_id';
   static const String serverId = 'id';
   static const String modifierId = 'modifier_id';

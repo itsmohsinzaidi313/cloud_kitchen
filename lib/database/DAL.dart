@@ -31,40 +31,40 @@ class DAL {
             listTables.forEach((table) {
               table.getDataFromDatabase().then((listMap) {
                 listMap.forEach((map) {
-                  if (table.tableName == Tables.listofAllTables[0])
+                  if (table.tableName == Tables.listOfAllTables[0])
                     DataLists.instance.listUsers
                         .add(new User.fromJson(map));
-                  else if (table.tableName == Tables.listofAllTables[2])
+                  else if (table.tableName == Tables.listOfAllTables[2])
                     DataLists.instance.listCategories
                         .add(new Category.fromJson(map));
-                  else if (table.tableName == Tables.listofAllTables[3])
+                  else if (table.tableName == Tables.listOfAllTables[3])
                     DataLists.instance.listItem
                         .add(new Item.fromJson(map));
-                  else if (table.tableName == Tables.listofAllTables[7])
+                  else if (table.tableName == Tables.listOfAllTables[7])
                     DataLists.instance.listCompany
                         .add(new Company.fromJson(map));
-                  else if (table.tableName == Tables.listofAllTables[8])
+                  else if (table.tableName == Tables.listOfAllTables[8])
                     DataLists.instance.listCustomers
                         .add(new Customer.fromJson(map));
-                  else if (table.tableName == Tables.listofAllTables[9])
+                  else if (table.tableName == Tables.listOfAllTables[9])
                     DataLists.instance.listExpenseCategories
                         .add(new ExpenseCategory.fromJson(map));
-                  else if (table.tableName == Tables.listofAllTables[10])
+                  else if (table.tableName == Tables.listOfAllTables[10])
                     DataLists.instance.listItemModifiers
                         .add(new ItemModifier.fromJson(map));
-                  else if (table.tableName == Tables.listofAllTables[11])
+                  else if (table.tableName == Tables.listOfAllTables[11])
                     DataLists.instance.listModifiers
                         .add(new Modifier.fromJson(map));
-                  else if (table.tableName == Tables.listofAllTables[12])
+                  else if (table.tableName == Tables.listOfAllTables[12])
                     DataLists.instance.listOutlet
                         .add(new Outlet.fromJson(map));
-                  else if (table.tableName == Tables.listofAllTables[13])
+                  else if (table.tableName == Tables.listOfAllTables[13])
                     DataLists.instance.listPaymentMethods
                         .add(new PaymentMethod.fromJson(map));
-                  else if (table.tableName == Tables.listofAllTables[14])
+                  else if (table.tableName == Tables.listOfAllTables[14])
                     DataLists.instance.listTables
                         .add(new Table.fromJson(map));
-                  else if (table.tableName == Tables.listofAllTables[15])
+                  else if (table.tableName == Tables.listOfAllTables[15])
                     DataLists.instance.listVatAmount
                         .add(new VatAmount.fromJson(map));
                 });
