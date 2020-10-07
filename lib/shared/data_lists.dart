@@ -10,7 +10,7 @@ import 'package:food_app/models/objects/modifier.dart';
 import 'package:food_app/models/objects/outlet.dart';
 import 'package:food_app/models/objects/payment_method.dart';
 import 'package:food_app/models/objects/user.dart';
-import 'package:food_app/models/objects/vatamount.dart';
+import 'package:food_app/models/objects/vat_amount.dart';
 import 'package:food_app/models/objects/table.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:logger/logger.dart';

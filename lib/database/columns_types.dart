@@ -1,10 +1,20 @@
 import 'package:food_app/database/table_object/category_table.dart';
 import 'package:food_app/database/table_object/company_table.dart';
+import 'package:food_app/database/table_object/customer_table.dart';
+import 'package:food_app/database/table_object/device_table.dart';
+import 'package:food_app/database/table_object/expense_categories_table.dart';
+import 'package:food_app/database/table_object/item_modifier_table.dart';
 import 'package:food_app/database/table_object/item_table.dart';
+import 'package:food_app/database/table_object/modifier_table.dart';
+import 'package:food_app/database/table_object/orders_table.dart';
+import 'package:food_app/database/table_object/outlet_table.dart';
+import 'package:food_app/database/table_object/payment_method_table.dart';
 import 'package:food_app/database/table_object/sales_detail_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
+import 'package:food_app/database/table_object/tables_table.dart';
 import 'package:food_app/database/table_object/user_table.dart';
+import 'package:food_app/database/table_object/vat_amount_table.dart';
 
 class Types {
   ///LIST OF [COLUMN_TYPES] LIST
@@ -16,16 +26,16 @@ class Types {
     SalesMasterTable.columnsType, //4
     SalesDetailTable.columnsType, //5
     CompanyTable.columnsType, //6
-    customers, //7
-    expenseCategories, //8
-    itemModifier, //9
-    modifier, //10
-    outlet, //11
-    paymentMethods, //12
-    vatAmount, //13
-    tables, //14
-    devices, //15
-    ordersTable //16
+    CustomerTable.columnsType, //7
+    ExpenseCategoryTable.columnsType, //8
+    ItemModifierTable.columnsType, //9
+    ModifierTable.columnsType, //10
+    OutletTable.columnsType, //11
+    PaymentMethodTable.columnsType, //12
+    VatAmountTable.columnsType, //13
+    TablesTable.columnsType, //14
+    DeviceTable.columnsType, //15
+    OrdersTable.columnsType //16
   ];
 
   static const String TEXT = 'TEXT';

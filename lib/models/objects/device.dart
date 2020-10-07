@@ -4,6 +4,7 @@ import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Device {
+
   String id;
   String serverId;
   String outletId;
@@ -13,6 +14,7 @@ class Device {
   String isInstalled;
   String dateAdded;
   String dateModified;
+
   Device.fromJson(Map<String, dynamic> json)
       : serverId = json['id'],
         outletId = json['outlet_id'],
