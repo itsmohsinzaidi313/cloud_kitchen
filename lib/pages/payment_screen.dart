@@ -156,7 +156,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             if (!check[0] || !check[1]) {
                               // PaymentController.uploadOrder(model.map);
                               Config.database.update(SalesMasterTable.tableName,
-                                  {SalesMasterTable.orderStatus: '3'},
+                                  {SalesMasterTable.orderStatus: '3', SalesMasterTable.paidAmount: model.map[SalesMasterTable.dueAmount]},
                                   where: '${SalesMasterTable.localId} = ?',
                                   whereArgs: [
                                     model.map[SalesMasterTable.localId]

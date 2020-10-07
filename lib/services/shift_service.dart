@@ -20,13 +20,13 @@ class ShiftService extends ServiceCommon {
   @override
   Future<bool> perform() async {
     try {
+      log('Responding', name: 'Shift Service', time: DateTime.now());
       List<Map<String, dynamic>> shiftRows = await _db.query(
           ShiftTable.tableName,
           where: '${ShiftTable.isUpload} = ?',
           whereArgs: ['0'],
           orderBy: '${ShiftTable.localId} asc');
       for (int i = 0; i < shiftRows.length; i++) {
-
         Shift shift = new Shift.fromJson(shiftRows[i]);
         Map<String, dynamic> json = {
           'user_id': shift.userId,
@@ -40,7 +40,8 @@ class ShiftService extends ServiceCommon {
         };
         //OPENING SHIFT
         Response response = await post(Config.openRegisterApi, body: json)
-            .timeout(Duration(seconds: 5), onTimeout: () => null); // SEND TO SERVER
+            .timeout(Duration(seconds: 5),
+                onTimeout: () => null); // SEND TO SERVER
         log(response.body, name: 'Open Register Response');
         if (response != null) {
           Map<String, dynamic> decodedJson = jsonDecode(response.body);
@@ -65,7 +66,7 @@ class ShiftService extends ServiceCommon {
                     await post(Config.closeRegisterApi, body: json).timeout(
                         Duration(seconds: 5),
                         onTimeout: () => null); // SEND TO SERVER
-                        log(response2.body, name: 'Close Register Response');
+                log(response2.body, name: 'Close Register Response');
                 if (response2 != null) {
                   Map<String, dynamic> decodedJson2 =
                       jsonDecode(response2.body);
@@ -83,7 +84,8 @@ class ShiftService extends ServiceCommon {
       }
       return true;
     } catch (e) {
-      log('Error occured on Shift Service', name: 'Shift Service', error: e);
+      log('Error occured on Shift Service',
+          name: 'Shift Service', time: DateTime.now(), error: e);
       return true;
     }
   }

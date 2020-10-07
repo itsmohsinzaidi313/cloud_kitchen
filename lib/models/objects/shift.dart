@@ -66,7 +66,7 @@ class Shift {
 
   Map<String, dynamic> toMap(Shift shift) {
     return {
-      ShiftTable.localId : shift.remoteId,
+      // ShiftTable.localId : shift.remoteId,
       ShiftTable.shift : shift.shift,
       ShiftTable.openingBalance : shift.openingBalance,
       ShiftTable.closingBalance : shift.closingBalance,

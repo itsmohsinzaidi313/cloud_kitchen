@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
-import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/shift.dart';
@@ -38,7 +37,7 @@ class ShiftController {
 
   void launch(BuildContext context) async {
     List<Map<String, dynamic>> data = await Config.database.rawQuery(
-        "select count(${ShiftTable.localId}) as count from ${ShiftTable.tableName} where ${ShiftTable.registerStatus} = '1' order by id desc");
+        "select count(${ShiftTable.localId}) as count from ${ShiftTable.tableName} where ${ShiftTable.registerStatus} = '1' order by ${ShiftTable.localId} desc");
     int count = data[0]['count'];
     if (count > 0) {
       List<Map<String, dynamic>> map = await Config.database.query(

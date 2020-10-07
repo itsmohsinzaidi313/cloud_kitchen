@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
 import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/table_object/sales_master_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/generic_models/customer_order.dart';
 import 'package:food_app/models/objects/category.dart';
@@ -148,7 +149,10 @@ class _NewSaleState extends State<NewSale> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.appBarColor,
         child: Icon(Icons.done),
-        onPressed: _onFloatingButtonPressed,
+        onPressed: () => AppTheme.showAlertDialogOK(context,
+            title: 'Success',
+            message: 'Order saved.',
+            onOK: () => _onFloatingButtonPressed()),
       ),
     );
   }
@@ -316,6 +320,7 @@ class _NewSaleState extends State<NewSale> {
         // Columns.salesMaster[35] :  ,
         Columns.salesMaster[36]: Config.currentUser.companyId,
         Columns.salesMaster[37]: 0.toString(),
+        SalesMasterTable.isUpload: '0'
       };
 
       ///EDIT ORDER
@@ -365,7 +370,6 @@ class _NewSaleState extends State<NewSale> {
         insertIntoSalesDetails(_db, item, masterId);
       });
     }
-    // OrderController().launchAndReplacement(context);
     DashboardController(context).pushAndRemoveUntil(context);
   }
 

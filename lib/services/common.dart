@@ -7,8 +7,8 @@ abstract class ServiceCommon {
   String description;
   String serviceVersion;
   bool active = false;
-  bool cycleComplete;
-  bool frcCycle;
+  bool cycleComplete = true;
+  bool frcCycle = false;
   int duration = Config.serviceCycleDelay;
   Logger log = Config.log;
 

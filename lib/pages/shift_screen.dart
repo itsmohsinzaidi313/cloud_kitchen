@@ -331,7 +331,7 @@ class _ShiftScreen extends State<ShiftScreen> {
                                 message:
                                     'Shift# ${Config.currentShift.registerNo} opened successfully.',
                                 onOK: () => DashboardController(context)
-                                    .launchAndReplacement());
+                                    .pushAndRemoveUntil(context));
                           else
                             AppTheme.showAlertDialogOK(context,
                                 title: 'Error',

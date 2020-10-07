@@ -182,12 +182,12 @@ class SalesMaster {
     Map<String, dynamic> map = new Map();
     for (int i = 0; i < SalesMasterTable.columnsName.length; i++) {
       if (i == 0) {
-        map['remote_id'] = getList()[i];
+        map['remote_id'] = getList()[i] == null ? '' : getList()[i];
       } else if(i == 35){
 
       }
       else {
-        map[SalesMasterTable.columnsName[i]] = getList()[i];
+        map[SalesMasterTable.columnsName[i]] = getList()[i] == null ? '' : getList()[i];
       }
     }
     return map;

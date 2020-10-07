@@ -44,15 +44,14 @@ class DashboardController {
   void launch() => Navigator.of(model.context)
       .push(new MaterialPageRoute(builder: (context) => new Dashboard(model)));
 
-  void launchAndReplacement() {
+  void launchAndReplacement() => Navigator.of(model.context).pushReplacement(
+      new MaterialPageRoute(builder: (context) => new Dashboard(model)));
+
+  void pushAndRemoveUntil(BuildContext context) {
     OrderService.orderService.start();
     ShiftService.shiftService.start();
-    Navigator.of(model.context).pushReplacement(
-        new MaterialPageRoute(builder: (context) => new Dashboard(model)));
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => Dashboard(model)),
+        (route) => false);
   }
-
-  void pushAndRemoveUntil(BuildContext context) =>
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => Dashboard(model)),
-          (route) => false);
 }
