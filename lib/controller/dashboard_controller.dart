@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:food_app/models/generic_models/dashboard_item.dart';
 import 'package:food_app/models/view_models/dashboard_model.dart';
 import 'package:food_app/pages/dashboard_screen.dart';
+import 'package:food_app/services/order_service.dart';
+import 'package:food_app/services/shift_service.dart';
 
 class DashboardController {
   DashBoardModel model;
@@ -11,9 +13,13 @@ class DashboardController {
     model.context = context;
     model.listDashboardButtons = [
       DashboardItem(
-          img: 'assets/sales.png', name: 'New Orders', subtitle: 'Your new sales'),
+          img: 'assets/sales.png',
+          name: 'New Orders',
+          subtitle: 'Your new sales'),
       DashboardItem(
-          img: 'assets/order.png', name: 'Pending Orders', subtitle: 'Your pending orders'),
+          img: 'assets/order.png',
+          name: 'Pending Orders',
+          subtitle: 'Your pending orders'),
       DashboardItem(
           img: 'assets/report.png',
           name: 'Reports',
@@ -35,14 +41,18 @@ class DashboardController {
     ];
   }
 
-  void launch() => Navigator.of(model.context).push(
-      new MaterialPageRoute(builder: (context) => new Dashboard(model)));
+  void launch() => Navigator.of(model.context)
+      .push(new MaterialPageRoute(builder: (context) => new Dashboard(model)));
 
-  void launchAndReplacement() => Navigator.of(model.context).pushReplacement(
-      new MaterialPageRoute(builder: (context) => new Dashboard(model)));
+  void launchAndReplacement() {
+    OrderService.orderService.start();
+    ShiftService.shiftService.start();
+    Navigator.of(model.context).pushReplacement(
+        new MaterialPageRoute(builder: (context) => new Dashboard(model)));
+  }
 
-  void pushAndRemoveUntil(BuildContext context) =>  Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => Dashboard(model)),
+  void pushAndRemoveUntil(BuildContext context) =>
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Dashboard(model)),
           (route) => false);
-
 }

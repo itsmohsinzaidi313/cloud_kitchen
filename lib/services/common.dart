@@ -7,7 +7,7 @@ abstract class ServiceCommon {
   String description;
   String serviceVersion;
   bool active = false;
-  bool cycleComplete = true;
+  bool cycleComplete;
   bool frcCycle;
   int duration = Config.serviceCycleDelay;
   Logger log = Config.log;
@@ -21,7 +21,7 @@ abstract class ServiceCommon {
   void start() => active = true;
 
   void stop() => active = false;
-  
+
   initiate() => _cycle();
 
   forceCycle() => frcCycle = true;
@@ -36,6 +36,7 @@ abstract class ServiceCommon {
   _operation() async {
     if (frcCycle) cycleComplete = true;
     if (active && cycleComplete) {
+      cycleComplete = false;
       cycleComplete = await perform();
     }
   }

@@ -1,4 +1,5 @@
 import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/lib.dart';
@@ -21,6 +22,7 @@ class Shift {
   String registerNo;
   String deviceKey;
   String remoteId;
+  String isUpload;
 
   Shift(
       {this.id,
@@ -38,7 +40,8 @@ class Shift {
       this.companyId,
       this.registerNo,
       this.deviceKey,
-      this.remoteId});
+      this.remoteId,
+      this.isUpload});
 
   Shift.fromJson(Map<String, dynamic> map)
       : remoteId = map['local_id'].toString(),
@@ -56,7 +59,8 @@ class Shift {
         companyId = map['company_id'],
         registerNo = map['register_no'],
         deviceKey = map['device_key'],
-        id = map['id'];
+        id = map['id'],
+        isUpload = map[ShiftTable.isUpload];
 
   Map<String, dynamic> toMap(Shift shift) {
     return {
@@ -76,6 +80,7 @@ class Shift {
       'register_no': shift.registerNo,
       'device_key': shift.deviceKey,
       'id': shift.id,
+      ShiftTable.isUpload: shift.isUpload
     };
   }
 
@@ -96,7 +101,8 @@ class Shift {
       this.companyId,
       this.registerNo,
       this.deviceKey,
-      this.remoteId
+      this.remoteId,
+      this.isUpload
     ];
   }
 

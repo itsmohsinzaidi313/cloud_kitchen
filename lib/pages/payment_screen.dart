@@ -2,13 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
 import 'package:food_app/controller/payment_controller.dart';
+import 'package:food_app/database/table_object/sales_master_table.dart';
 import 'package:food_app/models/objects/payment_method.dart';
 import 'package:food_app/models/view_models/payment_view_model.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 
 class PaymentScreen extends StatefulWidget {
-  PaymentViewModel model;
+  final PaymentViewModel model;
 
   PaymentScreen(this.model);
 
@@ -153,8 +154,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           message: 'Are you sure?',
                           onYes: () {
                             if (!check[0] || !check[1]) {
-                              PaymentController.uploadOrder(model.map);
-                              DashboardController(context).launchAndReplacement();
+                              // PaymentController.uploadOrder(model.map);
+                              Config.database.update(SalesMasterTable.tableName,
+                                  {SalesMasterTable.orderStatus: '3'},
+                                  where: '${SalesMasterTable.localId} = ?',
+                                  whereArgs: [
+                                    model.map[SalesMasterTable.localId]
+                                  ]);
+                              DashboardController(context)
+                                  .launchAndReplacement();
                             }
                           },
                           onNo: () => Navigator.pop(context),
