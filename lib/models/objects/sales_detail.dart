@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/table_object/sales_detail_table.dart';
+import 'package:food_app/database/table_object/sales_master_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/item.dart';
 import 'package:food_app/models/objects/sales_master.dart';
@@ -59,29 +61,29 @@ class SalesDetails {
       this.delStatus});
 
   SalesDetails.fromJson(Map<String, dynamic> json)
-      : id = json['id'].toString(),
-        foodMenuId = json['food_menu_id'],
-        menuName = json['menu_name'],
-        qty = json['qty'].toString(),
-        menuPriceWithoutDiscount = json['menu_price_without_discount'],
-        menuPriceWithDiscount = json['menu_price_with_discount'],
-        menuUnitPrice = json['menu_unit_price'],
-        menuVatPercentage = json['menu_vat_percentage'],
-        menuTaxes = json['menu_taxes'],
-        menuDiscountValue = json['menu_discount_value'],
-        discountType = json['discount_type'],
-        menuNote = json['menu_note'],
-        discountAmount = json['discount_amount'],
-        itemType = json['item_type'],
-        cookingStatus = json['cooking_status'],
-        cookingStartTime = json['cooking_start_time'],
-        cookingDoneTime = json['cooking_done_time'],
-        previousId = json['previous_id'],
-        salesMasterId = json['sales_id'].toString(),
-        orderStatus = json['order_status'],
-        userId = json['user_id'],
-        outletId = json['outlet_id'],
-        delStatus = json['del_status'];
+      : id = json[SalesDetailTable.id].toString(),
+        foodMenuId = json[SalesDetailTable.foodMenuId],
+        menuName = json[SalesDetailTable.menuName],
+        qty = json[SalesDetailTable.qty].toString(),
+        menuPriceWithoutDiscount = json[SalesDetailTable.menuPriceWithoutDiscount],
+        menuPriceWithDiscount = json[SalesDetailTable.menuPriceWithDiscount],
+        menuUnitPrice = json[SalesDetailTable.menuUnitPrice],
+        menuVatPercentage = json[SalesDetailTable.menuVatPercentage],
+        menuTaxes = json[SalesDetailTable.menuTaxes],
+        menuDiscountValue = json[SalesDetailTable.menuDiscountValue],
+        discountType = json[SalesDetailTable.discountType],
+        menuNote = json[SalesDetailTable.menuNote],
+        discountAmount = json[SalesDetailTable.discountAmount],
+        itemType = json[SalesDetailTable.itemType],
+        cookingStatus = json[SalesDetailTable.cookingStatus],
+        cookingStartTime = json[SalesDetailTable.cookingStartTime],
+        cookingDoneTime = json[SalesDetailTable.cookingDoneTime],
+        previousId = json[SalesDetailTable.previousId],
+        salesMasterId = json[SalesDetailTable.salesMasterId].toString(),
+        orderStatus = json[SalesDetailTable.orderStatus],
+        userId = json[SalesDetailTable.userId],
+        outletId = json[SalesDetailTable.outletId],
+        delStatus = json[SalesDetailTable.delStatus];
 
   // @override
   // String toString() {
@@ -119,34 +121,34 @@ class SalesDetails {
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
     for (int i = 0; i < getList().length; i++) {
-      map[Columns.salesDetails[i + 1]] = getList()[i];
+      map[SalesDetailTable.columnsName[i + 1]] = getList()[i];
     }
     return map;
   }
 
   Future<bool> insertIntoDatabase(Database db) async =>
-      await Lib.insertIntoDatabase(db, Tables.salesDetails, getValues());
+      await Lib.insertIntoDatabase(db, SalesDetailTable.tableName, getValues());
 
   Future<int> insertSpecificIntoDb(
       Database db, Map<String, dynamic> map) async {
-    int id = await db.insert(Tables.salesDetails, map);
+    int id = await db.insert(SalesDetailTable.tableName, map);
     return id;
   }
 
   Future<List<Item>> getOrderWhereMasterId(
       Database db, SalesMaster salesMaster) async {
-    List<Map<String, dynamic>> res = await db.query(Tables.salesDetails,
-        where: '${Columns.salesDetails[0]} = ${salesMaster.serverId}');
+    List<Map<String, dynamic>> res = await db.query(SalesDetailTable.tableName,
+        where: '${SalesDetailTable.id} = ${salesMaster.serverId}');
 
     List<Item> listItem = DataLists.instance.listItem;
     List<Item> updateList = [];
 
     for (int i = 0; i < listItem.length; i++) {
       for (int j = 0; j < res.length; j++) {
-        if (listItem[i].code == res[j]['food_menu_id']) {
+        if (listItem[i].code == res[j][SalesDetailTable.foodMenuId]) {
           log('${listItem[i].code}\n');
           Item item = Item.fromItem(listItem[i]);
-          item.quantity = res[j]['qty'];
+          item.quantity = res[j][SalesDetailTable.qty];
           updateList.add(item);
           break;
         }
@@ -157,7 +159,7 @@ class SalesDetails {
   }
 
   Future<List<Map<String, dynamic>>> queryAllRows(Database db) async {
-    var res = await db.query(Tables.salesDetails);
+    var res = await db.query(SalesDetailTable.tableName);
     return res;
   }
 }
