@@ -73,6 +73,13 @@ class Config {
     return currentDateTime;
   }
 
+  static String getCurrentTime() {
+    DateTime dateTime = DateTime.now();
+    DateFormat formatDateTime = DateFormat("HH:mm:ss");
+    String currentDateTime = formatDateTime.format(dateTime);
+    return currentDateTime;
+  }
+
   static String getCurrentDate() {
     DateTime dateTime = DateTime.now();
     DateFormat formatDateTime = DateFormat("yyyy-MM-dd");

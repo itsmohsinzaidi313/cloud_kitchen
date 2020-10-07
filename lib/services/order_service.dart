@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:food_app/database/table_object/sales_detail_table.dart';
@@ -19,7 +20,7 @@ class OrderService extends ServiceCommon {
   @override
   Future<bool> perform() async {
     try {
-      log('Responding', name: 'Order Service', time: DateTime.now());
+      log('Responding', name: 'Order Service : ${Config.getCurrentTime()}');
       List<Map<String, dynamic>> masterRows = await _db.query(
           SalesMasterTable.tableName,
           where:
@@ -55,7 +56,7 @@ class OrderService extends ServiceCommon {
           if (status) {
             List<dynamic> y = result['orders_synced'];
             String id = y[0]['id'].toString();
-            _db.update(SalesMasterTable.tableName,
+            await _db.update(SalesMasterTable.tableName,
                 {SalesMasterTable.isUpload: '1', SalesMasterTable.serverId: id},
                 where: '${SalesMasterTable.localId} = ?',
                 whereArgs: [salesMaster.remoteId]);

@@ -20,7 +20,7 @@ class ShiftService extends ServiceCommon {
   @override
   Future<bool> perform() async {
     try {
-      log('Responding', name: 'Shift Service', time: DateTime.now());
+      log('Responding', name: 'Shift Service : ${Config.getCurrentTime()}');
       List<Map<String, dynamic>> shiftRows = await _db.query(
           ShiftTable.tableName,
           where: '${ShiftTable.isUpload} = ?',
@@ -72,7 +72,7 @@ class ShiftService extends ServiceCommon {
                       jsonDecode(response2.body);
                   bool status2 = decodedJson2['status'];
                   if (status2) {
-                    _db.update(Tables.shiftData, {ShiftTable.isUpload: 2},
+                    await _db.update(Tables.shiftData, {ShiftTable.isUpload: '2'},
                         where: '${ShiftTable.localId} = ?',
                         whereArgs: [shift.remoteId]);
                   }
