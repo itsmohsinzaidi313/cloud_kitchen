@@ -1,23 +1,41 @@
+import 'package:food_app/database/table_object/category_table.dart';
+import 'package:food_app/database/table_object/company_table.dart';
+import 'package:food_app/database/table_object/customer_table.dart';
+import 'package:food_app/database/table_object/device_table.dart';
+import 'package:food_app/database/table_object/expense_categories_table.dart';
+import 'package:food_app/database/table_object/item_modifier_table.dart';
+import 'package:food_app/database/table_object/item_table.dart';
+import 'package:food_app/database/table_object/modifier_table.dart';
+import 'package:food_app/database/table_object/orders_table.dart';
+import 'package:food_app/database/table_object/outlet_table.dart';
+import 'package:food_app/database/table_object/payment_method_table.dart';
+import 'package:food_app/database/table_object/sales_detail_table.dart';
+import 'package:food_app/database/table_object/sales_master_table.dart';
+import 'package:food_app/database/table_object/shift_table.dart';
+import 'package:food_app/database/table_object/tables_table.dart';
+import 'package:food_app/database/table_object/user_table.dart';
+import 'package:food_app/database/table_object/vat_amount_table.dart';
+
 class Tables {
   //LIST OF TABLES MAME
   static const List<String> listOfAllTables = [
-    users, //0
-    shiftData, //1
-    categories, //2
-    item, //3
-    salesMaster, //4
-    salesDetails, //5
-    company, //6
-    customers, //7
-    expenseCategories, //8
-    itemModifiers, //9
-    modifiers, //10
-    outlet, //11
-    paymentMethods, //12
-    vatAmount, //13
-    tables, //14
-    devices, //15
-    orderTable //16
+    UserTable.tableName, //0
+    ShiftTable.tableName, //1
+    CategoryTable.tableName, //2
+    ItemTable.tableName, //3
+    SalesMasterTable.tableName, //4
+    SalesDetailTable.tableName, //5
+    CompanyTable.tableName, //6
+    CustomerTable.tableName, //7
+    ExpenseCategoryTable.tableName, //8
+    ItemModifierTable.tableName, //9
+    ModifierTable.tableName, //10
+    OutletTable.tableName, //11
+    PaymentMethodTable.tableName, //12
+    VatAmountTable.tableName, //13
+    TablesTable.tableName, //14
+    DeviceTable.tableName, //15
+    OrdersTable.tableName //16
   ];
 
   static const String users = 'users'; //0

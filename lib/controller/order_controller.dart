@@ -204,7 +204,7 @@ class OrderController {
 
   static Future onOrderCompleted(SalesMaster itm) async {
     await Config.database.execute(
-        'update ${Columns.salesMaster[37]} set ${Columns.salesMaster[5]} = ${Columns.salesMaster[6]} where id = ${itm.id}');
+        'update ${Columns.salesMaster[37]} set ${Columns.salesMaster[5]} = ${Columns.salesMaster[6]} where id = ${itm.serverId}');
   }
 
   static void onOrderCancelled(String orderId) async {

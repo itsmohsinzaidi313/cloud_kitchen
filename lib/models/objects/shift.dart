@@ -21,7 +21,7 @@ class Shift {
   String companyId;
   String registerNo;
   String deviceKey;
-  String remoteId;
+  String remoteId; //local id
   String isUpload;
 
   Shift(
@@ -41,46 +41,48 @@ class Shift {
       this.registerNo,
       this.deviceKey,
       this.remoteId,
-      this.isUpload});
+      this.isUpload
+      });
 
   Shift.fromJson(Map<String, dynamic> map)
-      : remoteId = map['local_id'].toString(),
-        shift = map['shift'],
-        openingBalance = map['opening_balance'],
-        closingBalance = map['closing_balance'],
-        openingBalanceDateTime = map['opening_balance_date_time'],
-        closingBalanceDateTime = map['closing_balance_date_time'],
-        salePaidAmount = map['sale_paid_amount'],
-        customerDueReceive = map['customer_due_receive'],
-        paymentMethodsSale = map['payment_methods_sale'],
-        registerStatus = map['register_status'],
-        userId = map['user_id'],
-        outletId = map['outlet_id'],
-        companyId = map['company_id'],
-        registerNo = map['register_no'],
-        deviceKey = map['device_key'],
-        id = map['id'],
-        isUpload = map[ShiftTable.isUpload];
+      : remoteId = map[ShiftTable.localId].toString(),
+        shift = map[ShiftTable.shift],
+        openingBalance = map[ShiftTable.openingBalance],
+        closingBalance = map[ShiftTable.closingBalance],
+        openingBalanceDateTime = map[ShiftTable.openingBalanceDateTime],
+        closingBalanceDateTime = map[ShiftTable.closingBalanceDateTime],
+        salePaidAmount = map[ShiftTable.salePaidAmount],
+        customerDueReceive = map[ShiftTable.customerDueReceive],
+        paymentMethodsSale = map[ShiftTable.paymentMethodsSale],
+        registerStatus = map[ShiftTable.registerStatus],
+        userId = map[ShiftTable.userId],
+        outletId = map[ShiftTable.outletId],
+        companyId = map[ShiftTable.companyId],
+        registerNo = map[ShiftTable.registerNo],
+        deviceKey = map[ShiftTable.deviceKey],
+        id = map[ShiftTable.serverId],
+        isUpload = map[ShiftTable.isUpload]
+  ;
 
   Map<String, dynamic> toMap(Shift shift) {
     return {
-      'local_id': shift.remoteId,
-      'shift': shift.shift,
-      'opening_balance': shift.openingBalance,
-      'closing_balance': shift.closingBalance,
-      'opening_balance_date_time': shift.openingBalanceDateTime,
-      'closing_balance_date_time': shift.closingBalanceDateTime,
-      'sale_paid_amount': shift.salePaidAmount,
-      'customer_due_receive': shift.customerDueReceive,
-      'payment_methods_sale': shift.paymentMethodsSale,
-      'register_status': shift.registerStatus,
-      'user_id': shift.userId,
-      'outlet_id': shift.outletId,
-      'company_id': shift.companyId,
-      'register_no': shift.registerNo,
-      'device_key': shift.deviceKey,
-      'id': shift.id,
-      ShiftTable.isUpload: shift.isUpload
+      ShiftTable.localId : shift.remoteId,
+      ShiftTable.shift : shift.shift,
+      ShiftTable.openingBalance : shift.openingBalance,
+      ShiftTable.closingBalance : shift.closingBalance,
+      ShiftTable.openingBalanceDateTime : shift.openingBalanceDateTime,
+      ShiftTable.closingBalanceDateTime : shift.closingBalanceDateTime,
+      ShiftTable.salePaidAmount : shift.salePaidAmount,
+      ShiftTable.customerDueReceive : shift.customerDueReceive,
+      ShiftTable.paymentMethodsSale : shift.paymentMethodsSale,
+      ShiftTable.registerStatus : shift.registerStatus,
+      ShiftTable.userId : shift.userId,
+      ShiftTable.outletId : shift.outletId,
+      ShiftTable.companyId : shift.companyId,
+      ShiftTable.registerNo : shift.registerNo,
+      ShiftTable.deviceKey : shift.deviceKey,
+      ShiftTable.serverId : shift.id,
+      ShiftTable.isUpload : shift.isUpload
     };
   }
 
@@ -109,18 +111,18 @@ class Shift {
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
     for (int i = 0; i < getList().length; i++) {
-      map[Columns.shiftData[i + 1]] = getList()[i];
+      map[ShiftTable.columnsName[i + 1]] = getList()[i];
     }
     return map;
   }
 
   Future<bool> insertIntoDatabase(Database db) async =>
-      await Lib.insertIntoDatabase(db, Tables.shiftData, getValues());
+      await Lib.insertIntoDatabase(db, ShiftTable.tableName, getValues());
 
   Future<int> getNextShiftRemoteId(Database db) async {
     try {
       List<Map<String, dynamic>> rows = await db.rawQuery(
-          "select ifnull(max(local_id),0) as remote_id from ${Tables.shiftData}");
+          "select ifnull(max(local_id),0) as remote_id from ${ShiftTable.tableName}");
       int remoteId = rows[0]['remote_id'];
       return remoteId + 1;
     } catch (e) {
@@ -131,7 +133,7 @@ class Shift {
   Future<int> insertSpecificIntoDatabase(Database db, Shift shift) async {
     try {
       Map<String, dynamic> row = Shift().toMap(shift);
-      int id = await db.insert(Tables.shiftData, row);
+      int id = await db.insert(ShiftTable.tableName, row);
       return id;
     } catch (e) {
       Config.log.e('Error on Shift insertSpecificIntoDatabase: $e');

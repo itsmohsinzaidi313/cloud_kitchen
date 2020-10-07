@@ -248,12 +248,12 @@ class _ShiftScreen extends State<ShiftScreen> {
                             Config.database.update(
                                 Tables.shiftData,
                                 {
-                                  Columns.shiftData[3]: closingAmount.text,
-                                  Columns.shiftData[5]:
+                                  ShiftTable.closingBalance: closingAmount.text,
+                                  ShiftTable.closingBalanceDateTime:
                                       Config.getCurrentDateTimeDBFormat(),
-                                  Columns.shiftData[9]: '2'
+                                  ShiftTable.registerStatus: '2'
                                 },
-                                where: '${Columns.shiftData[0]} = ?',
+                                where: '${ShiftTable.localId} = ?',
                                 whereArgs: [Config.currentShift.remoteId]);
                             Lib.closeRegister(Config.currentShift);
                             LoginController().pushAndRemoveUntil(context);
@@ -310,7 +310,11 @@ class _ShiftScreen extends State<ShiftScreen> {
                             Config.getCurrentDateTimeDBFormat(),
                         outletId: Config.currentUser.outletId,
                         companyId: Config.currentUser.companyId,
-                        registerStatus: '1');
+                        registerStatus: '1',
+                        closingBalance: '0',
+                        closingBalanceDateTime: '0',
+                        isUpload: '0'
+                    );
 
                     Shift().getNextShiftRemoteId(Config.database).then((value) {
                       if (value > 0) {
@@ -335,16 +339,6 @@ class _ShiftScreen extends State<ShiftScreen> {
                                     'Your request is not accepted by Server. Please Try Again!',
                                 onOK: () => Navigator.of(context).pop());
                         });
-                        // Lib.openRegister(Config.currentShift).then((value) {
-                        //   if (value)
-                        //     DashboardController(context).launchAndReplacement();
-                        //   else
-                        //     AppTheme.showAlertDialogOK(context,
-                        //         title: 'Error',
-                        //         message:
-                        //             'Your request is not accepted by Server. Please Try Again!',
-                        //         onOK: () => Navigator.of(context).pop());
-                        // });
                       }
                     });
                   } else {
@@ -372,13 +366,35 @@ class _ShiftScreen extends State<ShiftScreen> {
               if (!checkField) {
                 double amount = double.parse(closingAmount.text);
                 if (amount > 0) {
+
+                  ///UPDATING THE SHIFT OBJECT IN CONFIG
                   Config.currentShift.closingBalance = closingAmount.text;
                   Config.currentShift.closingBalanceDateTime =
                       Config.getCurrentDateTimeDBFormat();
-                  Config.currentShift.closingBalance = closingAmount.text;
-                  Lib.closeRegister(Config.currentShift).then((value) {
-                    if (value) LoginController().pushAndRemoveUntil(context);
+                  Config.currentShift.registerStatus = '2';
+
+                  ///UPDATING SHIFT IN THE DATABASE
+                  Config.database.update(ShiftTable.tableName, {
+                    ShiftTable.closingBalance : Config.currentShift.closingBalance,
+                    ShiftTable.closingBalanceDateTime : Config.currentShift.closingBalanceDateTime,
+                    ShiftTable.registerStatus : Config.currentShift.registerStatus
+                  }, where: '${ShiftTable.localId} = ${Config.currentShift.remoteId}').then((value) {
+                    if (value > 0)
+                      AppTheme.showAlertDialogOK(context,
+                          title: 'Success',
+                          message:
+                          'Shift# ${Config.currentShift.registerNo} closed successfully.',
+                          onOK: () => LoginController().pushAndRemoveUntil(context));
+                    else
+                      AppTheme.showAlertDialogOK(context,
+                          title: 'Error',
+                          message:
+                          'Something went wrong. Please Try Again!',
+                          onOK: () => Navigator.of(context).pop());
                   });
+
+                  // LoginController().pushAndRemoveUntil(context);
+
                 } else {
                   checkField = true;
                   errorMessage = 'Invalid Amount.';
@@ -393,6 +409,7 @@ class _ShiftScreen extends State<ShiftScreen> {
         );
         break;
       default:
+        return Container();
         break;
     }
   }

@@ -268,12 +268,12 @@ class _NewSaleState extends State<NewSale> {
       int masterId;
       if (model.salesMaster == null) {
         model.salesMaster = new SalesMaster();
-        model.salesMaster.id = "0";
+        model.salesMaster.serverId = "0";
       }
-      if (model.salesMaster.id == null) model.salesMaster.id = '0';
+      if (model.salesMaster.serverId == null) model.salesMaster.serverId = '0';
       List<Map<String, dynamic>> count = await _db.rawQuery(
           'SELECT IFNULL(COUNT(id),0) AS count FROM ${Tables.salesDetails} WHERE ${Columns.salesDetails[0]} = ?',
-          [model.salesMaster.id]);
+          [model.salesMaster.serverId]);
 
       CustomerOrder customerOrder = this.model.order;
       //MASTER DATA
@@ -323,12 +323,12 @@ class _NewSaleState extends State<NewSale> {
         _salesMaster = this.model.salesMaster;
         _db.delete(Tables.salesDetails,
             where: '${Columns.salesDetails[0]} = ?',
-            whereArgs: [_salesMaster.id]);
-        masterId = int.parse(_salesMaster.id);
+            whereArgs: [_salesMaster.serverId]);
+        masterId = int.parse(_salesMaster.serverId);
 
         _db.update(Tables.salesMaster, master,
             where: '${Columns.salesMaster[0]} = ?',
-            whereArgs: [_salesMaster.id]);
+            whereArgs: [_salesMaster.serverId]);
       } //IF
       else {
         ///NEW ORDER INSERTION

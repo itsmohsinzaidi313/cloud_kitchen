@@ -1,10 +1,9 @@
-import 'package:food_app/database/columns.dart';
-import 'package:food_app/database/tables.dart';
+import 'package:food_app/database/table_object/sales_master_table.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SalesMaster {
-  String id;
+  String serverId;
   String customerId;
   String saleNo;
   String totalItems;
@@ -42,9 +41,10 @@ class SalesMaster {
   String remoteId;
   String companyId;
   String isDelete;
+  String isUpdate;
 
   SalesMaster(
-      {this.id,
+      {this.serverId,
       this.customerId,
       this.saleNo,
       this.totalItems,
@@ -81,56 +81,54 @@ class SalesMaster {
       this.deviceKey,
       this.remoteId,
       this.companyId,
-      this.isDelete});
+      this.isDelete,
+        this.isUpdate
+      });
 
   SalesMaster.fromJson(Map<String, dynamic> json)
-      : id = json['local_id'].toString(),
-        customerId = json['customer_id'],
-        saleNo = json['sale_no'],
-        totalItems = json['total_items'],
-        subTotal = json['sub_total'],
-        paidAmount = json['paid_amount'],
-        dueAmount = json['due_amount'],
-        disc = json['disc'],
-        discActual = json['disc_actual'],
-        vat = json['vat'],
-        totalPayable = json['total_payable'],
-        paymentMethodId = json['payment_method_id'],
-        closeTime = json['close_time'],
-        tableId = json['table_id'],
-        totalItemDiscountAmount = json['total_item_discount_amount'],
-        subTotalWithDiscount = json['sub_total_with_discount'],
-        subTotalDiscountAmount = json['sub_total_discount_amount'],
-        totalDiscountAmount = json['total_discount_amount'],
-        deliveryCharge = json['delivery_charge'],
-        subTotalDiscountValue = json['sub_total_discount_value'],
-        subTotalDiscountType = json['sub_total_discount_type'],
-        saleDate = json['sale_date'],
-        dateTime = json['date_time'],
-        orderTime = json['order_time'],
-        cookingStartTime = json['cooking_start_time'],
-        cookingDoneTime = json['cooking_done_time'],
-        modified = json['modified'],
-        userId = json['user_id'],
-        waiterId = json['waiter_id'],
-        outletId = json['outlet_id'],
-        orderStatus = json['order_status'],
-        orderType = json['order_type'],
-        delStatus = json['del_status'],
-        saleVatObjects = json['sale_vat_objects'],
-        deviceKey = json['device_key'],
-        remoteId = json['id'],
-        companyId = json['company_id'],
-        isDelete = json['is_delete'];
-
-  @override
-  String toString() {
-    return 'SalesMaster{id: $id, customerId: $customerId, saleNo: $saleNo, totalItems: $totalItems, subTotal: $subTotal, paidAmount: $paidAmount, dueAmount: $dueAmount, disc: $disc, discActual: $discActual, vat: $vat, totalPayable: $totalPayable, paymentMethodId: $paymentMethodId, closeTime: $closeTime, tableId: $tableId, totalItemDiscountAmount: $totalItemDiscountAmount, subTotalWithDiscount: $subTotalWithDiscount, subTotalDiscountAmount: $subTotalDiscountAmount, totalDiscountAmount: $totalDiscountAmount, deliveryCharge: $deliveryCharge, subTotalDiscountValue: $subTotalDiscountValue, subTotalDiscountType: $subTotalDiscountType, saleDate: $saleDate, dateTime: $dateTime, orderTime: $orderTime, cookingStartTime: $cookingStartTime, cookingDoneTime: $cookingDoneTime, modified: $modified, userId: $userId, waiterId: $waiterId, outletId: $outletId, orderStatus: $orderStatus, orderType: $orderType, delStatus: $delStatus, saleVatObjects: $saleVatObjects, deviceKey: $deviceKey, remoteId: $remoteId, companyId: $companyId}';
-  }
+      : remoteId = json[SalesMasterTable.localId].toString(),
+        customerId = json[SalesMasterTable.customerId],
+        saleNo = json[SalesMasterTable.saleNo],
+        totalItems = json[SalesMasterTable.totalItems],
+        subTotal = json[SalesMasterTable.subTotal],
+        paidAmount = json[SalesMasterTable.paidAmount],
+        dueAmount = json[SalesMasterTable.dueAmount],
+        disc = json[SalesMasterTable.disc],
+        discActual = json[SalesMasterTable.discActual],
+        vat = json[SalesMasterTable.vat],
+        totalPayable = json[SalesMasterTable.totalPayable],
+        paymentMethodId = json[SalesMasterTable.paymentMethodId],
+        closeTime = json[SalesMasterTable.closeTime],
+        tableId = json[SalesMasterTable.tableId],
+        totalItemDiscountAmount = json[SalesMasterTable.totalItemDiscountAmount],
+        subTotalWithDiscount = json[SalesMasterTable.subTotalWithDiscount],
+        subTotalDiscountAmount = json[SalesMasterTable.subTotalDiscountAmount],
+        totalDiscountAmount = json[SalesMasterTable.totalDiscountAmount],
+        deliveryCharge = json[SalesMasterTable.deliveryCharge],
+        subTotalDiscountValue = json[SalesMasterTable.subTotalDiscountValue],
+        subTotalDiscountType = json[SalesMasterTable.subTotalDiscountType],
+        saleDate = json[SalesMasterTable.saleDate],
+        dateTime = json[SalesMasterTable.dateTime],
+        orderTime = json[SalesMasterTable.orderTime],
+        cookingStartTime = json[SalesMasterTable.cookingStartTime],
+        cookingDoneTime = json[SalesMasterTable.cookingDoneTime],
+        modified = json[SalesMasterTable.modified],
+        userId = json[SalesMasterTable.userId],
+        waiterId = json[SalesMasterTable.waiterId],
+        outletId = json[SalesMasterTable.outletId],
+        orderStatus = json[SalesMasterTable.orderStatus],
+        orderType = json[SalesMasterTable.orderType],
+        delStatus = json[SalesMasterTable.delStatus],
+        saleVatObjects = json[SalesMasterTable.saleVatObjects],
+        deviceKey = json[SalesMasterTable.deviceKey],
+        serverId = json[SalesMasterTable.serverId],
+        companyId = json[SalesMasterTable.companyId],
+        isDelete = json[SalesMasterTable.isDelete],
+        isUpdate = json[SalesMasterTable.isUpload];
 
   List<String> getList() {
     return [
-      this.id,
+      this.serverId,
       this.customerId,
       this.saleNo,
       this.totalItems,
@@ -167,54 +165,58 @@ class SalesMaster {
       this.deviceKey,
       this.remoteId,
       this.companyId,
-      this.isDelete
+      this.isDelete,
+      this.isUpdate
     ];
   }
 
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
     for (int i = 0; i < getList().length; i++) {
-      map[Columns.salesMaster[i + 1]] = getList()[i];
+      map[SalesMasterTable.columnsName[i + 1]] = getList()[i];
     }
     return map;
   }
 
   Map<String, dynamic> getValuesForUpload() {
     Map<String, dynamic> map = new Map();
-    for (int i = 1; i < Columns.salesMaster.length - 1; i++) {
-      if (i == 35) {
+    for (int i = 0; i < SalesMasterTable.columnsName.length; i++) {
+      if (i == 0) {
         map['remote_id'] = getList()[i];
-      } else {
-        map[Columns.salesMaster[i]] = getList()[i];
+      } else if(i == 35){
+
+      }
+      else {
+        map[SalesMasterTable.columnsName[i]] = getList()[i];
       }
     }
     return map;
   }
 
   Future<bool> insertIntoDatabase(Database db) async =>
-      await Lib.insertIntoDatabase(db, Tables.salesMaster, getValues());
+      await Lib.insertIntoDatabase(db, SalesMasterTable.tableName, getValues());
 
   Future<int> insertSpecificIntoDb(
       Database db, Map<String, dynamic> map) async {
-    int id = await db.insert(Tables.salesMaster, map);
+    int id = await db.insert(SalesMasterTable.tableName, map);
     return id;
   }
 
   Future<int> updateSpecificIntoDb(Database db, Map<String, dynamic> map,
       String columnName, dynamic columnValue) async {
-    int updateCount = await db.update(Tables.salesMaster, map,
+    int updateCount = await db.update(SalesMasterTable.tableName, map,
         where: '$columnName = ?', whereArgs: [columnValue]);
 
     return updateCount;
   }
 
   Future<List<SalesMaster>> queryAllRows(Database db) async {
-    List<Map<String, dynamic>> res = await db.query(Tables.salesMaster,
+    List<Map<String, dynamic>> res = await db.query(SalesMasterTable.tableName,
         where:
-            "${Columns.salesMaster[5]} == '0.0' AND ${Columns.salesMaster[37]} == '0'");
+            "${SalesMasterTable.paidAmount} == '0.0' AND ${SalesMasterTable.isDelete} == '0'");
     List<SalesMaster> _orders = [];
     res.forEach((row) {
-      if (row['${Columns.salesMaster[37]}'] == 0.toString()) {
+      if (row['${SalesMasterTable.isDelete}'] == 0.toString()) {
         _orders.add(SalesMaster.fromJson(row));
       }
     });
@@ -222,15 +224,15 @@ class SalesMaster {
   }
 
   Future<List<SalesMaster>> getDineInList(Database db) async {
-    List<Map<String, dynamic>> res = await db.query(Tables.salesMaster,
+    List<Map<String, dynamic>> res = await db.query(SalesMasterTable.tableName,
         columns: [
-          Columns.salesMaster[2],
-          Columns.salesMaster[13],
-          Columns.salesMaster[28],
-          Columns.salesMaster[6]
+          SalesMasterTable.saleNo,
+          SalesMasterTable.tableId,
+          SalesMasterTable.waiterId,
+          SalesMasterTable.dueAmount
         ],
         where:
-            "${Columns.salesMaster[5]} == '0.0' AND ${Columns.salesMaster[37]} == '0' AND ${Columns.salesMaster[31]} == '1'");
+            "${SalesMasterTable.paidAmount} == '0.0' AND ${SalesMasterTable.isDelete} == '0' AND ${SalesMasterTable.orderType} == '1'");
     List<SalesMaster> dineInList = [];
     res.forEach((row) {
       dineInList.add(SalesMaster.fromJson(row));
@@ -239,9 +241,9 @@ class SalesMaster {
   }
 
   Future<List<SalesMaster>> getTakeawayList(Database db) async {
-    List<Map<String, dynamic>> res = await db.query(Tables.salesMaster,
+    List<Map<String, dynamic>> res = await db.query(SalesMasterTable.tableName,
         where:
-            "${Columns.salesMaster[5]} == '0.0' AND ${Columns.salesMaster[37]} == '0' AND ${Columns.salesMaster[31]} == '2'");
+            "${SalesMasterTable.paidAmount} == '0.0' AND ${SalesMasterTable.isDelete} == '0' AND ${SalesMasterTable.orderType} == '2'");
     List<SalesMaster> takeawayList = [];
     res.forEach((row) {
       takeawayList.add(SalesMaster.fromJson(row));
@@ -250,9 +252,9 @@ class SalesMaster {
   }
 
   Future<List<SalesMaster>> getDeliveryList(Database db) async {
-    List<Map<String, dynamic>> res = await db.query(Tables.salesMaster,
+    List<Map<String, dynamic>> res = await db.query(SalesMasterTable.tableName,
         where:
-            "${Columns.salesMaster[5]} == '0.0' AND ${Columns.salesMaster[37]} == '0' AND ${Columns.salesMaster[31]} == '3'");
+            "${SalesMasterTable.paidAmount} == '0.0' AND ${SalesMasterTable.isDelete} == '0' AND ${SalesMasterTable.orderType} == '3'");
     List<SalesMaster> deliveryList = [];
     res.forEach((row) {
       deliveryList.add(SalesMaster.fromJson(row));

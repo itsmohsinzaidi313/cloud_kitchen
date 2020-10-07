@@ -136,7 +136,7 @@ class SalesDetails {
   Future<List<Item>> getOrderWhereMasterId(
       Database db, SalesMaster salesMaster) async {
     List<Map<String, dynamic>> res = await db.query(Tables.salesDetails,
-        where: '${Columns.salesDetails[0]} = ${salesMaster.id}');
+        where: '${Columns.salesDetails[0]} = ${salesMaster.serverId}');
 
     List<Item> listItem = DataLists.instance.listItem;
     List<Item> updateList = [];
