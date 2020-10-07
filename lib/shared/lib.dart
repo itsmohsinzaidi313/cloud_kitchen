@@ -100,7 +100,7 @@ class Lib {
         'json': jsonEncode({
           'device_key': shift.deviceKey,
           'remote_id': shift.remoteId,
-          'register_no': codeGenerator('REG', int.parse(shift.remoteId)),
+          'register_no': shift.registerNo,
           'opening_balance': shift.openingBalance,
           'opening_balance_date_time': shift.openingBalanceDateTime
         })

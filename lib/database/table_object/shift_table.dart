@@ -1,6 +1,7 @@
 import 'package:food_app/database/sql_structure.dart';
 
-class ShiftTable{
+class ShiftTable {
+  static const String tableName = 'shift_data';
 
   static const String localId = 'local_id';
   static const String shift = 'shift';
@@ -59,5 +60,4 @@ class ShiftTable{
     SqlStructure.text,
     SqlStructure.text
   ];
-
 }

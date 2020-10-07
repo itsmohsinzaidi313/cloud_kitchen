@@ -6,10 +6,6 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:food_app/database/DAL.dart';
-import 'package:food_app/database/project_database.dart';
-import 'package:food_app/models/generic_models/install_api.dart';
-import 'package:food_app/shared/lib.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

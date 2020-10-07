@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
 import 'package:food_app/controller/login_controller.dart';
 import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/shift.dart';
 import 'package:food_app/models/view_models/shift_model.dart';
@@ -314,15 +315,36 @@ class _ShiftScreen extends State<ShiftScreen> {
                     Shift().getNextShiftRemoteId(Config.database).then((value) {
                       if (value > 0) {
                         Config.currentShift.remoteId = value.toString();
-                        Lib.openRegister(Config.currentShift).then((value) {
-                          if (value)
-                            DashboardController(context).launchAndReplacement();
+                        Config.currentShift.registerNo = Lib.codeGenerator(
+                            'REG', int.parse(value.toString()));
+                        Config.database
+                            .insert(ShiftTable.tableName,
+                                Config.currentShift.toMap(Config.currentShift))
+                            .then((value) {
+                          if (value > 0)
+                            AppTheme.showAlertDialogOK(context,
+                                title: 'Success',
+                                message:
+                                    'Shift# ${Config.currentShift.registerNo} opened successfully.',
+                                onOK: () => DashboardController(context)
+                                    .launchAndReplacement());
                           else
                             AppTheme.showAlertDialogOK(context,
                                 title: 'Error',
                                 message:
-                                    'Your request is not accepted by Server. Please Try Again!');
+                                    'Your request is not accepted by Server. Please Try Again!',
+                                onOK: () => Navigator.of(context).pop());
                         });
+                        // Lib.openRegister(Config.currentShift).then((value) {
+                        //   if (value)
+                        //     DashboardController(context).launchAndReplacement();
+                        //   else
+                        //     AppTheme.showAlertDialogOK(context,
+                        //         title: 'Error',
+                        //         message:
+                        //             'Your request is not accepted by Server. Please Try Again!',
+                        //         onOK: () => Navigator.of(context).pop());
+                        // });
                       }
                     });
                   } else {

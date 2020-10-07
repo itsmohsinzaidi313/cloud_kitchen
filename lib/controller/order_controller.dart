@@ -1,17 +1,11 @@
-import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:food_app/controller/payment_controller.dart';
 import 'package:food_app/database/columns.dart';
-import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/payment_method.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/order_model.dart';
 import 'package:food_app/pages/orders_screen.dart';
-import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/data_lists.dart';
-import 'package:http/http.dart';
 import 'package:sqflite/sqflite.dart';
 
 class OrderController {
