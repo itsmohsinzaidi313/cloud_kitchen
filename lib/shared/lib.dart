@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/generic_models/install_api.dart';
 import 'package:food_app/models/objects/customer.dart';
@@ -161,11 +162,11 @@ class Lib {
           int rowsUpdated = await Config.database.update(
               Tables.shiftData,
               {
-                Columns.shiftData[3]: shift.closingBalance,
-                Columns.shiftData[5]: shift.closingBalanceDateTime,
-                Columns.shiftData[9]: '2'
+                ShiftTable.closingBalance: shift.closingBalance,
+                ShiftTable.openingBalanceDateTime: shift.closingBalanceDateTime,
+                ShiftTable.registerStatus: '2'
               },
-              where: '${Columns.shiftData[0]} = ?',
+              where: '${ShiftTable.localId} = ?',
               whereArgs: [shift.id]);
           if (rowsUpdated > 0)
             return true;

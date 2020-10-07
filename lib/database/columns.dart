@@ -38,44 +38,44 @@ class Columns {
   ];
 
   ///USER TABLE COLUMNS
-  static const List<String> users = [
-    'local_id',
-    'id',
-    'full_name',
-    'phone',
-    'email_address',
-    'password',
-    'designation',
-    'will_login',
-    'role',
-    'outlet_id',
-    'company_id',
-    'account_creation_date',
-    'language',
-    'last_login',
-    'active_status',
-    'del_status'
-  ];
+  // static const List<String> users = [
+  //   'local_id',
+  //   'id',
+  //   'full_name',
+  //   'phone',
+  //   'email_address',
+  //   'password',
+  //   'designation',
+  //   'will_login',
+  //   'role',
+  //   'outlet_id',
+  //   'company_id',
+  //   'account_creation_date',
+  //   'language',
+  //   'last_login',
+  //   'active_status',
+  //   'del_status'
+  // ];
 
   ///SHIFT_DATA TABLE COLUMNS
-  static const List<String> shiftData = [
-    'local_id', //0
-    'shift', //1
-    'opening_balance', //2
-    'closing_balance', //3
-    'opening_balance_date_time', //4
-    'closing_balance_date_time', //5
-    'sale_paid_amount', //6
-    'customer_due_receive', //7
-    'payment_methods_sale', //8
-    'register_status', //9
-    'user_id', //10
-    'outlet_id', //11
-    'company_id', //12
-    'register_no', //13
-    'device_key', //14
-    'id' //15
-  ];
+  // static const List<String> shiftData = [
+  //   'local_id', //0
+  //   'shift', //1
+  //   'opening_balance', //2
+  //   'closing_balance', //3
+  //   'opening_balance_date_time', //4
+  //   'closing_balance_date_time', //5
+  //   'sale_paid_amount', //6
+  //   'customer_due_receive', //7
+  //   'payment_methods_sale', //8
+  //   'register_status', //9
+  //   'user_id', //10
+  //   'outlet_id', //11
+  //   'company_id', //12
+  //   'register_no', //13
+  //   'device_key', //14
+  //   'id' //15
+  // ];
 
   ///CATEGORIES TABLE COLUMNS
   static const List<String> categories = [

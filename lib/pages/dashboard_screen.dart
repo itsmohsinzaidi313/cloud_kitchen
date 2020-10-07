@@ -3,6 +3,7 @@ import 'package:food_app/controller/login_controller.dart';
 import 'package:food_app/controller/order_controller.dart';
 import 'package:food_app/controller/shift_controller.dart';
 import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/view_models/dashboard_model.dart';
 import 'package:food_app/models/generic_models/dashboard_item.dart';
@@ -137,84 +138,4 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  Widget registerPopupContent() {
-    return Container(
-      // padding: EdgeInsets.all(10.0),
-      // margin: EdgeInsets.only(top: 30),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      width: Config.getDeviceWidth(context) * 0.4,
-      child: Wrap(
-        children: [
-          Container(
-            child: Card(
-              color: Colors.grey[100],
-              child: ListTile(
-                leading: Icon(
-                  Icons.monetization_on,
-                  color: Colors.grey[600],
-                ),
-                title: TextField(
-                  keyboardType: TextInputType.number,
-                  controller: closingAmount,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Colors.amberAccent, width: 1),
-                      ),
-                      hintText: 'Closing Amount',
-                      errorText: checkField ? errorMessage : null),
-                ),
-                trailing: RaisedButton(
-                  elevation: 2.0,
-                  onPressed: () {
-                    setState(() {
-                      checkField = closingAmount.text == '' ? true : false;
-                      errorMessage = 'Required.';
-                    });
-
-                    if (!checkField) {
-                      double amount = double.parse(closingAmount.text);
-                      if (amount > 0) {
-                        Config.currentShift.closingBalance = closingAmount.text;
-                        Config.currentShift.closingBalanceDateTime =
-                            Config.getCurrentDateTimeDBFormat();
-                        Config.database.update(
-                            Tables.shiftData,
-                            {
-                              Columns.shiftData[3]: closingAmount.text,
-                              Columns.shiftData[5]:
-                                  Config.getCurrentDateTimeDBFormat(),
-                              Columns.shiftData[9]: '2'
-                            },
-                            where: '${Columns.shiftData[0]} = ?',
-                            whereArgs: [Config.currentShift.remoteId]);
-                        Lib.closeRegister(Config.currentShift);
-                      } else {
-                        checkField = true;
-                        errorMessage = 'Invalid Amount.';
-                      }
-                    }
-                  },
-                  color: AppTheme.listTextColor,
-                  child: Text(
-                    'SUBMIT',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      // fontStyle: FontStyle.italic,
-                      letterSpacing: 2.0,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

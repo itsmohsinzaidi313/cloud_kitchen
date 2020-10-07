@@ -181,6 +181,7 @@ class AppTheme {
       {String title, String message, Function onOK}) {
     showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (value) => AlertDialog(
               title:
                   text(text: title, fontWeight: FontWeight.bold, fontSize: 20),
