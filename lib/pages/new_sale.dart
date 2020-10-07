@@ -379,34 +379,34 @@ class _NewSaleState extends State<NewSale> {
   Future<void> insertIntoSalesDetails(
       Database db, Item item, int masterId) async {
     Map<String, dynamic> details = {
-      // Columns.salesDetails[0] : ,
-      Columns.salesDetails[1]: int.parse(item.code).toString(),
-      Columns.salesDetails[2]: item.name,
-      Columns.salesDetails[3]: item.quantity.toString(),
-      Columns.salesDetails[4]:
+      // SalesDetailTable[0] : ,
+      SalesDetailTable.foodMenuId: int.parse(item.code).toString(),
+      SalesDetailTable.menuName: item.name,
+      SalesDetailTable.qty: item.quantity.toString(),
+      SalesDetailTable.menuPriceWithoutDiscount:
           (int.parse(item.quantity) * double.parse(item.salePrice)).toString(),
-      Columns.salesDetails[5]:
+      SalesDetailTable.menuPriceWithDiscount:
           (int.parse(item.quantity) * double.parse(item.salePrice) -
                       double.parse(this.model.order.discount) ??
                   0)
               .toString(),
-      Columns.salesDetails[6]: item.salePrice.toString(),
-      Columns.salesDetails[7]: '0.0',
-      // Columns.salesDetails[8] : ,
-      Columns.salesDetails[9]: '0',
-      Columns.salesDetails[10]: 'plain',
-      // Columns.salesDetails[11] : ,
-      Columns.salesDetails[12]: this.model.order.discount ?? 0,
-      Columns.salesDetails[13]: 'Kitchen Item',
-      Columns.salesDetails[14]: 'Done',
-      Columns.salesDetails[15]: Config.getCurrentDateTimeDBFormat(),
-      Columns.salesDetails[16]: Config.getCurrentDateTimeDBFormat(),
-      // Columns.salesDetails[17] : ,
-      Columns.salesDetails[18]: masterId,
-      Columns.salesDetails[19]: '0',
-      Columns.salesDetails[20]: Config.currentUser.serverId,
-      Columns.salesDetails[21]: Config.currentUser.outletId,
-      Columns.salesDetails[22]: Config.currentUser.delStatus,
+      SalesDetailTable.menuUnitPrice: item.salePrice.toString(),
+      SalesDetailTable.menuVatPercentage: '0.0',
+      // SalesDetailTable[8] : ,
+      SalesDetailTable.menuDiscountValue: '0',
+      SalesDetailTable.discountType: 'plain',
+      // SalesDetailTable[11] : ,
+      SalesDetailTable.discountAmount: this.model.order.discount ?? 0,
+      SalesDetailTable.itemType: 'Kitchen Item',
+      SalesDetailTable.cookingStatus: 'Done',
+      SalesDetailTable.cookingStartTime: Config.getCurrentDateTimeDBFormat(),
+      SalesDetailTable.cookingDoneTime: Config.getCurrentDateTimeDBFormat(),
+      // SalesDetailTable[17] : ,
+      SalesDetailTable.salesMasterId: masterId,
+      SalesDetailTable.orderStatus: '0',
+      SalesDetailTable.userId: Config.currentUser.serverId,
+      SalesDetailTable.outletId: Config.currentUser.outletId,
+      SalesDetailTable.delStatus: Config.currentUser.delStatus,
     };
     int detailsId = await SalesDetails().insertSpecificIntoDb(db, details);
     print('SALES DETAILS RETURN ID: $detailsId');

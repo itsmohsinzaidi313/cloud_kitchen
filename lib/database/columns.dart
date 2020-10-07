@@ -145,29 +145,29 @@ class Columns {
 
   ///SALES_DETAILS TABLE COLUMNS
   static const List<String> salesDetails = [
-    'id',
-    'food_menu_id',
-    'menu_name',
-    'qty',
-    'menu_price_without_discount',
-    'menu_price_with_discount',
-    'menu_unit_price',
-    'menu_vat_percentage',
-    'menu_taxes',
-    'menu_discount_value',
-    'discount_type',
-    'menu_note',
-    'discount_amount',
-    'item_type',
-    'cooking_status',
-    'cooking_start_time',
-    'cooking_done_time',
-    'previous_id',
+    'id', //0
+    'food_menu_id', //1
+    'menu_name', //2
+    'qty', //3
+    'menu_price_without_discount', //4
+    'menu_price_with_discount', //5
+    'menu_unit_price', //6
+    'menu_vat_percentage', //7
+    'menu_taxes', //8
+    'menu_discount_value', //9
+    'discount_type', //10
+    'menu_note', //11
+    'discount_amount', //12
+    'item_type', //13
+    'cooking_status', //14
+    'cooking_start_time', //15
+    'cooking_done_time', //16
+    'previous_id', //17
     'sales_id', //18
-    'order_status',
-    'user_id',
-    'outlet_id',
-    'del_status',
+    'order_status', //19
+    'user_id', //20
+    'outlet_id', //21
+    'del_status', //22
   ];
 
   ///COMPANY TABLE COLUMNS
