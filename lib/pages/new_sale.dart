@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
 import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/table_object/orders_table.dart';
+import 'package:food_app/database/table_object/sales_detail_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/generic_models/customer_order.dart';
@@ -282,57 +284,57 @@ class _NewSaleState extends State<NewSale> {
       CustomerOrder customerOrder = this.model.order;
       //MASTER DATA
       Map<String, dynamic> master = {
-        // Columns.salesMaster[0] :  ,
-        Columns.salesMaster[1]: this.model.order.customerId,
-        // Columns.salesMaster[2] :  ,
-        Columns.salesMaster[3]: customerOrder.totalItem().toString(),
-        Columns.salesMaster[4]: customerOrder.getSubTotal().toString(),
-        Columns.salesMaster[5]: '0.0',
-        Columns.salesMaster[6]: customerOrder.getSubTotal().toString(),
-        // Columns.salesMaster[7] :  ,
-        // Columns.salesMaster[8] :  ,
-        Columns.salesMaster[9]: '0.0',
-        Columns.salesMaster[10]: customerOrder.getSubTotal().toString(),
-        Columns.salesMaster[11]: '1',
-        Columns.salesMaster[12]: Config.getCurrentTime24Format(),
-        Columns.salesMaster[13]: this.model.order.orderTableId,
-        Columns.salesMaster[14]: customerOrder.discount ?? 0,
-        Columns.salesMaster[15]: customerOrder.getNetAmount(),
-        Columns.salesMaster[16]: customerOrder.discount ?? 0,
-        Columns.salesMaster[17]: customerOrder.discount ?? 0,
-        Columns.salesMaster[18]: '0.0',
-        Columns.salesMaster[19]: '',
-        Columns.salesMaster[20]: 'plain',
-        Columns.salesMaster[21]: Config.getCurrentDate(),
-        Columns.salesMaster[22]: Config.getCurrentDateTimeDBFormat(),
-        Columns.salesMaster[23]: Config.getCurrentTime24Format(),
-        Columns.salesMaster[24]: Config.getCurrentDateTimeDBFormat(),
-        Columns.salesMaster[25]: Config.getCurrentDateTimeDBFormat(),
-        Columns.salesMaster[26]: 'No',
-        Columns.salesMaster[27]: Config.currentUser.serverId,
-        Columns.salesMaster[28]: this.model.order.waiterId,
-        Columns.salesMaster[29]: Config.currentUser.outletId,
-        Columns.salesMaster[30]: '1',
-        Columns.salesMaster[31]: this.model.salesMaster.orderType,
-        Columns.salesMaster[32]: Config.currentUser.delStatus,
-        // Columns.salesMaster[33] :  ,
-        Columns.salesMaster[34]: Config.currentShift.deviceKey,
-        // Columns.salesMaster[35] :  ,
-        Columns.salesMaster[36]: Config.currentUser.companyId,
-        Columns.salesMaster[37]: 0.toString(),
-        SalesMasterTable.isUpload: '0'
+        // SalesMasterTable[0] :  ,
+        SalesMasterTable.customerId: this.model.order.customerId,
+        // SalesMasterTable[2] :  ,
+        SalesMasterTable.totalItems : customerOrder.totalItem().toString(),
+        SalesMasterTable.subTotal : customerOrder.getSubTotal().toString(),
+        SalesMasterTable.paidAmount : '0.0',
+        SalesMasterTable.dueAmount : customerOrder.getSubTotal().toString(),
+        // SalesMasterTable[7]  :  ,
+        // SalesMasterTable[8]  :  ,
+        SalesMasterTable.vat : '0.0',
+        SalesMasterTable.totalPayable : customerOrder.getSubTotal().toString(),
+        SalesMasterTable.paymentMethodId : '1',
+        SalesMasterTable.closeTime : Config.getCurrentTime24Format(),
+        SalesMasterTable.tableId : this.model.order.orderTableId,
+        SalesMasterTable.totalItemDiscountAmount : customerOrder.discount ?? 0,
+        SalesMasterTable.subTotalWithDiscount : customerOrder.getNetAmount(),
+        SalesMasterTable.subTotalDiscountAmount : customerOrder.discount ?? 0,
+        SalesMasterTable.totalDiscountAmount : customerOrder.discount ?? 0,
+        SalesMasterTable.deliveryCharge : '0.0',
+        SalesMasterTable.subTotalDiscountValue : '',
+        SalesMasterTable.subTotalDiscountType : 'plain',
+        SalesMasterTable.saleDate : Config.getCurrentDate(),
+        SalesMasterTable.dateTime : Config.getCurrentDateTimeDBFormat(),
+        SalesMasterTable.orderTime : Config.getCurrentTime24Format(),
+        SalesMasterTable.cookingStartTime : Config.getCurrentDateTimeDBFormat(),
+        SalesMasterTable.cookingDoneTime : Config.getCurrentDateTimeDBFormat(),
+        SalesMasterTable.modified : 'No',
+        SalesMasterTable.userId : Config.currentUser.serverId,
+        SalesMasterTable.waiterId : this.model.order.waiterId,
+        SalesMasterTable.outletId : Config.currentUser.outletId,
+        SalesMasterTable.orderStatus : '1',
+        SalesMasterTable.orderType : this.model.salesMaster.orderType,
+        SalesMasterTable.delStatus : Config.currentUser.delStatus,
+        // SalesMasterTable[33]  :  ,
+        SalesMasterTable.deviceKey : Config.currentShift.deviceKey,
+        // SalesMasterTable[35]  :  ,
+        SalesMasterTable.companyId : Config.currentUser.companyId,
+        SalesMasterTable.isDelete : 0.toString(),
+        SalesMasterTable.isUpload : '0'
       };
 
       ///EDIT ORDER
       if (count[0]['count'] > 0) {
         _salesMaster = this.model.salesMaster;
-        _db.delete(Tables.salesDetails,
-            where: '${Columns.salesDetails[0]} = ?',
+        _db.delete(SalesDetailTable.tableName,
+            where: '${SalesDetailTable.id} = ?',
             whereArgs: [_salesMaster.serverId]);
         masterId = int.parse(_salesMaster.serverId);
 
-        _db.update(Tables.salesMaster, master,
-            where: '${Columns.salesMaster[0]} = ?',
+        _db.update(SalesMasterTable.tableName, master,
+            where: '${SalesMasterTable.localId} = ?',
             whereArgs: [_salesMaster.serverId]);
       } //IF
       else {
@@ -341,8 +343,8 @@ class _NewSaleState extends State<NewSale> {
         masterId = await _salesMaster.insertSpecificIntoDb(_db, master);
         _salesMaster.updateSpecificIntoDb(
             _db,
-            {Columns.salesMaster[35]: masterId.toString()},
-            Columns.salesMaster[0],
+            {SalesMasterTable.serverId : masterId.toString()},
+            SalesMasterTable.localId,
             masterId);
         String code =
             Lib.codeGenerator('ORD', masterId); // GENERATES CODE FROM MASTER ID
@@ -352,12 +354,12 @@ class _NewSaleState extends State<NewSale> {
 
         ///UPDATE ORDER TABLE
         _db.update(
-            Tables.orderTable,
+            OrdersTable.tableName,
             {
-              Columns.ordersTables[3]: masterId,
-              Columns.ordersTables[4]: code,
+              OrdersTable.saleId: masterId,
+              OrdersTable.saleNo: code,
             },
-            where: '${Columns.ordersTables[0]} = ?',
+            where: '${OrdersTable.localId} = ?',
             whereArgs: [this.model.order.orderTableId]);
 
         int updateId = await _salesMaster.updateSpecificIntoDb(
