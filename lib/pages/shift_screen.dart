@@ -54,8 +54,7 @@ class _ShiftScreen extends State<ShiftScreen> {
                       backgroundColor: Colors.yellow[600],
                       child: CircleAvatar(
                         radius: 80.0,
-                        backgroundImage: NetworkImage(
-                            'https://image.freepik.com/free-vector/money-bag_16734-108.jpg'),
+                        backgroundImage: AssetImage('asset/money-bag.jpg'),
                       ),
                     ),
                   ),
@@ -297,7 +296,7 @@ class _ShiftScreen extends State<ShiftScreen> {
             setState(() {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
-
+                
                 DataLists.instance.listDevices.forEach((d) {
                   if (_deviceKey.text == d.deviceKey) {
                     Config.currentDevice = d;

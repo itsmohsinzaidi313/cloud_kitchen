@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/shift_controller.dart';
+import 'package:food_app/database/project_database.dart';
+import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/models/objects/user.dart';
 import 'package:food_app/models/view_models/login_model.dart';
 import 'package:food_app/pages/sql_view_page.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/data_lists.dart';
+import 'package:food_app/shared/lib.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -18,14 +22,17 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final LoginModel loginModel;
   _LoginScreenState(this.loginModel);
-
+  Logger _log = Config.log;
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  TextEditingController deviceKey = TextEditingController();
 
   bool _autoValidate = false;
   bool _obscureText = true;
   bool isLoading = false;
   bool isLogin = false;
+  bool _deviceKeyPresent = false;
+  bool _deviceKeyCheck = false;
   Icon _icon = Icon(Icons.visibility_off);
 
   String errorEmail = 'Invalid Email', errorPassword = 'Invalid Password';
@@ -41,6 +48,77 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   SharedPreferences _sharedPreferences;
+
+  @override
+  initState() {
+    super.initState();
+    // Config.database
+    //     .query(ShiftTable.tableName,
+    //         columns: [ShiftTable.deviceKey],
+    //         orderBy: '${ShiftTable.localId} desc')
+    //     .then((value) {
+    //   setState(() {
+    //     String dKey = value[0][ShiftTable.deviceKey] == null
+    //         ? ''
+    //         : value[0][ShiftTable.deviceKey];
+    String dKey = '';
+    if (dKey.isNotEmpty) {
+      _deviceKeyPresent = dKey == '' ? false : true;
+      deviceKey.text = dKey;
+    } else {
+      _deviceKeyPresent = false;
+    }
+    //   });
+    // });
+  }
+
+  Future<bool> init() async {
+    bool value1 = await Lib.install();
+    if (value1) {
+      bool value2 = await DataLists.importToDatabase(Config.database);
+      if (value2) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      bool value2 = await DataLists.importToMemory(Config.database);
+      if (value2) {
+        _log.v('Offline data loaded');
+        return true;
+      } else {
+        _log.v('Offline data load failed');
+        return false;
+      }
+    }
+    // Lib.install().then((value) {
+    //   if (value) {
+    //     _log.v('Data loaded from online source.');
+    //     DataLists.importToDatabase(Config.database).then((value) {
+    //       if (value) {
+    //         _log.v('Online data loaded');
+    //         // ShiftController(1).launch(context);
+    //         return true;
+    //       } else {
+    //         _log.v('Online data load failed');
+    //         return false;
+    //       }
+    //     });
+    //   } else {
+    //     _log.v('Data loading from offline source.');
+    //     DataLists.importToMemory(Config.database).then((value) {
+    //       if (value) {
+    //         _log.v('Offline data loaded');
+    //         // ShiftController(1).launch(context);
+    //         return true;
+    //       } else {
+    //         _log.v('Offline data load failed');
+    //         return false;
+    //       }
+    //     });
+    //   }
+    // });
+  }
 
   bool validateUser(email, pass) {
     List<User> listUser = DataLists.instance.listUsers;
@@ -120,9 +198,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: Config.getDeviceHeight(context),
                     width: Config.getDeviceWidth(context) * 0.4,
                     decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.amber,
+                          blurRadius: 20,
+                          offset: Offset(0, 0),
+                        ),
+                      ],
                       image: DecorationImage(
-                        image: NetworkImage(loginModel.imageUrl),
-                        fit: BoxFit.cover,
+                        image: AssetImage(
+                          'assets/logo1.png',
+                        ),
+                        fit: BoxFit.scaleDown,
                       ),
                     ),
                     child: Stack(
@@ -170,6 +257,59 @@ class _LoginScreenState extends State<LoginScreen> {
                                 autovalidate: _autoValidate,
                                 child: Column(
                                   children: <Widget>[
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            padding: EdgeInsets.all(5),
+                                            decoration: BoxDecoration(
+                                                border: Border(
+                                                    bottom: BorderSide(
+                                                        color:
+                                                            Colors.grey[100]))),
+                                            child: TextField(
+                                              enabled: !_deviceKeyPresent,
+                                              decoration: InputDecoration(
+                                                border: InputBorder.none,
+                                                labelText: 'Device Key',
+                                                labelStyle: TextStyle(
+                                                  color: Colors.grey[400],
+                                                ),
+                                                errorText: deviceKey.text != ''
+                                                    ? null
+                                                    : 'Required',
+                                              ),
+                                              textInputAction:
+                                                  TextInputAction.next,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              controller: deviceKey,
+                                            ),
+                                          ),
+                                        ),
+                                        FlatButton(
+                                          child: Text('SUBMIT'),
+                                          onPressed: !_deviceKeyPresent
+                                              ? () {
+                                                  _deviceKeyCheck =
+                                                      deviceKey.text == ''
+                                                          ? false
+                                                          : true;
+                                                  if (_deviceKeyCheck) {
+                                                    Config.authToken =
+                                                        deviceKey.text;
+                                                    init().then((value) {
+                                                      if (value) {
+                                                        ShiftController(1)
+                                                            .launch(context);
+                                                      }
+                                                    });
+                                                  }
+                                                }
+                                              : null,
+                                        )
+                                      ],
+                                    ),
                                     Container(
                                       padding: EdgeInsets.all(5),
                                       decoration: BoxDecoration(
@@ -177,6 +317,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                               bottom: BorderSide(
                                                   color: Colors.grey[100]))),
                                       child: TextFormField(
+                                        enabled: _deviceKeyPresent,
                                         decoration: InputDecoration(
                                           border: InputBorder.none,
                                           labelText: loginModel.hintEmail,
@@ -206,6 +347,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         children: <Widget>[
                                           Positioned(
                                             child: TextFormField(
+                                              enabled: _deviceKeyPresent,
                                               decoration: InputDecoration(
                                                 border: InputBorder.none,
                                                 labelText:

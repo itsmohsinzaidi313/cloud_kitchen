@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:flutter/services.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/shift.dart';
@@ -15,7 +16,8 @@ class ShiftService extends ServiceCommon {
   ShiftService._instance(this._db) {
     initiate();
   }
-
+  static const platform =
+      const MethodChannel('com.devaj.cloudKitchen/shiftService');
   Database _db;
   @override
   Future<bool> perform() async {
@@ -72,7 +74,8 @@ class ShiftService extends ServiceCommon {
                       jsonDecode(response2.body);
                   bool status2 = decodedJson2['status'];
                   if (status2) {
-                    await _db.update(Tables.shiftData, {ShiftTable.isUpload: '2'},
+                    await _db.update(
+                        Tables.shiftData, {ShiftTable.isUpload: '2'},
                         where: '${ShiftTable.localId} = ?',
                         whereArgs: [shift.remoteId]);
                   }
@@ -87,6 +90,15 @@ class ShiftService extends ServiceCommon {
       log('Error occured on Shift Service',
           name: 'Shift Service', time: DateTime.now(), error: e);
       return true;
+    }
+  }
+
+  void printy() async {
+    try {
+      String value = await platform.invokeMethod('Printy');
+      log(value, name: 'Printy');
+    } catch (e) {
+      log(e, name: 'Printy Error');
     }
   }
 }

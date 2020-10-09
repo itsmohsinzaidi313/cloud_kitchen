@@ -8,7 +8,6 @@
     <application
         android:label="Cloud Kitchen"
         android:icon="@drawable/logo2">
-        ,ser
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

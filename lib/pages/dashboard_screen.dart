@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:food_app/controller/login_controller.dart';
 import 'package:food_app/controller/order_controller.dart';
 import 'package:food_app/controller/shift_controller.dart';
-import 'package:food_app/database/columns.dart';
-import 'package:food_app/database/table_object/shift_table.dart';
-import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/view_models/dashboard_model.dart';
 import 'package:food_app/models/generic_models/dashboard_item.dart';
 import 'package:food_app/pages/order_type_screen.dart';
 import 'package:food_app/pages/sql_view_page.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
-import 'package:food_app/shared/lib.dart';
 import 'package:food_app/shared/widgets/dashboard_card.dart';
 import 'package:toast/toast.dart';
 
