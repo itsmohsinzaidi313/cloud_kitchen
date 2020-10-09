@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/shift_controller.dart';
-import 'package:food_app/database/project_database.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/models/objects/user.dart';
 import 'package:food_app/models/view_models/login_model.dart';
 import 'package:food_app/pages/sql_view_page.dart';
+import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/data_lists.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:logger/logger.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -52,27 +53,33 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   initState() {
     super.initState();
-    // Config.database
-    //     .query(ShiftTable.tableName,
-    //         columns: [ShiftTable.deviceKey],
-    //         orderBy: '${ShiftTable.localId} desc')
-    //     .then((value) {
-    //   setState(() {
-    //     String dKey = value[0][ShiftTable.deviceKey] == null
-    //         ? ''
-    //         : value[0][ShiftTable.deviceKey];
-    String dKey = '';
-    if (dKey.isNotEmpty) {
-      _deviceKeyPresent = dKey == '' ? false : true;
-      deviceKey.text = dKey;
-    } else {
-      _deviceKeyPresent = false;
-    }
-    //   });
-    // });
+    Config.database
+        .query(ShiftTable.tableName,
+            columns: [ShiftTable.deviceKey],
+            orderBy: '${ShiftTable.localId} desc')
+        .then((value) {
+      setState(() {
+        try {
+          if (value.isNotEmpty) {
+            String dKey = value[0][ShiftTable.deviceKey] == null
+                ? ''
+                : value[0][ShiftTable.deviceKey];
+            if (dKey.isNotEmpty) {
+              _deviceKeyPresent = dKey == '' ? false : true;
+              deviceKey.text = dKey;
+              loadData().then((value) => _deviceKeyPresent = value);
+            } else {
+              _deviceKeyPresent = false;
+            }
+          }
+        } catch (e) {
+          _log.e(e);
+        }
+      });
+    });
   }
 
-  Future<bool> init() async {
+  Future<bool> loadData() async {
     bool value1 = await Lib.install();
     if (value1) {
       bool value2 = await DataLists.importToDatabase(Config.database);
@@ -91,33 +98,6 @@ class _LoginScreenState extends State<LoginScreen> {
         return false;
       }
     }
-    // Lib.install().then((value) {
-    //   if (value) {
-    //     _log.v('Data loaded from online source.');
-    //     DataLists.importToDatabase(Config.database).then((value) {
-    //       if (value) {
-    //         _log.v('Online data loaded');
-    //         // ShiftController(1).launch(context);
-    //         return true;
-    //       } else {
-    //         _log.v('Online data load failed');
-    //         return false;
-    //       }
-    //     });
-    //   } else {
-    //     _log.v('Data loading from offline source.');
-    //     DataLists.importToMemory(Config.database).then((value) {
-    //       if (value) {
-    //         _log.v('Offline data loaded');
-    //         // ShiftController(1).launch(context);
-    //         return true;
-    //       } else {
-    //         _log.v('Offline data load failed');
-    //         return false;
-    //       }
-    //     });
-    //   }
-    // });
   }
 
   bool validateUser(email, pass) {
@@ -159,20 +139,13 @@ class _LoginScreenState extends State<LoginScreen> {
         if (_formKey.currentState.validate()) {
           isLoading = true;
           _formKey.currentState.save();
-          // if (email.text.contains('\t')) {
-          //   email.text = email.text.replaceAll(RegExp(r'\t'), '');
-          //   validateUser(email.text, password.text)
-          //       ? ShiftController(1).launch(context)
-          //       : _scaffoldKey.currentState.showSnackBar(
-          //           SnackBar(content: Text('There is no such user exists')));
-          // } else {
           email.text = email.text.trim();
           password.text = password.text.trim();
+          Config.authToken = deviceKey.text;
           validateUser(email.text, password.text)
               ? ShiftController(1).launch(context)
               : _scaffoldKey.currentState.showSnackBar(
                   SnackBar(content: Text('Invalid email or password')));
-          // }
         } else {
           isLoading = false;
           _autoValidate = true;
@@ -214,22 +187,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: Stack(
                       children: <Widget>[
-                        Positioned(
-                          child: Container(
-                            margin: EdgeInsets.only(top: 180),
-                            child: Center(
-                              child: Text(
-                                loginModel.loginButtonText,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 60,
-                                  fontWeight: FontWeight.bold,
-                                  // fontFamily: 'Ubuntu',
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                        // Positioned(
+                        //   child: Container(
+                        //     margin: EdgeInsets.only(top: 180),
+                        //     child: Center(
+                        //       child: Text(
+                        //         loginModel.loginButtonText,
+                        //         style: TextStyle(
+                        //           color: Colors.white,
+                        //           fontSize: 60,
+                        //           fontWeight: FontWeight.bold,
+                        //           // fontFamily: 'Ubuntu',
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -291,6 +264,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                           child: Text('SUBMIT'),
                                           onPressed: !_deviceKeyPresent
                                               ? () {
+                                                  ProgressDialog
+                                                      progressDialog = AppTheme
+                                                          .showProgressDialog(
+                                                              context);
+                                                  progressDialog.show();
                                                   _deviceKeyCheck =
                                                       deviceKey.text == ''
                                                           ? false
@@ -298,12 +276,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   if (_deviceKeyCheck) {
                                                     Config.authToken =
                                                         deviceKey.text;
-                                                    init().then((value) {
+                                                    loadData().then((value) {
                                                       if (value) {
-                                                        ShiftController(1)
-                                                            .launch(context);
+                                                        progressDialog.hide();
+                                                        setState(() {
+                                                          _deviceKeyPresent =
+                                                              true;
+                                                        });
                                                       }
                                                     });
+                                                  } else {
+                                                    progressDialog.hide();
                                                   }
                                                 }
                                               : null,
@@ -413,7 +396,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: Colors.transparent,
                                 child: InkWell(
                                   splashColor: Colors.yellow[100],
-                                  onTap: onButtonTap,
+                                  onTap: _deviceKeyPresent ? onButtonTap : null,
                                   child: Center(
                                     child: Text(
                                       'Login',

@@ -20,14 +20,14 @@ class DashboardController {
           img: 'assets/order.png',
           name: 'Pending Orders',
           subtitle: 'Your pending orders'),
-      DashboardItem(
-          img: 'assets/report.png',
-          name: 'Reports',
-          subtitle: 'Your daily reports'),
-      DashboardItem(
-          img: 'assets/setting.png',
-          name: 'Setting',
-          subtitle: 'Application setting'),
+      // DashboardItem(
+      //     img: 'assets/report.png',
+      //     name: 'Reports',
+      //     subtitle: 'Your daily reports'),
+      // DashboardItem(
+      //     img: 'assets/setting.png',
+      //     name: 'Setting',
+      //     subtitle: 'Application setting'),
       DashboardItem(
           img: 'assets/register.png',
           name: 'Register',
@@ -35,7 +35,7 @@ class DashboardController {
       DashboardItem(
           img: 'assets/logout.png', name: 'Logout', subtitle: 'You can rest'),
       DashboardItem(
-          img: 'assets/register.png',
+          img: 'assets/database-storage.png',
           name: 'Database',
           subtitle: 'Provides raw database access')
     ];

@@ -9,7 +9,7 @@ class AppTheme {
   static final Color appBarColor = Colors.red;
   static final Color dialogButtonColor = Colors.amberAccent;
   static final Color listTextColor = Colors.amber[400];
-  static final Color appThemeColor = Colors.blue;
+  static final Color appThemeColor = Colors.amber;
 
   static Widget appBarNormal(
       {BuildContext context,

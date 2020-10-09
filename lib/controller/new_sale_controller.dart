@@ -81,6 +81,9 @@ class NewSaleController {
         .getOrderWhereMasterId(Config.database, salesMaster);
     this.model.order.setItemList = updatedList;
     this.model.salesMaster = salesMaster;
+    this.model.leadingString = '';
+    this.model.titleString = '';
+    this.model.trailingString = '';
     launchAndReplacement(context);
   }
 }

@@ -12,6 +12,7 @@ class Config {
   static const String databaseName = 'CloudKitchen.db';
 
   static const String serverIP = '72.52.142.19';
+  //622780154
   static String _authToken;
   static set authToken(String value) => _authToken = value;
   static String get authToken => _authToken;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/controller/new_sale_controller.dart';
 import 'package:food_app/database/columns.dart';
 import 'package:food_app/models/objects/payment_method.dart';
 import 'package:food_app/models/objects/sales_master.dart';
@@ -18,21 +19,23 @@ class OrderController {
     model.paymentMethodList = DataLists.instance.listPaymentMethods;
     getDineInList();
     model.dineInColumns = [
-      '...',
+      'Pay',
       'Sale No',
       'Table No',
       'Waiter Name',
       'DueAmount',
-      '...'
+      'Delete',
+      'Edit'
     ];
     getTakeawayList();
     model.takeawayAndDeliveryColumns = [
-      '...',
+      'Pay',
       'Sale No',
       'Cell No',
       'Customer Name',
       'DueAmount',
-      '...'
+      'Delete',
+      'Edit'
     ];
     getDeliveryList();
     if (orderType == 1) {
@@ -117,16 +120,26 @@ class OrderController {
               onPressed: () {
                 onOrderCancelled(element['local_id']);
               })),
+          DataCell(IconButton(
+              icon: Icon(
+                Icons.edit,
+                color: Colors.amberAccent,
+              ),
+              onPressed: () {
+                NewSaleController()
+                    .editOrder(new SalesMaster.fromJson(element), context);
+              })),
         ]));
       });
       return DataTable(
         columns: [
-          DataColumn(label: Text('...')),
+          DataColumn(label: Text('Pay')),
           DataColumn(label: Text('Sale No')),
           DataColumn(label: Text('Table#')),
           DataColumn(label: Text('Waiter')),
           DataColumn(label: Text('Amount')),
-          DataColumn(label: Text('...')),
+          DataColumn(label: Text('Delete')),
+          DataColumn(label: Text('Edit')),
         ],
         rows: rows,
       );
@@ -154,16 +167,26 @@ class OrderController {
         DataCell(IconButton(
             icon: Icon(Icons.close, color: Colors.red),
             onPressed: () => onNo(element['local_id']))),
+        DataCell(IconButton(
+            icon: Icon(
+              Icons.edit,
+              color: Colors.amberAccent,
+            ),
+            onPressed: () {
+              NewSaleController()
+                  .editOrder(new SalesMaster.fromJson(element), context);
+            })),
       ]));
     });
     return DataTable(
       columns: [
-        DataColumn(label: Text('...')),
+        DataColumn(label: Text('Pay')),
         DataColumn(label: Text('Sale No')),
         DataColumn(label: Text('Customer')),
         DataColumn(label: Text('Contact')),
         DataColumn(label: Text('Amount')),
-        DataColumn(label: Text('...')),
+        DataColumn(label: Text('Delete')),
+        DataColumn(label: Text('Edit')),
       ],
       rows: rows,
     );
@@ -187,16 +210,26 @@ class OrderController {
         DataCell(IconButton(
             icon: Icon(Icons.close, color: Colors.red),
             onPressed: () => onNo(element['local_id']))),
+        DataCell(IconButton(
+            icon: Icon(
+              Icons.edit,
+              color: Colors.amberAccent,
+            ),
+            onPressed: () {
+              NewSaleController()
+                  .editOrder(new SalesMaster.fromJson(element), context);
+            })),
       ]));
     });
     return DataTable(
       columns: [
-        DataColumn(label: Text('...')),
+        DataColumn(label: Text('Pay')),
         DataColumn(label: Text('Sale No')),
         DataColumn(label: Text('Customer')),
         DataColumn(label: Text('Contact')),
         DataColumn(label: Text('Amount')),
-        DataColumn(label: Text('...')),
+        DataColumn(label: Text('Delete')),
+        DataColumn(label: Text('Edit')),
       ],
       rows: rows,
     );

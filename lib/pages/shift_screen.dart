@@ -29,11 +29,9 @@ class _ShiftScreen extends State<ShiftScreen> {
   String errorMessage = 'Required';
 
   final GlobalKey<FormState> _formKey = GlobalKey();
-  TextEditingController _deviceKey = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    _deviceKey.text = Config.authToken;
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -54,7 +52,7 @@ class _ShiftScreen extends State<ShiftScreen> {
                       backgroundColor: Colors.yellow[600],
                       child: CircleAvatar(
                         radius: 80.0,
-                        backgroundImage: AssetImage('asset/money-bag.jpg'),
+                        backgroundImage: AssetImage('assets/money-bag.jpg'),
                       ),
                     ),
                   ),
@@ -122,40 +120,6 @@ class _ShiftScreen extends State<ShiftScreen> {
                             ),
                           ],
                         )),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          labelText: "Device Key",
-                          prefixIcon: Icon(
-                            Icons.device_unknown,
-                            size: 20,
-                            color: Colors.amber,
-                          ),
-                          hintStyle: TextStyle(
-                            color: Colors.grey[300],
-                          ),
-                          labelStyle: TextStyle(
-                            color: Colors.grey[400],
-                          ),
-                        ),
-                        textInputAction: TextInputAction.next,
-                        keyboardType: TextInputType.number,
-                        onFieldSubmitted: (value) {
-                          FocusScope.of(context).unfocus();
-                        },
-                        validator: (value) {
-                          if (value.isEmpty ||
-                              value.length < 0 ||
-                              int.parse(value) <= 0) {
-                            return 'Invalid Device Key';
-                          }
-                          return null;
-                        },
-                        controller: _deviceKey,
-                      ),
-                    ),
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextFormField(
@@ -296,53 +260,47 @@ class _ShiftScreen extends State<ShiftScreen> {
             setState(() {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
-                
                 DataLists.instance.listDevices.forEach((d) {
-                  if (_deviceKey.text == d.deviceKey) {
-                    Config.currentDevice = d;
-                    Config.currentShift = Shift(
-                        shift: _dropdown,
-                        deviceKey: _deviceKey.text.trim(),
-                        openingBalance: openingAmount.text.trim(),
-                        userId: Config.currentUser.serverId,
-                        openingBalanceDateTime:
-                            Config.getCurrentDateTimeDBFormat(),
-                        outletId: Config.currentUser.outletId,
-                        companyId: Config.currentUser.companyId,
-                        registerStatus: '1',
-                        closingBalance: '0',
-                        closingBalanceDateTime: '0',
-                        isUpload: '0'
-                    );
+                  Config.currentDevice = d;
+                  Config.currentShift = Shift(
+                      shift: _dropdown,
+                      deviceKey: Config.authToken,
+                      openingBalance: openingAmount.text.trim(),
+                      userId: Config.currentUser.serverId,
+                      openingBalanceDateTime:
+                          Config.getCurrentDateTimeDBFormat(),
+                      outletId: Config.currentUser.outletId,
+                      companyId: Config.currentUser.companyId,
+                      registerStatus: '1',
+                      closingBalance: '0',
+                      closingBalanceDateTime: '0',
+                      isUpload: '0');
 
-                    Shift().getNextShiftRemoteId(Config.database).then((value) {
-                      if (value > 0) {
-                        Config.currentShift.remoteId = value.toString();
-                        Config.currentShift.registerNo = Lib.codeGenerator(
-                            'REG', int.parse(value.toString()));
-                        Config.database
-                            .insert(ShiftTable.tableName,
-                                Config.currentShift.toMap(Config.currentShift))
-                            .then((value) {
-                          if (value > 0)
-                            AppTheme.showAlertDialogOK(context,
-                                title: 'Success',
-                                message:
-                                    'Shift# ${Config.currentShift.registerNo} opened successfully.',
-                                onOK: () => DashboardController(context)
-                                    .pushAndRemoveUntil(context));
-                          else
-                            AppTheme.showAlertDialogOK(context,
-                                title: 'Error',
-                                message:
-                                    'Your request is not accepted by Server. Please Try Again!',
-                                onOK: () => Navigator.of(context).pop());
-                        });
-                      }
-                    });
-                  } else {
-                    Config.log.e('Device not found');
-                  }
+                  Shift().getNextShiftRemoteId(Config.database).then((value) {
+                    if (value > 0) {
+                      Config.currentShift.remoteId = value.toString();
+                      Config.currentShift.registerNo =
+                          Lib.codeGenerator('REG', int.parse(value.toString()));
+                      Config.database
+                          .insert(ShiftTable.tableName,
+                              Config.currentShift.toMap(Config.currentShift))
+                          .then((value) {
+                        if (value > 0)
+                          AppTheme.showAlertDialogOK(context,
+                              title: 'Success',
+                              message:
+                                  'Shift# ${Config.currentShift.registerNo} opened successfully.',
+                              onOK: () => DashboardController(context)
+                                  .pushAndRemoveUntil(context));
+                        else
+                          AppTheme.showAlertDialogOK(context,
+                              title: 'Error',
+                              message:
+                                  'Your request is not accepted by Server. Please Try Again!',
+                              onOK: () => Navigator.of(context).pop());
+                      });
+                    }
+                  });
                 });
               } else {
                 _autoValidate = true;
@@ -365,7 +323,6 @@ class _ShiftScreen extends State<ShiftScreen> {
               if (!checkField) {
                 double amount = double.parse(closingAmount.text);
                 if (amount > 0) {
-
                   ///UPDATING THE SHIFT OBJECT IN CONFIG
                   Config.currentShift.closingBalance = closingAmount.text;
                   Config.currentShift.closingBalanceDateTime =
@@ -373,22 +330,31 @@ class _ShiftScreen extends State<ShiftScreen> {
                   Config.currentShift.registerStatus = '2';
 
                   ///UPDATING SHIFT IN THE DATABASE
-                  Config.database.update(ShiftTable.tableName, {
-                    ShiftTable.closingBalance : Config.currentShift.closingBalance,
-                    ShiftTable.closingBalanceDateTime : Config.currentShift.closingBalanceDateTime,
-                    ShiftTable.registerStatus : Config.currentShift.registerStatus
-                  }, where: '${ShiftTable.localId} = ${Config.currentShift.remoteId}').then((value) {
+                  Config.database
+                      .update(
+                          ShiftTable.tableName,
+                          {
+                            ShiftTable.closingBalance:
+                                Config.currentShift.closingBalance,
+                            ShiftTable.closingBalanceDateTime:
+                                Config.currentShift.closingBalanceDateTime,
+                            ShiftTable.registerStatus:
+                                Config.currentShift.registerStatus
+                          },
+                          where:
+                              '${ShiftTable.localId} = ${Config.currentShift.remoteId}')
+                      .then((value) {
                     if (value > 0)
                       AppTheme.showAlertDialogOK(context,
                           title: 'Success',
                           message:
-                          'Shift# ${Config.currentShift.registerNo} closed successfully.',
-                          onOK: () => LoginController().pushAndRemoveUntil(context));
+                              'Shift# ${Config.currentShift.registerNo} closed successfully.',
+                          onOK: () =>
+                              LoginController().pushAndRemoveUntil(context));
                     else
                       AppTheme.showAlertDialogOK(context,
                           title: 'Error',
-                          message:
-                          'Something went wrong. Please Try Again!',
+                          message: 'Something went wrong. Please Try Again!',
                           onOK: () => Navigator.of(context).pop());
                   });
 
