@@ -1,3 +1,4 @@
+import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/company.dart';
@@ -9,6 +10,7 @@ import 'package:food_app/models/objects/item_modifier.dart';
 import 'package:food_app/models/objects/modifier.dart';
 import 'package:food_app/models/objects/outlet.dart';
 import 'package:food_app/models/objects/payment_method.dart';
+import 'package:food_app/models/objects/register.dart';
 import 'package:food_app/models/objects/user.dart';
 import 'package:food_app/models/objects/vat_amount.dart';
 import 'package:food_app/models/objects/table.dart';
@@ -30,11 +32,13 @@ class DataLists {
   final List<PaymentMethod> listPaymentMethods = [];
   final List<ExpenseCategory> listExpenseCategories = [];
   final List<Device> listDevices = [];
+  final List<Register> listRegisters = [];
   final List<dynamic> listSales = []; // NOT FUNCTIONAL
   final List<dynamic> listExpenses = []; // NOT FUNCTIONAL
   final int listsCount = 12;
   static final DataLists instance = new DataLists();
   static final Logger _log = Config.log;
+
   List<List> getInList() => [
         listCompany,
         listOutlet,
@@ -51,6 +55,7 @@ class DataLists {
         listDevices
       ];
 
+  // INSERT DATA INTO DATABASE FROM ONLINE SOURCE
   static Future<bool> importToDatabase(Database db) async {
     try {
       int x = await db.delete(Tables.users);
@@ -149,10 +154,18 @@ class DataLists {
       _log.e('Error On ImportToDatabase listDevices', [e]);
       return false;
     }
+    try {
+      db.delete(ShiftTable.tableName).then((value) => instance.listRegisters
+          .forEach((element) async => await element.insertIntoDatabase(db)));
+    } catch (e) {
+      _log.e('Error On ImportToDatabase listRegisters', [e]);
+      return false;
+    }
     showDataCount();
     return true;
   }
 
+  //LOAD DATA TO MEMORY FROM DATABASE
   static Future<bool> importToMemory(Database db) async {
     try {
       List<Map<String, dynamic>> listMap = await db.query(Tables.users);
@@ -280,32 +293,48 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap =
-          await db.query(Tables.devices);
+      List<Map<String, dynamic>> listMap = await db.query(Tables.devices);
       listMap.forEach((element) {
-        DataLists.instance.listDevices
-            .add(new Device.fromJson(element));
+        DataLists.instance.listDevices.add(new Device.fromJson(element));
       });
     } catch (e) {
       _log.e('ERROR ON importToMemory listDevices', [e]);
       return false;
     }
+
+    try {
+      List<Map<String, dynamic>> listMap = await db.query(ShiftTable.tableName);
+      listMap.forEach((element) {
+        DataLists.instance.listRegisters.add(new Register.fromJson(element));
+      });
+    } catch (e) {
+      _log.e('ERROR ON importToMemory listRegisters', [e]);
+      return false;
+    }
     showDataCount();
-    return true;
+    if (DataLists.instance.listUsers.isNotEmpty)
+      return true;
+    else
+      return false;
   }
 
   static void showDataCount() {
     _log.v('Users: ${DataLists.instance.listUsers.length.toString()}');
     _log.v('Devics: ${DataLists.instance.listDevices.length.toString()}');
-    _log.v('Categories: ${DataLists.instance.listCategories.length.toString()}');
+    _log.v(
+        'Categories: ${DataLists.instance.listCategories.length.toString()}');
     _log.v('Item: ${DataLists.instance.listItem.length.toString()}');
     _log.v('Modifiers: ${DataLists.instance.listModifiers.length.toString()}');
-    _log.v('Item Modifiers: ${DataLists.instance.listItemModifiers.length.toString()}');
+    _log.v(
+        'Item Modifiers: ${DataLists.instance.listItemModifiers.length.toString()}');
     _log.v('Tables: ${DataLists.instance.listTables.length.toString()}');
-    _log.v('Payment Methods: ${DataLists.instance.listPaymentMethods.length.toString()}');
-    _log.v('Expense Categories: ${DataLists.instance.listExpenseCategories.length.toString()}');
+    _log.v(
+        'Payment Methods: ${DataLists.instance.listPaymentMethods.length.toString()}');
+    _log.v(
+        'Expense Categories: ${DataLists.instance.listExpenseCategories.length.toString()}');
     _log.v('Outlet: ${DataLists.instance.listOutlet.length.toString()}');
     _log.v('VatAmount: ${DataLists.instance.listVatAmount.length.toString()}');
     _log.v('Customers: ${DataLists.instance.listCustomers.length.toString()}');
+    _log.v('Registers: ${DataLists.instance.listRegisters.length.toString()}');
   }
 }

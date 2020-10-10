@@ -8,6 +8,7 @@ import 'package:food_app/models/objects/item_modifier.dart';
 import 'package:food_app/models/objects/modifier.dart';
 import 'package:food_app/models/objects/outlet.dart';
 import 'package:food_app/models/objects/payment_method.dart';
+import 'package:food_app/models/objects/register.dart';
 import 'package:food_app/models/objects/table.dart';
 import 'package:food_app/models/objects/user.dart';
 import 'package:food_app/models/objects/vat_amount.dart';
@@ -138,13 +139,22 @@ class ApiInstall {
         return false;
       }
 
-      // try {
+      try {
         getDeviceList(data['device']);
-      //   _log.v('DATA LIST device Ready.');
-      // } catch (e) {
-      //   _log.e('>>>ERROR ON getDeviceList', [e]);
-      //   return false;
-      // }
+        _log.v('DATA LIST device Ready.');
+      } catch (e) {
+        _log.e('>>>ERROR ON getDeviceList', [e]);
+        return false;
+      }
+
+      try {
+        getRegisterList(data['registers']);
+        _log.v('DATA LIST registers Ready.');
+      } catch (e) {
+        _log.e('>>>ERROR ON getRegistersList', [e]);
+        return false;
+      }
+
       return true;
     } else {
       _log.i('NULL DATA PASSED TO INSTALL API');
@@ -354,6 +364,12 @@ class ApiInstall {
         dateAdded: e['date_added'],
         dateModified: e['date_modified'],
       ));
+    });
+  }
+
+  void getRegisterList(List<dynamic> i) {
+    i.forEach((element) {
+      DataLists.instance.listRegisters.add(new Register.fromJson(element));
     });
   }
 }

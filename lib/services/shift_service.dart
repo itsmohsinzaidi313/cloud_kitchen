@@ -82,6 +82,11 @@ class ShiftService extends ServiceCommon {
                 }
               }
             }
+          } else {
+            String message = decodedJson['message'];
+            if(message == 'A register is already opened with the user, please close the previous one to open another') {
+              
+            }
           }
         }
       }

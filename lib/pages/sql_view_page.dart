@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/database/project_database.dart';
+import 'package:flutter/rendering.dart';
+import 'package:food_app/shared/config.dart';
+import 'package:sqflite/sqlite_api.dart';
 
 class SqlView extends StatefulWidget {
   @override
@@ -12,6 +14,10 @@ class _SqlViewState extends State<SqlView> {
   final _textEditingController1 = TextEditingController();
   final _textEditingController2 = TextEditingController();
   List<Map<String, dynamic>> result = [];
+  List<DataColumn> columns = [DataColumn(label: Text(''))];
+  List<DataRow> rows = [
+    DataRow(cells: [DataCell(Text(''))])
+  ];
   bool check1 = false;
   @override
   Widget build(BuildContext context) {
@@ -34,17 +40,34 @@ class _SqlViewState extends State<SqlView> {
                       Icons.check,
                       color: Colors.red,
                     ),
-                    onPressed: () {
-                      ProjectDatabase().database.then((db) {
-                        db
-                            .rawQuery(_textEditingController1.text)
-                            .then((value) => setState(() {
-                                  result = value;
-                                }))
-                            .catchError((onError) => setState(() {
-                                  result = [];
-                                  result.add({'Error': onError});
-                                }));
+                    onPressed: () async {
+                      Database db = Config.database;
+                      List<Map<String, dynamic>> values =
+                          await db.rawQuery(_textEditingController1.text);
+                      result = values;
+                      columns = [];
+                      rows = [];
+                      setState(() {
+                        if (values.isNotEmpty) {
+                          values[0].forEach((key, value) {
+                            columns
+                                .add(DataColumn(label: Text(key.toString())));
+                          });
+                          if (columns.length == 0)
+                            columns.add(DataColumn(label: Text('')));
+                          values.forEach((element) {
+                            List<DataCell> cells = [];
+                            element.forEach((key, value) {
+                              cells.add(DataCell(Text(value.toString())));
+                            });
+                            rows.add(DataRow(cells: cells));
+                          });
+                          if (rows.length == 0)
+                            rows.add(DataRow(cells: [DataCell(Text(''))]));
+                        } else {
+                          columns.add(DataColumn(label: Text('')));
+                          rows.add(DataRow(cells: [DataCell(Text(''))]));
+                        }
                       });
                     },
                   ),
@@ -72,17 +95,33 @@ class _SqlViewState extends State<SqlView> {
                       Icons.check,
                       color: Colors.red,
                     ),
-                    onPressed: () {
-                      ProjectDatabase().database.then((db) {
-                        db
-                            .rawQuery(_textEditingController2.text)
-                            .then((value) => setState(() {
-                                  result = value;
-                                }))
-                            .catchError((onError) => setState(() {
-                                  result = [];
-                                  result.add({'Error': onError});
-                                }));
+                    onPressed: () async {
+                      Database db = Config.database;
+                      List<Map<String, dynamic>> values =
+                          await db.rawQuery(_textEditingController2.text);
+                      result = values;
+                      columns = [];
+                      rows = [];
+                      setState(() {
+                        if (values.isNotEmpty) {
+                          values[0].forEach((key, value) {
+                            columns.add(DataColumn(
+                                label: Text(key.toString().toUpperCase())));
+                          });
+                          if (columns.length == 0)
+                            columns.add(DataColumn(label: Text('')));
+                          values.forEach((element) {
+                            List<DataCell> cells = [];
+                            element.forEach((key, value) {
+                              cells.add(DataCell(Text(value.toString())));
+                            });
+                            rows.add(DataRow(cells: cells));
+                          });
+                          if (rows.length == 0) rows.add(DataRow(cells: []));
+                        } else {
+                          columns.add(DataColumn(label: Text('')));
+                          rows.add(DataRow(cells: [DataCell(Text(''))]));
+                        }
                       });
                     },
                   ),
@@ -100,67 +139,23 @@ class _SqlViewState extends State<SqlView> {
                   ),
                   subtitle: Text('Rows: ${result.length}'),
                 ),
-                ButtonBar(
-                  alignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    RaisedButton(
-                      child: Text('New Line'),
-                      onPressed: () {
-                        setState(() {
-                          applyNewLine = !applyNewLine;
-                        });
-                      },
-                    ),
-                    RaisedButton(
-                      child: Text('Caps Columns'),
-                      onPressed: () {
-                        setState(() {
-                          capsColumnNames = !capsColumnNames;
-                        });
-                      },
-                    )
-                  ],
-                ),
                 Expanded(
-                  child: ListView.builder(
-                      itemCount: result.length,
-                      itemBuilder: (BuildContext context, int index) =>
-                          getWidget(context, index)),
-                ),
+                    child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      columns: columns,
+                      rows: rows,
+                    ),
+                  ),
+                )),
               ],
             ),
           ),
         );
       }),
     );
-  }
-
-  Widget getWidget(BuildContext context, int index) {
-    return Container(
-      child: Card(
-        child: ListTile(
-          leading: Text(
-            '${index + 1}',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          title: Text(styleColumns(result[index])),
-        ),
-      ),
-    );
-  }
-
-  String styleColumns(Map<String, dynamic> map) {
-    String string = '';
-    String newLine = '';
-    if (applyNewLine) newLine = '\n';
-    map.forEach((key, value) {
-      if (capsColumnNames) {
-        string += '${key.toUpperCase()}: $value$newLine ';
-      } else {
-        string += '$key: $value$newLine ';
-      }
-    });
-    return string;
   }
 
   @override

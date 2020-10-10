@@ -185,26 +185,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         fit: BoxFit.scaleDown,
                       ),
                     ),
-                    child: Stack(
-                      children: <Widget>[
-                        // Positioned(
-                        //   child: Container(
-                        //     margin: EdgeInsets.only(top: 180),
-                        //     child: Center(
-                        //       child: Text(
-                        //         loginModel.loginButtonText,
-                        //         style: TextStyle(
-                        //           color: Colors.white,
-                        //           fontSize: 60,
-                        //           fontWeight: FontWeight.bold,
-                        //           // fontFamily: 'Ubuntu',
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
-                    ),
                   ),
                   Expanded(
                     child: Padding(
@@ -283,6 +263,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                                           _deviceKeyPresent =
                                                               true;
                                                         });
+                                                      } else {
+                                                        progressDialog.hide();
+                                                        AppTheme.showAlertDialogOK(
+                                                            context,
+                                                            title: 'Attention',
+                                                            message:
+                                                                'Unable to load data.\nMake sure you have an internet connection\nand try again.', onOK: () => Navigator.of(context).pop());
                                                       }
                                                     });
                                                   } else {
