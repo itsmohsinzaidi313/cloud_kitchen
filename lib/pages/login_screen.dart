@@ -68,7 +68,8 @@ class _LoginScreenState extends State<LoginScreen> {
               _deviceKeyPresent = dKey == '' ? false : true;
               deviceKey.text = dKey;
               Config.authToken = dKey;
-              loadData().then((value) => _deviceKeyPresent = value);
+              loadData().then((value) => _deviceKeyPresent = value)
+                  .whenComplete(() => Config.currentDevice = DataLists.instance.listDevices.where((element) => dKey == element.deviceKey));
             } else {
               _deviceKeyPresent = false;
             }

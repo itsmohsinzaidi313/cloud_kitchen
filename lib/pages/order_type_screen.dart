@@ -364,7 +364,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                           Config.database
                               .query(CustomerTable.tableName,
                                   columns: [
-                                    CustomerTable.localId[0],
+                                    CustomerTable.localId,
                                     CustomerTable.name,
                                     CustomerTable.phone,
                                     CustomerTable.address,
@@ -432,8 +432,8 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                           ]);
                         } else {
                           User cUser = Config.currentUser;
-                          Customer customer = Customer(
-                              name: controllers[4].text,
+                          Customer customer = Customer(                              name: controllers[4].text,
+
                               phone: controllers[5].text,
                               address: controllers[6].text,
                               userId: cUser.serverId,
