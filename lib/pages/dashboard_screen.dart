@@ -5,6 +5,7 @@ import 'package:food_app/controller/shift_controller.dart';
 import 'package:food_app/models/view_models/dashboard_model.dart';
 import 'package:food_app/models/generic_models/dashboard_item.dart';
 import 'package:food_app/pages/order_type_screen.dart';
+import 'package:food_app/pages/settings_screen.dart';
 import 'package:food_app/pages/sql_view_page.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
@@ -131,7 +132,9 @@ class _DashboardState extends State<Dashboard> {
             LoginController().pushAndRemoveUntil(context);
           },
           onNo: () => Navigator.pop(context));
+    } else if (dashboardItem.name == 'Setting') {
+      Navigator.of(context)
+          .push(new MaterialPageRoute(builder: (context) => SettingsScreen()));
     }
   }
-
 }

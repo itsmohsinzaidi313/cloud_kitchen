@@ -34,6 +34,8 @@ class Lib {
         _log.v('SERVER RESPONSE: ${response.statusCode}');
         if (response.statusCode == 200) {
           data = jsonDecode(response.body);
+        } else {
+          _log.w('SERVER RESPONSE: ${response.body}');  
         }
       }
       return data;
@@ -202,7 +204,5 @@ class Lib {
     return code + deviceId + digits;
   }
 
-  void shiftMech(Database db) async {
-    
-  }
+  void shiftMech(Database db) async {}
 }

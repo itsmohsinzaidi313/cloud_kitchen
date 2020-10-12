@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:food_app/controller/login_controller.dart';
 import 'package:food_app/database/project_database.dart';
 import 'package:food_app/shared/config.dart';
-import 'package:food_app/shared/data_lists.dart';
-import 'package:food_app/shared/lib.dart';
-import 'package:logger/logger.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -15,37 +12,10 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   final globalScaffoldKey = GlobalKey<ScaffoldState>();
-  Logger _log = Config.log;
-
-  Future<void> init() async {
-    ProjectDatabase().database.then((db) => Config.database = db);
-    Lib.install().then((value) {
-      if (value) {
-        _log.v('Data loaded from online source.');
-        DataLists.importToDatabase(Config.database).then((value) {
-          if (value) {
-            _log.v('Online data loaded');
-            LoginController().launch(context);
-          } else
-            _log.v('Online data load failed');
-        });
-      } else {
-        _log.v('Data loading from offline source.');
-        DataLists.importToMemory(Config.database).then((value) {
-          if (value) {
-            _log.v('Offline data loaded');
-            LoginController().launch(context);
-          } else
-            _log.v('Offline data load failed');
-        });
-      }
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    // init();
     ProjectDatabase().database.then((db) => Config.database = db);
     Timer(
           Duration(seconds: 3),

@@ -24,10 +24,10 @@ class DashboardController {
       //     img: 'assets/report.png',
       //     name: 'Reports',
       //     subtitle: 'Your daily reports'),
-      // DashboardItem(
-      //     img: 'assets/setting.png',
-      //     name: 'Setting',
-      //     subtitle: 'Application setting'),
+      DashboardItem(
+          img: 'assets/setting.png',
+          name: 'Setting',
+          subtitle: 'Application setting'),
       DashboardItem(
           img: 'assets/register.png',
           name: 'Register',

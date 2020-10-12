@@ -67,6 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
             if (dKey.isNotEmpty) {
               _deviceKeyPresent = dKey == '' ? false : true;
               deviceKey.text = dKey;
+              Config.authToken = dKey;
               loadData().then((value) => _deviceKeyPresent = value);
             } else {
               _deviceKeyPresent = false;
@@ -84,17 +85,19 @@ class _LoginScreenState extends State<LoginScreen> {
     if (value1) {
       bool value2 = await DataLists.importToDatabase(Config.database);
       if (value2) {
+        _log.w('Online data loaded');
         return true;
       } else {
+        _log.w('Online data load failed');
         return false;
       }
     } else {
       bool value2 = await DataLists.importToMemory(Config.database);
       if (value2) {
-        _log.v('Offline data loaded');
+        _log.w('Offline data loaded');
         return true;
       } else {
-        _log.v('Offline data load failed');
+        _log.w('Offline data load failed');
         return false;
       }
     }
@@ -141,7 +144,6 @@ class _LoginScreenState extends State<LoginScreen> {
           _formKey.currentState.save();
           email.text = email.text.trim();
           password.text = password.text.trim();
-          Config.authToken = deviceKey.text;
           validateUser(email.text, password.text)
               ? ShiftController(1).launch(context)
               : _scaffoldKey.currentState.showSnackBar(
@@ -269,7 +271,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                                             context,
                                                             title: 'Attention',
                                                             message:
-                                                                'Unable to load data.\nMake sure you have an internet connection\nand try again.', onOK: () => Navigator.of(context).pop());
+                                                                'Unable to load data.\nMake sure you have an internet connection\nand try again.',
+                                                            onOK: () =>
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop());
                                                       }
                                                     });
                                                   } else {
