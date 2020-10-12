@@ -1,3 +1,4 @@
+import 'package:food_app/database/table_object/company_table.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
@@ -80,7 +81,7 @@ class Company {
     try {
       Map<String, dynamic> map = new Map<String, dynamic>();
       for (int i = 0; i < getList().length; i++) {
-        map[Columns.company[i + 1]] = getList()[i];
+        map[CompanyTable.columnsName[i + 1]] = getList()[i];
       }
       return map;
     } catch (e) {
@@ -90,5 +91,5 @@ class Company {
   }
 
   Future<bool> insertIntoDatabase(Database db) async =>
-      await Lib.insertIntoDatabase(db, Tables.company, getValues());
+      await Lib.insertIntoDatabase(db, CompanyTable.tableName, getValues());
 }

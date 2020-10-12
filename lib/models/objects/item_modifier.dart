@@ -1,4 +1,5 @@
 import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/table_object/item_modifier_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/lib.dart';
@@ -61,7 +62,7 @@ class ItemModifier {
     try {
       Map<String, dynamic> map = new Map<String, dynamic>();
       for (int i = 1; i < getList().length; i++) {
-        map[Columns.itemModifier[i + 1]] = getList()[i];
+        map[ItemModifierTable.columnsName[i + 1]] = getList()[i];
       }
       return map;
     } catch (e) {
@@ -71,5 +72,5 @@ class ItemModifier {
   }
 
   Future<bool> insertIntoDatabase(Database db) async =>
-      await Lib.insertIntoDatabase(db, Tables.itemModifiers, getValues());
+      await Lib.insertIntoDatabase(db, ItemModifierTable.tableName, getValues());
 }

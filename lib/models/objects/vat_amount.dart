@@ -1,4 +1,5 @@
 import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/table_object/vat_amount_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
@@ -42,11 +43,11 @@ class VatAmount {
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
     for (int i = 0; i < getList().length; i++) {
-      map[Columns.vatAmount[i + 1]] = getList()[i];
+      map[VatAmountTable.columnsName[i + 1]] = getList()[i];
     }
     return map;
   }
 
   Future<bool> insertIntoDatabase(Database db) async =>
-      await Lib.insertIntoDatabase(db, Tables.vatAmount, getValues());
+      await Lib.insertIntoDatabase(db, VatAmountTable.tableName, getValues());
 }

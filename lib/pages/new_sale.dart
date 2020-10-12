@@ -278,7 +278,7 @@ class _NewSaleState extends State<NewSale> {
       }
       if (model.salesMaster.serverId == null) model.salesMaster.serverId = '0';
       List<Map<String, dynamic>> count = await _db.rawQuery(
-          'SELECT IFNULL(COUNT(id),0) AS count FROM ${Tables.salesDetails} WHERE ${Columns.salesDetails[0]} = ?',
+          'SELECT IFNULL(COUNT(id),0) AS count FROM ${SalesDetailTable.tableName} WHERE ${SalesDetailTable.id} = ?',
           [model.salesMaster.serverId]);
 
       CustomerOrder customerOrder = this.model.order;

@@ -41,7 +41,7 @@ class ShiftController {
     int count = data[0]['count'];
     if (count > 0) {
       List<Map<String, dynamic>> map = await Config.database.query(
-          Tables.shiftData,
+          ShiftTable.tableName,
           where: '${ShiftTable.registerStatus} = ?',
           whereArgs: ['1']);
       Shift shift = new Shift.fromJson(map[0]);

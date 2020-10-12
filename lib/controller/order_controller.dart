@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/new_sale_controller.dart';
 import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/table_object/sales_master_table.dart';
 import 'package:food_app/models/objects/payment_method.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/order_model.dart';
@@ -237,13 +238,13 @@ class OrderController {
 
   static Future onOrderCompleted(SalesMaster itm) async {
     await Config.database.execute(
-        'update ${Columns.salesMaster[37]} set ${Columns.salesMaster[5]} = ${Columns.salesMaster[6]} where id = ${itm.serverId}');
+        'update ${SalesMasterTable.isDelete} set ${SalesMasterTable.paidAmount} = ${SalesMasterTable.dueAmount} where id = ${itm.serverId}');
   }
 
   static void onOrderCancelled(String orderId) async {
     Database db = Config.database;
     Map<String, dynamic> update = {
-      Columns.salesMaster[37]: 1.toString(),
+      SalesMasterTable.isDelete: 1.toString(),
     };
     await SalesMaster().updateSpecificIntoDb(db, update, 'id', orderId);
   }

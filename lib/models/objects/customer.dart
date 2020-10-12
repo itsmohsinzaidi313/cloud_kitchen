@@ -1,3 +1,4 @@
+import 'package:food_app/database/table_object/customer_table.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:food_app/database/columns.dart';
@@ -86,23 +87,23 @@ class Customer {
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
     for (int i = 0; i < getList().length; i++) {
-      map[Columns.customers[i + 1]] = getList()[i];
+      map[CustomerTable.columnsName[i + 1]] = getList()[i];
     }
     return map;
   }
 
   Future<bool> insertIntoDatabase(Database db) async =>
-      await Lib.insertIntoDatabase(db, Tables.customers, getValues());
+      await Lib.insertIntoDatabase(db, CustomerTable.tableName, getValues());
 
   Future<int> insertCustomer(Database db, Customer customer) async {
     Map<String, dynamic> row = Customer().toMap(customer);
-    int id = await db.insert(Tables.customers, row);
+    int id = await db.insert(CustomerTable.tableName, row);
     return id;
   }
 
   Future<List<Customer>> getCustomer(Database db) async {
     List<Customer> customerList = [];
-    List<Map<String, dynamic>> customerMap = await db.query(Tables.customers);
+    List<Map<String, dynamic>> customerMap = await db.query(CustomerTable.tableName);
     customerMap.forEach((customer) {
       customerList.add(Customer.fromJson(customer));
     });
@@ -111,9 +112,9 @@ class Customer {
 
   Future<List<Customer>> getCustomerById(Database db, int id) async {
     List<Customer> customerList = [];
-    List<Map<String, dynamic>> customerMap = await db.query(Tables.customers,
-        columns: [Columns.customers[2], Columns.customers[3]],
-        where: '${Columns.customers[0]} = $id');
+    List<Map<String, dynamic>> customerMap = await db.query(CustomerTable.tableName,
+        columns: [CustomerTable.name, CustomerTable.phone],
+        where: '${CustomerTable.localId} = $id');
     customerMap.forEach((customer) {
       customerList.add(Customer.fromJson(customer));
     });

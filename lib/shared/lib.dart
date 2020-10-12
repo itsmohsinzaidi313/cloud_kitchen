@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/table_object/customer_table.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/generic_models/install_api.dart';
@@ -89,8 +90,8 @@ class Lib {
       List<Map<String, dynamic>> x = result['customer_synced'];
       String id = x[0]['id'];
       String remoteId = x[0]['remote_id'];
-      Config.database.update(Tables.customers, {'${Columns.customers[1]}': id},
-          where: '${Columns.customers[0]} = ?', whereArgs: [remoteId]);
+      Config.database.update(CustomerTable.tableName, {'${CustomerTable.serverId}': id},
+          where: '${CustomerTable.localId} = ?', whereArgs: [remoteId]);
       return true;
     } else
       return false;
@@ -162,7 +163,7 @@ class Lib {
         bool status = result['status'];
         if (status) {
           int rowsUpdated = await Config.database.update(
-              Tables.shiftData,
+              ShiftTable.tableName,
               {
                 ShiftTable.closingBalance: shift.closingBalance,
                 ShiftTable.openingBalanceDateTime: shift.closingBalanceDateTime,
