@@ -157,6 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
           _formKey.currentState.save();
           email.text = email.text.trim();
           password.text = password.text.trim();
+          Config.authToken = deviceKey.text;
           validateUser(email.text, password.text)
               ? ShiftController(1).launch(context)
               : _scaffoldKey.currentState.showSnackBar(

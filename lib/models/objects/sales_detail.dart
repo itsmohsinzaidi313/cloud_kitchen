@@ -1,9 +1,6 @@
 import 'dart:developer';
 
-import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/table_object/sales_detail_table.dart';
-import 'package:food_app/database/table_object/sales_master_table.dart';
-import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/item.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/shared/data_lists.dart';
