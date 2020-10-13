@@ -1,3 +1,4 @@
+import 'package:food_app/database/table_object/item_table.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:food_app/database/columns.dart';
@@ -65,20 +66,20 @@ class Item {
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
     for (int i = 0; i < getList().length; i++) {
-      map[Columns.item[i + 1]] = getList()[i];
+      map[ItemTable.columnsName[i + 1]] = getList()[i];
     }
     return map;
   }
 
   Future<bool> insertIntoDatabase(Database db) async =>
-      await Lib.insertIntoDatabase(db, Tables.item, getValues());
+      await Lib.insertIntoDatabase(db, ItemTable.tableName, getValues());
 
-  less() {
-    int qty = int.parse(this.quantity);
-    int difference = qty - 1;
-    if (difference >= 0) {
-      qty--;
-      this.quantity = qty.toString();
-    }
-  }
+  // less() {
+  //   int qty = int.parse(this.quantity);
+  //   int difference = qty - 1;
+  //   if (difference >= 0) {
+  //     qty--;
+  //     this.quantity = qty.toString();
+  //   }
+  // }
 }

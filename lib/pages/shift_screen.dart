@@ -209,7 +209,7 @@ class _ShiftScreen extends State<ShiftScreen> {
                             Config.currentShift.closingBalanceDateTime =
                                 Config.getCurrentDateTimeDBFormat();
                             Config.database.update(
-                                Tables.shiftData,
+                                ShiftTable.tableName,
                                 {
                                   ShiftTable.closingBalance: closingAmount.text,
                                   ShiftTable.closingBalanceDateTime:

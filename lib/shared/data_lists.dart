@@ -1,4 +1,17 @@
+import 'package:food_app/database/table_object/category_table.dart';
+import 'package:food_app/database/table_object/company_table.dart';
+import 'package:food_app/database/table_object/customer_table.dart';
+import 'package:food_app/database/table_object/device_table.dart';
+import 'package:food_app/database/table_object/expense_categories_table.dart';
+import 'package:food_app/database/table_object/item_modifier_table.dart';
+import 'package:food_app/database/table_object/item_table.dart';
+import 'package:food_app/database/table_object/modifier_table.dart';
+import 'package:food_app/database/table_object/outlet_table.dart';
+import 'package:food_app/database/table_object/payment_method_table.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
+import 'package:food_app/database/table_object/tables_table.dart';
+import 'package:food_app/database/table_object/user_table.dart';
+import 'package:food_app/database/table_object/vat_amount_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/company.dart';
@@ -58,7 +71,7 @@ class DataLists {
   // INSERT DATA INTO DATABASE FROM ONLINE SOURCE
   static Future<bool> importToDatabase(Database db) async {
     try {
-      int x = await db.delete(Tables.users);
+      int x = await db.delete(UserTable.tableName);
       instance.listUsers
           .forEach((element) async => await element.insertIntoDatabase(db));
     } catch (e) {
@@ -66,7 +79,7 @@ class DataLists {
       return false;
     }
     try {
-      int x = await db.delete(Tables.item);
+      int x = await db.delete(ItemTable.tableName);
       instance.listItem
           .forEach((element) async => await element.insertIntoDatabase(db));
     } catch (e) {
@@ -74,7 +87,7 @@ class DataLists {
       return false;
     }
     try {
-      int x = await db.delete(Tables.categories);
+      int x = await db.delete(CategoryTable.tableName);
       instance.listCategories
           .forEach((element) async => await element.insertIntoDatabase(db));
     } catch (e) {
@@ -82,7 +95,7 @@ class DataLists {
       return false;
     }
     try {
-      int x = await db.delete(Tables.company);
+      int x = await db.delete(CompanyTable.tableName);
       instance.listCompany
           .forEach((element) async => await element.insertIntoDatabase(db));
     } catch (e) {
@@ -90,42 +103,42 @@ class DataLists {
       return false;
     }
     try {
-      db.delete(Tables.outlet).then((value) => instance.listOutlet
+      db.delete(OutletTable.tableName).then((value) => instance.listOutlet
           .forEach((element) async => await element.insertIntoDatabase(db)));
     } catch (e) {
       _log.e('Error On ImportToDatabase listOutlet', [e]);
       return false;
     }
     try {
-      db.delete(Tables.customers).then((value) => instance.listCustomers
+      db.delete(CustomerTable.tableName).then((value) => instance.listCustomers
           .forEach((element) async => await element.insertIntoDatabase(db)));
     } catch (e) {
       _log.e('Error On ImportToDatabase listCustomers', [e]);
       return false;
     }
     try {
-      db.delete(Tables.tables).then((value) => instance.listTables
+      db.delete(TablesTable.tableName).then((value) => instance.listTables
           .forEach((element) async => await element.insertIntoDatabase(db)));
     } catch (e) {
       _log.e('Error On ImportToDatabase listTables', [e]);
       return false;
     }
     try {
-      db.delete(Tables.itemModifiers).then((value) => instance.listItemModifiers
+      db.delete(ItemModifierTable.tableName).then((value) => instance.listItemModifiers
           .forEach((element) async => await element.insertIntoDatabase(db)));
     } catch (e) {
       _log.e('Error On ImportToDatabase listItemModifiers', [e]);
       return false;
     }
     try {
-      db.delete(Tables.modifiers).then((value) => instance.listModifiers
+      db.delete(ModifierTable.tableName).then((value) => instance.listModifiers
           .forEach((element) async => await element.insertIntoDatabase(db)));
     } catch (e) {
       _log.e('Error On ImportToDatabase listModifiers', [e]);
       return false;
     }
     try {
-      db.delete(Tables.expenseCategories).then((value) => instance
+      db.delete(ExpenseCategoryTable.tableName).then((value) => instance
           .listExpenseCategories
           .forEach((element) async => await element.insertIntoDatabase(db)));
     } catch (e) {
@@ -133,7 +146,7 @@ class DataLists {
       return false;
     }
     try {
-      db.delete(Tables.paymentMethods).then((value) => instance
+      db.delete(PaymentMethodTable.tableName).then((value) => instance
           .listPaymentMethods
           .forEach((element) async => await element.insertIntoDatabase(db)));
     } catch (e) {
@@ -141,14 +154,14 @@ class DataLists {
       return false;
     }
     try {
-      db.delete(Tables.vatAmount).then((value) => instance.listVatAmount
+      db.delete(VatAmountTable.tableName).then((value) => instance.listVatAmount
           .forEach((element) async => await element.insertIntoDatabase(db)));
     } catch (e) {
       _log.e('Error On ImportToDatabase listVatAmount', [e]);
       return false;
     }
     try {
-      db.delete(Tables.devices).then((value) => instance.listDevices
+      db.delete(DeviceTable.tableName).then((value) => instance.listDevices
           .forEach((element) async => await element.insertIntoDatabase(db)));
     } catch (e) {
       _log.e('Error On ImportToDatabase listDevices', [e]);
@@ -168,7 +181,7 @@ class DataLists {
   //LOAD DATA TO MEMORY FROM DATABASE
   static Future<bool> importToMemory(Database db) async {
     try {
-      List<Map<String, dynamic>> listMap = await db.query(Tables.users);
+      List<Map<String, dynamic>> listMap = await db.query(UserTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listUsers.add(new User.fromJson(element));
       });
@@ -178,7 +191,7 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap = await db.query(Tables.categories);
+      List<Map<String, dynamic>> listMap = await db.query(CategoryTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listCategories.add(new Category.fromJson(element));
       });
@@ -188,7 +201,7 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap = await db.query(Tables.item);
+      List<Map<String, dynamic>> listMap = await db.query(ItemTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listItem.add(new Item.fromJson(element));
       });
@@ -198,7 +211,7 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap = await db.query(Tables.company);
+      List<Map<String, dynamic>> listMap = await db.query(CompanyTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listCompany.add(new Company.fromJson(element));
       });
@@ -208,7 +221,7 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap = await db.query(Tables.customers);
+      List<Map<String, dynamic>> listMap = await db.query(CustomerTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listCustomers.add(new Customer.fromJson(element));
       });
@@ -218,7 +231,7 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap = await db.query(Tables.tables);
+      List<Map<String, dynamic>> listMap = await db.query(TablesTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listTables.add(new Table.fromJson(element));
       });
@@ -228,7 +241,7 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap = await db.query(Tables.vatAmount);
+      List<Map<String, dynamic>> listMap = await db.query(VatAmountTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listVatAmount.add(new VatAmount.fromJson(element));
       });
@@ -238,7 +251,7 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap = await db.query(Tables.outlet);
+      List<Map<String, dynamic>> listMap = await db.query(OutletTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listOutlet.add(new Outlet.fromJson(element));
       });
@@ -248,7 +261,7 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap = await db.query(Tables.modifiers);
+      List<Map<String, dynamic>> listMap = await db.query(ModifierTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listModifiers.add(new Modifier.fromJson(element));
       });
@@ -258,7 +271,7 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap = await db.query(Tables.itemModifiers);
+      List<Map<String, dynamic>> listMap = await db.query(ItemModifierTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listItemModifiers
             .add(new ItemModifier.fromJson(element));
@@ -270,7 +283,7 @@ class DataLists {
 
     try {
       List<Map<String, dynamic>> listMap =
-          await db.query(Tables.paymentMethods);
+          await db.query(PaymentMethodTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listPaymentMethods
             .add(new PaymentMethod.fromJson(element));
@@ -282,7 +295,7 @@ class DataLists {
 
     try {
       List<Map<String, dynamic>> listMap =
-          await db.query(Tables.expenseCategories);
+          await db.query(ExpenseCategoryTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listExpenseCategories
             .add(new ExpenseCategory.fromJson(element));
@@ -293,7 +306,7 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap = await db.query(Tables.devices);
+      List<Map<String, dynamic>> listMap = await db.query(DeviceTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listDevices.add(new Device.fromJson(element));
       });

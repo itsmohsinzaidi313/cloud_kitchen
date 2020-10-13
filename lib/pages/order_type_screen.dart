@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/new_sale_controller.dart';
 import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/table_object/customer_table.dart';
+import 'package:food_app/database/table_object/orders_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/customer.dart';
 import 'package:food_app/models/objects/user.dart';
@@ -183,13 +185,13 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                     if (!check[1]) {
                       int persons = int.parse(controllers[1].text);
                       if (persons > 0) {
-                        Config.database.insert(Tables.orderTable, {
-                          Columns.ordersTables[1]: controllers[1].text,
-                          Columns.ordersTables[2]:
+                        Config.database.insert(OrdersTable.tableName, {
+                          OrdersTable.persons: controllers[1].text,
+                          OrdersTable.bookingTime:
                               Config.getCurrentTime24Format(),
-                          Columns.ordersTables[5]: waiter.outletId,
-                          Columns.ordersTables[6]: table.serverId,
-                          Columns.ordersTables[7]: 'Live'
+                          OrdersTable.outletId: waiter.outletId,
+                          OrdersTable.tableId: table.serverId,
+                          OrdersTable.delStatus: 'Live'
                         }).then((value) => NewSaleController().launchDineIn(
                                 context,
                                 _viewType.toString(),
@@ -243,26 +245,26 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                     if (!check[3]) {
                       Config.database
                           .rawQuery(
-                        "select count(id) as count from ${Tables.customers} where ${Columns.customers[3]} = '${controllers[3].text}'",
+                        "select count(id) as count from ${CustomerTable.tableName} where ${CustomerTable.phone} = '${controllers[3].text}'",
                       )
                           .then((value) {
                         int count = value[0]['count'] as int;
                         if (count > 0) {
                           Config.database
-                              .query(Tables.customers,
+                              .query(CustomerTable.tableName,
                                   columns: [
-                                    Columns.customers[0],
-                                    Columns.customers[2],
-                                    Columns.customers[3],
+                                    CustomerTable.localId,
+                                    CustomerTable.name,
+                                    CustomerTable.phone,
                                   ],
-                                  where: '${Columns.customers[3]} = ?',
+                                  where: '${CustomerTable.phone} = ?',
                                   whereArgs: [controllers[3].text])
                               .then((value2) {
-                            this.customerId = value2[0][Columns.customers[0]];
+                            this.customerId = value2[0][CustomerTable.localId];
                             controllers[2].text =
-                                value2[0][Columns.customers[2]];
+                                value2[0][CustomerTable.name];
                             controllers[3].text =
-                                value2[0][Columns.customers[3]];
+                                value2[0][CustomerTable.phone];
                           });
                         } else {
                           this.customerExists = false;
@@ -354,29 +356,29 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                     if (!check[5]) {
                       Config.database
                           .rawQuery(
-                        "select count(id) as count from ${Tables.customers} where ${Columns.customers[3]} = '${controllers[5].text}'",
+                        "select count(id) as count from ${CustomerTable.tableName} where ${CustomerTable.phone} = '${controllers[5].text}'",
                       )
                           .then((value) {
                         int count = value[0]['count'] as int;
                         if (count > 0) {
                           Config.database
-                              .query(Tables.customers,
+                              .query(CustomerTable.tableName,
                                   columns: [
-                                    Columns.customers[0],
-                                    Columns.customers[2],
-                                    Columns.customers[3],
-                                    Columns.customers[5],
+                                    CustomerTable.localId,
+                                    CustomerTable.name,
+                                    CustomerTable.phone,
+                                    CustomerTable.address,
                                   ],
-                                  where: '${Columns.customers[3]} = ?',
+                                  where: '${CustomerTable.phone} = ?',
                                   whereArgs: [controllers[5].text])
                               .then((value2) {
-                            this.customerId = value2[0][Columns.customers[0]];
+                            this.customerId = value2[0][CustomerTable.localId];
                             controllers[4].text =
-                                value2[0][Columns.customers[2]];
+                                value2[0][CustomerTable.name];
                             controllers[5].text =
-                                value2[0][Columns.customers[3]];
+                                value2[0][CustomerTable.phone];
                             controllers[6].text =
-                                value2[0][Columns.customers[5]];
+                                value2[0][CustomerTable.address];
                           });
                         } else {
                           this.customerExists = false;
@@ -430,8 +432,8 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                           ]);
                         } else {
                           User cUser = Config.currentUser;
-                          Customer customer = Customer(
-                              name: controllers[4].text,
+                          Customer customer = Customer(                              name: controllers[4].text,
+
                               phone: controllers[5].text,
                               address: controllers[6].text,
                               userId: cUser.serverId,

@@ -3,6 +3,9 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/table_object/sales_detail_table.dart';
+import 'package:food_app/database/table_object/sales_master_table.dart';
+import 'package:food_app/database/table_object/sales_master_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/payment_view_model.dart';
@@ -24,28 +27,29 @@ class PaymentController {
 
   static dynamic uploadOrder(Map<String, dynamic> element) async {
     Config.database.update(
-        Tables.salesMaster,
+        SalesMasterTable.tableName,
         {
-          Columns.salesMaster[30]: '3',
-          Columns.salesMaster[5]: element[Columns.salesMaster[6]]
+          SalesMasterTable.orderStatus: '3',
+          SalesMasterTable.paidAmount: element[SalesMasterTable.dueAmount]
         },
-        where: '${Columns.salesMaster[0]} = ?',
-        whereArgs: [element[Columns.salesMaster[0]]]);
+        where: '${SalesMasterTable.localId} = ?',
+        whereArgs: [element[SalesMasterTable.localId]]);
+
     Map<String, dynamic> values =
         new SalesMaster.fromJson(element).getValuesForUpload();
     List<Map<String, dynamic>> values1 = [];
     //COLUMNS
     List<Map<String, dynamic>> values2 = await Config.database.query(
-        Tables.salesDetails,
-        columns: Columns.salesDetails
-            .getRange(1, Columns.salesDetails.length - 1)
+        SalesDetailTable.tableName,
+        columns: SalesDetailTable.columnsName
+            .getRange(1, SalesDetailTable.columnsName.length - 1)
             .toList(),
-        where: '${Columns.salesDetails[18]} = ?',
+        where: '${SalesDetailTable.salesMasterId} = ?',
         whereArgs: [new SalesMaster.fromJson(element).remoteId]);
-    values['sale_details'] = values2;
+    values[SalesDetailTable.tableName] = values2;
     values1.add(values);
     Map<String, dynamic> json = new Map();
-    json['user_id'] = '1';
+    json[SalesDetailTable.userId] = '1';
     json['json'] = jsonEncode(values1);
     log(
       json.toString(),
@@ -64,8 +68,8 @@ class PaymentController {
         String id = y[0]['id'];
         String remoteId = y[0]['remote_id'];
         Config.database.update(
-            Tables.salesMaster, {'${Columns.salesMaster[35]}': '$id'},
-            where: '${Columns.salesMaster[0]} = ?', whereArgs: [remoteId]);
+            SalesMasterTable.tableName, {'${SalesMasterTable.serverId}': '$id'},
+            where: '${SalesMasterTable.localId} = ?', whereArgs: [remoteId]);
       }
     } else {
       log('Response Timeout', name: 'Request Timeout');

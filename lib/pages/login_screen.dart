@@ -68,7 +68,8 @@ class _LoginScreenState extends State<LoginScreen> {
               _deviceKeyPresent = dKey == '' ? false : true;
               deviceKey.text = dKey;
               Config.authToken = dKey;
-              loadData().then((value) => _deviceKeyPresent = value);
+              loadData().then((value) => _deviceKeyPresent = value)
+                  .whenComplete(() => Config.currentDevice = DataLists.instance.listDevices.where((element) => dKey == element.deviceKey));
             } else {
               _deviceKeyPresent = false;
             }
@@ -77,6 +78,8 @@ class _LoginScreenState extends State<LoginScreen> {
           _log.e(e);
         }
       });
+    }).catchError((onError){
+      _deviceKeyPresent = false;
     });
   }
 
@@ -149,6 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ? ShiftController(1).launch(context)
               : _scaffoldKey.currentState.showSnackBar(
                   SnackBar(content: Text('Invalid email or password')));
+          // }
         } else {
           isLoading = false;
           _autoValidate = true;
@@ -378,6 +382,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Container(
                               height: 50,
                               decoration: BoxDecoration(
+
                                 borderRadius: BorderRadius.circular(10),
                                 gradient: LinearGradient(
                                   colors: [

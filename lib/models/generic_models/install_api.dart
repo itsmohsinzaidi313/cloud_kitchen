@@ -17,6 +17,7 @@ import 'package:logger/logger.dart';
 import 'package:food_app/shared/data_lists.dart';
 
 class ApiInstall {
+
   final String status;
   final String message;
   final Map data;

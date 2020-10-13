@@ -11,14 +11,18 @@ import 'package:http/http.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ShiftService extends ServiceCommon {
+
   static final ShiftService shiftService =
       ShiftService._instance(Config.database);
+
   ShiftService._instance(this._db) {
     initiate();
   }
+
   static const platform =
       const MethodChannel('com.devaj.cloudKitchen/shiftService');
   Database _db;
+
   @override
   Future<bool> perform() async {
     try {
@@ -49,7 +53,7 @@ class ShiftService extends ServiceCommon {
           Map<String, dynamic> decodedJson = jsonDecode(response.body);
           bool status = decodedJson['status'];
           if (status) {
-            //UPDATEING ID AND IS_UPLOAD
+            //UPDATING ID AND IS_UPLOAD
             int rowsUpdated = await _db.update(
                 ShiftTable.tableName,
                 {
@@ -75,7 +79,7 @@ class ShiftService extends ServiceCommon {
                   bool status2 = decodedJson2['status'];
                   if (status2) {
                     await _db.update(
-                        Tables.shiftData, {ShiftTable.isUpload: '2'},
+                        ShiftTable.tableName, {ShiftTable.isUpload: '2'},
                         where: '${ShiftTable.localId} = ?',
                         whereArgs: [shift.remoteId]);
                   }
@@ -92,7 +96,7 @@ class ShiftService extends ServiceCommon {
       }
       return true;
     } catch (e) {
-      log('Error occured on Shift Service',
+      log('Error occurred on Shift Service',
           name: 'Shift Service', time: DateTime.now(), error: e);
       return true;
     }

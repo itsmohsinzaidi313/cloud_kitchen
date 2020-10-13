@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:food_app/controller/order_controller.dart';
 import 'package:food_app/controller/payment_controller.dart';
 import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/table_object/sales_master_table.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/order_model.dart';
 import 'package:food_app/shared/app_theme.dart';
@@ -149,7 +150,7 @@ class _OrderScreenState extends State<OrderScreen> {
   static void onOrderCancelled(String orderId) async {
     Database db = Config.database;
     Map<String, dynamic> update = {
-      Columns.salesMaster[37]: 1.toString(),
+      SalesMasterTable.isDelete : 1.toString(),
     };
     await SalesMaster().updateSpecificIntoDb(db, update, 'id', orderId);
   }

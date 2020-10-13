@@ -89,5 +89,5 @@ class User {
   }
 
   Future<bool> insertIntoDatabase(Database db) async =>
-      await Lib.insertIntoDatabase(db, Tables.users, getValues());
+      await Lib.insertIntoDatabase(db, UserTable.tableName, getValues());
 }
