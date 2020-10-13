@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:food_app/controller/order_controller.dart';
 import 'package:food_app/controller/payment_controller.dart';
-import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/order_model.dart';

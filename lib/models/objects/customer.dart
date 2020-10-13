@@ -1,11 +1,9 @@
 import 'package:food_app/database/table_object/customer_table.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:food_app/database/columns.dart';
-import 'package:food_app/database/tables.dart';
 
 class Customer {
-  String id;
+  String remoteId;
   final String serverId;
   final String name;
   final String phone;
@@ -18,9 +16,11 @@ class Customer {
   final String delStatus;
   final String dateOfBirth;
   final String dateOfAnniversary;
+  final String isUpload;
 
   Customer.fromJson(Map<String, dynamic> json)
-      : serverId = json['id'],
+      : remoteId = json['local_id'].toString(),
+        serverId = json['id'],
         name = json['name'],
         phone = json['phone'],
         email = json['email'],
@@ -31,7 +31,8 @@ class Customer {
         companyId = json['company_id'],
         delStatus = json['del_status'],
         dateOfBirth = json['date_of_birth'],
-        dateOfAnniversary = json['date_of_anniversary'];
+        dateOfAnniversary = json['date_of_anniversary'],
+        isUpload = json['is_upload'];
 
   Map<String, dynamic> toMap(Customer customer) {
     return {
@@ -47,6 +48,7 @@ class Customer {
       'del_status': customer.delStatus,
       'date_of_birth': customer.dateOfBirth,
       'date_of_anniversary': customer.dateOfAnniversary,
+      'is_upload' : customer.isUpload
     };
   }
 
@@ -62,7 +64,8 @@ class Customer {
       this.companyId,
       this.delStatus,
       this.dateOfBirth,
-      this.dateOfAnniversary});
+      this.dateOfAnniversary,
+      this.isUpload});
 
   @override
   String toString() {
@@ -81,7 +84,8 @@ class Customer {
         this.companyId,
         this.delStatus,
         this.dateOfBirth,
-        this.dateOfAnniversary
+        this.dateOfAnniversary,
+        this.isUpload
       ];
 
   Map<String, dynamic> getValues() {

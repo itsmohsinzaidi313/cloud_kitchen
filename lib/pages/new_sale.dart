@@ -57,7 +57,7 @@ class _NewSaleState extends State<NewSale> {
                       child: ListTile(
                         leading: Container(
                           padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(color: Colors.yellow),
+                          decoration: BoxDecoration(color: model.leadingString.isNotEmpty ? Colors.yellow : Colors.red),
                           child: Text(
                             model.leadingString,
                             style: TextStyle(
@@ -66,7 +66,7 @@ class _NewSaleState extends State<NewSale> {
                         ),
                         title: Container(
                           padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(color: Colors.yellow),
+                          decoration: BoxDecoration(color: model.titleString.isNotEmpty ? Colors.yellow : Colors.red),
                           child: Center(
                             child: Text(model.titleString,
                                 style: TextStyle(
@@ -76,7 +76,7 @@ class _NewSaleState extends State<NewSale> {
                         ),
                         trailing: Container(
                           padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(color: Colors.yellow),
+                          decoration: BoxDecoration(color: model.trailingString.isNotEmpty ? Colors.yellow : Colors.red),
                           child: Text(model.trailingString,
                               style: TextStyle(
                                   color: Colors.red,
@@ -281,6 +281,7 @@ class _NewSaleState extends State<NewSale> {
           'SELECT IFNULL(COUNT(id),0) AS count FROM ${SalesDetailTable.tableName} WHERE ${SalesDetailTable.id} = ?',
           [model.salesMaster.serverId]);
 
+      print('Customer Id: ${this.model.order.customerId}');
       CustomerOrder customerOrder = this.model.order;
       //MASTER DATA
       Map<String, dynamic> master = {

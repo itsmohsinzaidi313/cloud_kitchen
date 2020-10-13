@@ -17,6 +17,7 @@ class CustomerTable{
   static const String delStatus = 'del_status';
   static const String dateOfBirth = 'date_of_birth';
   static const String dateOfAnniversary = 'date_of_anniversary';
+  static const String isUpload = 'is_upload';
 
   static const List<String> columnsName = [
     localId,
@@ -31,11 +32,13 @@ class CustomerTable{
     companyId,
     delStatus,
     dateOfBirth,
-    dateOfAnniversary
+    dateOfAnniversary,
+    isUpload
   ];
 
   static const List<String> columnsType = [
     SqlStructure.integer + SqlStructure.primaryKey,
+    SqlStructure.text,
     SqlStructure.text,
     SqlStructure.text,
     SqlStructure.text,

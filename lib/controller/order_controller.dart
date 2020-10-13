@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/new_sale_controller.dart';
 import 'package:food_app/database/columns.dart';
+import 'package:food_app/database/table_object/customer_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
+import 'package:food_app/database/table_object/user_table.dart';
 import 'package:food_app/models/objects/payment_method.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/order_model.dart';
@@ -154,7 +156,7 @@ class OrderController {
   static Future<DataTable> getTakeAwayOrders(BuildContext context,
       void onOk(Map<String, dynamic> id), void onNo(String id)) async {
     List<Map<String, dynamic>> data = await Config.database.rawQuery(
-        "select *, a.sale_no, IFNULL((select name from customers where id = a.customer_id),'') as customer_name, IFNULL((select phone from customers where id = a.customer_id),'') as contact, a.due_amount from sales_master a where a.order_type = '2' and a.paid_amount = '0.0' and a.is_delete = '0'");
+        "select *, a.sale_no, IFNULL((select name from customers where ${CustomerTable.localId} = a.customer_id),'') as customer_name, IFNULL((select phone from customers where  ${CustomerTable.localId} = a.customer_id),'') as contact, a.due_amount from sales_master a where a.order_type = '2' and a.paid_amount = '0.0' and a.is_delete = '0'");
     List<DataRow> rows = [];
     data.forEach((element) {
       rows.add(DataRow(cells: [
@@ -196,7 +198,7 @@ class OrderController {
   static Future<DataTable> getDeliveryOrders(BuildContext context,
       void onOk(Map<String, dynamic> id), void onNo(String id)) async {
     List<Map<String, dynamic>> data = await Config.database.rawQuery(
-        "select *, a.sale_no, IFNULL((select full_name from users where id = a.user_id),'') as customer_name,IFNULL((select phone from customers where id = a.customer_id),'') as contact, a.due_amount from sales_master a where a.order_type = '3' and a.paid_amount = '0.0' and a.is_delete = '0'");
+        "select *, a.sale_no, IFNULL((select full_name from users where ${UserTable.localId} = a.user_id),'') as customer_name,IFNULL((select phone from customers where ${CustomerTable.localId} = a.customer_id),'') as contact, a.due_amount from sales_master a where a.order_type = '3' and a.paid_amount = '0.0' and a.is_delete = '0'");
 
     List<DataRow> rows = [];
     data.forEach((element) {

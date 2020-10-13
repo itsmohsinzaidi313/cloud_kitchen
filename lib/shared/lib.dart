@@ -7,6 +7,7 @@ import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/generic_models/install_api.dart';
 import 'package:food_app/models/objects/customer.dart';
+import 'package:food_app/models/objects/device.dart';
 import 'package:food_app/models/objects/shift.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:http/http.dart';
@@ -68,7 +69,7 @@ class Lib {
     List<Map<String, dynamic>> map = [];
 
     map.add({
-      'remote_id': customer.id,
+      'remote_id': customer.remoteId,
       'name': customer.name,
       'phone': customer.phone,
       'address': customer.address,
@@ -87,11 +88,13 @@ class Lib {
     if (response != null) {
       Config.log.i(response.body);
       Map<String, dynamic> result = jsonDecode(response.body);
-      List<Map<String, dynamic>> x = result['customer_synced'];
+      List<dynamic> x = result['customers_synced'];
+      print('ID: ${x[0]['id']}\n SERVER ID: ${x[0]['remote_id']}');
       String id = x[0]['id'];
       String remoteId = x[0]['remote_id'];
-      Config.database.update(CustomerTable.tableName, {'${CustomerTable.serverId}': id},
+      int y = await Config.database.update(CustomerTable.tableName, {'${CustomerTable.serverId}': id, '${CustomerTable.isUpload}': '1'},
           where: '${CustomerTable.localId} = ?', whereArgs: [remoteId]);
+      print('Customer server id update value : $y');
       return true;
     } else
       return false;

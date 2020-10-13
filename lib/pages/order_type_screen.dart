@@ -25,6 +25,9 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
   T.Table table;
   User waiter;
   String errorMsg;
+  bool takeawaySearchButton = false;
+  bool deliverySearchButton = false;
+
   List<TextEditingController> controllers = [
     new TextEditingController(),
     new TextEditingController(),
@@ -34,6 +37,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
     new TextEditingController(),
     new TextEditingController(),
   ];
+
   List<bool> check = [false, false, false, false, false, false, false];
 
   @override
@@ -241,6 +245,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                     setState(() {
                       check[3] = controllers[3].text == '' ? true : false;
                       errorMsg = controllers[3].text == '' ? 'Required' : '';
+                      !check[3] ? takeawaySearchButton = true : takeawaySearchButton = false;
                     });
                     if (!check[3]) {
                       Config.database
@@ -287,9 +292,9 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                 ),
               ),
               ListTile(
-                title: OutlineButton(
-                  child: Text('Ok'),
-                  onPressed: () {
+                title: FlatButton(
+                  child: Text('Ok', style: TextStyle(color: Colors.white)),
+                  onPressed: takeawaySearchButton ? () {
                     setState(() {
                       check[2] = controllers[2].text == '' ? true : false;
                       check[3] = controllers[3].text == '' ? true : false;
@@ -310,25 +315,30 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                               phone: controllers[3].text,
                               userId: cUser.serverId,
                               companyId: cUser.companyId,
-                              delStatus: cUser.delStatus);
+                              delStatus: cUser.delStatus,
+                              isUpload: '0'
+                          );
 
                           Customer()
                               .insertCustomer(Config.database, customer)
                               .then((value) {
-                            customer.id = value.toString();
-                            Lib.uploadCustomer(customer);
-                            NewSaleController().launchTakeaway(context,
-                                _viewType.toString(), value.toString(), [
-                              'Customer: ${controllers[2].text}',
-                              'Contact: ${controllers[3].text}',
-                              ''
-                            ]);
+                            customer.remoteId = value.toString();
+                            if(value > 0){
+                              NewSaleController().launchTakeaway(context,
+                                  _viewType.toString(), value.toString(), [
+                                    'Customer: ${controllers[2].text}',
+                                    'Contact: ${controllers[3].text}',
+                                    ''
+                                  ]);
+                            }
                           });
                         }
                       }
                     });
-                  },
+                  } : null,
+                  color:  takeawaySearchButton ? Colors.redAccent : null,
                 ),
+                // tileColor: takeawaySearchButton ? Colors.redAccent : null,
               ),
             ],
           ),
@@ -352,6 +362,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                   onPressed: () {
                     setState(() {
                       check[5] = controllers[5].text == '' ? true : false;
+                      !check[5] ? deliverySearchButton = true : deliverySearchButton = false;
                     });
                     if (!check[5]) {
                       Config.database
@@ -411,9 +422,9 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                 ),
               ),
               ListTile(
-                title: OutlineButton(
-                  child: Text('Ok'),
-                  onPressed: () {
+                title: FlatButton(
+                  child: Text('Ok', style: TextStyle(color: Colors.white),),
+                  onPressed: deliverySearchButton ? () {
                     setState(() {
                       check[4] = controllers[4].text == '' ? true : false;
                       check[5] = controllers[5].text == '' ? true : false;
@@ -432,31 +443,36 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                           ]);
                         } else {
                           User cUser = Config.currentUser;
-                          Customer customer = Customer(                              name: controllers[4].text,
-
+                          Customer customer = Customer(
+                              name: controllers[4].text,
                               phone: controllers[5].text,
                               address: controllers[6].text,
                               userId: cUser.serverId,
                               companyId: cUser.companyId,
-                              delStatus: cUser.delStatus);
+                              delStatus: cUser.delStatus,
+                              isUpload: '0'
+                          );
 
                           Customer()
                               .insertCustomer(Config.database, customer)
                               .then((value) {
-                            customer.id = value.toString();
-                            Lib.uploadCustomer(customer);
-                            NewSaleController().launchDelivery(context,
-                                _viewType.toString(), value.toString(), [
-                              'Customer: ${controllers[4].text}',
-                              'Phone: ${controllers[5].text}',
-                              ''
-                            ]);
+                            customer.remoteId = value.toString();
+                            if(value > 0){
+                              NewSaleController().launchDelivery(context,
+                                  _viewType.toString(), value.toString(), [
+                                    'Customer: ${controllers[4].text}',
+                                    'Phone: ${controllers[5].text}',
+                                    ''
+                                  ]);
+                            }
                           });
                         }
                       }
                     });
-                  },
+                  } : null,
+                  color :  deliverySearchButton ? Colors.redAccent : null,
                 ),
+                // tileColor: deliverySearchButton ? Colors.redAccent : null,
               ),
             ],
           ),

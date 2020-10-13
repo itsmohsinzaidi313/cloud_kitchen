@@ -68,8 +68,18 @@ class _LoginScreenState extends State<LoginScreen> {
               _deviceKeyPresent = dKey == '' ? false : true;
               deviceKey.text = dKey;
               Config.authToken = dKey;
+              Config.installApi = dKey;
               loadData().then((value) => _deviceKeyPresent = value)
-                  .whenComplete(() => Config.currentDevice = DataLists.instance.listDevices.where((element) => dKey == element.deviceKey));
+                  .whenComplete(() {
+                    setState(() {
+                      // DataLists.instance.listDevices.where((element) => dKey == element.deviceKey);
+                      DataLists.instance.listDevices.forEach((element) {
+                        if(dKey == element.deviceKey){
+                          Config.currentDevice = element;
+                        }
+                      });
+                    });
+              });
             } else {
               _deviceKeyPresent = false;
             }
@@ -260,15 +270,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                                           ? false
                                                           : true;
                                                   if (_deviceKeyCheck) {
-                                                    Config.authToken =
-                                                        deviceKey.text;
+                                                      Config.authToken = deviceKey.text;
+                                                      Config.installApi = deviceKey.text;
                                                     loadData().then((value) {
                                                       if (value) {
-                                                        progressDialog.hide();
-                                                        setState(() {
-                                                          _deviceKeyPresent =
-                                                              true;
-                                                        });
+                                                            DataLists.instance.listDevices.forEach((element) {
+                                                            if(deviceKey.text == element.deviceKey){
+                                                                setState(() {
+                                                                  Config.currentDevice = element;
+                                                                  _deviceKeyPresent = true;
+                                                                });
+                                                              }
+                                                            progressDialog.hide();
+                                                            });
                                                       } else {
                                                         progressDialog.hide();
                                                         AppTheme.showAlertDialogOK(

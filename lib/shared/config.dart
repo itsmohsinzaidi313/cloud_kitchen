@@ -8,7 +8,7 @@ import 'package:sqflite/sqflite.dart';
 
 class Config {
   static const String appTitle = 'Cloud Kitchen';
-  static const DATABASE databaseVersion = DATABASE.CREATE;
+  static const DATABASE databaseVersion = DATABASE.STABLE;
   static const String databaseName = 'CloudKitchen.db';
 
   static const String serverIP = '72.52.142.19';
@@ -16,8 +16,14 @@ class Config {
   static String _authToken;
   static set authToken(String value) => _authToken = value;
   static String get authToken => _authToken;
-  static final String installApi =
-      'http://$serverIP/cloud-kitchen/api/install?auth=$authToken&sale_limit=20&expense_limit=20';
+  static String _installApi;
+
+  static String get installApi => _installApi;
+
+  static set installApi(String value) {
+    _installApi = 'http://$serverIP/cloud-kitchen/api/install?auth=$value&sale_limit=20&expense_limit=20';
+  }
+
   static final String addUpdateOrderApi =
       'http://$serverIP/cloud-kitchen/api/order?auth=$authToken';
   static final customerUploadApi =
