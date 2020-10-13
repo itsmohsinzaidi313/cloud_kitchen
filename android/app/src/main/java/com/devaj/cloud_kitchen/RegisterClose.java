@@ -1,5 +1,4 @@
 package com.devaj.cloud_kitchen;
 
-class Register {
-    
+class RegisterClose {
 }
