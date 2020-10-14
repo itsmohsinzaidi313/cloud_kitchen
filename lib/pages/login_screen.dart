@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   final LoginModel loginModel;
+
   LoginScreen(this.loginModel);
 
   @override
@@ -22,7 +23,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final LoginModel loginModel;
+
   _LoginScreenState(this.loginModel);
+
   Logger _log = Config.log;
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -69,16 +72,17 @@ class _LoginScreenState extends State<LoginScreen> {
               deviceKey.text = dKey;
               Config.authToken = dKey;
               Config.installApi = dKey;
-              loadData().then((value) => _deviceKeyPresent = value)
+              loadData()
+                  .then((value) => _deviceKeyPresent = value)
                   .whenComplete(() {
-                    setState(() {
-                      // DataLists.instance.listDevices.where((element) => dKey == element.deviceKey);
-                      DataLists.instance.listDevices.forEach((element) {
-                        if(dKey == element.deviceKey){
-                          Config.currentDevice = element;
-                        }
-                      });
-                    });
+                setState(() {
+                  // DataLists.instance.listDevices.where((element) => dKey == element.deviceKey);
+                  DataLists.instance.listDevices.forEach((element) {
+                    if (dKey == element.deviceKey) {
+                      Config.currentDevice = element;
+                    }
+                  });
+                });
               });
             } else {
               _deviceKeyPresent = false;
@@ -88,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
           _log.e(e);
         }
       });
-    }).catchError((onError){
+    }).catchError((onError) {
       _deviceKeyPresent = false;
     });
   }
@@ -175,259 +179,304 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.white,
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
-            child: Container(
-              height: Config.getDeviceHeight(context),
-              width: Config.getDeviceWidth(context),
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    height: Config.getDeviceHeight(context),
-                    width: Config.getDeviceWidth(context) * 0.4,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.amber,
-                          blurRadius: 20,
-                          offset: Offset(0, 0),
+            child: SafeArea(
+              child: Container(
+                // margin: EdgeInsets.all(8.0),
+                height: Config.getDeviceHeight(context),
+                width: Config.getDeviceWidth(context),
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      height: Config.getDeviceHeight(context),
+                      width: Config.getDeviceWidth(context) * 0.4,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            // Colors.yellowAccent,
+                            // Colors.yellow,
+                            // Colors.amberAccent,
+                            Colors.amber,
+                            Colors.redAccent,
+                            // Colors.indigo,
+                            // Colors.indigoAccent,
+                            // Colors.redAccent,
+                          ],
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+
                         ),
-                      ],
-                      image: DecorationImage(
-                        image: AssetImage(
-                          'assets/logo1.png',
+                        // borderRadius: new BorderRadius.horizontal(
+                        //     right: new Radius.circular(250)),
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.horizontal(
+                          right: Radius.circular(Config.getDeviceHeight(context)),
                         ),
-                        fit: BoxFit.scaleDown,
+                        color: Colors.amber,
+                        image: DecorationImage(
+                          image: AssetImage(
+                            'assets/logo1.png',
+                          ),
+                          fit: BoxFit.fitWidth,
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.all(30.0),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey[300],
-                                    blurRadius: 20,
-                                    offset: Offset(0, 10),
-                                  ),
-                                ],
-                              ),
-                              child: Form(
-                                key: _formKey,
-                                autovalidate: _autoValidate,
-                                child: Column(
-                                  children: <Widget>[
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            padding: EdgeInsets.all(5),
-                                            decoration: BoxDecoration(
-                                                border: Border(
-                                                    bottom: BorderSide(
-                                                        color:
-                                                            Colors.grey[100]))),
-                                            child: TextField(
-                                              enabled: !_deviceKeyPresent,
-                                              decoration: InputDecoration(
-                                                border: InputBorder.none,
-                                                labelText: 'Device Key',
-                                                labelStyle: TextStyle(
-                                                  color: Colors.grey[400],
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(30.0),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: <Widget>[
+                              Container(
+                                padding: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        offset: Offset(10, 10),
+                                        color: Colors.grey[300],
+                                        blurRadius: 20),
+                                    BoxShadow(
+                                        offset: Offset(-10, -10),
+                                        color: Colors.grey[300],
+                                        blurRadius: 20)
+                                  ],
+                                ),
+                                child: Form(
+                                  key: _formKey,
+                                  autovalidate: _autoValidate,
+                                  child: Column(
+                                    children: <Widget>[
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                              padding: EdgeInsets.all(5),
+                                              decoration: BoxDecoration(
+                                                  border: Border(
+                                                      bottom: BorderSide(
+                                                          color: Colors
+                                                              .grey[100]))),
+                                              child: TextField(
+                                                enabled: !_deviceKeyPresent,
+                                                decoration: InputDecoration(
+                                                  border: InputBorder.none,
+                                                  labelText: 'Device Key',
+                                                  labelStyle: TextStyle(
+                                                    color: Colors.grey[400],
+                                                  ),
+                                                  errorText:
+                                                      deviceKey.text != ''
+                                                          ? null
+                                                          : 'Required',
                                                 ),
-                                                errorText: deviceKey.text != ''
-                                                    ? null
-                                                    : 'Required',
+                                                textInputAction:
+                                                    TextInputAction.next,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                controller: deviceKey,
                                               ),
-                                              textInputAction:
-                                                  TextInputAction.next,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              controller: deviceKey,
                                             ),
                                           ),
-                                        ),
-                                        FlatButton(
-                                          child: Text('SUBMIT'),
-                                          onPressed: !_deviceKeyPresent
-                                              ? () {
-                                                  ProgressDialog
-                                                      progressDialog = AppTheme
-                                                          .showProgressDialog(
-                                                              context);
-                                                  progressDialog.show();
-                                                  _deviceKeyCheck =
-                                                      deviceKey.text == ''
-                                                          ? false
-                                                          : true;
-                                                  if (_deviceKeyCheck) {
-                                                      Config.authToken = deviceKey.text;
-                                                      Config.installApi = deviceKey.text;
-                                                    loadData().then((value) {
-                                                      if (value) {
-                                                            DataLists.instance.listDevices.forEach((element) {
-                                                            if(deviceKey.text == element.deviceKey){
-                                                                setState(() {
-                                                                  Config.currentDevice = element;
-                                                                  _deviceKeyPresent = true;
-                                                                });
-                                                              }
-                                                            progressDialog.hide();
-                                                            });
-                                                      } else {
-                                                        progressDialog.hide();
-                                                        AppTheme.showAlertDialogOK(
-                                                            context,
-                                                            title: 'Attention',
-                                                            message:
-                                                                'Unable to load data.\nMake sure you have an internet connection\nand try again.',
-                                                            onOK: () =>
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop());
-                                                      }
-                                                    });
-                                                  } else {
-                                                    progressDialog.hide();
+                                          FlatButton(
+                                            child: Text('SUBMIT'),
+                                            onPressed: !_deviceKeyPresent
+                                                ? () {
+                                                    ProgressDialog
+                                                        progressDialog =
+                                                        AppTheme
+                                                            .showProgressDialog(
+                                                                context);
+                                                    progressDialog.show();
+                                                    _deviceKeyCheck =
+                                                        deviceKey.text == ''
+                                                            ? false
+                                                            : true;
+                                                    if (_deviceKeyCheck) {
+                                                      Config.authToken =
+                                                          deviceKey.text;
+                                                      Config.installApi =
+                                                          deviceKey.text;
+                                                      loadData().then((value) {
+                                                        if (value) {
+                                                          DataLists.instance
+                                                              .listDevices
+                                                              .forEach(
+                                                                  (element) {
+                                                            if (deviceKey
+                                                                    .text ==
+                                                                element
+                                                                    .deviceKey) {
+                                                              setState(() {
+                                                                Config.currentDevice =
+                                                                    element;
+                                                                _deviceKeyPresent =
+                                                                    true;
+                                                              });
+                                                            }
+                                                            progressDialog
+                                                                .hide();
+                                                          });
+                                                        } else {
+                                                          progressDialog.hide();
+                                                          AppTheme.showAlertDialogOK(
+                                                              context,
+                                                              title:
+                                                                  'Attention',
+                                                              message:
+                                                                  'Unable to load data.\nMake sure you have an internet connection\nand try again.',
+                                                              onOK: () =>
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop());
+                                                        }
+                                                      });
+                                                    } else {
+                                                      progressDialog.hide();
+                                                    }
                                                   }
-                                                }
-                                              : null,
-                                        )
-                                      ],
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.all(5),
-                                      decoration: BoxDecoration(
-                                          border: Border(
-                                              bottom: BorderSide(
-                                                  color: Colors.grey[100]))),
-                                      child: TextFormField(
-                                        enabled: _deviceKeyPresent,
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          labelText: loginModel.hintEmail,
-                                          labelStyle: TextStyle(
-                                            color: Colors.grey[400],
-                                          ),
-                                        ),
-                                        textInputAction: TextInputAction.next,
-                                        keyboardType:
-                                            TextInputType.emailAddress,
-                                        onFieldSubmitted: (value) {
-                                          FocusScope.of(context).nextFocus();
-                                        },
-                                        validator: (value) {
-                                          if (value.isEmpty ||
-                                              !value.contains('@')) {
-                                            return errorEmail;
-                                          }
-                                          return null;
-                                        },
-                                        controller: email,
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.all(5),
-                                      child: Stack(
-                                        children: <Widget>[
-                                          Positioned(
-                                            child: TextFormField(
-                                              enabled: _deviceKeyPresent,
-                                              decoration: InputDecoration(
-                                                border: InputBorder.none,
-                                                labelText:
-                                                    loginModel.hintPassword,
-                                                labelStyle: TextStyle(
-                                                  color: Colors.grey[400],
-                                                ),
-                                              ),
-                                              obscureText: _obscureText,
-                                              textInputAction:
-                                                  TextInputAction.done,
-                                              keyboardType:
-                                                  TextInputType.visiblePassword,
-                                              onFieldSubmitted: (value) {
-                                                FocusScope.of(context)
-                                                    .unfocus();
-                                              },
-                                              controller: password,
-                                              validator: (value) {
-                                                if (value.isEmpty ||
-                                                    value.length <= 0) {
-                                                  return errorPassword;
-                                                }
-                                                return null;
-                                              },
-                                            ),
-                                          ),
-                                          Positioned(
-                                            right: 5,
-                                            child: IconButton(
-                                              icon: _icon,
-                                              onPressed: _toggle,
-                                            ),
-                                          ),
+                                                : null,
+                                          )
                                         ],
                                       ),
-                                    ),
-                                  ],
+                                      Container(
+                                        padding: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                                    color: Colors.grey[100]))),
+                                        child: TextFormField(
+                                          enabled: _deviceKeyPresent,
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            labelText: loginModel.hintEmail,
+                                            labelStyle: TextStyle(
+                                              color: Colors.grey[400],
+                                            ),
+                                          ),
+                                          textInputAction: TextInputAction.next,
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          onFieldSubmitted: (value) {
+                                            FocusScope.of(context).nextFocus();
+                                          },
+                                          validator: (value) {
+                                            if (value.isEmpty ||
+                                                !value.contains('@')) {
+                                              return errorEmail;
+                                            }
+                                            return null;
+                                          },
+                                          controller: email,
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Stack(
+                                          children: <Widget>[
+                                            Positioned(
+                                              child: TextFormField(
+                                                enabled: _deviceKeyPresent,
+                                                decoration: InputDecoration(
+                                                  border: InputBorder.none,
+                                                  labelText:
+                                                      loginModel.hintPassword,
+                                                  labelStyle: TextStyle(
+                                                    color: Colors.grey[400],
+                                                  ),
+                                                ),
+                                                obscureText: _obscureText,
+                                                textInputAction:
+                                                    TextInputAction.done,
+                                                keyboardType: TextInputType
+                                                    .visiblePassword,
+                                                onFieldSubmitted: (value) {
+                                                  FocusScope.of(context)
+                                                      .unfocus();
+                                                },
+                                                controller: password,
+                                                validator: (value) {
+                                                  if (value.isEmpty ||
+                                                      value.length <= 0) {
+                                                    return errorPassword;
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                            ),
+                                            Positioned(
+                                              right: 5,
+                                              child: IconButton(
+                                                icon: _icon,
+                                                onPressed: _toggle,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            // isLoading
-                            //     ? AppTheme.circularProgressIndicator(
-                            //         Colors.redAccent)
-                            //     : SizedBox(
-                            //         height: 0,
-                            //       ),
-                            Container(
-                              height: 50,
-                              decoration: BoxDecoration(
-
-                                borderRadius: BorderRadius.circular(10),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.yellow[300],
-                                    Colors.red[200],
+                              SizedBox(
+                                height: 30,
+                              ),
+                              // isLoading
+                              //     ? AppTheme.circularProgressIndicator(
+                              //         Colors.redAccent)
+                              //     : SizedBox(
+                              //         height: 0,
+                              //       ),
+                              Container(
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.redAccent,
+                                      Colors.amber,
+                                    ],
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        offset: Offset(10, 10),
+                                        color: Colors.grey[300],
+                                        blurRadius: 20),
+                                    BoxShadow(
+                                        offset: Offset(-10, -10),
+                                        color: Colors.grey[300],
+                                        blurRadius: 20)
                                   ],
                                 ),
-                              ),
-                              child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  splashColor: Colors.yellow[100],
-                                  onTap: _deviceKeyPresent ? onButtonTap : null,
-                                  child: Center(
-                                    child: Text(
-                                      'Login',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    splashColor: Colors.yellow[100],
+                                    onTap:
+                                        _deviceKeyPresent ? onButtonTap : null,
+                                    child: Center(
+                                      child: Text(
+                                        'Login',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

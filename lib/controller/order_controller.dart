@@ -121,7 +121,7 @@ class OrderController {
                 color: Colors.red,
               ),
               onPressed: () {
-                onOrderCancelled(element['local_id']);
+                onNo(element['local_id'].toString());
               })),
           DataCell(IconButton(
               icon: Icon(
@@ -169,7 +169,7 @@ class OrderController {
         DataCell(Text(element['due_amount'])),
         DataCell(IconButton(
             icon: Icon(Icons.close, color: Colors.red),
-            onPressed: () => onNo(element['local_id']))),
+            onPressed: () => onNo(element['local_id'].toString()))),
         DataCell(IconButton(
             icon: Icon(
               Icons.edit,
@@ -198,7 +198,7 @@ class OrderController {
   static Future<DataTable> getDeliveryOrders(BuildContext context,
       void onOk(Map<String, dynamic> id), void onNo(String id)) async {
     List<Map<String, dynamic>> data = await Config.database.rawQuery(
-        "select *, a.sale_no, IFNULL((select full_name from users where ${UserTable.localId} = a.user_id),'') as customer_name,IFNULL((select phone from customers where ${CustomerTable.localId} = a.customer_id),'') as contact, a.due_amount from sales_master a where a.order_type = '3' and a.paid_amount = '0.0' and a.is_delete = '0'");
+        "select *, a.sale_no, IFNULL((select name from customers where ${CustomerTable.localId} = a.customer_id),'') as customer_name,IFNULL((select phone from customers where ${CustomerTable.localId} = a.customer_id),'') as contact, a.due_amount from sales_master a where a.order_type = '3' and a.paid_amount = '0.0' and a.is_delete = '0'");
 
     List<DataRow> rows = [];
     data.forEach((element) {
@@ -212,7 +212,7 @@ class OrderController {
         DataCell(Text(element['due_amount'])),
         DataCell(IconButton(
             icon: Icon(Icons.close, color: Colors.red),
-            onPressed: () => onNo(element['local_id']))),
+            onPressed: () => onNo(element['local_id'].toString()) )),
         DataCell(IconButton(
             icon: Icon(
               Icons.edit,
@@ -240,14 +240,14 @@ class OrderController {
 
   static Future onOrderCompleted(SalesMaster itm) async {
     await Config.database.execute(
-        'update ${SalesMasterTable.isDelete} set ${SalesMasterTable.paidAmount} = ${SalesMasterTable.dueAmount} where id = ${itm.serverId}');
+        'update ${SalesMasterTable.isDelete} set ${SalesMasterTable.paidAmount} = ${SalesMasterTable.dueAmount} where ${SalesMasterTable.serverId} = ${itm.serverId}');
   }
 
-  static void onOrderCancelled(String orderId) async {
-    Database db = Config.database;
-    Map<String, dynamic> update = {
-      SalesMasterTable.isDelete: 1.toString(),
-    };
-    await SalesMaster().updateSpecificIntoDb(db, update, 'id', orderId);
-  }
+  // static void onOrderCancelled(String orderId) async {
+  //   Database db = Config.database;
+  //   Map<String, dynamic> update = {
+  //     SalesMasterTable.isDelete: 1.toString(),
+  //   };
+  //   await SalesMaster().updateSpecificIntoDb(db, update, 'id', orderId);
+  // }
 }

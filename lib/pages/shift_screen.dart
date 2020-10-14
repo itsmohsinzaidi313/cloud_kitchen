@@ -13,14 +13,18 @@ import 'package:food_app/shared/lib.dart';
 
 class ShiftScreen extends StatefulWidget {
   final ShiftModel model;
+
   ShiftScreen(this.model);
+
   @override
   _ShiftScreen createState() => _ShiftScreen(this.model);
 }
 
 class _ShiftScreen extends State<ShiftScreen> {
   final ShiftModel model;
+
   _ShiftScreen(this.model);
+
   String _dropdown = 'Morning';
   bool _autoValidate = false;
   TextEditingController closingAmount = TextEditingController();
@@ -193,50 +197,50 @@ class _ShiftScreen extends State<ShiftScreen> {
                           hintText: 'Closing Amount',
                           errorText: checkField ? errorMessage : null),
                     ),
-                    trailing: RaisedButton(
-                      elevation: 2.0,
-                      onPressed: () {
-                        setState(() {
-                          checkField = closingAmount.text == '' ? true : false;
-                          errorMessage = 'Required.';
-                        });
-
-                        if (!checkField) {
-                          double amount = double.parse(closingAmount.text);
-                          if (amount > 0) {
-                            Config.currentShift.closingBalance =
-                                closingAmount.text;
-                            Config.currentShift.closingBalanceDateTime =
-                                Config.getCurrentDateTimeDBFormat();
-                            Config.database.update(
-                                ShiftTable.tableName,
-                                {
-                                  ShiftTable.closingBalance: closingAmount.text,
-                                  ShiftTable.closingBalanceDateTime:
-                                      Config.getCurrentDateTimeDBFormat(),
-                                  ShiftTable.registerStatus: '2'
-                                },
-                                where: '${ShiftTable.localId} = ?',
-                                whereArgs: [Config.currentShift.remoteId]);
-                            Lib.closeRegister(Config.currentShift);
-                            LoginController().pushAndRemoveUntil(context);
-                          } else {
-                            checkField = true;
-                            errorMessage = 'Invalid Amount.';
-                          }
-                        }
-                      },
-                      color: AppTheme.listTextColor,
-                      child: Text(
-                        'SUBMIT',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          // fontStyle: FontStyle.italic,
-                          letterSpacing: 2.0,
-                        ),
-                      ),
-                    ),
+                    // trailing: RaisedButton(
+                    //   elevation: 2.0,
+                    //   onPressed: () {
+                    //     setState(() {
+                    //       checkField = closingAmount.text == '' ? true : false;
+                    //       errorMessage = 'Required.';
+                    //     });
+                    //
+                    //     if (!checkField) {
+                    //       double amount = double.parse(closingAmount.text);
+                    //       if (amount > 0) {
+                    //         Config.currentShift.closingBalance =
+                    //             closingAmount.text;
+                    //         Config.currentShift.closingBalanceDateTime =
+                    //             Config.getCurrentDateTimeDBFormat();
+                    //         Config.database.update(
+                    //             ShiftTable.tableName,
+                    //             {
+                    //               ShiftTable.closingBalance: closingAmount.text,
+                    //               ShiftTable.closingBalanceDateTime:
+                    //                   Config.getCurrentDateTimeDBFormat(),
+                    //               ShiftTable.registerStatus: '2'
+                    //             },
+                    //             where: '${ShiftTable.localId} = ?',
+                    //             whereArgs: [Config.currentShift.remoteId]);
+                    //         // Lib.closeRegister(Config.currentShift);
+                    //         LoginController().pushAndRemoveUntil(context);
+                    //       } else {
+                    //         checkField = true;
+                    //         errorMessage = 'Invalid Amount.';
+                    //       }
+                    //     }
+                    //   },
+                    //   color: AppTheme.listTextColor,
+                    //   child: Text(
+                    //     'SUBMIT',
+                    //     style: TextStyle(
+                    //       color: Colors.white,
+                    //       fontWeight: FontWeight.bold,
+                    //       // fontStyle: FontStyle.italic,
+                    //       letterSpacing: 2.0,
+                    //     ),
+                    //   ),
+                    // ),
                   ),
                 ),
               ),
@@ -285,19 +289,20 @@ class _ShiftScreen extends State<ShiftScreen> {
                           .insert(ShiftTable.tableName,
                               Config.currentShift.toMap(Config.currentShift))
                           .then((value) {
-                        if (value > 0)
+                        if (value > 0) {
                           AppTheme.showAlertDialogOK(context,
                               title: 'Success',
                               message:
                                   'Shift# ${Config.currentShift.registerNo} opened successfully.',
                               onOK: () => DashboardController(context)
                                   .pushAndRemoveUntil(context));
-                        else
+                        } else {
                           AppTheme.showAlertDialogOK(context,
                               title: 'Error',
                               message:
                                   'Your request is not accepted by Server. Please Try Again!',
                               onOK: () => Navigator.of(context).pop());
+                        }
                       });
                     }
                   });
@@ -344,20 +349,21 @@ class _ShiftScreen extends State<ShiftScreen> {
                           where:
                               '${ShiftTable.localId} = ${Config.currentShift.remoteId}')
                       .then((value) {
-                    if (value > 0)
+                    if (value > 0) {
+                      Lib.closeRegister(Config.currentShift);
                       AppTheme.showAlertDialogOK(context,
                           title: 'Success',
                           message:
                               'Shift# ${Config.currentShift.registerNo} closed successfully.',
                           onOK: () =>
                               LoginController().pushAndRemoveUntil(context));
-                    else
+                    } else {
                       AppTheme.showAlertDialogOK(context,
                           title: 'Error',
                           message: 'Something went wrong. Please Try Again!',
                           onOK: () => Navigator.of(context).pop());
+                    }
                   });
-
                   // LoginController().pushAndRemoveUntil(context);
 
                 } else {

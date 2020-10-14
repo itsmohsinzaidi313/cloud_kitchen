@@ -16,6 +16,7 @@ import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:toast/toast.dart';
 
 class NewSale extends StatefulWidget {
   final NewSaleModel model;
@@ -37,125 +38,155 @@ class _NewSaleState extends State<NewSale> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _key,
-      appBar: AppTheme.appBarNormal(
-        context: context,
-        appBarTitle: 'New Sales',
-        appBarElevation: 0.0,
-        appBarBgColor: AppTheme.appBarColor,
-      ),
-      body: Container(
-        child: Column(
-          children: [
-            Container(
-              color: Colors.red,
-              child: Row(
-                children: [
-                  Flexible(
-                      flex: 1,
-                      child: ListTile(
-                        leading: Container(
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(color: model.leadingString.isNotEmpty ? Colors.yellow : Colors.red),
-                          child: Text(
-                            model.leadingString,
-                            style: TextStyle(
-                                color: Colors.red, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        title: Container(
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(color: model.titleString.isNotEmpty ? Colors.yellow : Colors.red),
-                          child: Center(
-                            child: Text(model.titleString,
+    return WillPopScope(
+        child: Scaffold(
+          key: _key,
+          appBar: AppTheme.appBarNormal(
+            context: context,
+            appBarTitle: 'New Sales',
+            appBarElevation: 0.0,
+            appBarBgColor: AppTheme.appBarColor,
+          ),
+          body: Container(
+            child: Column(
+              children: [
+                Container(
+                  color: Colors.red,
+                  child: Row(
+                    children: [
+                      Flexible(
+                          flex: 1,
+                          child: ListTile(
+                            leading: Container(
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                  color: model.leadingString.isNotEmpty
+                                      ? Colors.yellow
+                                      : Colors.red),
+                              child: Text(
+                                model.leadingString,
                                 style: TextStyle(
                                     color: Colors.red,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                        ),
-                        trailing: Container(
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(color: model.trailingString.isNotEmpty ? Colors.yellow : Colors.red),
-                          child: Text(model.trailingString,
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                      ))
-                ],
-              ),
-            ),
-            Expanded(
-              child: Row(
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: Column(
-                      children: [
-                        ListTile(
-                          title:
-                              Center(child: Text('Categories'.toUpperCase())),
-                        ),
-                        Container(
-                          height: Config.getDeviceHeight(context) * 0.1,
-                          padding: EdgeInsets.only(top: 5),
-                          // decoration: BoxDecoration(border: Border.all(width: 2)),
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: getCategoryWidgets(model.lstCategory),
-                          ),
-                        ),
-                        ListTile(
-                          title: Center(child: Text('Items'.toUpperCase())),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                            margin: EdgeInsets.only(top: 5),
-                            padding: EdgeInsets.only(top: 5),
-                            // decoration: BoxDecoration(border: Border.all(width: 2)),
-                            child: GridView.count(
-                              crossAxisCount: 4,
-                              children:
-                                  getItemsWidgets(model.lstItem, categoryName),
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
+                            title: Container(
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                  color: model.titleString.isNotEmpty
+                                      ? Colors.yellow
+                                      : Colors.red),
+                              child: Center(
+                                child: Text(model.titleString,
+                                    style: TextStyle(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                            ),
+                            trailing: Container(
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                  color: model.trailingString.isNotEmpty
+                                      ? Colors.yellow
+                                      : Colors.red),
+                              child: Text(model.trailingString,
+                                  style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                          ))
+                    ],
                   ),
-                  Flexible(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Flexible(
-                            flex: 1,
-                            child: ListView(
-                              children:
-                                  getCartItemsWidgets(model.order.itemList),
+                ),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: Column(
+                          children: [
+                            ListTile(
+                              title: Center(
+                                  child: Text('Categories'.toUpperCase())),
                             ),
-                          ),
-                        ],
+                            Container(
+                              height: Config.getDeviceHeight(context) * 0.1,
+                              padding: EdgeInsets.only(top: 5),
+                              // decoration: BoxDecoration(border: Border.all(width: 2)),
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: getCategoryWidgets(model.lstCategory),
+                              ),
+                            ),
+                            ListTile(
+                              title: Center(child: Text('Items'.toUpperCase())),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: Container(
+                                margin: EdgeInsets.only(top: 5),
+                                padding: EdgeInsets.only(top: 5),
+                                // decoration: BoxDecoration(border: Border.all(width: 2)),
+                                child: GridView.count(
+                                  crossAxisCount: 4,
+                                  children: getItemsWidgets(
+                                      model.lstItem, categoryName),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                      Flexible(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Flexible(
+                                flex: 1,
+                                child: ListView(
+                                  children:
+                                      getCartItemsWidgets(model.order.itemList),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: AppTheme.appBarColor,
+            child: Icon(Icons.done),
+            onPressed: () {
+              model.order.itemList.length > 0
+                  ? AppTheme.showAlertDialogOK(context,
+                      title: 'Success',
+                      message: 'Order saved.',
+                      onOK: () => _onFloatingButtonPressed())
+                  : AppTheme.showAlertDialogOK(context,
+                      title: 'Failed',
+                      message: 'Please add Items to punch order',
+                      onOK: () => Navigator.pop(context));
+            },
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppTheme.appBarColor,
-        child: Icon(Icons.done),
-        onPressed: () => AppTheme.showAlertDialogOK(context,
-            title: 'Success',
-            message: 'Order saved.',
-            onOK: () => _onFloatingButtonPressed()),
-      ),
+        onWillPop: _onWillPop
+    );
+  }
+
+  Future<bool> _onWillPop() async {
+    return ( await AppTheme.showAlertDialogYNFutureReturn(
+        context,
+        title: 'Question?',
+        message: 'Are you sure?',
+        onNo: () => Navigator.of(context).pop(false),
+        onYes: () => DashboardController(context).pushAndRemoveUntil(context)) ?? false
     );
   }
 
@@ -372,8 +403,8 @@ class _NewSaleState extends State<NewSale> {
       this.model.order.itemList.forEach((item) {
         insertIntoSalesDetails(_db, item, masterId);
       });
+      DashboardController(context).pushAndRemoveUntil(context);
     }
-    DashboardController(context).pushAndRemoveUntil(context);
   }
 
   //DETAIL DATA

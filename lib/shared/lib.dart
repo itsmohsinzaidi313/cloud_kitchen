@@ -169,11 +169,11 @@ class Lib {
               ShiftTable.tableName,
               {
                 ShiftTable.closingBalance: shift.closingBalance,
-                ShiftTable.openingBalanceDateTime: shift.closingBalanceDateTime,
+                ShiftTable.closingBalanceDateTime: shift.closingBalanceDateTime,
                 ShiftTable.registerStatus: '2'
               },
               where: '${ShiftTable.localId} = ?',
-              whereArgs: [shift.id]);
+              whereArgs: [shift.remoteId]);
           if (rowsUpdated > 0)
             return true;
           else

@@ -12,6 +12,7 @@ import 'package:sqflite/sqflite.dart';
 
 class OrderScreen extends StatefulWidget {
   final OrderModel model;
+
   OrderScreen({this.model});
 
   @override
@@ -22,6 +23,7 @@ class _OrderScreenState extends State<OrderScreen> {
   GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   final OrderModel model;
   int orderType = 1;
+
   _OrderScreenState(this.model);
 
   @override
@@ -146,11 +148,23 @@ class _OrderScreenState extends State<OrderScreen> {
     return widget;
   }
 
-  static void onOrderCancelled(String orderId) async {
-    Database db = Config.database;
-    Map<String, dynamic> update = {
-      SalesMasterTable.isDelete : 1.toString(),
-    };
-    await SalesMaster().updateSpecificIntoDb(db, update, 'id', orderId);
+  Future onOrderCancelled(String orderId) async {
+    await AppTheme.showAlertDialogYNFutureReturn(
+      context,
+      title: 'Question',
+      message: 'Are you sure?',
+      onNo: () => Navigator.of(context).pop(),
+      onYes: () async {
+        Database db = Config.database;
+        Map<String, dynamic> update = {
+          SalesMasterTable.isDelete: 1.toString(),
+        };
+        await SalesMaster().updateSpecificIntoDb(db, update, 'id', orderId).whenComplete(() {
+          setState(() {
+            Navigator.of(context).pop();
+          });
+        });
+      }
+    );
   }
 }

@@ -158,6 +158,28 @@ class AppTheme {
                 borderRadius: BorderRadius.circular(8))));
   }
 
+  static Future<bool> showAlertDialogYNFutureReturn(
+      BuildContext context,
+      {String title, String message, Function onYes, Function onNo}
+      ) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (value) => AlertDialog(
+          title: text(text: title, fontWeight: FontWeight.bold, fontSize: 20),
+          content: text(text: message),
+          actions: [
+            FlatButton(
+                child: text(text: 'Yes', color: Colors.blue),
+                onPressed: onYes),
+            FlatButton(
+                child: text(text: 'No', color: Colors.blue), onPressed: onNo)
+          ],
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8))));
+    return null;
+  }
+
   static Text text(
       {String text,
       double fontSize = 15,
