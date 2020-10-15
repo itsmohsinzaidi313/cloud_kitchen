@@ -76,12 +76,13 @@ class NewSaleController {
       Navigator.of(context).pushReplacement(
           new MaterialPageRoute(builder: (context) => new NewSale(model)));
 
-  void editOrder(SalesMaster salesMaster, BuildContext context) async {
+  void editOrder(SalesMaster salesMaster, int orderTye, BuildContext context) async {
     List<Item> updatedList = await SalesDetails()
         .getOrderWhereMasterId(Config.database, salesMaster);
     this.model.order.setItemList = updatedList;
     this.model.salesMaster = salesMaster;
     this.model.order.customerId = salesMaster.customerId;
+    this.model.orderType = orderTye;
     this.model.leadingString = '';
     this.model.titleString = '';
     this.model.trailingString = '';

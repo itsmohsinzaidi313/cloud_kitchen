@@ -8,6 +8,7 @@ class NewSaleModel {
   SalesMaster salesMaster;
   List<Item> lstItem;
   String categoryName;
+  int orderType;
   CustomerOrder order;
   String leadingString;
   String titleString;

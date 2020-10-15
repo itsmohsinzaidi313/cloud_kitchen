@@ -11,6 +11,7 @@ class OrderModel {
   List<String> _dineInColumns;
   List<String> _takeawayAndDeliveryColumns;
   List<PaymentMethod> _paymentMethodList;
+  int orderType;
 
 
   List<PaymentMethod> get paymentMethodList => _paymentMethodList;

@@ -22,12 +22,20 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen> {
   GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   final OrderModel model;
-  int orderType = 1;
-
   _OrderScreenState(this.model);
+
+  int orderType;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    orderType = model.orderType;
+  }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.grey[200],
       key: _key,
@@ -53,6 +61,7 @@ class _OrderScreenState extends State<OrderScreen> {
                       onPressed: () {
                         setState(() {
                           orderType = 1;
+                          model.orderType = orderType;
                         });
                       },
                       color: AppTheme.listTextColor,
@@ -71,6 +80,7 @@ class _OrderScreenState extends State<OrderScreen> {
                       onPressed: () {
                         setState(() {
                           orderType = 2;
+                          model.orderType = orderType;
                         });
                       },
                       color: AppTheme.listTextColor,
@@ -89,6 +99,7 @@ class _OrderScreenState extends State<OrderScreen> {
                       onPressed: () {
                         setState(() {
                           orderType = 3;
+                          model.orderType = orderType;
                         });
                       },
                       color: AppTheme.listTextColor,
@@ -128,19 +139,19 @@ class _OrderScreenState extends State<OrderScreen> {
         widget = await OrderController.getDineInOrders(
             context,
             (element) => PaymentController(element).launch(context),
-            (id) => onOrderCancelled(id));
+            (id) => onOrderCancelled(id), orderType);
         break;
       case 2:
         widget = await OrderController.getTakeAwayOrders(
             context,
             (element) => PaymentController(element).launch(context),
-            (id) => onOrderCancelled(id));
+            (id) => onOrderCancelled(id), orderType);
         break;
       case 3:
         widget = await OrderController.getDeliveryOrders(
             context,
             (element) => PaymentController(element).launch(context),
-            (id) => onOrderCancelled(id));
+            (id) => onOrderCancelled(id), orderType);
         break;
       default:
         break;

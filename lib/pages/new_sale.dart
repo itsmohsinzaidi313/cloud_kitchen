@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
+import 'package:food_app/controller/order_controller.dart';
 import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/table_object/orders_table.dart';
 import 'package:food_app/database/table_object/sales_detail_table.dart';
@@ -186,7 +187,7 @@ class _NewSaleState extends State<NewSale> {
         title: 'Question?',
         message: 'Are you sure?',
         onNo: () => Navigator.of(context).pop(false),
-        onYes: () => DashboardController(context).pushAndRemoveUntil(context)) ?? false
+        onYes: () => OrderController(model.orderType).launchAndReplacement(context) ?? false)
     );
   }
 
