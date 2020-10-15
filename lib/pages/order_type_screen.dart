@@ -160,6 +160,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
   }
 
   int gridViewType;
+  bool isWaiterSelected = false;
   int listLength = DataLists.instance.listTables.length;
 
   Widget getLayout(int viewType) {
@@ -179,9 +180,10 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                 ),
               ),
               ListTile(
-                title: OutlineButton(
-                  child: Text('Ok'),
-                  onPressed: () {
+                title: FlatButton(
+                  child: Text('Ok', style : TextStyle(color: isWaiterSelected ? Colors.white : null)),
+                  color: isWaiterSelected ? Colors.red : null,
+                  onPressed: isWaiterSelected ? () {
                     setState(() {
                       check[1] = controllers[1].text == '' ? true : false;
                       errorMsg = controllers[1].text == '' ? 'Required' : '';
@@ -189,30 +191,24 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                     if (!check[1]) {
                       int persons = int.parse(controllers[1].text);
                       if (persons > 0) {
-                        Config.database.insert(OrdersTable.tableName, {
-                          OrdersTable.persons: controllers[1].text,
-                          OrdersTable.bookingTime:
-                              Config.getCurrentTime24Format(),
-                          OrdersTable.outletId: waiter.outletId,
-                          OrdersTable.tableId: table.serverId,
-                          OrdersTable.delStatus: 'Live'
-                        }).then((value) => NewSaleController().launchDineIn(
+                        NewSaleController().launchDineIn(
                                 context,
                                 _viewType.toString(),
-                                value.toString(),
+                                table.serverId,
                                 waiter.serverId, [
                               'Persons: ${controllers[1].text}',
                               'Table: ${table.name}',
                               'Waiter: ${waiter.fullName}'
-                            ]));
+                            ]);
                       } else {
                         setState(() {
                           check[1] = true;
                           errorMsg = 'Invalid no of persons.';
+                          isWaiterSelected = false;
                         });
                       }
                     }
-                  },
+                  } : null,
                 ),
               ),
               Expanded(
@@ -522,6 +518,9 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
               child: Center(child: Text(element.fullName)),
               onTap: () {
                 waiter = element;
+                setState(() {
+                  isWaiterSelected = true;
+                });
               },
             ),
           ),

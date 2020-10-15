@@ -99,6 +99,18 @@ class OrderController {
     return true;
   }
 
+  bool popScreen(BuildContext context) {
+    // SalesMaster().queryAllRows(Config.database).then((value) {
+    //   this.model.setItemHoldList(value);
+    //   Navigator.of(context).pushReplacement(new MaterialPageRoute(
+    //       builder: (context) => new OrderScreen(
+    //         model: model,
+    //       )));
+    // });
+    Navigator.pop(context);
+    return true;
+  }
+
 
   static Future<Widget> getDineInOrders(BuildContext context,
       void onOk(Map<String, dynamic> id), void onNo(String id), int _orderType) async {

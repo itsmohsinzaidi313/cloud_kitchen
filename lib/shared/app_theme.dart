@@ -177,7 +177,7 @@ class AppTheme {
           ],
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8))));
-    return null;
+    return true;
   }
 
   static Text text(

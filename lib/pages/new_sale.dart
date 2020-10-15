@@ -6,6 +6,7 @@ import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/table_object/orders_table.dart';
 import 'package:food_app/database/table_object/sales_detail_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
+import 'package:food_app/database/table_object/tables_table.dart';
 import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/generic_models/customer_order.dart';
 import 'package:food_app/models/objects/category.dart';
@@ -30,6 +31,7 @@ class NewSale extends StatefulWidget {
 
 class _NewSaleState extends State<NewSale> {
   final NewSaleModel model;
+  bool isNew = false;
 
   _NewSaleState(this.model);
 
@@ -182,13 +184,27 @@ class _NewSaleState extends State<NewSale> {
   }
 
   Future<bool> _onWillPop() async {
-    return ( await AppTheme.showAlertDialogYNFutureReturn(
+    bool isYes = false;
+    bool type = await AppTheme.showAlertDialogYNFutureReturn(
         context,
         title: 'Question?',
         message: 'Are you sure?',
         onNo: () => Navigator.of(context).pop(false),
-        onYes: () => OrderController(model.orderType).launchAndReplacement(context) ?? false)
-    );
+        onYes: () =>  OrderController(model.orderType).launchAndReplacement(context) ? isYes = true : isYes = false);
+
+    if(isYes && type){
+      if(model.titleString.isNotEmpty){
+        Navigator.pop(context);
+        return true;
+      }
+      else{
+        Navigator.pop(context);
+        OrderController(model.orderType).launchAndReplacement(context);
+      }
+      return false;
+    } else {
+      return false;
+    }
   }
 
   List<Widget> getCategoryWidgets(List<Category> lstCategory) {
@@ -300,6 +316,8 @@ class _NewSaleState extends State<NewSale> {
   }
 
   void _onFloatingButtonPressed() async {
+    Navigator.pop(context);
+
     if (model.order.itemList.length > 0) {
       Database _db = Config.database;
       SalesMaster _salesMaster;
@@ -360,6 +378,9 @@ class _NewSaleState extends State<NewSale> {
 
       ///EDIT ORDER
       if (count[0]['count'] > 0) {
+        setState(() {
+          isNew = false;
+        });
         _salesMaster = this.model.salesMaster;
         _db.delete(SalesDetailTable.tableName,
             where: '${SalesDetailTable.id} = ?',
@@ -372,6 +393,9 @@ class _NewSaleState extends State<NewSale> {
       } //IF
       else {
         ///NEW ORDER INSERTION
+        setState(() {
+          isNew = true;
+        });
         _salesMaster = SalesMaster();
         masterId = await _salesMaster.insertSpecificIntoDb(_db, master);
         _salesMaster.updateSpecificIntoDb(
@@ -379,10 +403,20 @@ class _NewSaleState extends State<NewSale> {
             {SalesMasterTable.serverId: masterId.toString()},
             SalesMasterTable.localId,
             masterId);
-        String code =
-            Lib.codeGenerator('ORD', masterId); // GENERATES CODE FROM MASTER ID
+
+        // //TODO Insert order table
+        // if (masterId > 0){
+        //   Config.database.insert(OrdersTable.tableName, {
+        //     OrdersTable.persons: 'person',
+        //     OrdersTable.bookingTime:
+        //     Config.getCurrentTime24Format(),
+        //     OrdersTable.outletId: Config.currentUser.outletId,
+        //     OrdersTable.tableId: model.order.orderTableId,
+        //     OrdersTable.delStatus: 'Live'
+        //   });
+
         Map<String, dynamic> update = {
-          'sale_no': code,
+          'sale_no': Lib.codeGenerator('ORD', masterId),
         };
 
         ///UPDATE ORDER TABLE
@@ -390,7 +424,7 @@ class _NewSaleState extends State<NewSale> {
             OrdersTable.tableName,
             {
               OrdersTable.saleId: masterId,
-              OrdersTable.saleNo: code,
+              OrdersTable.saleNo: Lib.codeGenerator('ORD', masterId),
             },
             where: '${OrdersTable.localId} = ?',
             whereArgs: [this.model.order.orderTableId]);
@@ -404,7 +438,12 @@ class _NewSaleState extends State<NewSale> {
       this.model.order.itemList.forEach((item) {
         insertIntoSalesDetails(_db, item, masterId);
       });
-      DashboardController(context).pushAndRemoveUntil(context);
+      if(isNew){
+        DashboardController(context).pushAndRemoveUntil(context);
+      } else{
+        // Navigator.pop(context);
+        OrderController(model.orderType).launchAndReplacement(context);
+      }
     }
   }
 
