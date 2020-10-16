@@ -5,6 +5,7 @@ import 'package:food_app/controller/order_controller.dart';
 import 'package:food_app/database/table_object/orders_table.dart';
 import 'package:food_app/database/table_object/sales_detail_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
+import 'package:food_app/database/table_object/tables_table.dart';
 import 'package:food_app/models/generic_models/customer_order.dart';
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/item.dart';
@@ -17,9 +18,11 @@ import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
 
 class NewSale extends StatefulWidget {
-  final NewSaleModel model;
+  NewSaleModel model;
 
-  NewSale(this.model);
+  NewSale(NewSaleModel model) {
+    this.model = model;
+  }
 
   @override
   _NewSaleState createState() => _NewSaleState(this.model);
@@ -382,6 +385,7 @@ class _NewSaleState extends State<NewSale> {
             where: '${SalesDetailTable.salesMasterId} = ?',
             whereArgs: [_salesMaster.localId]);
         localId = int.parse(_salesMaster.localId);
+
         db.update(SalesMasterTable.tableName, saleMasterData,
             where: '${SalesMasterTable.localId} = ?',
             whereArgs: [_salesMaster.localId]);
@@ -410,9 +414,8 @@ class _NewSaleState extends State<NewSale> {
             OrdersTable.tableId: model.order.tableId,
             OrdersTable.delStatus: 'Live'
           });
-          db.update(SalesMasterTable.tableName,
-              {SalesMasterTable.tableId: orderTableId},
-              where: '${SalesMasterTable.localId} = ?', whereArgs: [localId]);
+          if(orderTableId > 0)
+            db.update(TablesTable.tableName, {TablesTable.delStatus: TablesTable.RESERVED}, where: '${model.order.tableId} = ?', whereArgs: [model.order.tableId]);
         }
       } //ELSE
 

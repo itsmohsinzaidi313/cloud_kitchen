@@ -261,4 +261,9 @@ class SalesMaster {
     });
     return deliveryList;
   }
+
+  Future<String> getTableName(Database db, String orderTableId) async {
+    db.rawQuery("select () from ");
+    return '';
+  }
 }

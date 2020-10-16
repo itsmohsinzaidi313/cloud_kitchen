@@ -2,7 +2,10 @@ import 'package:food_app/database/sql_structure.dart';
 
 class TablesTable{
 
-  static const String tableName = 'tables'; //13
+  static const String tableName = 'tables';
+  static const RESERVED = 'Reserved';
+  static const FREE = 'Free';
+
 
   static const String localId = 'local_id';
   static const String serverId = 'id';

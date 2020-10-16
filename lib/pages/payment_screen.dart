@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
-import 'package:food_app/database/table_object/orders_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
 import 'package:food_app/database/table_object/tables_table.dart';
 import 'package:food_app/models/objects/payment_method.dart';
 import 'package:food_app/models/view_models/payment_view_model.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
+import 'package:sqflite/sqflite.dart';
 
 class PaymentScreen extends StatefulWidget {
   final PaymentViewModel model;
@@ -22,6 +22,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   PaymentViewModel model;
 
   _PaymentScreenState(this.model);
+
   PaymentMethod selectedPayment;
   List<TextEditingController> controllers = [
     new TextEditingController(),
@@ -157,7 +158,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           onYes: () {
                             if (!check[0] || !check[1]) {
                               // PaymentController.uploadOrder(model.map);
-                              Config.database.update(
+                              Database db = Config.database;
+                              db.update(
                                   SalesMasterTable.tableName,
                                   {
                                     SalesMasterTable.orderStatus: '3',
@@ -165,11 +167,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                         model.salesMaster.dueAmount
                                   },
                                   where: '${SalesMasterTable.localId} = ?',
-                                  whereArgs: [
-                                    model.salesMaster.localId
-                                  ]);
-                              Config.database.update(OrdersTable.tableName,
-                                  {OrdersTable.delStatus: 'Delete'}, where: '${OrdersTable.saleId} = ?', whereArgs: [model.salesMaster.localId]);
+                                  whereArgs: [model.salesMaster.localId]);
+                              if (model.salesMaster.orderType == '1') {
+                                db.update(TablesTable.tableName,
+                                    {TablesTable.delStatus: TablesTable.FREE},
+                                    where: '${TablesTable.serverId} = ?',
+                                    whereArgs: [model.salesMaster.tableId]);
+                              }
                               DashboardController(context)
                                   .launchAndReplacement();
                             }

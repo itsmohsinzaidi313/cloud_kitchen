@@ -192,9 +192,9 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                                 _viewType.toString(),
                                 table.serverId,
                                 waiter.serverId, [
-                              'Persons: ${controllers[1].text}',
-                              'Table: ${table.name}',
-                              'Waiter: ${waiter.fullName}'
+                              controllers[1].text,
+                              table.name,
+                              waiter.fullName
                             ]);
                       } else {
                         setState(() {
@@ -318,8 +318,8 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                             if(value > 0){
                               NewSaleController().launchTakeaway(context,
                                   _viewType.toString(), value.toString(), [
-                                    'Customer: ${controllers[2].text}',
-                                    'Contact: ${controllers[3].text}',
+                                    controllers[2].text,
+                                    controllers[3].text,
                                     ''
                                   ]);
                             }
@@ -452,8 +452,8 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                             if(value > 0){
                               NewSaleController().launchDelivery(context,
                                   _viewType.toString(), value.toString(), [
-                                    'Customer: ${controllers[4].text}',
-                                    'Phone: ${controllers[5].text}',
+                                    controllers[4].text,
+                                    controllers[5].text,
                                     ''
                                   ]);
                             }

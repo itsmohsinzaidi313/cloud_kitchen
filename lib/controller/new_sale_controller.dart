@@ -37,9 +37,9 @@ class NewSaleController {
     this.model.order.waiterId = waiterId;
     this.model.order.noOfPersons = titleStrings[0];
 
-    this.model.leadingString = titleStrings[0];
-    this.model.titleString = titleStrings[1];
-    this.model.trailingString = titleStrings[2];
+    this.model.leadingString = 'Persons: ${titleStrings[0]}';
+    this.model.titleString = 'Table: ${titleStrings[1]}';
+    this.model.trailingString = 'Waiter: ${titleStrings[2]}';
 
     Navigator.of(context)
         .push(new MaterialPageRoute(builder: (context) => new NewSale(model)));
@@ -51,8 +51,8 @@ class NewSaleController {
     this.model.salesMaster.orderType = orderType;
     this.model.order.customerId = customerId;
 
-    this.model.leadingString = titleStrings[0];
-    this.model.titleString = titleStrings[1];
+    this.model.leadingString = 'Customer: ${titleStrings[0]}';
+    this.model.titleString = 'Contact: ${titleStrings[1]}';
     this.model.trailingString = titleStrings[2];
 
     Navigator.of(context)
@@ -65,8 +65,8 @@ class NewSaleController {
     this.model.salesMaster.orderType = orderType;
     this.model.order.customerId = customerId;
 
-    this.model.leadingString = titleStrings[0];
-    this.model.titleString = titleStrings[1];
+    this.model.leadingString = 'Customer: ${titleStrings[0]}';
+    this.model.titleString = 'Phone: ${titleStrings[1]}';
     this.model.trailingString = titleStrings[2];
 
     Navigator.of(context)
@@ -75,7 +75,7 @@ class NewSaleController {
 
   void launchAndReplacement(BuildContext context) =>
       Navigator.of(context).pushReplacement(
-          new MaterialPageRoute(builder: (context) => new NewSale(model)));
+          new MaterialPageRoute(builder: (context) => new NewSale(this.model)));
 
   void editOrder(SalesMaster salesMaster, int orderType, BuildContext context) async {
     List<Item> updatedList = await SalesDetails()
@@ -83,10 +83,12 @@ class NewSaleController {
     this.model.order.setItemList = updatedList;
     this.model.salesMaster = salesMaster;
     this.model.order.customerId = salesMaster.customerId;
+    this.model.order.tableId = salesMaster.tableId;
     this.model.orderType = orderType;
     this.model.leadingString = '';
     this.model.titleString = '';
     this.model.trailingString = '';
-    launchAndReplacement(context);
+    Navigator.of(context).pushReplacement(
+        new MaterialPageRoute(builder: (context) => new NewSale(this.model)));
   }
 }
