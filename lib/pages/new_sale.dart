@@ -57,46 +57,48 @@ class _NewSaleState extends State<NewSale> {
                   child: Row(
                     children: [
                       Flexible(
-                          flex: 1,
-                          child: ListTile(
-                            leading: Container(
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                  color: model.leadingString.isNotEmpty
-                                      ? Colors.yellow
-                                      : Colors.red),
-                              child: Text(
-                                model.leadingString,
-                                style: TextStyle(
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                        flex: 1,
+                        child: ListTile(
+                          leading: Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                color: model.leadingString.isNotEmpty
+                                    ? Colors.yellow
+                                    : Colors.red),
+                            child: Text(
+                              model.leadingString,
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold),
                             ),
-                            title: Container(
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                  color: model.titleString.isNotEmpty
-                                      ? Colors.yellow
-                                      : Colors.red),
-                              child: Center(
-                                child: Text(model.titleString,
-                                    style: TextStyle(
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                            ),
-                            trailing: Container(
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                  color: model.trailingString.isNotEmpty
-                                      ? Colors.yellow
-                                      : Colors.red),
-                              child: Text(model.trailingString,
+                          ),
+                          title: Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                color: model.titleString.isNotEmpty
+                                    ? Colors.yellow
+                                    : Colors.red),
+                            child: Center(
+                              child: Text(model.titleString,
                                   style: TextStyle(
                                       color: Colors.red,
                                       fontWeight: FontWeight.bold)),
                             ),
-                          ))
+                          ),
+                          trailing: Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                color: model.trailingString.isNotEmpty
+                                    ? Colors.yellow
+                                    : Colors.red),
+                            child: Text(model.trailingString,
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                      ),
+
                     ],
                   ),
                 ),
@@ -395,7 +397,8 @@ class _NewSaleState extends State<NewSale> {
           isNew = true;
         });
         _salesMaster = SalesMaster();
-        localId = await _salesMaster.insertSpecificIntoDb(db, saleMasterData); // INSERTING NEW ORDER IN SALES MASTER
+        localId = await _salesMaster.insertSpecificIntoDb(
+            db, saleMasterData); // INSERTING NEW ORDER IN SALES MASTER
 
         //UPDATING SALE NO IN SALE MASTER
         db.update(SalesMasterTable.tableName,
@@ -414,8 +417,11 @@ class _NewSaleState extends State<NewSale> {
             OrdersTable.tableId: model.order.tableId,
             OrdersTable.delStatus: OrdersTable.RESERVED
           });
-          if(orderTableId > 0)
-            db.update(TablesTable.tableName, {TablesTable.delStatus: TablesTable.RESERVED}, where: '${model.order.tableId} = ?', whereArgs: [model.order.tableId]);
+          if (orderTableId > 0)
+            db.update(TablesTable.tableName,
+                {TablesTable.delStatus: TablesTable.RESERVED},
+                where: '${model.order.tableId} = ?',
+                whereArgs: [model.order.tableId]);
         }
       } //ELSE
 
@@ -443,7 +449,10 @@ class _NewSaleState extends State<NewSale> {
       SalesDetailTable.menuPriceWithoutDiscount:
           (int.parse(item.quantity) * double.parse(item.salePrice)).toString(),
       SalesDetailTable.menuPriceWithDiscount:
-          (int.parse(item.quantity) * double.parse(item.salePrice) - double.parse(this.model.order.discount) ?? 0).toString(),
+          (int.parse(item.quantity) * double.parse(item.salePrice) -
+                      double.parse(this.model.order.discount) ??
+                  0)
+              .toString(),
       SalesDetailTable.menuUnitPrice: item.salePrice.toString(),
       SalesDetailTable.menuVatPercentage: '0.0',
       // SalesDetailTable[8] : ,
