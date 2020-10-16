@@ -412,7 +412,7 @@ class _NewSaleState extends State<NewSale> {
             OrdersTable.saleNo: Lib.codeGenerator('ORD', localId),
             OrdersTable.outletId: Config.currentUser.outletId,
             OrdersTable.tableId: model.order.tableId,
-            OrdersTable.delStatus: 'Live'
+            OrdersTable.delStatus: OrdersTable.RESERVED
           });
           if(orderTableId > 0)
             db.update(TablesTable.tableName, {TablesTable.delStatus: TablesTable.RESERVED}, where: '${model.order.tableId} = ?', whereArgs: [model.order.tableId]);

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/new_sale_controller.dart';
-import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/table_object/customer_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
-import 'package:food_app/database/table_object/user_table.dart';
 import 'package:food_app/models/objects/payment_method.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/order_model.dart';

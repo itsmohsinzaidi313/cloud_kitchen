@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/login_controller.dart';
 import 'package:food_app/controller/order_controller.dart';
+import 'package:food_app/controller/order_type_controller.dart';
 import 'package:food_app/controller/shift_controller.dart';
 import 'package:food_app/models/view_models/dashboard_model.dart';
 import 'package:food_app/models/generic_models/dashboard_item.dart';
@@ -107,8 +108,7 @@ class _DashboardState extends State<Dashboard> {
   void onCardTap(DashboardItem dashboardItem) {
     Toast.show(dashboardItem.name, context);
     if (dashboardItem.name == 'New Orders') {
-      Navigator.of(context)
-          .push(new MaterialPageRoute(builder: (context) => OrderTypeScreen()));
+      OrderTypeController().launch(context);
     } else if (dashboardItem.name == 'Pending Orders') {
       OrderController(1).launch(context);
     } else if (dashboardItem.name == 'Database') {

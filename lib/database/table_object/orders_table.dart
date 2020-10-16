@@ -2,6 +2,9 @@ import 'package:food_app/database/sql_structure.dart';
 
 class OrdersTable {
 
+  static const String RESERVED = 'Reserved';
+  static const String FREE = 'Free';
+
   static const String tableName = 'orders_table';
 
   static const String localId = 'local_id';

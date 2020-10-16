@@ -5,7 +5,7 @@ import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/table_object/customer_table.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/database/tables.dart';
-import 'package:food_app/models/generic_models/install_api.dart';
+import 'file:///D:/Flutter/cloud_kitchen/lib/shared/install_api.dart';
 import 'package:food_app/models/objects/customer.dart';
 import 'package:food_app/models/objects/device.dart';
 import 'package:food_app/models/objects/shift.dart';
@@ -56,7 +56,7 @@ class Lib {
   static Future<bool> insertIntoDatabase(
       Database db, String table, Map<String, dynamic> values) async {
     try {
-      bool value = await db.transaction((txn) => txn.insert(table, values)) > 0 ? true : false;
+      bool value = await db.insert(table, values) > 0 ? true : false;
       return value;
     } catch (e) {
       Config.log.e('Error on Lib insertIntoDatabase', [e]);

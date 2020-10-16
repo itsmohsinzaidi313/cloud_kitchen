@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
+import 'package:food_app/database/table_object/orders_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
 import 'package:food_app/database/table_object/tables_table.dart';
 import 'package:food_app/models/objects/payment_method.dart';
+import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/payment_view_model.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
@@ -169,10 +171,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   where: '${SalesMasterTable.localId} = ?',
                                   whereArgs: [model.salesMaster.localId]);
                               if (model.salesMaster.orderType == '1') {
-                                db.update(TablesTable.tableName,
-                                    {TablesTable.delStatus: TablesTable.FREE},
-                                    where: '${TablesTable.serverId} = ?',
-                                    whereArgs: [model.salesMaster.tableId]);
+                                db.update(OrdersTable.tableName,
+                                    {OrdersTable.delStatus: OrdersTable.FREE},
+                                    where: '${OrdersTable.saleId} = ?',
+                                    whereArgs: [model.salesMaster.localId]);
                               }
                               DashboardController(context)
                                   .launchAndReplacement();

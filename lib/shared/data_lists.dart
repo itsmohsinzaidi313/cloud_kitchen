@@ -73,6 +73,7 @@ class DataLists {
       int x = await db.delete(UserTable.tableName);
       instance.listUsers
           .forEach((element) async => await element.insertIntoDatabase(db));
+      _log.v('Users inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listUsers', [e]);
       return false;
@@ -81,7 +82,7 @@ class DataLists {
       int x = await db.delete(ItemTable.tableName);
       instance.listItem
           .forEach((element) async => await element.insertIntoDatabase(db));
-
+      _log.v('Items inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listItem', [e]);
       return false;
@@ -90,6 +91,7 @@ class DataLists {
       int x = await db.delete(CategoryTable.tableName);
       instance.listCategories
           .forEach((element) async => await element.insertIntoDatabase(db));
+      _log.v('Categories inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listCategories', [e]);
       return false;
@@ -98,6 +100,7 @@ class DataLists {
       int x = await db.delete(CompanyTable.tableName);
       instance.listCompany
           .forEach((element) async => await element.insertIntoDatabase(db));
+      _log.v('Company inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listCompany', [e]);
       return false;
@@ -105,6 +108,7 @@ class DataLists {
     try {
       db.delete(OutletTable.tableName).then((value) => instance.listOutlet
           .forEach((element) async => await element.insertIntoDatabase(db)));
+      _log.v('Outlet inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listOutlet', [e]);
       return false;
@@ -112,6 +116,7 @@ class DataLists {
     try {
       db.delete(CustomerTable.tableName).then((value) => instance.listCustomers
           .forEach((element) async => await element.insertIntoDatabase(db)));
+      _log.v('Customer inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listCustomers', [e]);
       return false;
@@ -119,6 +124,7 @@ class DataLists {
     try {
       db.delete(TablesTable.tableName).then((value) => instance.listTables
           .forEach((element) async => await element.insertIntoDatabase(db)));
+      _log.v('Tables inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listTables', [e]);
       return false;
@@ -126,6 +132,7 @@ class DataLists {
     try {
       db.delete(ItemModifierTable.tableName).then((value) => instance.listItemModifiers
           .forEach((element) async => await element.insertIntoDatabase(db)));
+      _log.v('ItemModifier inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listItemModifiers', [e]);
       return false;
@@ -133,6 +140,7 @@ class DataLists {
     try {
       db.delete(ModifierTable.tableName).then((value) => instance.listModifiers
           .forEach((element) async => await element.insertIntoDatabase(db)));
+      _log.v('Modifier inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listModifiers', [e]);
       return false;
@@ -141,6 +149,7 @@ class DataLists {
       db.delete(ExpenseCategoryTable.tableName).then((value) => instance
           .listExpenseCategories
           .forEach((element) async => await element.insertIntoDatabase(db)));
+      _log.v('ExpenseCategory inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listExpenseCategories', [e]);
       return false;
@@ -149,6 +158,7 @@ class DataLists {
       db.delete(PaymentMethodTable.tableName).then((value) => instance
           .listPaymentMethods
           .forEach((element) async => await element.insertIntoDatabase(db)));
+      _log.v('PaymentMethod inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listPaymentMethods', [e]);
       return false;
@@ -156,6 +166,7 @@ class DataLists {
     try {
       db.delete(VatAmountTable.tableName).then((value) => instance.listVatAmount
           .forEach((element) async => await element.insertIntoDatabase(db)));
+      _log.v('VatAmount inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listVatAmount', [e]);
       return false;
@@ -163,6 +174,7 @@ class DataLists {
     try {
       db.delete(DeviceTable.tableName).then((value) => instance.listDevices
           .forEach((element) async => await element.insertIntoDatabase(db)));
+      _log.v('Device inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listDevices', [e]);
       return false;
@@ -170,6 +182,7 @@ class DataLists {
     try {
       db.delete(ShiftTable.tableName).then((value) => instance.listRegisters
           .forEach((element) async => await element.insertIntoDatabase(db)));
+      _log.v('Shift inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listRegisters', [e]);
       return false;

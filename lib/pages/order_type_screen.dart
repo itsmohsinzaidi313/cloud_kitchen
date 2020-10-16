@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/new_sale_controller.dart';
 import 'package:food_app/database/table_object/customer_table.dart';
+import 'package:food_app/database/table_object/orders_table.dart';
 import 'package:food_app/models/objects/customer.dart';
 import 'package:food_app/models/objects/user.dart';
+import 'package:food_app/models/view_models/order_type_model.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/data_lists.dart';
 import 'package:food_app/models/objects/table.dart' as T;
 
 class OrderTypeScreen extends StatefulWidget {
+  OrderTypeModel model;
+  OrderTypeScreen(OrderTypeModel model) {
+    this.model = model;
+  }
   @override
-  _OrderTypeScreenState createState() => _OrderTypeScreenState();
+  _OrderTypeScreenState createState() => _OrderTypeScreenState(this.model);
 }
 
 class _OrderTypeScreenState extends State<OrderTypeScreen> {
+  final OrderTypeModel model;
+  _OrderTypeScreenState(this.model);
+
   GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   int _viewType = 0;
   bool customerExists = true;
@@ -177,34 +186,39 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
               ),
               ListTile(
                 title: FlatButton(
-                  child: Text('Ok', style : TextStyle(color: isWaiterSelected ? Colors.white : null)),
+                  child: Text('Ok',
+                      style: TextStyle(
+                          color: isWaiterSelected ? Colors.white : null)),
                   color: isWaiterSelected ? Colors.red : null,
-                  onPressed: isWaiterSelected ? () {
-                    setState(() {
-                      check[1] = controllers[1].text == '' ? true : false;
-                      errorMsg = controllers[1].text == '' ? 'Required' : '';
-                    });
-                    if (!check[1]) {
-                      int persons = int.parse(controllers[1].text);
-                      if (persons > 0) {
-                        NewSaleController().launchDineIn(
-                                context,
-                                _viewType.toString(),
-                                table.serverId,
-                                waiter.serverId, [
-                              controllers[1].text,
-                              table.name,
-                              waiter.fullName
-                            ]);
-                      } else {
-                        setState(() {
-                          check[1] = true;
-                          errorMsg = 'Invalid no of persons.';
-                          isWaiterSelected = false;
-                        });
-                      }
-                    }
-                  } : null,
+                  onPressed: isWaiterSelected
+                      ? () {
+                          setState(() {
+                            check[1] = controllers[1].text == '' ? true : false;
+                            errorMsg =
+                                controllers[1].text == '' ? 'Required' : '';
+                          });
+                          if (!check[1]) {
+                            int persons = int.parse(controllers[1].text);
+                            if (persons > 0) {
+                              NewSaleController().launchDineIn(
+                                  context,
+                                  _viewType.toString(),
+                                  table.serverId,
+                                  waiter.serverId, [
+                                controllers[1].text,
+                                table.name,
+                                waiter.fullName
+                              ]);
+                            } else {
+                              setState(() {
+                                check[1] = true;
+                                errorMsg = 'Invalid no of persons.';
+                                isWaiterSelected = false;
+                              });
+                            }
+                          }
+                        }
+                      : null,
                 ),
               ),
               Expanded(
@@ -237,12 +251,14 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                     setState(() {
                       check[3] = controllers[3].text == '' ? true : false;
                       errorMsg = controllers[3].text == '' ? 'Required' : '';
-                      !check[3] ? takeawaySearchButton = true : takeawaySearchButton = false;
+                      !check[3]
+                          ? takeawaySearchButton = true
+                          : takeawaySearchButton = false;
                     });
                     if (!check[3]) {
                       Config.database
                           .rawQuery(
-                        "select count(id) as count from ${CustomerTable.tableName} where ${CustomerTable.phone} = '${controllers[3].text}'",
+                        "select count(${CustomerTable.serverId}) as count from ${CustomerTable.tableName} where ${CustomerTable.phone} = '${controllers[3].text}'",
                       )
                           .then((value) {
                         int count = value[0]['count'] as int;
@@ -258,8 +274,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                                   whereArgs: [controllers[3].text])
                               .then((value2) {
                             this.customerId = value2[0][CustomerTable.localId];
-                            controllers[2].text =
-                                value2[0][CustomerTable.name];
+                            controllers[2].text = value2[0][CustomerTable.name];
                             controllers[3].text =
                                 value2[0][CustomerTable.phone];
                           });
@@ -286,49 +301,56 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
               ListTile(
                 title: FlatButton(
                   child: Text('Ok', style: TextStyle(color: Colors.white)),
-                  onPressed: takeawaySearchButton ? () {
-                    setState(() {
-                      check[2] = controllers[2].text == '' ? true : false;
-                      check[3] = controllers[3].text == '' ? true : false;
-                      errorMsg = controllers[2].text == '' ? 'Required' : '';
-                      errorMsg = controllers[3].text == '' ? 'Required' : '';
-                      if (!check[2] && !check[3]) {
-                        if (customerExists) {
-                          NewSaleController().launchTakeaway(context,
-                              _viewType.toString(), customerId.toString(), [
-                            'Customer: ${controllers[2].text}',
-                            'Contact: ${controllers[3].text}',
-                            ''
-                          ]);
-                        } else {
-                          User cUser = Config.currentUser;
-                          Customer customer = Customer(
-                              name: controllers[2].text,
-                              phone: controllers[3].text,
-                              userId: cUser.serverId,
-                              companyId: cUser.companyId,
-                              delStatus: cUser.delStatus,
-                              isUpload: '0'
-                          );
+                  onPressed: takeawaySearchButton
+                      ? () {
+                          setState(() {
+                            check[2] = controllers[2].text == '' ? true : false;
+                            check[3] = controllers[3].text == '' ? true : false;
+                            errorMsg =
+                                controllers[2].text == '' ? 'Required' : '';
+                            errorMsg =
+                                controllers[3].text == '' ? 'Required' : '';
+                            if (!check[2] && !check[3]) {
+                              if (customerExists) {
+                                NewSaleController().launchTakeaway(
+                                    context,
+                                    _viewType.toString(),
+                                    customerId.toString(), [
+                                  controllers[2].text,
+                                  controllers[3].text,
+                                  ''
+                                ]);
+                              } else {
+                                User cUser = Config.currentUser;
+                                Customer customer = Customer(
+                                    name: controllers[2].text,
+                                    phone: controllers[3].text,
+                                    userId: cUser.serverId,
+                                    companyId: cUser.companyId,
+                                    delStatus: cUser.delStatus,
+                                    isUpload: '0');
 
-                          Customer()
-                              .insertCustomer(Config.database, customer)
-                              .then((value) {
-                            customer.remoteId = value.toString();
-                            if(value > 0){
-                              NewSaleController().launchTakeaway(context,
-                                  _viewType.toString(), value.toString(), [
-                                    controllers[2].text,
-                                    controllers[3].text,
-                                    ''
-                                  ]);
+                                Customer()
+                                    .insertCustomer(Config.database, customer)
+                                    .then((value) {
+                                  customer.remoteId = value.toString();
+                                  if (value > 0) {
+                                    NewSaleController().launchTakeaway(
+                                        context,
+                                        _viewType.toString(),
+                                        value.toString(), [
+                                      controllers[2].text,
+                                      controllers[3].text,
+                                      ''
+                                    ]);
+                                  }
+                                });
+                              }
                             }
                           });
                         }
-                      }
-                    });
-                  } : null,
-                  color:  takeawaySearchButton ? Colors.redAccent : null,
+                      : null,
+                  color: takeawaySearchButton ? Colors.redAccent : null,
                 ),
                 // tileColor: takeawaySearchButton ? Colors.redAccent : null,
               ),
@@ -354,12 +376,14 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                   onPressed: () {
                     setState(() {
                       check[5] = controllers[5].text == '' ? true : false;
-                      !check[5] ? deliverySearchButton = true : deliverySearchButton = false;
+                      !check[5]
+                          ? deliverySearchButton = true
+                          : deliverySearchButton = false;
                     });
                     if (!check[5]) {
                       Config.database
                           .rawQuery(
-                        "select count(id) as count from ${CustomerTable.tableName} where ${CustomerTable.phone} = '${controllers[5].text}'",
+                        "select count(${CustomerTable.serverId}) as count from ${CustomerTable.tableName} where ${CustomerTable.phone} = '${controllers[5].text}'",
                       )
                           .then((value) {
                         int count = value[0]['count'] as int;
@@ -376,8 +400,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                                   whereArgs: [controllers[5].text])
                               .then((value2) {
                             this.customerId = value2[0][CustomerTable.localId];
-                            controllers[4].text =
-                                value2[0][CustomerTable.name];
+                            controllers[4].text = value2[0][CustomerTable.name];
                             controllers[5].text =
                                 value2[0][CustomerTable.phone];
                             controllers[6].text =
@@ -415,54 +438,65 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
               ),
               ListTile(
                 title: FlatButton(
-                  child: Text('Ok', style: TextStyle(color: Colors.white),),
-                  onPressed: deliverySearchButton ? () {
-                    setState(() {
-                      check[4] = controllers[4].text == '' ? true : false;
-                      check[5] = controllers[5].text == '' ? true : false;
-                      check[6] = controllers[6].text == '' ? true : false;
+                  child: Text(
+                    'Ok',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: deliverySearchButton
+                      ? () {
+                          setState(() {
+                            check[4] = controllers[4].text == '' ? true : false;
+                            check[5] = controllers[5].text == '' ? true : false;
+                            check[6] = controllers[6].text == '' ? true : false;
 
-                      errorMsg = controllers[4].text == '' ? 'Required' : '';
-                      errorMsg = controllers[5].text == '' ? 'Required' : '';
-                      errorMsg = controllers[6].text == '' ? 'Required' : '';
-                      if (!check[4] && !check[5] && !check[6]) {
-                        if (customerExists) {
-                          NewSaleController().launchDelivery(context,
-                              _viewType.toString(), customerId.toString(), [
-                            'Customer: ${controllers[4].text}',
-                            'Phone: ${controllers[5].text}',
-                            ''
-                          ]);
-                        } else {
-                          User cUser = Config.currentUser;
-                          Customer customer = Customer(
-                              name: controllers[4].text,
-                              phone: controllers[5].text,
-                              address: controllers[6].text,
-                              userId: cUser.serverId,
-                              companyId: cUser.companyId,
-                              delStatus: cUser.delStatus,
-                              isUpload: '0'
-                          );
+                            errorMsg =
+                                controllers[4].text == '' ? 'Required' : '';
+                            errorMsg =
+                                controllers[5].text == '' ? 'Required' : '';
+                            errorMsg =
+                                controllers[6].text == '' ? 'Required' : '';
+                            if (!check[4] && !check[5] && !check[6]) {
+                              if (customerExists) {
+                                NewSaleController().launchDelivery(
+                                    context,
+                                    _viewType.toString(),
+                                    customerId.toString(), [
+                                  controllers[4].text,
+                                  controllers[5].text,
+                                  ''
+                                ]);
+                              } else {
+                                User cUser = Config.currentUser;
+                                Customer customer = Customer(
+                                    name: controllers[4].text,
+                                    phone: controllers[5].text,
+                                    address: controllers[6].text,
+                                    userId: cUser.serverId,
+                                    companyId: cUser.companyId,
+                                    delStatus: cUser.delStatus,
+                                    isUpload: '0');
 
-                          Customer()
-                              .insertCustomer(Config.database, customer)
-                              .then((value) {
-                            customer.remoteId = value.toString();
-                            if(value > 0){
-                              NewSaleController().launchDelivery(context,
-                                  _viewType.toString(), value.toString(), [
-                                    controllers[4].text,
-                                    controllers[5].text,
-                                    ''
-                                  ]);
+                                Customer()
+                                    .insertCustomer(Config.database, customer)
+                                    .then((value) {
+                                  customer.remoteId = value.toString();
+                                  if (value > 0) {
+                                    NewSaleController().launchDelivery(
+                                        context,
+                                        _viewType.toString(),
+                                        value.toString(), [
+                                      controllers[4].text,
+                                      controllers[5].text,
+                                      ''
+                                    ]);
+                                  }
+                                });
+                              }
                             }
                           });
                         }
-                      }
-                    });
-                  } : null,
-                  color :  deliverySearchButton ? Colors.redAccent : null,
+                      : null,
+                  color: deliverySearchButton ? Colors.redAccent : null,
                 ),
                 // tileColor: deliverySearchButton ? Colors.redAccent : null,
               ),
@@ -478,17 +512,23 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
 
   List<Widget> getGridViewWidget(int viewType) {
     List<Widget> listWidget = [];
-    List<T.Table> listTables = DataLists.instance.listTables;
-    List<User> listWaiters = DataLists.instance.listUsers
-        .where((element) => element.designation == 'Waiter')
-        .toList();
+    List<T.Table> listTables = model.listTables;
+    List<User> listWaiters = model.listWaiters;
     if (viewType == 1) {
       listTables.forEach((element) {
+        Color color = Colors.white;
+        Color textColor = Colors.black;
+        if(element.delStatus == OrdersTable.RESERVED) {
+          color = Colors.redAccent;
+          textColor = Colors.white;
+        }
         listWidget.add(Container(
           child: Card(
+            color: color,
             child: InkWell(
-              child: Center(child: Text(element.name)),
-              onTap: () {
+              child: Center(child: Text(element.name, style: TextStyle(color: textColor))),
+              onTap: element.delStatus == OrdersTable.RESERVED ? () => _key.currentState.showSnackBar(
+                  SnackBar(content: Text('Table is reserved.'))) : () {
                 table = element;
                 setState(() {
                   gridViewType = 2;

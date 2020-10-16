@@ -5,15 +5,15 @@ import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Table {
-  final String serverId;
-  final String name;
-  final String sitCapacity;
-  final String position;
-  final String description;
-  final String userId;
-  final String outletId;
-  final String companyId;
-  final String delStatus;
+  String serverId;
+  String name;
+  String sitCapacity;
+  String position;
+  String description;
+  String userId;
+  String outletId;
+  String companyId;
+  String delStatus;
 
   Table(
       {this.serverId,
@@ -59,7 +59,7 @@ class Table {
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
     for (int i = 0; i < getList().length; i++) {
-      map[TablesTable.columnsName[i + 1]] = getList()[i];
+        map[TablesTable.columnsName[i + 1]] = getList()[i];
     }
     return map;
   }

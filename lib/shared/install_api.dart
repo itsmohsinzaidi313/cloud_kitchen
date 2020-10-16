@@ -1,3 +1,4 @@
+import 'package:food_app/database/table_object/tables_table.dart';
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/company.dart';
 import 'package:food_app/models/objects/customer.dart';
@@ -17,13 +18,14 @@ import 'package:logger/logger.dart';
 import 'package:food_app/shared/data_lists.dart';
 
 class ApiInstall {
-
   final String status;
   final String message;
   final Map data;
   final Logger _log = Config.log;
   bool _isInitialized = false;
+
   bool get isInitialized => _isInitialized;
+
   ApiInstall({this.status, this.message, this.data});
 
   Future<bool> init() async {
