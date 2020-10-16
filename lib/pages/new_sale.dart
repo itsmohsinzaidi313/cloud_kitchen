@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
 import 'package:food_app/controller/order_controller.dart';
-import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/table_object/orders_table.dart';
 import 'package:food_app/database/table_object/sales_detail_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
-import 'package:food_app/database/table_object/tables_table.dart';
-import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/generic_models/customer_order.dart';
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/item.dart';
@@ -18,7 +15,6 @@ import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:toast/toast.dart';
 
 class NewSale extends StatefulWidget {
   final NewSaleModel model;
@@ -179,25 +175,25 @@ class _NewSaleState extends State<NewSale> {
             },
           ),
         ),
-        onWillPop: _onWillPop
-    );
+        onWillPop: _onWillPop);
   }
 
   Future<bool> _onWillPop() async {
     bool isYes = false;
-    bool type = await AppTheme.showAlertDialogYNFutureReturn(
-        context,
+    bool type = await AppTheme.showAlertDialogYNFutureReturn(context,
         title: 'Question?',
         message: 'Are you sure?',
         onNo: () => Navigator.of(context).pop(false),
-        onYes: () =>  OrderController(model.orderType).launchAndReplacement(context) ? isYes = true : isYes = false);
+        onYes: () =>
+            OrderController(model.orderType).launchAndReplacement(context)
+                ? isYes = true
+                : isYes = false);
 
-    if(isYes && type){
-      if(model.titleString.isNotEmpty){
+    if (isYes && type) {
+      if (model.titleString.isNotEmpty) {
         Navigator.pop(context);
         return true;
-      }
-      else{
+      } else {
         Navigator.pop(context);
         OrderController(model.orderType).launchAndReplacement(context);
       }
@@ -319,22 +315,22 @@ class _NewSaleState extends State<NewSale> {
     Navigator.pop(context);
 
     if (model.order.itemList.length > 0) {
-      Database _db = Config.database;
+      Database db = Config.database;
       SalesMaster _salesMaster;
-      int masterId;
-      if (model.salesMaster == null) {
-        model.salesMaster = new SalesMaster();
-        model.salesMaster.serverId = "0";
-      }
-      if (model.salesMaster.serverId == null) model.salesMaster.serverId = '0';
-      List<Map<String, dynamic>> count = await _db.rawQuery(
-          'SELECT IFNULL(COUNT(id),0) AS count FROM ${SalesDetailTable.tableName} WHERE ${SalesDetailTable.id} = ?',
-          [model.salesMaster.serverId]);
+      int localId;
 
-      print('Customer Id: ${this.model.order.customerId}');
+      model.salesMaster =
+          model.salesMaster == null ? new SalesMaster() : model.salesMaster;
+      model.salesMaster.localId =
+          model.salesMaster.localId == null ? '0' : model.salesMaster.localId;
+
+      List<Map<String, dynamic>> count = await db.rawQuery(
+          'SELECT IFNULL(COUNT(id),0) AS count FROM ${SalesDetailTable.tableName} WHERE ${SalesDetailTable.salesMasterId} = ?',
+          [model.salesMaster.localId]);
+
       CustomerOrder customerOrder = this.model.order;
       //MASTER DATA
-      Map<String, dynamic> master = {
+      Map<String, dynamic> saleMasterData = {
         // SalesMasterTable[0] :  ,
         SalesMasterTable.customerId: this.model.order.customerId,
         // SalesMasterTable[2] :  ,
@@ -348,7 +344,7 @@ class _NewSaleState extends State<NewSale> {
         SalesMasterTable.totalPayable: customerOrder.getSubTotal().toString(),
         SalesMasterTable.paymentMethodId: '1',
         SalesMasterTable.closeTime: Config.getCurrentTime24Format(),
-        SalesMasterTable.tableId: this.model.order.orderTableId,
+        SalesMasterTable.tableId: this.model.order.tableId,
         SalesMasterTable.totalItemDiscountAmount: customerOrder.discount ?? 0,
         SalesMasterTable.subTotalWithDiscount: customerOrder.getNetAmount(),
         SalesMasterTable.subTotalDiscountAmount: customerOrder.discount ?? 0,
@@ -382,65 +378,51 @@ class _NewSaleState extends State<NewSale> {
           isNew = false;
         });
         _salesMaster = this.model.salesMaster;
-        _db.delete(SalesDetailTable.tableName,
-            where: '${SalesDetailTable.id} = ?',
-            whereArgs: [_salesMaster.serverId]);
-        masterId = int.parse(_salesMaster.serverId);
-
-        _db.update(SalesMasterTable.tableName, master,
+        db.delete(SalesDetailTable.tableName,
+            where: '${SalesDetailTable.salesMasterId} = ?',
+            whereArgs: [_salesMaster.localId]);
+        localId = int.parse(_salesMaster.localId);
+        db.update(SalesMasterTable.tableName, saleMasterData,
             where: '${SalesMasterTable.localId} = ?',
-            whereArgs: [_salesMaster.serverId]);
-      } //IF
-      else {
+            whereArgs: [_salesMaster.localId]);
+      } else {
         ///NEW ORDER INSERTION
         setState(() {
           isNew = true;
         });
         _salesMaster = SalesMaster();
-        masterId = await _salesMaster.insertSpecificIntoDb(_db, master);
-        _salesMaster.updateSpecificIntoDb(
-            _db,
-            {SalesMasterTable.serverId: masterId.toString()},
-            SalesMasterTable.localId,
-            masterId);
+        localId = await _salesMaster.insertSpecificIntoDb(db, saleMasterData); // INSERTING NEW ORDER IN SALES MASTER
 
-        // //TODO Insert order table
-        // if (masterId > 0){
-        //   Config.database.insert(OrdersTable.tableName, {
-        //     OrdersTable.persons: 'person',
-        //     OrdersTable.bookingTime:
-        //     Config.getCurrentTime24Format(),
-        //     OrdersTable.outletId: Config.currentUser.outletId,
-        //     OrdersTable.tableId: model.order.orderTableId,
-        //     OrdersTable.delStatus: 'Live'
-        //   });
+        //UPDATING SALE NO IN SALE MASTER
+        db.update(SalesMasterTable.tableName,
+            {SalesMasterTable.saleNo: Lib.codeGenerator('ORD', localId)},
+            where: '${SalesMasterTable.localId} = ?',
+            whereArgs: [localId.toString()]);
 
-        Map<String, dynamic> update = {
-          'sale_no': Lib.codeGenerator('ORD', masterId),
-        };
-
-        ///UPDATE ORDER TABLE
-        _db.update(
-            OrdersTable.tableName,
-            {
-              OrdersTable.saleId: masterId,
-              OrdersTable.saleNo: Lib.codeGenerator('ORD', masterId),
-            },
-            where: '${OrdersTable.localId} = ?',
-            whereArgs: [this.model.order.orderTableId]);
-
-        int updateId = await _salesMaster.updateSpecificIntoDb(
-            _db, update, 'id', masterId);
-        print('UPDATE RETURN ID: $updateId');
+        // ADDING ENTRY IN ORDER TABLE
+        if (localId > 0 && model.salesMaster.orderType == '1') {
+          int orderTableId = await db.insert(OrdersTable.tableName, {
+            OrdersTable.persons: model.order.noOfPersons,
+            OrdersTable.bookingTime: Config.getCurrentTime24Format(),
+            OrdersTable.saleId: localId,
+            OrdersTable.saleNo: Lib.codeGenerator('ORD', localId),
+            OrdersTable.outletId: Config.currentUser.outletId,
+            OrdersTable.tableId: model.order.tableId,
+            OrdersTable.delStatus: 'Live'
+          });
+          db.update(SalesMasterTable.tableName,
+              {SalesMasterTable.tableId: orderTableId},
+              where: '${SalesMasterTable.localId} = ?', whereArgs: [localId]);
+        }
       } //ELSE
 
       ///insert sales_details
       this.model.order.itemList.forEach((item) {
-        insertIntoSalesDetails(_db, item, masterId);
+        insertIntoSalesDetails(db, item, localId);
       });
-      if(isNew){
+      if (isNew) {
         DashboardController(context).pushAndRemoveUntil(context);
-      } else{
+      } else {
         // Navigator.pop(context);
         OrderController(model.orderType).launchAndReplacement(context);
       }
@@ -449,7 +431,7 @@ class _NewSaleState extends State<NewSale> {
 
   //DETAIL DATA
   Future<void> insertIntoSalesDetails(
-      Database db, Item item, int masterId) async {
+      Database db, Item item, int salesMasterLocalId) async {
     Map<String, dynamic> details = {
       // SalesDetailTable[0] : ,
       SalesDetailTable.foodMenuId: int.parse(item.code).toString(),
@@ -458,10 +440,7 @@ class _NewSaleState extends State<NewSale> {
       SalesDetailTable.menuPriceWithoutDiscount:
           (int.parse(item.quantity) * double.parse(item.salePrice)).toString(),
       SalesDetailTable.menuPriceWithDiscount:
-          (int.parse(item.quantity) * double.parse(item.salePrice) -
-                      double.parse(this.model.order.discount) ??
-                  0)
-              .toString(),
+          (int.parse(item.quantity) * double.parse(item.salePrice) - double.parse(this.model.order.discount) ?? 0).toString(),
       SalesDetailTable.menuUnitPrice: item.salePrice.toString(),
       SalesDetailTable.menuVatPercentage: '0.0',
       // SalesDetailTable[8] : ,
@@ -474,15 +453,12 @@ class _NewSaleState extends State<NewSale> {
       SalesDetailTable.cookingStartTime: Config.getCurrentDateTimeDBFormat(),
       SalesDetailTable.cookingDoneTime: Config.getCurrentDateTimeDBFormat(),
       // SalesDetailTable[17] : ,
-      SalesDetailTable.salesMasterId: masterId,
+      SalesDetailTable.salesMasterId: salesMasterLocalId,
       SalesDetailTable.orderStatus: '0',
       SalesDetailTable.userId: Config.currentUser.serverId,
       SalesDetailTable.outletId: Config.currentUser.outletId,
       SalesDetailTable.delStatus: Config.currentUser.delStatus,
     };
     int detailsId = await SalesDetails().insertSpecificIntoDb(db, details);
-    print('SALES DETAILS RETURN ID: $detailsId');
   }
-
-  void uploadOrder(SalesMaster salesMaster, SalesDetails salesDetails) {}
 }

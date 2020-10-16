@@ -12,7 +12,6 @@ import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/database/table_object/tables_table.dart';
 import 'package:food_app/database/table_object/user_table.dart';
 import 'package:food_app/database/table_object/vat_amount_table.dart';
-import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/company.dart';
 import 'package:food_app/models/objects/customer.dart';
@@ -82,6 +81,7 @@ class DataLists {
       int x = await db.delete(ItemTable.tableName);
       instance.listItem
           .forEach((element) async => await element.insertIntoDatabase(db));
+
     } catch (e) {
       _log.e('Error On ImportToDatabase listItem', [e]);
       return false;

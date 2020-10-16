@@ -1,9 +1,11 @@
 import 'package:food_app/models/objects/payment_method.dart';
+import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/order_model.dart';
 
 class PaymentViewModel {
   OrderModel _orderModel;
-  Map<String, dynamic> map;
+  // Map<String, dynamic> map;
+  SalesMaster salesMaster;
   List<PaymentMethod> _paymentMethodList;
   set ordermodel(OrderModel model) => _orderModel = model;
   OrderModel get orderModel => _orderModel;

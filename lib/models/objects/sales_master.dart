@@ -38,7 +38,7 @@ class SalesMaster {
   String delStatus;
   String saleVatObjects;
   String deviceKey;
-  String remoteId;
+  String localId;
   String companyId;
   String isDelete;
   String isUpdate;
@@ -79,14 +79,14 @@ class SalesMaster {
       this.delStatus,
       this.saleVatObjects,
       this.deviceKey,
-      this.remoteId,
+      this.localId,
       this.companyId,
       this.isDelete,
         this.isUpdate
       });
 
   SalesMaster.fromJson(Map<String, dynamic> json)
-      : remoteId = json[SalesMasterTable.localId].toString(),
+      : localId = json[SalesMasterTable.localId].toString(),
         customerId = json[SalesMasterTable.customerId],
         saleNo = json[SalesMasterTable.saleNo],
         totalItems = json[SalesMasterTable.totalItems],
@@ -163,7 +163,7 @@ class SalesMaster {
       this.delStatus,
       this.saleVatObjects,
       this.deviceKey,
-      this.remoteId,
+      this.localId,
       this.companyId,
       this.isDelete,
       this.isUpdate

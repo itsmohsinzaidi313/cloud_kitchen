@@ -116,7 +116,7 @@ class OrderController {
       void onOk(Map<String, dynamic> id), void onNo(String id), int _orderType) async {
     try {
       List<Map<String, dynamic>> data = await Config.database.rawQuery(
-          "select *, a.id, a.sale_no, ifnull((select name from tables where id = a.table_id),'x') as tables, (select full_name from users where id = a.user_id) as waiter, a.due_amount from sales_master a where a.order_type = '1' and a.paid_amount = '0.0' and a.is_delete = '0'");
+          "select *, IFNULL((select name from tables where id = a.table_id),'x') as tables, (select full_name from users where id = a.user_id) as waiter, a.due_amount from sales_master a where a.order_type = '1' and a.paid_amount = '0.0' and a.is_delete = '0'");
 
       List<DataRow> rows = [];
       data.forEach((element) {
@@ -172,7 +172,7 @@ class OrderController {
   static Future<DataTable> getTakeAwayOrders(BuildContext context,
       void onOk(Map<String, dynamic> id), void onNo(String id), int _orderType) async {
     List<Map<String, dynamic>> data = await Config.database.rawQuery(
-        "select *, a.sale_no, IFNULL((select name from customers where ${CustomerTable.localId} = a.customer_id),'') as customer_name, IFNULL((select phone from customers where  ${CustomerTable.localId} = a.customer_id),'') as contact, a.due_amount from sales_master a where a.order_type = '2' and a.paid_amount = '0.0' and a.is_delete = '0'");
+        "select *, IFNULL((select name from customers where ${CustomerTable.localId} = a.customer_id),'') as customer_name, IFNULL((select phone from customers where  ${CustomerTable.localId} = a.customer_id),'') as contact, a.due_amount from sales_master a where a.order_type = '2' and a.paid_amount = '0.0' and a.is_delete = '0'");
     List<DataRow> rows = [];
     data.forEach((element) {
       rows.add(DataRow(cells: [
@@ -214,7 +214,7 @@ class OrderController {
   static Future<DataTable> getDeliveryOrders(BuildContext context,
       void onOk(Map<String, dynamic> id), void onNo(String id), int _orderType) async {
     List<Map<String, dynamic>> data = await Config.database.rawQuery(
-        "select *, a.sale_no, IFNULL((select name from customers where ${CustomerTable.localId} = a.customer_id),'') as customer_name,IFNULL((select phone from customers where ${CustomerTable.localId} = a.customer_id),'') as contact, a.due_amount from sales_master a where a.order_type = '3' and a.paid_amount = '0.0' and a.is_delete = '0'");
+        "select *, IFNULL((select name from customers where ${CustomerTable.localId} = a.customer_id),'') as customer_name,IFNULL((select phone from customers where ${CustomerTable.localId} = a.customer_id),'') as contact, a.due_amount from sales_master a where a.order_type = '3' and a.paid_amount = '0.0' and a.is_delete = '0'");
 
     List<DataRow> rows = [];
     data.forEach((element) {

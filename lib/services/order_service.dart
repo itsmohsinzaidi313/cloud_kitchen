@@ -32,7 +32,7 @@ class OrderService extends ServiceCommon {
         List<Map<String, dynamic>> detailRows = await _db.query(
             SalesDetailTable.tableName,
             where: '${SalesDetailTable.salesMasterId} = ?',
-            whereArgs: [salesMaster.remoteId]);
+            whereArgs: [salesMaster.localId]);
         List<Map<String, dynamic>> details = [];
         detailRows.forEach(
             (element) => details.add(Map<String, dynamic>.from(element)));
@@ -59,7 +59,7 @@ class OrderService extends ServiceCommon {
             await _db.update(SalesMasterTable.tableName,
                 {SalesMasterTable.isUpload: '1', SalesMasterTable.serverId: id},
                 where: '${SalesMasterTable.localId} = ?',
-                whereArgs: [salesMaster.remoteId]);
+                whereArgs: [salesMaster.localId]);
           } else {
             log(json.toString(), name: 'Order Service', time: DateTime.now());
           }

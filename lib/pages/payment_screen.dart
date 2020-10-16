@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
-import 'package:food_app/controller/payment_controller.dart';
+import 'package:food_app/database/table_object/orders_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
+import 'package:food_app/database/table_object/tables_table.dart';
 import 'package:food_app/models/objects/payment_method.dart';
 import 'package:food_app/models/view_models/payment_view_model.dart';
 import 'package:food_app/shared/app_theme.dart';
@@ -20,7 +21,7 @@ class PaymentScreen extends StatefulWidget {
 class _PaymentScreenState extends State<PaymentScreen> {
   PaymentViewModel model;
 
-  _PaymentScreenState(this.model) {}
+  _PaymentScreenState(this.model);
   PaymentMethod selectedPayment;
   List<TextEditingController> controllers = [
     new TextEditingController(),
@@ -37,7 +38,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    controllers[0].text = model.map['due_amount'];
+    controllers[0].text = model.salesMaster.dueAmount;
     // selectedPayment = model.paymentMethodList[0];
 
     return Scaffold(
@@ -85,7 +86,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ),
                     ),
                     Text(
-                      model.map['due_amount'],
+                      // model.map['due_amount'],
+                      model.salesMaster.dueAmount,
                       style: TextStyle(
                         color: Colors.grey[400],
                         fontSize: 20,
@@ -155,12 +157,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           onYes: () {
                             if (!check[0] || !check[1]) {
                               // PaymentController.uploadOrder(model.map);
-                              Config.database.update(SalesMasterTable.tableName,
-                                  {SalesMasterTable.orderStatus: '3', SalesMasterTable.paidAmount: model.map[SalesMasterTable.dueAmount]},
+                              Config.database.update(
+                                  SalesMasterTable.tableName,
+                                  {
+                                    SalesMasterTable.orderStatus: '3',
+                                    SalesMasterTable.paidAmount:
+                                        model.salesMaster.dueAmount
+                                  },
                                   where: '${SalesMasterTable.localId} = ?',
                                   whereArgs: [
-                                    model.map[SalesMasterTable.localId]
+                                    model.salesMaster.localId
                                   ]);
+                              Config.database.update(OrdersTable.tableName,
+                                  {OrdersTable.delStatus: 'Delete'}, where: '${OrdersTable.saleId} = ?', whereArgs: [model.salesMaster.localId]);
                               DashboardController(context)
                                   .launchAndReplacement();
                             }

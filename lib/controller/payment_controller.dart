@@ -16,10 +16,11 @@ import 'package:http/http.dart';
 
 class PaymentController {
   PaymentViewModel model;
-  PaymentController(Map<String, dynamic> map) {
+  PaymentController(SalesMaster salesMaster/*Map<String, dynamic> map*/) {
     model = new PaymentViewModel();
     model.paymentMethodList = DataLists.instance.listPaymentMethods;
-    model.map = map;
+    /*model.map = map;*/
+    model.salesMaster = salesMaster;
   }
 
   void launch(BuildContext context) => Navigator.of(context)
@@ -45,7 +46,7 @@ class PaymentController {
             .getRange(1, SalesDetailTable.columnsName.length - 1)
             .toList(),
         where: '${SalesDetailTable.salesMasterId} = ?',
-        whereArgs: [new SalesMaster.fromJson(element).remoteId]);
+        whereArgs: [new SalesMaster.fromJson(element).localId]);
     values[SalesDetailTable.tableName] = values2;
     values1.add(values);
     Map<String, dynamic> json = new Map();

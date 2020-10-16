@@ -18,6 +18,7 @@ class Register {
   String registerNo;
   String deviceKey;
   String remoteId;
+
   Register(
       {this.id,
       this.openingBalance,
@@ -34,6 +35,7 @@ class Register {
       this.registerNo,
       this.deviceKey,
       this.remoteId});
+
   Register.fromJson(Map<String, dynamic> json)
       : this.id = json['id'],
         this.openingBalance = json['opening_balance'],
@@ -74,7 +76,10 @@ class Register {
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
     for (int i = 0; i < getList().length; i++) {
-      map[ShiftTable.columnsName[i]] = getList()[i];
+      if (!(ShiftTable.columnsName[i] == ShiftTable.shift))
+        map[ShiftTable.columnsName[i]] = getList()[i];
+      else
+        map[ShiftTable.columnsName[i]] = '';
     }
     return map;
   }

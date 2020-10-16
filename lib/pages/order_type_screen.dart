@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/new_sale_controller.dart';
-import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/table_object/customer_table.dart';
-import 'package:food_app/database/table_object/orders_table.dart';
-import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/customer.dart';
 import 'package:food_app/models/objects/user.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/data_lists.dart';
 import 'package:food_app/models/objects/table.dart' as T;
-import 'package:food_app/shared/lib.dart';
 
 class OrderTypeScreen extends StatefulWidget {
   @override

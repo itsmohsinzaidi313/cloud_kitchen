@@ -28,7 +28,6 @@ class _OrderScreenState extends State<OrderScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     orderType = model.orderType;
   }
@@ -138,19 +137,19 @@ class _OrderScreenState extends State<OrderScreen> {
       case 1:
         widget = await OrderController.getDineInOrders(
             context,
-            (element) => PaymentController(element).launch(context),
+            (element) => PaymentController(new SalesMaster.fromJson(element)).launch(context),
             (id) => onOrderCancelled(id), orderType);
         break;
       case 2:
         widget = await OrderController.getTakeAwayOrders(
             context,
-            (element) => PaymentController(element).launch(context),
+            (element) => PaymentController(new SalesMaster.fromJson(element)).launch(context),
             (id) => onOrderCancelled(id), orderType);
         break;
       case 3:
         widget = await OrderController.getDeliveryOrders(
             context,
-            (element) => PaymentController(element).launch(context),
+            (element) => PaymentController(new SalesMaster.fromJson(element)).launch(context),
             (id) => onOrderCancelled(id), orderType);
         break;
       default:

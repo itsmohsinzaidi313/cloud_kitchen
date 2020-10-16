@@ -56,7 +56,7 @@ class Lib {
   static Future<bool> insertIntoDatabase(
       Database db, String table, Map<String, dynamic> values) async {
     try {
-      bool value = await db.insert(table, values) > 0 ? true : false;
+      bool value = await db.transaction((txn) => txn.insert(table, values)) > 0 ? true : false;
       return value;
     } catch (e) {
       Config.log.e('Error on Lib insertIntoDatabase', [e]);

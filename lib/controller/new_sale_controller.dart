@@ -29,12 +29,13 @@ class NewSaleController {
   void launch(BuildContext context) => Navigator.of(context)
       .push(new MaterialPageRoute(builder: (context) => new NewSale(model)));
 
-  void launchDineIn(BuildContext context, String orderType, String orderTableId,
+  void launchDineIn(BuildContext context, String orderType, String tableId,
       String waiterId, List<String> titleStrings) {
     this.model.salesMaster = SalesMaster();
     this.model.salesMaster.orderType = orderType;
-    this.model.order.orderTableId = orderTableId;
+    this.model.order.tableId = tableId;
     this.model.order.waiterId = waiterId;
+    this.model.order.noOfPersons = titleStrings[0];
 
     this.model.leadingString = titleStrings[0];
     this.model.titleString = titleStrings[1];
@@ -76,13 +77,13 @@ class NewSaleController {
       Navigator.of(context).pushReplacement(
           new MaterialPageRoute(builder: (context) => new NewSale(model)));
 
-  void editOrder(SalesMaster salesMaster, int orderTye, BuildContext context) async {
+  void editOrder(SalesMaster salesMaster, int orderType, BuildContext context) async {
     List<Item> updatedList = await SalesDetails()
         .getOrderWhereMasterId(Config.database, salesMaster);
     this.model.order.setItemList = updatedList;
     this.model.salesMaster = salesMaster;
     this.model.order.customerId = salesMaster.customerId;
-    this.model.orderType = orderTye;
+    this.model.orderType = orderType;
     this.model.leadingString = '';
     this.model.titleString = '';
     this.model.trailingString = '';

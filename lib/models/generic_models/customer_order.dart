@@ -2,12 +2,18 @@ import 'package:food_app/models/objects/item.dart';
 
 class CustomerOrder {
   List<Item> _itemList = [];
-  String _tableNo, _orderType, _discount, _salesTax, _customerId, _orderTableId, _waiterId;
+  String _tableNo, _orderType, _discount, _salesTax, _customerId, _tableId, _waiterId, _noOfPersons;
 
-  get orderTableId => _orderTableId;
+  get noOfPersons => _noOfPersons;
 
-  set orderTableId(value) {
-    _orderTableId = value;
+  set noOfPersons(value) {
+    _noOfPersons = value;
+  }
+
+  get tableId => _tableId;
+
+  set tableId(value) {
+    _tableId = value;
   }
 
   get customerId {
