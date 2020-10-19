@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/bloc/dialog_message_bloc.dart';
+import 'package:food_app/bloc/dialog_message_event.dart';
 import 'package:food_app/controller/shift_controller.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/models/objects/user.dart';
@@ -30,6 +32,8 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController deviceKey = TextEditingController();
+
+  final DialogMessageBloc _bloc = new DialogMessageBloc();
 
   bool _autoValidate = false;
   bool _obscureText = true;
@@ -72,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
               deviceKey.text = dKey;
               Config.authToken = dKey;
               Config.installApi = dKey;
-              loadData()
+              loadData(_bloc)
                   .then((value) => _deviceKeyPresent = value)
                   .whenComplete(() {
                 setState(() {
@@ -97,10 +101,10 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  Future<bool> loadData() async {
+  Future<bool> loadData(DialogMessageBloc bloc) async {
     bool value1 = await Lib.install();
     if (value1) {
-      bool value2 = await DataLists.importToDatabase(Config.database);
+      bool value2 = await DataLists.importToDatabase(Config.database, bloc);
       if (value2) {
         _log.w('Online data loaded');
         return true;
@@ -109,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
         return false;
       }
     } else {
-      bool value2 = await DataLists.importToMemory(Config.database);
+      bool value2 = await DataLists.importToMemory(Config.database, bloc);
       if (value2) {
         _log.w('Offline data loaded');
         return true;
@@ -207,13 +211,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                           begin: Alignment.topRight,
                           end: Alignment.bottomLeft,
-
                         ),
                         // borderRadius: new BorderRadius.horizontal(
                         //     right: new Radius.circular(250)),
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.horizontal(
-                          right: Radius.circular(Config.getDeviceHeight(context)),
+                          right:
+                              Radius.circular(Config.getDeviceHeight(context)),
                         ),
                         color: Colors.amber,
                         image: DecorationImage(
@@ -290,7 +294,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         progressDialog =
                                                         AppTheme
                                                             .showProgressDialog(
-                                                                context);
+                                                      context,
+                                                      widget: StreamBuilder(
+                                                        initialData:
+                                                            Text('Loading'),
+                                                        stream: _bloc.message,
+                                                        builder: (context,
+                                                            snapshot) {
+                                                          return snapshot.data;
+                                                        },
+                                                      ),
+                                                    );
                                                     progressDialog.show();
                                                     _deviceKeyCheck =
                                                         deviceKey.text == ''
@@ -301,7 +315,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                           deviceKey.text;
                                                       Config.installApi =
                                                           deviceKey.text;
-                                                      loadData().then((value) {
+                                                      loadData(_bloc).then((value) {
                                                         if (value) {
                                                           DataLists.instance
                                                               .listDevices

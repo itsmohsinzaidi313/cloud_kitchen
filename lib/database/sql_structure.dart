@@ -1,5 +1,4 @@
 class SqlStructure{
-
    static const String text = 'TEXT';
    static const String integer = 'INTEGER';
    static const String blob = 'BLOB';

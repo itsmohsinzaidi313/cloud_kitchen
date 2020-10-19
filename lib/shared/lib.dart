@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'package:food_app/bloc/dialog_message_bloc.dart';
+import 'package:food_app/bloc/dialog_message_event.dart';
 import 'package:food_app/database/table_object/customer_table.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/models/objects/customer.dart';
@@ -206,4 +208,14 @@ class Lib {
   }
 
   void shiftMech(Database db) async {}
+
+
+  ///UPDATE MESSAGE IN BLOC
+  ///USE IN DATA_LISTS CLASS
+  static void dialogMessageUpdate({String newMessage ,DialogMessageBloc bloc}){
+    UpdateDialogMessageEvent updateDialogMessageEvent = UpdateDialogMessageEvent();
+    updateDialogMessageEvent.message = newMessage;
+    bloc.dialogMessageEventSink.add(updateDialogMessageEvent);
+  }
+
 }
