@@ -394,7 +394,7 @@ class _NewSaleState extends State<NewSale> {
         setState(() {
           isNew = true;
         });
-        _salesMaster = SalesMaster();
+        _salesMaster = new SalesMaster();
         localId = await _salesMaster.insertSpecificIntoDb(db, saleMasterData); // INSERTING NEW ORDER IN SALES MASTER
 
         //UPDATING SALE NO IN SALE MASTER

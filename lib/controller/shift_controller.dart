@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
-import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/shift.dart';
 import 'package:food_app/models/view_models/shift_model.dart';
 import 'package:food_app/pages/shift_screen.dart';

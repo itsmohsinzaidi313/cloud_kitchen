@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/services.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
-import 'package:food_app/database/tables.dart';
 import 'package:food_app/models/objects/shift.dart';
 import 'package:food_app/services/common.dart';
 import 'package:food_app/shared/config.dart';

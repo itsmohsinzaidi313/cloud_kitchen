@@ -43,6 +43,10 @@ class SalesMaster {
   String isDelete;
   String isUpdate;
 
+  static const String DINEIN = '1';
+  static const String TAKEAWAY = '2';
+  static const String DELIVERY = '3';
+
   SalesMaster(
       {this.serverId,
       this.customerId,

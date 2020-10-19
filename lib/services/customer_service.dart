@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:food_app/database/table_object/customer_table.dart';
-import 'package:food_app/database/table_object/sales_master_table.dart';
 import 'package:food_app/models/objects/customer.dart';
-import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/services/common.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:http/http.dart';

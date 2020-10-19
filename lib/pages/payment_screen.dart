@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
 import 'package:food_app/database/table_object/orders_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
-import 'package:food_app/database/table_object/tables_table.dart';
 import 'package:food_app/models/objects/payment_method.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/payment_view_model.dart';
@@ -170,7 +168,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   },
                                   where: '${SalesMasterTable.localId} = ?',
                                   whereArgs: [model.salesMaster.localId]);
-                              if (model.salesMaster.orderType == '1') {
+                              if (model.salesMaster.orderType == SalesMaster.DINEIN) {
                                 db.update(OrdersTable.tableName,
                                     {OrdersTable.delStatus: OrdersTable.FREE},
                                     where: '${OrdersTable.saleId} = ?',

@@ -172,7 +172,7 @@ class _OrderScreenState extends State<OrderScreen> {
         onNo: () => Navigator.of(context).pop(),
         onYes: () async {
           Database db = Config.database;
-          if (salesMaster.orderType == '1') {
+          if (salesMaster.orderType == SalesMaster.DINEIN) {
             db.update(TablesTable.tableName,
                 {TablesTable.delStatus: TablesTable.FREE},
                 where: '${TablesTable.serverId}',

@@ -1,4 +1,3 @@
-import 'package:food_app/database/table_object/tables_table.dart';
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/company.dart';
 import 'package:food_app/models/objects/customer.dart';

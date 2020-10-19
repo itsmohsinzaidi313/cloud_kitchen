@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/models/generic_models/customer_order.dart';
-import 'package:food_app/models/objects/customer.dart';
 import 'package:food_app/models/objects/item.dart';
 import 'package:food_app/models/objects/sales_detail.dart';
 import 'package:food_app/models/objects/sales_master.dart';
@@ -11,10 +10,7 @@ import 'package:food_app/shared/data_lists.dart';
 
 class NewSaleController {
   NewSaleModel model;
-  bool _autoValidate = false;
-  Customer _customer;
 
-  final GlobalKey<FormState> _formKey = GlobalKey();
   TextEditingController userName = TextEditingController();
   TextEditingController userPhone = TextEditingController();
   TextEditingController userAddress = TextEditingController();

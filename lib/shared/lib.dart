@@ -1,15 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'package:food_app/database/columns.dart';
 import 'package:food_app/database/table_object/customer_table.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
-import 'package:food_app/database/tables.dart';
-import 'file:///D:/Flutter/cloud_kitchen/lib/shared/install_api.dart';
 import 'package:food_app/models/objects/customer.dart';
-import 'package:food_app/models/objects/device.dart';
 import 'package:food_app/models/objects/shift.dart';
 import 'package:food_app/shared/config.dart';
+import 'package:food_app/shared/install_api.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter/material.dart';

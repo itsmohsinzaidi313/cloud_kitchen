@@ -1,8 +1,6 @@
 import 'package:food_app/database/table_object/item_table.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:food_app/database/columns.dart';
-import 'package:food_app/database/tables.dart';
 
 class Item {
   String serverId;

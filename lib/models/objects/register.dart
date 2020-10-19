@@ -54,7 +54,6 @@ class Register {
         this.remoteId = json['remote_id'];
 
   List<String> getList() => [
-        this.remoteId,
         Lib.codeGenerator('REG', int.parse(this.remoteId)),
         this.openingBalance,
         this.closingBalance,
@@ -69,17 +68,16 @@ class Register {
         this.companyId,
         this.registerNo,
         this.deviceKey,
-        this.id,
-        this.registerStatus
+        this.id
       ];
 
   Map<String, dynamic> getValues() {
     Map<String, dynamic> map = new Map();
     for (int i = 0; i < getList().length; i++) {
-      if (!(ShiftTable.columnsName[i] == ShiftTable.shift))
-        map[ShiftTable.columnsName[i]] = getList()[i];
+      if (!(ShiftTable.columnsName[i + 1] == ShiftTable.shift))
+        map[ShiftTable.columnsName[i + 1]] = getList()[i];
       else
-        map[ShiftTable.columnsName[i]] = '';
+        map[ShiftTable.columnsName[i + 1]] = '';
     }
     return map;
   }
