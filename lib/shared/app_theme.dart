@@ -105,7 +105,7 @@ class AppTheme {
 
   static ProgressDialog showProgressDialog(BuildContext context,
       {Widget widget,bool isDismissible = true}) {
-    final spinKit = new SpinKitFadingCube(
+    final spinKit = new SpinKitCircle(
       itemBuilder: (context, index) => DecoratedBox(
         decoration: BoxDecoration(color: appThemeColor),
       ),

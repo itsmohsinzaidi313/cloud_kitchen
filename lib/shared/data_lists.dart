@@ -257,7 +257,8 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listUsers.add(new User.fromJson(element));
         dialogUpdatedMessage =
-            'Loading Users ... ${count + 1}/${instance.listUsers.length + 1} ';
+            'Loading Users ... ${count + 1}/${listMap.length + 1} ';
+        Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
     } catch (e) {
@@ -272,7 +273,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listCategories.add(new Category.fromJson(element));
         dialogUpdatedMessage =
-            'Loading Categories ... ${count + 1}/${instance.listCategories.length + 1} ';
+            'Loading Categories ... ${count + 1}/${listMap.length + 1} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -287,7 +288,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listItem.add(new Item.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Items ... ${count + 1}/${instance.listItem.length + 1} ';
+        'Loading Items ... ${count + 1}/${listMap.length + 1} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -303,7 +304,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listCompany.add(new Company.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Companies ... ${count + 1}/${instance.listCompany.length + 1} ';
+        'Loading Companies ... ${count + 1}/${listMap.length + 1} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -320,7 +321,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listCustomers.add(new Customer.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Customers ... ${count + 1}/${instance.listCustomers.length + 1} ';
+        'Loading Customers ... ${count + 1}/${listMap.length + 1} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -337,7 +338,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listTables.add(new Table.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Tables ... ${count + 1}/${instance.listTables.length + 1} ';
+        'Loading Tables ... ${count + 1}/${listMap.length + 1} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -354,7 +355,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listVatAmount.add(new VatAmount.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Vat Amounts ... ${count + 1}/${instance.listVatAmount.length + 1} ';
+        'Loading Vat Amounts ... ${count + 1}/${listMap.length + 1} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -371,7 +372,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listOutlet.add(new Outlet.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Outlets ... ${count + 1}/${instance.listOutlet.length + 1} ';
+        'Loading Outlets ... ${count + 1}/${listMap.length + 1} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -388,7 +389,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listModifiers.add(new Modifier.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Modifiers ... ${count + 1}/${instance.listModifiers.length + 1} ';
+        'Loading Modifiers ... ${count + 1}/${listMap.length + 1} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -406,7 +407,7 @@ class DataLists {
         DataLists.instance.listItemModifiers
             .add(new ItemModifier.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Item Modifiers ... ${count + 1}/${instance.listItemModifiers.length + 1} ';
+        'Loading Item Modifiers ... ${count + 1}/${listMap.length + 1} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -424,7 +425,7 @@ class DataLists {
         DataLists.instance.listPaymentMethods
             .add(new PaymentMethod.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Payment Methods ... ${count + 1}/${instance.listPaymentMethods.length + 1} ';
+        'Loading Payment Methods ... ${count + 1}/${listMap.length + 1} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -442,7 +443,7 @@ class DataLists {
         DataLists.instance.listExpenseCategories
             .add(new ExpenseCategory.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Expense Categories ... ${count + 1}/${instance.listExpenseCategories.length + 1} ';
+        'Loading Expense Categories ... ${count + 1}/${listMap.length + 1} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -459,7 +460,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listDevices.add(new Device.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Devices ... ${count + 1}/${instance.listDevices.length + 1} ';
+        'Loading Devices ... ${count + 1}/${listMap.length + 1} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -475,7 +476,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listRegisters.add(new Register.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Registers ... ${count + 1}/${instance.listRegisters.length + 1} ';
+        'Loading Registers ... ${count + 1}/${listMap.length + 1} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });

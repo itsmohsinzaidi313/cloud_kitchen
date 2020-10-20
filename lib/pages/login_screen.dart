@@ -56,6 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   SharedPreferences _sharedPreferences;
+  ProgressDialog progressDialog;
 
   @override
   initState() {
@@ -76,27 +77,46 @@ class _LoginScreenState extends State<LoginScreen> {
               deviceKey.text = dKey;
               Config.authToken = dKey;
               Config.installApi = dKey;
+              progressDialog =
+                  AppTheme
+                      .showProgressDialog(
+                    context,
+                    widget: StreamBuilder(
+                      initialData:
+                      Text('Loading'),
+                      stream: _bloc.message,
+                      builder: (context,
+                          snapshot) {
+                        return snapshot.data;
+                      },
+                    ),
+                  );
+              progressDialog.show();
               loadData(_bloc)
                   .then((value) => _deviceKeyPresent = value)
                   .whenComplete(() {
-                setState(() {
+                // setState(() {
                   // DataLists.instance.listDevices.where((element) => dKey == element.deviceKey);
                   DataLists.instance.listDevices.forEach((element) {
                     if (dKey == element.deviceKey) {
                       Config.currentDevice = element;
+                      progressDialog.hide();
                     }
                   });
-                });
+                // });
               });
             } else {
+              progressDialog.hide();
               _deviceKeyPresent = false;
             }
           }
         } catch (e) {
+          progressDialog.hide();
           _log.e(e);
         }
       });
     }).catchError((onError) {
+      progressDialog.hide();
       _deviceKeyPresent = false;
     });
   }
