@@ -86,8 +86,7 @@ class SalesMaster {
       this.localId,
       this.companyId,
       this.isDelete,
-        this.isUpdate
-      });
+      this.isUpdate});
 
   SalesMaster.fromJson(Map<String, dynamic> json)
       : localId = json[SalesMasterTable.localId].toString(),
@@ -104,7 +103,8 @@ class SalesMaster {
         paymentMethodId = json[SalesMasterTable.paymentMethodId],
         closeTime = json[SalesMasterTable.closeTime],
         tableId = json[SalesMasterTable.tableId],
-        totalItemDiscountAmount = json[SalesMasterTable.totalItemDiscountAmount],
+        totalItemDiscountAmount =
+            json[SalesMasterTable.totalItemDiscountAmount],
         subTotalWithDiscount = json[SalesMasterTable.subTotalWithDiscount],
         subTotalDiscountAmount = json[SalesMasterTable.subTotalDiscountAmount],
         totalDiscountAmount = json[SalesMasterTable.totalDiscountAmount],
@@ -132,7 +132,7 @@ class SalesMaster {
 
   List<String> getList() {
     return [
-      this.serverId,
+      this.localId,
       this.customerId,
       this.saleNo,
       this.totalItems,
@@ -167,7 +167,7 @@ class SalesMaster {
       this.delStatus,
       this.saleVatObjects,
       this.deviceKey,
-      this.localId,
+      this.serverId,
       this.companyId,
       this.isDelete,
       this.isUpdate
@@ -185,13 +185,13 @@ class SalesMaster {
   Map<String, dynamic> getValuesForUpload() {
     Map<String, dynamic> map = new Map();
     for (int i = 0; i < SalesMasterTable.columnsName.length; i++) {
-      if (i == 0) {
+      if (SalesMasterTable.columnsName[i] == SalesMasterTable.localId) {
         map['remote_id'] = getList()[i] == null ? '' : getList()[i];
-      } else if(i == 35){
-
-      }
-      else {
-        map[SalesMasterTable.columnsName[i]] = getList()[i] == null ? '' : getList()[i];
+      } else if (SalesMasterTable.columnsName[i] == SalesMasterTable.serverId) {
+        //SKIP THIS COLUMN
+      } else {
+        map[SalesMasterTable.columnsName[i]] =
+            getList()[i] == null ? '' : getList()[i];
       }
     }
     return map;

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:food_app/database/table_object/sales_detail_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
 import 'package:food_app/models/objects/sales_master.dart';
@@ -33,11 +34,13 @@ class OrderService extends ServiceCommon {
             SalesDetailTable.tableName,
             where: '${SalesDetailTable.salesMasterId} = ?',
             whereArgs: [salesMaster.localId]);
+
         List<Map<String, dynamic>> details = [];
         detailRows.forEach(
             (element) => details.add(Map<String, dynamic>.from(element)));
         details.forEach((element) => element.remove(SalesDetailTable.isUpload));
         List<Map<String, dynamic>> masterJson = [];
+
         Map<String, dynamic> map = salesMaster.getValuesForUpload();
         map.remove(SalesMasterTable.isDelete);
         map.remove(SalesMasterTable.isUpload);
