@@ -104,7 +104,7 @@ class AppTheme {
               ));
 
   static ProgressDialog showProgressDialog(BuildContext context,
-      {String text = '', bool isDismissible = true}) {
+      {Widget widget,bool isDismissible = true}) {
     final spinKit = new SpinKitFadingCube(
       itemBuilder: (context, index) => DecoratedBox(
         decoration: BoxDecoration(color: appThemeColor),
@@ -125,7 +125,7 @@ class AppTheme {
                 SizedBox(
                   height: 30,
                 ),
-                Text('Loading...')
+                widget,
               ]),
         ));
     return progressDialog;

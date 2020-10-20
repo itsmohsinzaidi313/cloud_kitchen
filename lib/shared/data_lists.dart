@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:food_app/bloc/dialog_message_bloc.dart';
 import 'package:food_app/database/table_object/category_table.dart';
 import 'package:food_app/database/table_object/company_table.dart';
 import 'package:food_app/database/table_object/customer_table.dart';
@@ -27,10 +30,13 @@ import 'package:food_app/models/objects/user.dart';
 import 'package:food_app/models/objects/vat_amount.dart';
 import 'package:food_app/models/objects/table.dart';
 import 'package:food_app/shared/config.dart';
+import 'package:food_app/shared/lib.dart';
 import 'package:logger/logger.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DataLists {
+  static String dialogUpdatedMessage = 'Started';
+
   final List<Company> listCompany = [];
   final List<Outlet> listOutlet = [];
   final List<User> listUsers = [];
@@ -68,121 +74,172 @@ class DataLists {
       ];
 
   // INSERT DATA INTO DATABASE FROM ONLINE SOURCE
-  static Future<bool> importToDatabase(Database db) async {
+  static Future<bool> importToDatabase(
+      Database db, DialogMessageBloc bloc) async {
     try {
-      int x = await db.delete(UserTable.tableName);
-      instance.listUsers
-          .forEach((element) async => await element.insertIntoDatabase(db));
-      _log.v('Users inserted');
+      await importListToDatabase(
+              tableName: UserTable.tableName,
+              bloc: bloc,
+              anyList: DataLists.instance.listUsers,
+              objectNameOfList: 'User')
+          ? _log.v('Users inserted')
+          : _log.v('Users not inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listUsers', [e]);
       return false;
     }
     try {
-      int x = await db.delete(ItemTable.tableName);
-      instance.listItem
-          .forEach((element) async => await element.insertIntoDatabase(db));
-      _log.v('Items inserted');
+      await importListToDatabase(
+              tableName: ItemTable.tableName,
+              bloc: bloc,
+              anyList: DataLists.instance.listItem,
+              objectNameOfList: 'Item')
+          ? _log.v('Items inserted')
+          : _log.v('Items not inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listItem', [e]);
       return false;
     }
     try {
-      int x = await db.delete(CategoryTable.tableName);
-      instance.listCategories
-          .forEach((element) async => await element.insertIntoDatabase(db));
-      _log.v('Categories inserted');
+      await importListToDatabase(
+              tableName: CategoryTable.tableName,
+              bloc: bloc,
+              anyList: DataLists.instance.listCategories,
+              objectNameOfList: 'Category')
+          ? _log.v('Categories inserted')
+          : _log.v('Categories not inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listCategories', [e]);
       return false;
     }
     try {
-      int x = await db.delete(CompanyTable.tableName);
-      instance.listCompany
-          .forEach((element) async => await element.insertIntoDatabase(db));
-      _log.v('Company inserted');
+      await importListToDatabase(
+              tableName: CompanyTable.tableName,
+              bloc: bloc,
+              anyList: DataLists.instance.listCompany,
+              objectNameOfList: 'Company')
+          ? _log.v('Company inserted')
+          : _log.v('Company not inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listCompany', [e]);
       return false;
     }
     try {
-      db.delete(OutletTable.tableName).then((value) => instance.listOutlet
-          .forEach((element) async => await element.insertIntoDatabase(db)));
-      _log.v('Outlet inserted');
+      await importListToDatabase(
+              tableName: OutletTable.tableName,
+              bloc: bloc,
+              anyList: DataLists.instance.listOutlet,
+              objectNameOfList: 'Outlet')
+          ? _log.v('Outlet inserted')
+          : _log.v('Outlet not inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listOutlet', [e]);
       return false;
     }
     try {
-      db.delete(CustomerTable.tableName).then((value) => instance.listCustomers
-          .forEach((element) async => await element.insertIntoDatabase(db)));
-      _log.v('Customer inserted');
+      await importListToDatabase(
+              tableName: CustomerTable.tableName,
+              bloc: bloc,
+              anyList: DataLists.instance.listCustomers,
+              objectNameOfList: 'Customer')
+          ? _log.v('Customer inserted')
+          : _log.v('Customer not inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listCustomers', [e]);
       return false;
     }
     try {
-      db.delete(TablesTable.tableName).then((value) => instance.listTables
-          .forEach((element) async => await element.insertIntoDatabase(db)));
-      _log.v('Tables inserted');
+      await importListToDatabase(
+              tableName: TablesTable.tableName,
+              bloc: bloc,
+              anyList: DataLists.instance.listTables,
+              objectNameOfList: 'Table')
+          ? _log.v('Tables inserted')
+          : _log.v('Tables not inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listTables', [e]);
       return false;
     }
     try {
-      db.delete(ItemModifierTable.tableName).then((value) => instance.listItemModifiers
-          .forEach((element) async => await element.insertIntoDatabase(db)));
-      _log.v('ItemModifier inserted');
+      await importListToDatabase(
+              tableName: ItemModifierTable.tableName,
+              bloc: bloc,
+              anyList: DataLists.instance.listItemModifiers,
+              objectNameOfList: 'ItemModifier')
+          ? _log.v('ItemModifier inserted')
+          : _log.v('ItemModifier not inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listItemModifiers', [e]);
       return false;
     }
     try {
-      db.delete(ModifierTable.tableName).then((value) => instance.listModifiers
-          .forEach((element) async => await element.insertIntoDatabase(db)));
-      _log.v('Modifier inserted');
+      await importListToDatabase(
+              tableName: ModifierTable.tableName,
+              bloc: bloc,
+              anyList: DataLists.instance.listModifiers,
+              objectNameOfList: 'Modifier')
+          ? _log.v('Modifier inserted')
+          : _log.v('Modifier not inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listModifiers', [e]);
       return false;
     }
     try {
-      db.delete(ExpenseCategoryTable.tableName).then((value) => instance
-          .listExpenseCategories
-          .forEach((element) async => await element.insertIntoDatabase(db)));
-      _log.v('ExpenseCategory inserted');
+      await importListToDatabase(
+              tableName: ExpenseCategoryTable.tableName,
+              bloc: bloc,
+              anyList: DataLists.instance.listExpenseCategories,
+              objectNameOfList: 'ExpenseCategory')
+          ? _log.v('ExpenseCategory inserted')
+          : _log.v('ExpenseCategory not inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listExpenseCategories', [e]);
       return false;
     }
     try {
-      db.delete(PaymentMethodTable.tableName).then((value) => instance
-          .listPaymentMethods
-          .forEach((element) async => await element.insertIntoDatabase(db)));
-      _log.v('PaymentMethod inserted');
+      await importListToDatabase(
+              tableName: PaymentMethodTable.tableName,
+              bloc: bloc,
+              anyList: DataLists.instance.listPaymentMethods,
+              objectNameOfList: 'PaymentMethod')
+          ? _log.v('PaymentMethod inserted')
+          : _log.v('PaymentMethod not inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listPaymentMethods', [e]);
       return false;
     }
     try {
-      db.delete(VatAmountTable.tableName).then((value) => instance.listVatAmount
-          .forEach((element) async => await element.insertIntoDatabase(db)));
-      _log.v('VatAmount inserted');
+      await importListToDatabase(
+              tableName: VatAmountTable.tableName,
+              bloc: bloc,
+              anyList: DataLists.instance.listVatAmount,
+              objectNameOfList: 'VatAmount')
+          ? _log.v('VatAmount inserted')
+          : _log.v('VatAmount inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listVatAmount', [e]);
       return false;
     }
     try {
-      db.delete(DeviceTable.tableName).then((value) => instance.listDevices
-          .forEach((element) async => await element.insertIntoDatabase(db)));
-      _log.v('Device inserted');
+      await importListToDatabase(
+              tableName: DeviceTable.tableName,
+              bloc: bloc,
+              anyList: DataLists.instance.listDevices,
+              objectNameOfList: 'Device')
+          ? _log.v('Device inserted')
+          : _log.v('Device inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listDevices', [e]);
       return false;
     }
     try {
-      db.delete(ShiftTable.tableName).then((value) => instance.listRegisters
-          .forEach((element) async => await element.insertIntoDatabase(db)));
-      _log.v('Shift inserted');
+      await importListToDatabase(
+              tableName: ShiftTable.tableName,
+              bloc: bloc,
+              anyList: DataLists.instance.listRegisters,
+              objectNameOfList: 'Register')
+          ? _log.v('Shift inserted')
+          : _log.v('Shift not inserted');
     } catch (e) {
       _log.e('Error On ImportToDatabase listRegisters', [e]);
       return false;
@@ -192,11 +249,16 @@ class DataLists {
   }
 
   //LOAD DATA TO MEMORY FROM DATABASE
-  static Future<bool> importToMemory(Database db) async {
+  static Future<bool> importToMemory(
+      Database db, DialogMessageBloc bloc) async {
     try {
+      int count = 0;
       List<Map<String, dynamic>> listMap = await db.query(UserTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listUsers.add(new User.fromJson(element));
+        dialogUpdatedMessage =
+            'Loading Users ... ${count + 1}/${instance.listUsers.length + 1} ';
+        count++;
       });
     } catch (e) {
       _log.e('ERROR ON importToMemory listUsers', [e]);
@@ -204,9 +266,15 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap = await db.query(CategoryTable.tableName);
+      int count = 0;
+      List<Map<String, dynamic>> listMap =
+          await db.query(CategoryTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listCategories.add(new Category.fromJson(element));
+        dialogUpdatedMessage =
+            'Loading Categories ... ${count + 1}/${instance.listCategories.length + 1} ';
+        Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
+        count++;
       });
     } catch (e) {
       _log.e('ERROR ON importToMemory listCategories', [e]);
@@ -214,9 +282,14 @@ class DataLists {
     }
 
     try {
+      int count = 0;
       List<Map<String, dynamic>> listMap = await db.query(ItemTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listItem.add(new Item.fromJson(element));
+        dialogUpdatedMessage =
+        'Loading Items ... ${count + 1}/${instance.listItem.length + 1} ';
+        Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
+        count++;
       });
     } catch (e) {
       _log.e('ERROR ON importToMemory listItem', [e]);
@@ -224,9 +297,15 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap = await db.query(CompanyTable.tableName);
+      int count = 0;
+      List<Map<String, dynamic>> listMap =
+          await db.query(CompanyTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listCompany.add(new Company.fromJson(element));
+        dialogUpdatedMessage =
+        'Loading Companies ... ${count + 1}/${instance.listCompany.length + 1} ';
+        Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
+        count++;
       });
     } catch (e) {
       _log.e('ERROR ON importToMemory listCompany', [e]);
@@ -234,9 +313,16 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap = await db.query(CustomerTable.tableName);
+      int count = 0;
+
+      List<Map<String, dynamic>> listMap =
+          await db.query(CustomerTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listCustomers.add(new Customer.fromJson(element));
+        dialogUpdatedMessage =
+        'Loading Customers ... ${count + 1}/${instance.listCustomers.length + 1} ';
+        Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
+        count++;
       });
     } catch (e) {
       _log.e('ERROR ON importToMemory listCustomers', [e]);
@@ -244,9 +330,16 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap = await db.query(TablesTable.tableName);
+      int count = 0;
+
+      List<Map<String, dynamic>> listMap =
+          await db.query(TablesTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listTables.add(new Table.fromJson(element));
+        dialogUpdatedMessage =
+        'Loading Tables ... ${count + 1}/${instance.listTables.length + 1} ';
+        Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
+        count++;
       });
     } catch (e) {
       _log.e('ERROR ON importToMemory listTables', [e]);
@@ -254,9 +347,16 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap = await db.query(VatAmountTable.tableName);
+      int count = 0;
+
+      List<Map<String, dynamic>> listMap =
+          await db.query(VatAmountTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listVatAmount.add(new VatAmount.fromJson(element));
+        dialogUpdatedMessage =
+        'Loading Vat Amounts ... ${count + 1}/${instance.listVatAmount.length + 1} ';
+        Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
+        count++;
       });
     } catch (e) {
       _log.e('ERROR ON importToMemory listVatAmount', [e]);
@@ -264,9 +364,16 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap = await db.query(OutletTable.tableName);
+      int count = 0;
+
+      List<Map<String, dynamic>> listMap =
+          await db.query(OutletTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listOutlet.add(new Outlet.fromJson(element));
+        dialogUpdatedMessage =
+        'Loading Outlets ... ${count + 1}/${instance.listOutlet.length + 1} ';
+        Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
+        count++;
       });
     } catch (e) {
       _log.e('ERROR ON importToMemory listOutlet', [e]);
@@ -274,9 +381,16 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap = await db.query(ModifierTable.tableName);
+      int count = 0;
+
+      List<Map<String, dynamic>> listMap =
+          await db.query(ModifierTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listModifiers.add(new Modifier.fromJson(element));
+        dialogUpdatedMessage =
+        'Loading Modifiers ... ${count + 1}/${instance.listModifiers.length + 1} ';
+        Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
+        count++;
       });
     } catch (e) {
       _log.e('ERROR ON importToMemory listModifiers', [e]);
@@ -284,10 +398,17 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap = await db.query(ItemModifierTable.tableName);
+      int count = 0;
+
+      List<Map<String, dynamic>> listMap =
+          await db.query(ItemModifierTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listItemModifiers
             .add(new ItemModifier.fromJson(element));
+        dialogUpdatedMessage =
+        'Loading Item Modifiers ... ${count + 1}/${instance.listItemModifiers.length + 1} ';
+        Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
+        count++;
       });
     } catch (e) {
       _log.e('ERROR ON importToMemory listItemModifiers', [e]);
@@ -295,11 +416,17 @@ class DataLists {
     }
 
     try {
+      int count = 0;
+
       List<Map<String, dynamic>> listMap =
           await db.query(PaymentMethodTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listPaymentMethods
             .add(new PaymentMethod.fromJson(element));
+        dialogUpdatedMessage =
+        'Loading Payment Methods ... ${count + 1}/${instance.listPaymentMethods.length + 1} ';
+        Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
+        count++;
       });
     } catch (e) {
       _log.e('ERROR ON importToMemory listPaymentMethods', [e]);
@@ -307,11 +434,17 @@ class DataLists {
     }
 
     try {
+      int count = 0;
+
       List<Map<String, dynamic>> listMap =
           await db.query(ExpenseCategoryTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listExpenseCategories
             .add(new ExpenseCategory.fromJson(element));
+        dialogUpdatedMessage =
+        'Loading Expense Categories ... ${count + 1}/${instance.listExpenseCategories.length + 1} ';
+        Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
+        count++;
       });
     } catch (e) {
       _log.e('ERROR ON importToMemory listExpenseCategories', [e]);
@@ -319,9 +452,16 @@ class DataLists {
     }
 
     try {
-      List<Map<String, dynamic>> listMap = await db.query(DeviceTable.tableName);
+      int count = 0;
+
+      List<Map<String, dynamic>> listMap =
+          await db.query(DeviceTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listDevices.add(new Device.fromJson(element));
+        dialogUpdatedMessage =
+        'Loading Devices ... ${count + 1}/${instance.listDevices.length + 1} ';
+        Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
+        count++;
       });
     } catch (e) {
       _log.e('ERROR ON importToMemory listDevices', [e]);
@@ -329,9 +469,15 @@ class DataLists {
     }
 
     try {
+      int count = 0;
+
       List<Map<String, dynamic>> listMap = await db.query(ShiftTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listRegisters.add(new Register.fromJson(element));
+        dialogUpdatedMessage =
+        'Loading Registers ... ${count + 1}/${instance.listRegisters.length + 1} ';
+        Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
+        count++;
       });
     } catch (e) {
       _log.e('ERROR ON importToMemory listRegisters', [e]);
@@ -362,5 +508,41 @@ class DataLists {
     _log.v('VatAmount: ${DataLists.instance.listVatAmount.length.toString()}');
     _log.v('Customers: ${DataLists.instance.listCustomers.length.toString()}');
     _log.v('Registers: ${DataLists.instance.listRegisters.length.toString()}');
+  }
+
+  static Future<bool> importListToDatabase(
+      {String tableName,
+      String objectNameOfList,
+      List anyList,
+      DialogMessageBloc bloc}) async {
+    Database db = Config.database;
+    int count = 0;
+    await db.delete(tableName);
+    anyList.forEach((element) async {
+      await element.insertIntoDatabase(db);
+      String newMessage =
+          'Inserting $objectNameOfList ... ${count + 1}/${anyList.length + 1} ';
+      Lib.dialogMessageUpdate(newMessage: newMessage, bloc: bloc);
+      count++;
+    });
+    return true;
+  }
+
+  static Future<bool> importListToMemory(
+      {String tableName,
+      String objectNameOfList,
+      List anyList,
+      DialogMessageBloc bloc,
+      Function func(Map<String, dynamic> map)}) async {
+    Database db = Config.database;
+    int count = 0;
+    List<Map<String, dynamic>> listMap = await db.query(UserTable.tableName);
+    listMap.forEach((element) {
+      anyList.add(func(element));
+      dialogUpdatedMessage =
+          'Loading Register ... ${count + 1}/${instance.listUsers.length + 1} ';
+      Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
+      count++;
+    });
   }
 }
