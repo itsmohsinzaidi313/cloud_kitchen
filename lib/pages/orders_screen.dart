@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:food_app/controller/order_controller.dart';
 import 'package:food_app/controller/payment_controller.dart';
+import 'package:food_app/database/table_object/orders_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
 import 'package:food_app/database/table_object/tables_table.dart';
 import 'package:food_app/models/objects/sales_master.dart';
@@ -173,19 +174,20 @@ class _OrderScreenState extends State<OrderScreen> {
         onYes: () async {
           Database db = Config.database;
           if (salesMaster.orderType == SalesMaster.DINEIN) {
-            db.update(TablesTable.tableName,
+            await db.update(OrdersTable.tableName,
                 {TablesTable.delStatus: TablesTable.FREE},
-                where: '${TablesTable.serverId}',
-                whereArgs: [salesMaster.tableId]);
+                where: '${OrdersTable.tableId} = ?',
+                whereArgs: [salesMaster.tableId]) > 0 ? print('ORDERS_TABLE TABLE UPDATED') : print('ORDERS_TABLE TABLE NOT UPDATED');
           }
-          Map<String, dynamic> update = {
+          Map<String, dynamic> _update = {
             SalesMasterTable.isDelete: 1.toString(),
           };
           await SalesMaster()
-              .updateSpecificIntoDb(db, update, 'id', salesMaster.localId)
+              .updateSpecificIntoDb(db, _update, SalesMasterTable.localId, salesMaster.localId)
               .whenComplete(() {
             setState(() {
-              Navigator.of(context).pop();
+              Navigator.pop(context);
+              print('SALES MASTER TABLE UPDATED');
             });
           });
         });

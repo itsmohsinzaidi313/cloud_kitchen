@@ -107,14 +107,17 @@ class AppTheme {
       {Widget widget,bool isDismissible = true}) {
     final spinKit = new SpinKitCircle(
       itemBuilder: (context, index) => DecoratedBox(
-        decoration: BoxDecoration(color: appThemeColor),
+        decoration: BoxDecoration(
+            color: appThemeColor,
+          shape: BoxShape.circle,
+
+        ),
       ),
     );
     ProgressDialog progressDialog = ProgressDialog(context,
         type: ProgressDialogType.Normal,
         isDismissible: false,
         customBody: Container(
-          color: Colors.transparent,
           height: 250,
           width: 100,
           child: Column(

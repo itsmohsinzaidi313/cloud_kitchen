@@ -61,41 +61,41 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   initState() {
     super.initState();
-    Config.database
-        .query(ShiftTable.tableName,
-            columns: [ShiftTable.deviceKey],
-            orderBy: '${ShiftTable.localId} desc')
-        .then((value) {
-      setState(() {
-        try {
-          if (value.isNotEmpty) {
-            String dKey = value[0][ShiftTable.deviceKey] == null
-                ? ''
-                : value[0][ShiftTable.deviceKey];
-            if (dKey.isNotEmpty) {
-              _deviceKeyPresent = dKey == '' ? false : true;
-              deviceKey.text = dKey;
-              Config.authToken = dKey;
-              Config.installApi = dKey;
-              progressDialog =
-                  AppTheme
-                      .showProgressDialog(
-                    context,
-                    widget: StreamBuilder(
-                      initialData:
-                      Text('Loading'),
-                      stream: _bloc.message,
-                      builder: (context,
-                          snapshot) {
-                        return snapshot.data;
-                      },
-                    ),
-                  );
-              progressDialog.show();
-              loadData(_bloc)
-                  .then((value) => _deviceKeyPresent = value)
-                  .whenComplete(() {
-                // setState(() {
+      Config.database
+          .query(ShiftTable.tableName,
+          columns: [ShiftTable.deviceKey],
+          orderBy: '${ShiftTable.localId} desc')
+          .then((value) {
+        setState(() {
+          try {
+            if (value.isNotEmpty) {
+              String dKey = value[0][ShiftTable.deviceKey] == null
+                  ? ''
+                  : value[0][ShiftTable.deviceKey];
+              if (dKey.isNotEmpty) {
+                _deviceKeyPresent = dKey == '' ? false : true;
+                deviceKey.text = dKey;
+                Config.authToken = dKey;
+                Config.installApi = dKey;
+                progressDialog =
+                    AppTheme
+                        .showProgressDialog(
+                      context,
+                      widget: StreamBuilder(
+                        initialData:
+                        Text('Loading'),
+                        stream: _bloc.message,
+                        builder: (context,
+                            snapshot) {
+                          return snapshot.data;
+                        },
+                      ),
+                    );
+                progressDialog.show();
+                loadData(_bloc)
+                    .then((value) => _deviceKeyPresent = value)
+                    .whenComplete(() {
+                  // setState(() {
                   // DataLists.instance.listDevices.where((element) => dKey == element.deviceKey);
                   DataLists.instance.listDevices.forEach((element) {
                     if (dKey == element.deviceKey) {
@@ -103,22 +103,23 @@ class _LoginScreenState extends State<LoginScreen> {
                       progressDialog.hide();
                     }
                   });
-                // });
-              });
-            } else {
-              progressDialog.hide();
-              _deviceKeyPresent = false;
+                  // });
+                });
+              } else {
+                progressDialog.hide();
+                _deviceKeyPresent = false;
+              }
             }
+          } catch (e) {
+            progressDialog.hide();
+            _log.e(e);
           }
-        } catch (e) {
-          progressDialog.hide();
-          _log.e(e);
-        }
+        });
+      }).catchError((onError) {
+        progressDialog.hide();
+        _deviceKeyPresent = false;
       });
-    }).catchError((onError) {
-      progressDialog.hide();
-      _deviceKeyPresent = false;
-    });
+
   }
 
   Future<bool> loadData(DialogMessageBloc bloc) async {
@@ -149,9 +150,11 @@ class _LoginScreenState extends State<LoginScreen> {
     bool valid = false;
     for (int i = 0; i < listUser.length; i++) {
       if (listUser[i].emailAddress == email && listUser[i].password == pass) {
-        valid = true;
         Config.currentUser = listUser[i];
         print(Config.currentUser.serverId);
+        setState(() {
+          valid = true;
+        });
         break;
       }
     }

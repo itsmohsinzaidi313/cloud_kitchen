@@ -252,7 +252,7 @@ class DataLists {
   static Future<bool> importToMemory(
       Database db, DialogMessageBloc bloc) async {
     try {
-      int count = 0;
+      int count = 1;
       List<Map<String, dynamic>> listMap = await db.query(UserTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listUsers.add(new User.fromJson(element));
@@ -267,7 +267,7 @@ class DataLists {
     }
 
     try {
-      int count = 0;
+      int count = 1;
       List<Map<String, dynamic>> listMap =
           await db.query(CategoryTable.tableName);
       listMap.forEach((element) {
@@ -283,7 +283,7 @@ class DataLists {
     }
 
     try {
-      int count = 0;
+      int count = 1;
       List<Map<String, dynamic>> listMap = await db.query(ItemTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listItem.add(new Item.fromJson(element));
@@ -298,7 +298,7 @@ class DataLists {
     }
 
     try {
-      int count = 0;
+      int count = 1;
       List<Map<String, dynamic>> listMap =
           await db.query(CompanyTable.tableName);
       listMap.forEach((element) {
@@ -314,7 +314,7 @@ class DataLists {
     }
 
     try {
-      int count = 0;
+      int count = 1;
 
       List<Map<String, dynamic>> listMap =
           await db.query(CustomerTable.tableName);
@@ -331,7 +331,7 @@ class DataLists {
     }
 
     try {
-      int count = 0;
+      int count = 1;
 
       List<Map<String, dynamic>> listMap =
           await db.query(TablesTable.tableName);
@@ -348,7 +348,7 @@ class DataLists {
     }
 
     try {
-      int count = 0;
+      int count = 1;
 
       List<Map<String, dynamic>> listMap =
           await db.query(VatAmountTable.tableName);
@@ -365,7 +365,7 @@ class DataLists {
     }
 
     try {
-      int count = 0;
+      int count = 1;
 
       List<Map<String, dynamic>> listMap =
           await db.query(OutletTable.tableName);
@@ -382,7 +382,7 @@ class DataLists {
     }
 
     try {
-      int count = 0;
+      int count = 1;
 
       List<Map<String, dynamic>> listMap =
           await db.query(ModifierTable.tableName);
@@ -399,7 +399,7 @@ class DataLists {
     }
 
     try {
-      int count = 0;
+      int count = 1;
 
       List<Map<String, dynamic>> listMap =
           await db.query(ItemModifierTable.tableName);
@@ -417,7 +417,7 @@ class DataLists {
     }
 
     try {
-      int count = 0;
+      int count = 1;
 
       List<Map<String, dynamic>> listMap =
           await db.query(PaymentMethodTable.tableName);
@@ -435,7 +435,7 @@ class DataLists {
     }
 
     try {
-      int count = 0;
+      int count = 1;
 
       List<Map<String, dynamic>> listMap =
           await db.query(ExpenseCategoryTable.tableName);
@@ -453,7 +453,7 @@ class DataLists {
     }
 
     try {
-      int count = 0;
+      int count = 1;
 
       List<Map<String, dynamic>> listMap =
           await db.query(DeviceTable.tableName);
@@ -470,7 +470,7 @@ class DataLists {
     }
 
     try {
-      int count = 0;
+      int count = 1;
 
       List<Map<String, dynamic>> listMap = await db.query(ShiftTable.tableName);
       listMap.forEach((element) {
@@ -517,7 +517,7 @@ class DataLists {
       List anyList,
       DialogMessageBloc bloc}) async {
     Database db = Config.database;
-    int count = 0;
+    int count = 1;
     await db.delete(tableName);
     anyList.forEach((element) async {
       await element.insertIntoDatabase(db);
@@ -529,21 +529,21 @@ class DataLists {
     return true;
   }
 
-  static Future<bool> importListToMemory(
-      {String tableName,
-      String objectNameOfList,
-      List anyList,
-      DialogMessageBloc bloc,
-      Function func(Map<String, dynamic> map)}) async {
-    Database db = Config.database;
-    int count = 0;
-    List<Map<String, dynamic>> listMap = await db.query(UserTable.tableName);
-    listMap.forEach((element) {
-      anyList.add(func(element));
-      dialogUpdatedMessage =
-          'Loading Register ... ${count + 1}/${instance.listUsers.length + 1} ';
-      Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
-      count++;
-    });
-  }
+  // static Future<bool> importListToMemory(
+  //     {String tableName,
+  //     String objectNameOfList,
+  //     List anyList,
+  //     DialogMessageBloc bloc,
+  //     Function func(Map<String, dynamic> map)}) async {
+  //   Database db = Config.database;
+  //   int count = 1;
+  //   List<Map<String, dynamic>> listMap = await db.query(UserTable.tableName);
+  //   listMap.forEach((element) {
+  //     anyList.add(func(element));
+  //     dialogUpdatedMessage =
+  //         'Loading Register ... ${count + 1}/${instance.listUsers.length + 1} ';
+  //     Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
+  //     count++;
+  //   });
+  // }
 }

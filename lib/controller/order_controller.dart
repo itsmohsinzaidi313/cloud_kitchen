@@ -91,8 +91,8 @@ class OrderController {
       this.model.setItemHoldList(value);
       Navigator.of(context).pushReplacement(new MaterialPageRoute(
           builder: (context) => new OrderScreen(
-            model: model,
-          )));
+                model: model,
+              )));
     });
     return true;
   }
@@ -109,9 +109,11 @@ class OrderController {
     return true;
   }
 
-
-  static Future<Widget> getDineInOrders(BuildContext context,
-      void onOk(Map<String, dynamic> id), void onNo(Map<String, dynamic> id), int _orderType) async {
+  static Future<Widget> getDineInOrders(
+      BuildContext context,
+      void onOk(Map<String, dynamic> id),
+      void onNo(Map<String, dynamic> id),
+      int _orderType) async {
     try {
       List<Map<String, dynamic>> data = await Config.database.rawQuery(
           "select *, IFNULL((select name from tables where id = a.table_id),'x') as tables, (select full_name from users where id = a.user_id) as waiter, a.due_amount from sales_master a where a.order_type = '1' and a.paid_amount = '0.0' and a.is_delete = '0'");
@@ -143,8 +145,8 @@ class OrderController {
                 color: Colors.amberAccent,
               ),
               onPressed: () {
-                NewSaleController()
-                    .editOrder(new SalesMaster.fromJson(element), _orderType, context);
+                NewSaleController().editOrder(
+                    new SalesMaster.fromJson(element), _orderType, context);
               })),
         ]));
       });
@@ -167,8 +169,11 @@ class OrderController {
     }
   }
 
-  static Future<DataTable> getTakeAwayOrders(BuildContext context,
-      void onOk(Map<String, dynamic> id), void onNo(Map<String, dynamic> id), int _orderType) async {
+  static Future<DataTable> getTakeAwayOrders(
+      BuildContext context,
+      void onOk(Map<String, dynamic> id),
+      void onNo(Map<String, dynamic> id),
+      int _orderType) async {
     List<Map<String, dynamic>> data = await Config.database.rawQuery(
         "select *, IFNULL((select name from customers where ${CustomerTable.localId} = a.customer_id),'') as customer_name, IFNULL((select phone from customers where  ${CustomerTable.localId} = a.customer_id),'') as contact, a.due_amount from sales_master a where a.order_type = '2' and a.paid_amount = '0.0' and a.is_delete = '0'");
     List<DataRow> rows = [];
@@ -190,8 +195,8 @@ class OrderController {
               color: Colors.amberAccent,
             ),
             onPressed: () {
-              NewSaleController()
-                  .editOrder(new SalesMaster.fromJson(element), _orderType,context);
+              NewSaleController().editOrder(
+                  new SalesMaster.fromJson(element), _orderType, context);
             })),
       ]));
     });
@@ -209,8 +214,11 @@ class OrderController {
     );
   }
 
-  static Future<DataTable> getDeliveryOrders(BuildContext context,
-      void onOk(Map<String, dynamic> id), void onNo(Map<String, dynamic> id), int _orderType) async {
+  static Future<DataTable> getDeliveryOrders(
+      BuildContext context,
+      void onOk(Map<String, dynamic> id),
+      void onNo(Map<String, dynamic> id),
+      int _orderType) async {
     List<Map<String, dynamic>> data = await Config.database.rawQuery(
         "select *, IFNULL((select name from customers where ${CustomerTable.localId} = a.customer_id),'') as customer_name,IFNULL((select phone from customers where ${CustomerTable.localId} = a.customer_id),'') as contact, a.due_amount from sales_master a where a.order_type = '3' and a.paid_amount = '0.0' and a.is_delete = '0'");
 
@@ -226,15 +234,15 @@ class OrderController {
         DataCell(Text(element['due_amount'])),
         DataCell(IconButton(
             icon: Icon(Icons.close, color: Colors.red),
-            onPressed: () => onNo(element) )),
+            onPressed: () => onNo(element))),
         DataCell(IconButton(
             icon: Icon(
               Icons.edit,
               color: Colors.amberAccent,
             ),
             onPressed: () {
-              NewSaleController()
-                  .editOrder(new SalesMaster.fromJson(element), _orderType, context);
+              NewSaleController().editOrder(
+                  new SalesMaster.fromJson(element), _orderType, context);
             })),
       ]));
     });
@@ -257,11 +265,11 @@ class OrderController {
         'update ${SalesMasterTable.isDelete} set ${SalesMasterTable.paidAmount} = ${SalesMasterTable.dueAmount} where ${SalesMasterTable.serverId} = ${itm.serverId}');
   }
 
-  // static void onOrderCancelled(String orderId) async {
-  //   Database db = Config.database;
-  //   Map<String, dynamic> update = {
-  //     SalesMasterTable.isDelete: 1.toString(),
-  //   };
-  //   await SalesMaster().updateSpecificIntoDb(db, update, 'id', orderId);
-  // }
+// static void onOrderCancelled(String orderId) async {
+//   Database db = Config.database;
+//   Map<String, dynamic> update = {
+//     SalesMasterTable.isDelete: 1.toString(),
+//   };
+//   await SalesMaster().updateSpecificIntoDb(db, update, 'id', orderId);
+// }
 }
