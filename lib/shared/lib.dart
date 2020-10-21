@@ -46,8 +46,8 @@ class Lib {
     }
   }
 
-  static Future<bool> install() async {
-    ApiInstall apiInstall = new ApiInstall(data: await fetchData());
+  static Future<bool> install([DialogMessageBloc bloc]) async {
+    ApiInstall apiInstall = new ApiInstall(data: await fetchData(), bloc: bloc);
     bool value = await apiInstall.init();
     return value;
   }

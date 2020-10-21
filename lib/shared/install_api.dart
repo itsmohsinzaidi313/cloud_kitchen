@@ -1,3 +1,4 @@
+import 'package:food_app/bloc/dialog_message_bloc.dart';
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/company.dart';
 import 'package:food_app/models/objects/customer.dart';
@@ -16,16 +17,38 @@ import 'package:food_app/shared/config.dart';
 import 'package:logger/logger.dart';
 import 'package:food_app/shared/data_lists.dart';
 
+import 'lib.dart';
+
 class ApiInstall {
   final String status;
   final String message;
   final Map data;
+  DialogMessageBloc bloc;
   final Logger _log = Config.log;
   bool _isInitialized = false;
 
+  // List<String> _children = [
+  //   'company',
+  //   'outlet',
+  //   'users',
+  //   'vatamount',
+  //   'tables',
+  //   'categories',
+  //   'modifiers',
+  //   'item_menus',
+  //   'item_modifiers',
+  //   'customers',
+  //   'payment_methods',
+  //   'expense_categories',
+  //   'sales',
+  //   'expenses',
+  //   'device',
+  //   'registers'
+  // ];
+
   bool get isInitialized => _isInitialized;
 
-  ApiInstall({this.status, this.message, this.data});
+  ApiInstall({this.status, this.message, this.data, this.bloc});
 
   Future<bool> init() async {
     if (this.data != null) {
@@ -165,6 +188,7 @@ class ApiInstall {
   }
 
   void getCompanyList(List<dynamic> i) {
+    int count = 1;
     i.forEach((e) {
       DataLists.instance.listCompany.add(new Company(
           serverId: e['id'],
@@ -181,10 +205,15 @@ class ApiInstall {
           dateAdded: e['date_added'],
           expiryDate: e['expiry_date'],
           token: e['token']));
+      String newMessage =
+          'Getting Company ... $count/${i.length} ';
+      Lib.dialogMessageUpdate(newMessage: newMessage, bloc: bloc);
+      count++;
     });
   }
 
   void getOutletList(List<dynamic> i) {
+    int count = 1;
     i.forEach((e) {
       DataLists.instance.listOutlet.add(new Outlet(
           serverId: e['id'],
@@ -200,10 +229,15 @@ class ApiInstall {
           userId: e['user_id'],
           companyId: e['company_id'],
           delStatus: e['del_status']));
+      String newMessage =
+          'Getting Outlet ... $count/${i.length} ';
+      Lib.dialogMessageUpdate(newMessage: newMessage, bloc: bloc);
+      count++;
     });
   }
 
   void getUsersList(List<dynamic> i) {
+    int count = 1;
     i.forEach((e) {
       DataLists.instance.listUsers.add(new User(
           serverId: e['id'],
@@ -221,10 +255,15 @@ class ApiInstall {
           lastLogin: e['last_login'],
           activeStatus: e['active_status'],
           delStatus: e['del_status']));
+      String newMessage =
+          'Getting User ... $count/${i.length} ';
+      Lib.dialogMessageUpdate(newMessage: newMessage, bloc: bloc);
+      count++;
     });
   }
 
   void getVatAmountList(List<dynamic> i) {
+    int count = 1;
     i.forEach((e) {
       DataLists.instance.listVatAmount.add(new VatAmount(
         serverID: e['id'],
@@ -234,10 +273,15 @@ class ApiInstall {
         userId: e['user_id'],
         delStatus: e['del_status'],
       ));
+      String newMessage =
+          'Getting VatAmount ... $count/${i.length} ';
+      Lib.dialogMessageUpdate(newMessage: newMessage, bloc: bloc);
+      count++;
     });
   }
 
   void getTablesList(List<dynamic> i) {
+    int count = 1;
     i.forEach((e) {
       DataLists.instance.listTables.add(new Table(
           serverId: e['id'],
@@ -249,10 +293,15 @@ class ApiInstall {
           outletId: e['outlet_id'],
           companyId: e['company_id'],
           delStatus: e['del_status']));
+      String newMessage =
+          'Getting Table ... $count/${i.length} ';
+      Lib.dialogMessageUpdate(newMessage: newMessage, bloc: bloc);
+      count++;
     });
   }
 
   void getCategoriesList(List<dynamic> i) {
+    int count = 1;
     i.forEach((e) {
       DataLists.instance.listCategories.add(new Category(
           serverId: e['id'],
@@ -261,10 +310,15 @@ class ApiInstall {
           userId: e['user_id'],
           companyId: e['company_id'],
           delStatus: e['del_status']));
+      String newMessage =
+          'Getting Category ... $count/${i.length} ';
+      Lib.dialogMessageUpdate(newMessage: newMessage, bloc: bloc);
+      count++;
     });
   }
 
   void getModifiersList(List<dynamic> i) {
+    int count = 1;
     i.forEach((e) {
       DataLists.instance.listModifiers.add(new Modifier(
           serverId: e['id'],
@@ -274,10 +328,15 @@ class ApiInstall {
           userId: e['user_id'],
           companyId: e['company_id'],
           delStatus: e['del_status']));
+      String newMessage =
+          'Getting Modifier ... $count/${i.length} ';
+      Lib.dialogMessageUpdate(newMessage: newMessage, bloc: bloc);
+      count++;
     });
   }
 
   void getItemList(List<dynamic> i) {
+    int count = 1;
     i.forEach((e) {
       DataLists.instance.listItem.add(new Item(
           serverId: e['id'],
@@ -288,10 +347,16 @@ class ApiInstall {
           categoryName: e['category_name'],
           quantity: 1.toString(),
           percentage: e['percentage']));
+      String newMessage =
+          'Getting Item ... $count/${i.length} ';
+      print(newMessage);
+      Lib.dialogMessageUpdate(newMessage: newMessage, bloc: bloc);
+      count++;
     });
   }
 
   void getItemModifiersList(List<dynamic> i) {
+    int count = 1;
     i.forEach((e) {
       DataLists.instance.listItemModifiers.add(new ItemModifier(
           serverId: e['id'],
@@ -303,10 +368,15 @@ class ApiInstall {
           name: e['name'],
           price: e['price'],
           delStatus: e['del_status']));
+      String newMessage =
+          'Getting ItemModifier ... $count/${i.length} ';
+      Lib.dialogMessageUpdate(newMessage: newMessage, bloc: bloc);
+      count++;
     });
   }
 
   void getCustomersList(List<dynamic> i) {
+    int count = 1;
     i.forEach((e) {
       DataLists.instance.listCustomers.add(new Customer(
           serverId: e['id'],
@@ -321,10 +391,15 @@ class ApiInstall {
           delStatus: e['del_status'],
           dateOfBirth: e['date_of_birth'],
           dateOfAnniversary: e['date_of_anniversary']));
+      String newMessage =
+          'Getting Customer ... $count/${i.length} ';
+      Lib.dialogMessageUpdate(newMessage: newMessage, bloc: bloc);
+      count++;
     });
   }
 
   void getPaymentMethodsList(List<dynamic> i) {
+    int count = 1;
     i.forEach((e) {
       DataLists.instance.listPaymentMethods.add(new PaymentMethod(
         serverId: e['id'],
@@ -334,10 +409,15 @@ class ApiInstall {
         companyId: e['company_id'],
         delStatus: e['del_status'],
       ));
+      String newMessage =
+          'Getting PaymentMethod ... $count/${i.length} ';
+      Lib.dialogMessageUpdate(newMessage: newMessage, bloc: bloc);
+      count++;
     });
   }
 
   void getExpenseCategoriesList(List<dynamic> i) {
+    int count = 1;
     i.forEach((e) {
       DataLists.instance.listExpenseCategories.add(new ExpenseCategory(
         serverId: e['id'],
@@ -347,6 +427,10 @@ class ApiInstall {
         companyId: e['company_id'],
         delStatus: e['del_status'],
       ));
+      String newMessage =
+          'Getting ExpenseCategory ... $count/${i.length} ';
+      Lib.dialogMessageUpdate(newMessage: newMessage, bloc: bloc);
+      count++;
     });
   }
 
@@ -355,6 +439,7 @@ class ApiInstall {
   void getExpensesList(List<dynamic> i) {}
 
   void getDeviceList(List<dynamic> i) {
+    int count = 1;
     i.forEach((e) {
       DataLists.instance.listDevices.add(new Device(
         serverId: e['id'],
@@ -366,7 +451,12 @@ class ApiInstall {
         dateAdded: e['date_added'],
         dateModified: e['date_modified'],
       ));
+      String newMessage =
+          'Getting Devices ... $count/${i.length} ';
+      Lib.dialogMessageUpdate(newMessage: newMessage, bloc: bloc);
+      count++;
     });
+
   }
 
   void getRegisterList(List<dynamic> i) {
@@ -374,4 +464,17 @@ class ApiInstall {
       DataLists.instance.listRegisters.add(new Register.fromJson(element));
     });
   }
+
+  // bool getDataFromAPI(Map data) {
+  //   int count = 1;
+  //   _children.forEach((e1) {
+  //     List<dynamic> map = data[e1];
+  //     map.forEach((e2) {
+  //       DataLists.instance.getInList()[count].add(DataLists.getAnyObject(
+  //           DataLists.getDataTypeOfListElement(count), e2));
+  //     });
+  //     count++;
+  //   });
+  //   return true;
+  // }
 }

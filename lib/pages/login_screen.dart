@@ -53,6 +53,13 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _bloc.dispose();
+  }
+
   final GlobalKey<FormState> _formKey = GlobalKey();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   SharedPreferences _sharedPreferences;
@@ -83,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       context,
                       widget: StreamBuilder(
                         initialData:
-                        Text('Loading'),
+                        Text('Loading...'),
                         stream: _bloc.message,
                         builder: (context,
                             snapshot) {
@@ -123,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<bool> loadData(DialogMessageBloc bloc) async {
-    bool value1 = await Lib.install();
+    bool value1 = await Lib.install(bloc);
     if (value1) {
       bool value2 = await DataLists.importToDatabase(Config.database, bloc);
       if (value2) {
@@ -320,7 +327,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                       context,
                                                       widget: StreamBuilder(
                                                         initialData:
-                                                            Text('Loading'),
+                                                            Text('Loading...'),
                                                         stream: _bloc.message,
                                                         builder: (context,
                                                             snapshot) {

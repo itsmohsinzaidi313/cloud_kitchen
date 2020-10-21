@@ -1,8 +1,9 @@
 import 'package:food_app/database/table_object/item_table.dart';
+import 'package:food_app/models/objects/my_object.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
 
-class Item {
+class Item extends MyObject{
   String serverId;
   String code;
   String name;

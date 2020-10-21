@@ -1,9 +1,10 @@
 import 'package:food_app/database/table_object/company_table.dart';
+import 'package:food_app/models/objects/my_object.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
 
-class Company {
+class Company extends MyObject {
   final String serverId;
   final String currency;
   final String timezone;
@@ -90,4 +91,6 @@ class Company {
 
   Future<bool> insertIntoDatabase(Database db) async =>
       await Lib.insertIntoDatabase(db, CompanyTable.tableName, getValues());
+
+
 }

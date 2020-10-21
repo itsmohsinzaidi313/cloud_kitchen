@@ -23,6 +23,7 @@ import 'package:food_app/models/objects/expense_category.dart';
 import 'package:food_app/models/objects/item.dart';
 import 'package:food_app/models/objects/item_modifier.dart';
 import 'package:food_app/models/objects/modifier.dart';
+import 'package:food_app/models/objects/my_object.dart';
 import 'package:food_app/models/objects/outlet.dart';
 import 'package:food_app/models/objects/payment_method.dart';
 import 'package:food_app/models/objects/register.dart';
@@ -257,7 +258,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listUsers.add(new User.fromJson(element));
         dialogUpdatedMessage =
-            'Loading Users ... ${count + 1}/${listMap.length + 1} ';
+            'Loading Users ... $count/${listMap.length} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -273,7 +274,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listCategories.add(new Category.fromJson(element));
         dialogUpdatedMessage =
-            'Loading Categories ... ${count + 1}/${listMap.length + 1} ';
+            'Loading Categories ... $count/${listMap.length } ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -288,7 +289,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listItem.add(new Item.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Items ... ${count + 1}/${listMap.length + 1} ';
+        'Loading Items ... $count/${listMap.length } ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -304,7 +305,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listCompany.add(new Company.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Companies ... ${count + 1}/${listMap.length + 1} ';
+        'Loading Companies ... $count/${listMap.length } ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -321,7 +322,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listCustomers.add(new Customer.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Customers ... ${count + 1}/${listMap.length + 1} ';
+        'Loading Customers ... $count/${listMap.length } ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -338,7 +339,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listTables.add(new Table.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Tables ... ${count + 1}/${listMap.length + 1} ';
+        'Loading Tables ... $count/${listMap.length } ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -355,7 +356,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listVatAmount.add(new VatAmount.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Vat Amounts ... ${count + 1}/${listMap.length + 1} ';
+        'Loading Vat Amounts ... $count/${listMap.length } ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -372,7 +373,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listOutlet.add(new Outlet.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Outlets ... ${count + 1}/${listMap.length + 1} ';
+        'Loading Outlets ... $count/${listMap.length } ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -389,7 +390,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listModifiers.add(new Modifier.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Modifiers ... ${count + 1}/${listMap.length + 1} ';
+        'Loading Modifiers ... $count/${listMap.length } ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -407,7 +408,7 @@ class DataLists {
         DataLists.instance.listItemModifiers
             .add(new ItemModifier.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Item Modifiers ... ${count + 1}/${listMap.length + 1} ';
+        'Loading Item Modifiers ... $count/${listMap.length } ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -425,7 +426,7 @@ class DataLists {
         DataLists.instance.listPaymentMethods
             .add(new PaymentMethod.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Payment Methods ... ${count + 1}/${listMap.length + 1} ';
+        'Loading Payment Methods ... $count/${listMap.length } ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -443,7 +444,7 @@ class DataLists {
         DataLists.instance.listExpenseCategories
             .add(new ExpenseCategory.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Expense Categories ... ${count + 1}/${listMap.length + 1} ';
+        'Loading Expense Categories ... $count/${listMap.length } ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -460,7 +461,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listDevices.add(new Device.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Devices ... ${count + 1}/${listMap.length + 1} ';
+        'Loading Devices ... $count/${listMap.length } ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -476,7 +477,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listRegisters.add(new Register.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Registers ... ${count + 1}/${listMap.length + 1} ';
+        'Loading Registers ... $count/${listMap.length } ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -522,12 +523,31 @@ class DataLists {
     anyList.forEach((element) async {
       await element.insertIntoDatabase(db);
       String newMessage =
-          'Inserting $objectNameOfList ... ${count + 1}/${anyList.length + 1} ';
+          'Inserting $objectNameOfList ... $count/${anyList.length} ';
       Lib.dialogMessageUpdate(newMessage: newMessage, bloc: bloc);
       count++;
     });
     return true;
   }
+
+  // static String getDataTypeOfListElement(int count){
+  //   var varType = DataLists.instance.getInList()[count].runtimeType.toString();
+  //   String startVar = 'List<';
+  //   String endVar = '>';
+  //   int startIndex = varType.indexOf(startVar);
+  //   int endIndex = varType.indexOf(endVar);
+  //   String _type = varType.substring(startIndex + startVar.length, endIndex );
+  //   return _type;
+  // }
+  //
+  // static MyObject getAnyObject(String type, Map<String, dynamic> map){
+  //   MyObject myObject;
+  //   if(type == 'Item') {
+  //     myObject = Item.fromJson(map);
+  //   }
+  //   return myObject;
+  // }
+
 
   // static Future<bool> importListToMemory(
   //     {String tableName,
@@ -541,7 +561,7 @@ class DataLists {
   //   listMap.forEach((element) {
   //     anyList.add(func(element));
   //     dialogUpdatedMessage =
-  //         'Loading Register ... ${count + 1}/${instance.listUsers.length + 1} ';
+  //         'Loading Register ... $count/${instance.listUsers.length } ';
   //     Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
   //     count++;
   //   });
