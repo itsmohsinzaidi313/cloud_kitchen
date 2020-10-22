@@ -115,18 +115,14 @@ class _OrderScreenState extends State<OrderScreen> {
             ),
             Expanded(
                 flex: 1,
-                child: GestureDetector(
-                  child: Card(
-                      child: FutureBuilder(
-                          future: getOrdersList(orderType),
-                          initialData: Container(
-                            child: SpinKitRing(
-                              color: Colors.yellow,
-                            ),
-                          ),
-                          builder: (context, snapshot) => snapshot.data)),
-                  onTap: () {},
-                )),
+                child: FutureBuilder(
+                    future: getOrdersList(orderType),
+                    initialData: Container(
+                      child: SpinKitRing(
+                        color: Colors.yellow,
+                      ),
+                    ),
+                    builder: (context, snapshot) => snapshot.data)),
           ],
         ),
       ),

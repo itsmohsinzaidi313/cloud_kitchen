@@ -21,10 +21,10 @@ class DashboardController {
           img: 'assets/order.png',
           name: 'Pending Orders',
           subtitle: 'Your pending orders'),
-      // DashboardItem(
-      //     img: 'assets/report.png',
-      //     name: 'Reports',
-      //     subtitle: 'Your daily reports'),
+      DashboardItem(
+          img: 'assets/report.png',
+          name: 'Reports',
+          subtitle: 'Your daily reports'),
       DashboardItem(
           img: 'assets/setting.png',
           name: 'Setting',

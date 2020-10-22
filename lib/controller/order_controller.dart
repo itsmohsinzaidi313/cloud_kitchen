@@ -8,6 +8,7 @@ import 'package:food_app/models/view_models/order_model.dart';
 import 'package:food_app/pages/orders_screen.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/data_lists.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:sqflite/sqflite.dart';
 
 class OrderController {
@@ -98,13 +99,6 @@ class OrderController {
   }
 
   bool popScreen(BuildContext context) {
-    // SalesMaster().queryAllRows(Config.database).then((value) {
-    //   this.model.setItemHoldList(value);
-    //   Navigator.of(context).pushReplacement(new MaterialPageRoute(
-    //       builder: (context) => new OrderScreen(
-    //         model: model,
-    //       )));
-    // });
     Navigator.pop(context);
     return true;
   }
@@ -118,49 +112,163 @@ class OrderController {
       List<Map<String, dynamic>> data = await Config.database.rawQuery(
           "select *, IFNULL((select name from tables where id = a.table_id),'x') as tables, (select full_name from users where id = a.user_id) as waiter, a.due_amount from sales_master a where a.order_type = '1' and a.paid_amount = '0.0' and a.is_delete = '0'");
 
-      List<DataRow> rows = [];
+      List<ExpansionTile> expansionTiles = [];
       data.forEach((element) {
-        rows.add(DataRow(cells: [
-          DataCell(IconButton(
-              icon: Icon(
-                Icons.check,
-                color: Colors.green,
+        // SalesMaster salesMaster = new SalesMaster.fromJson(element);
+        expansionTiles.add(ExpansionTile(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                '${element['sale_no']}',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              onPressed: () => onOk(element))),
-          DataCell(Text(element['sale_no'])),
-          DataCell(Text(element['tables'])),
-          DataCell(Text(element['waiter'])),
-          DataCell(Text(element['due_amount'])),
-          DataCell(IconButton(
-              icon: Icon(
-                Icons.close,
-                color: Colors.red,
+              Text(
+                '${element['tables']}',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              onPressed: () {
-                onNo(element);
-              })),
-          DataCell(IconButton(
-              icon: Icon(
-                Icons.edit,
-                color: Colors.amberAccent,
+              Text(
+                '${element['waiter']}',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              onPressed: () {
-                NewSaleController().editOrder(
-                    new SalesMaster.fromJson(element), _orderType, context);
-              })),
-        ]));
+              Text(
+                '${element['due_amount']}',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          children: [
+            Column(
+              children: [
+                Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    // getSpacer(context: context, width: 0.01),
+                    InkWell(
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.attach_money_rounded,
+                            color: Colors.yellow[900],
+                            size: 20,
+                          ),
+                          Text('Order\nPayment', style: TextStyle(color: Colors.grey),textAlign: TextAlign.center,),
+                        ],
+                      ),
+                      onTap: () => onOk(element),
+                    ),
+                    // getSpacer(context: context, width: 0.01),
+                    InkWell(
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.edit_rounded,
+                            color: Colors.grey[700],
+                            size: 20,
+                          ),
+                          Text('Edit\nOrder', style: TextStyle(color: Colors.grey),textAlign: TextAlign.center,),
+                        ],
+                      ),
+                      onTap: () => NewSaleController().editOrder(
+                          new SalesMaster.fromJson(element), _orderType, context),
+                    ),
+                    // InkWell(
+                    //   child: Column(
+                    //     children: [
+                    //       Icon(
+                    //         Icons.update_rounded,
+                    //         color: Colors.green,
+                    //         size: 20,
+                    //       ),
+                    //       Text('Change\nTable', style: TextStyle(color: Colors.grey),textAlign: TextAlign.center,),
+                    //     ],
+                    //   ),
+                    //   onTap: () {},
+                    // ),
+                    // getSpacer(context: context, width: 0.01),
+                    InkWell(
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.delete_rounded,
+                            color: Colors.red,
+                            size: 20,
+                          ),
+                          Text('Cancel\nOrder', style: TextStyle(color: Colors.grey),textAlign: TextAlign.center,),
+                        ],
+                      ),
+                      onTap: () => onNo(element),
+                    ),
+                    // getSpacer(context: context, width: 0.01),
+
+                    // getSpacer(context: context, width: 0.01),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ));
       });
-      return DataTable(
-        columns: [
-          DataColumn(label: Text('Pay')),
-          DataColumn(label: Text('Sale No')),
-          DataColumn(label: Text('Table#')),
-          DataColumn(label: Text('Waiter')),
-          DataColumn(label: Text('Amount')),
-          DataColumn(label: Text('Delete')),
-          DataColumn(label: Text('Edit')),
+      return Column(
+        children: [
+          ListTile(
+            tileColor: Colors.grey[200],
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  'Sale No.',
+                  style: GoogleFonts.staatliches(
+                    letterSpacing: 2,
+                    wordSpacing: 1,
+                    fontWeight: FontWeight.w500,
+                    // fontSize: 18,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                Text(
+                  'Table',
+                  style: GoogleFonts.staatliches(
+                    letterSpacing: 2,
+                    wordSpacing: 1,
+                    fontWeight: FontWeight.w500,
+                    // fontSize: 18,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                Text(
+                  'Waiter',
+                  style: GoogleFonts.staatliches(
+                    letterSpacing: 2,
+                    wordSpacing: 1,
+                    fontWeight: FontWeight.w500,
+                    // fontSize: 18,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                Text(
+                  'Amount',
+                  style: GoogleFonts.staatliches(
+                    letterSpacing: 2,
+                    wordSpacing: 1,
+                    fontWeight: FontWeight.w500,
+                    // fontSize: 18,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Container(
+              color: Colors.white,
+              child: ListView(
+                children: expansionTiles,
+              ),
+            ),
+          ),
         ],
-        rows: rows,
       );
     } catch (e) {
       return Container(
@@ -169,52 +277,175 @@ class OrderController {
     }
   }
 
-  static Future<DataTable> getTakeAwayOrders(
+  static Future<Widget> getTakeAwayOrders(
       BuildContext context,
       void onOk(Map<String, dynamic> id),
       void onNo(Map<String, dynamic> id),
       int _orderType) async {
     List<Map<String, dynamic>> data = await Config.database.rawQuery(
         "select *, IFNULL((select name from customers where ${CustomerTable.localId} = a.customer_id),'') as customer_name, IFNULL((select phone from customers where  ${CustomerTable.localId} = a.customer_id),'') as contact, a.due_amount from sales_master a where a.order_type = '2' and a.paid_amount = '0.0' and a.is_delete = '0'");
-    List<DataRow> rows = [];
+
+    List<ExpansionTile> expansionTiles = [];
     data.forEach((element) {
-      rows.add(DataRow(cells: [
-        DataCell(IconButton(
-            icon: Icon(Icons.check, color: Colors.green),
-            onPressed: () => onOk(element))),
-        DataCell(Text(element['sale_no'])),
-        DataCell(Text(element['customer_name'])),
-        DataCell(Text(element['contact'])),
-        DataCell(Text(element['due_amount'])),
-        DataCell(IconButton(
-            icon: Icon(Icons.close, color: Colors.red),
-            onPressed: () => onNo(element))),
-        DataCell(IconButton(
-            icon: Icon(
-              Icons.edit,
-              color: Colors.amberAccent,
+      // SalesMaster salesMaster = new SalesMaster.fromJson(element);
+      expansionTiles.add(ExpansionTile(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+              '${element['sale_no']}',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            onPressed: () {
-              NewSaleController().editOrder(
-                  new SalesMaster.fromJson(element), _orderType, context);
-            })),
-      ]));
+            Text(
+              '${element['customer_name']}',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(
+              '${element['contact']}',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(
+              '${element['due_amount']}',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        children: [
+          Column(
+            children: [
+              Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // getSpacer(context: context, width: 0.01),
+                  InkWell(
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.attach_money_rounded,
+                          color: Colors.yellow[900],
+                          size: 20,
+                        ),
+                        Text('Order\nPayment', style: TextStyle(color: Colors.grey),textAlign: TextAlign.center,),
+                      ],
+                    ),
+                    onTap: () => onOk(element),
+                  ),
+                  // getSpacer(context: context, width: 0.01),
+                  InkWell(
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.edit_rounded,
+                          color: Colors.grey[700],
+                          size: 20,
+                        ),
+                        Text('Edit\nOrder', style: TextStyle(color: Colors.grey),textAlign: TextAlign.center,),
+                      ],
+                    ),
+                    onTap: () => NewSaleController().editOrder(
+                        new SalesMaster.fromJson(element), _orderType, context),
+                  ),
+                  // InkWell(
+                  //   child: Column(
+                  //     children: [
+                  //       Icon(
+                  //         Icons.update_rounded,
+                  //         color: Colors.green,
+                  //         size: 20,
+                  //       ),
+                  //       Text('Change\nTable', style: TextStyle(color: Colors.grey),textAlign: TextAlign.center,),
+                  //     ],
+                  //   ),
+                  //   onTap: () {},
+                  // ),
+                  // getSpacer(context: context, width: 0.01),
+                  InkWell(
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.delete_rounded,
+                          color: Colors.red,
+                          size: 20,
+                        ),
+                        Text('Cancel\nOrder', style: TextStyle(color: Colors.grey),textAlign: TextAlign.center,),
+                      ],
+                    ),
+                    onTap: () => onNo(element),
+                  ),
+                  // getSpacer(context: context, width: 0.01),
+
+                  // getSpacer(context: context, width: 0.01),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ));
     });
-    return DataTable(
-      columns: [
-        DataColumn(label: Text('Pay')),
-        DataColumn(label: Text('Sale No')),
-        DataColumn(label: Text('Customer')),
-        DataColumn(label: Text('Contact')),
-        DataColumn(label: Text('Amount')),
-        DataColumn(label: Text('Delete')),
-        DataColumn(label: Text('Edit')),
+    return Column(
+      children: [
+        ListTile(
+          tileColor: Colors.grey[200],
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                'Sale No.',
+                style: GoogleFonts.staatliches(
+                  letterSpacing: 2,
+                  wordSpacing: 1,
+                  fontWeight: FontWeight.w500,
+                  // fontSize: 18,
+                  color: Colors.grey[600],
+                ),
+              ),
+              Text(
+                'Customer',
+                style: GoogleFonts.staatliches(
+                  letterSpacing: 2,
+                  wordSpacing: 1,
+                  fontWeight: FontWeight.w500,
+                  // fontSize: 18,
+                  color: Colors.grey[600],
+                ),
+              ),
+              Text(
+                'Contact',
+                style: GoogleFonts.staatliches(
+                  letterSpacing: 2,
+                  wordSpacing: 1,
+                  fontWeight: FontWeight.w500,
+                  // fontSize: 18,
+                  color: Colors.grey[600],
+                ),
+              ),
+              Text(
+                'Amount',
+                style: GoogleFonts.staatliches(
+                  letterSpacing: 2,
+                  wordSpacing: 1,
+                  fontWeight: FontWeight.w500,
+                  // fontSize: 18,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Container(
+            color: Colors.white,
+            child: ListView(
+              children: expansionTiles,
+            ),
+          ),
+        ),
       ],
-      rows: rows,
     );
   }
 
-  static Future<DataTable> getDeliveryOrders(
+  static Future<Widget> getDeliveryOrders(
       BuildContext context,
       void onOk(Map<String, dynamic> id),
       void onNo(Map<String, dynamic> id),
@@ -222,41 +453,163 @@ class OrderController {
     List<Map<String, dynamic>> data = await Config.database.rawQuery(
         "select *, IFNULL((select name from customers where ${CustomerTable.localId} = a.customer_id),'') as customer_name,IFNULL((select phone from customers where ${CustomerTable.localId} = a.customer_id),'') as contact, a.due_amount from sales_master a where a.order_type = '3' and a.paid_amount = '0.0' and a.is_delete = '0'");
 
-    List<DataRow> rows = [];
+    List<ExpansionTile> expansionTiles = [];
     data.forEach((element) {
-      rows.add(DataRow(cells: [
-        DataCell(IconButton(
-            icon: Icon(Icons.check, color: Colors.green),
-            onPressed: () => onOk(element))),
-        DataCell(Text(element['sale_no'])),
-        DataCell(Text(element['customer_name'])),
-        DataCell(Text(element['contact'])),
-        DataCell(Text(element['due_amount'])),
-        DataCell(IconButton(
-            icon: Icon(Icons.close, color: Colors.red),
-            onPressed: () => onNo(element))),
-        DataCell(IconButton(
-            icon: Icon(
-              Icons.edit,
-              color: Colors.amberAccent,
+      // SalesMaster salesMaster = new SalesMaster.fromJson(element);
+      expansionTiles.add(ExpansionTile(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+              '${element['sale_no']}',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            onPressed: () {
-              NewSaleController().editOrder(
-                  new SalesMaster.fromJson(element), _orderType, context);
-            })),
-      ]));
+            Text(
+              '${element['customer_name']}',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(
+              '${element['contact']}',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(
+              '${element['due_amount']}',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        children: [
+          Column(
+            children: [
+              Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // getSpacer(context: context, width: 0.01),
+                  InkWell(
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.attach_money_rounded,
+                          color: Colors.yellow[900],
+                          size: 20,
+                        ),
+                        Text('Order\nPayment', style: TextStyle(color: Colors.grey),textAlign: TextAlign.center,),
+                      ],
+                    ),
+                    onTap: () => onOk(element),
+                  ),
+                  // getSpacer(context: context, width: 0.01),
+                  InkWell(
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.edit_rounded,
+                          color: Colors.grey[700],
+                          size: 20,
+                        ),
+                        Text('Edit\nOrder', style: TextStyle(color: Colors.grey),textAlign: TextAlign.center,),
+                      ],
+                    ),
+                    onTap: () => NewSaleController().editOrder(
+                        new SalesMaster.fromJson(element), _orderType, context),
+                  ),
+                  // InkWell(
+                  //   child: Column(
+                  //     children: [
+                  //       Icon(
+                  //         Icons.update_rounded,
+                  //         color: Colors.green,
+                  //         size: 20,
+                  //       ),
+                  //       Text('Change\nTable', style: TextStyle(color: Colors.grey),textAlign: TextAlign.center,),
+                  //     ],
+                  //   ),
+                  //   onTap: () {},
+                  // ),
+                  // getSpacer(context: context, width: 0.01),
+                  InkWell(
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.delete_rounded,
+                          color: Colors.red,
+                          size: 20,
+                        ),
+                        Text('Cancel\nOrder', style: TextStyle(color: Colors.grey),textAlign: TextAlign.center,),
+                      ],
+                    ),
+                    onTap: () => onNo(element),
+                  ),
+                  // getSpacer(context: context, width: 0.01),
+
+                  // getSpacer(context: context, width: 0.01),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ));
     });
-    return DataTable(
-      columns: [
-        DataColumn(label: Text('Pay')),
-        DataColumn(label: Text('Sale No')),
-        DataColumn(label: Text('Customer')),
-        DataColumn(label: Text('Contact')),
-        DataColumn(label: Text('Amount')),
-        DataColumn(label: Text('Delete')),
-        DataColumn(label: Text('Edit')),
+    return Column(
+      children: [
+        ListTile(
+          tileColor: Colors.grey[200],
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                'Sale No.',
+                style: GoogleFonts.staatliches(
+                  letterSpacing: 2,
+                  wordSpacing: 1,
+                  fontWeight: FontWeight.w500,
+                  // fontSize: 18,
+                  color: Colors.grey[600],
+                ),
+              ),
+              Text(
+                'Customer',
+                style: GoogleFonts.staatliches(
+                  letterSpacing: 2,
+                  wordSpacing: 1,
+                  fontWeight: FontWeight.w500,
+                  // fontSize: 18,
+                  color: Colors.grey[600],
+                ),
+              ),
+              Text(
+                'Contact',
+                style: GoogleFonts.staatliches(
+                  letterSpacing: 2,
+                  wordSpacing: 1,
+                  fontWeight: FontWeight.w500,
+                  // fontSize: 18,
+                  color: Colors.grey[600],
+                ),
+              ),
+              Text(
+                'Amount',
+                style: GoogleFonts.staatliches(
+                  letterSpacing: 2,
+                  wordSpacing: 1,
+                  fontWeight: FontWeight.w500,
+                  // fontSize: 18,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Container(
+            color: Colors.white,
+            child: ListView(
+              children: expansionTiles,
+            ),
+          ),
+        ),
       ],
-      rows: rows,
     );
   }
 
@@ -265,6 +618,11 @@ class OrderController {
         'update ${SalesMasterTable.isDelete} set ${SalesMasterTable.paidAmount} = ${SalesMasterTable.dueAmount} where ${SalesMasterTable.serverId} = ${itm.serverId}');
   }
 
+  static Widget getSpacer({BuildContext context, double width}) {
+    return SizedBox(
+      width: Config.getDeviceWidth(context) * width,
+    );
+  }
 // static void onOrderCancelled(String orderId) async {
 //   Database db = Config.database;
 //   Map<String, dynamic> update = {
