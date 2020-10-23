@@ -1,3 +1,4 @@
+import 'package:draggable_floating_button/draggable_floating_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
@@ -16,6 +17,7 @@ import 'package:food_app/models/view_models/new_sale_model.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/lib.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:sqflite/sqflite.dart';
 
 class NewSale extends StatefulWidget {
@@ -32,6 +34,8 @@ class NewSale extends StatefulWidget {
 class _NewSaleState extends State<NewSale> {
   final NewSaleModel model;
   bool isNew = false;
+  double xPosition = 0.0;
+  double yPosition = 0.0;
 
   _NewSaleState(this.model);
 
@@ -41,143 +45,233 @@ class _NewSaleState extends State<NewSale> {
 
   @override
   Widget build(BuildContext context) {
+    var _appBar = AppTheme.appBarNormal(
+      context: context,
+      appBarTitle: 'New Sales',
+      appBarElevation: 0.0,
+      appBarBgColor: AppTheme.appBarColor,
+    );
     return WillPopScope(
         child: Scaffold(
           key: _key,
-          appBar: AppTheme.appBarNormal(
-            context: context,
-            appBarTitle: 'New Sales',
-            appBarElevation: 0.0,
-            appBarBgColor: AppTheme.appBarColor,
-          ),
-          body: Container(
-            child: Column(
-              children: [
-                Container(
-                  color: Colors.red,
-                  child: Row(
-                    children: [
-                      Flexible(
-                        flex: 1,
-                        child: ListTile(
-                          leading: Container(
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                                color: model.leadingString.isNotEmpty
-                                    ? Colors.yellow
-                                    : Colors.red),
-                            child: Text(
-                              model.leadingString,
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          title: Container(
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                                color: model.titleString.isNotEmpty
-                                    ? Colors.yellow
-                                    : Colors.red),
-                            child: Center(
-                              child: Text(model.titleString,
+          backgroundColor: Colors.grey[200],
+          appBar: _appBar,
+          body: Stack(
+            children: [
+              Container(
+                child: Column(
+                  children: [
+                    Container(
+                      color: Colors.red,
+                      child: Row(
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            child: ListTile(
+                              leading: Container(
+                                padding: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  color: model.leadingString.isNotEmpty
+                                      ? Colors.yellow.shade600
+                                      : Colors.red,
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  model.leadingString,
                                   style: TextStyle(
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                          ),
-                          trailing: Container(
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                                color: model.trailingString.isNotEmpty
-                                    ? Colors.yellow
-                                    : Colors.red),
-                            child: Text(model.trailingString,
-                                style: TextStyle(
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Row(
-                    children: [
-                      Flexible(
-                        flex: 1,
-                        child: Column(
-                          children: [
-                            ListTile(
-                              title: Center(
-                                  child: Text('Categories'.toUpperCase())),
-                            ),
-                            Container(
-                              height: Config.getDeviceHeight(context) * 0.1,
-                              padding: EdgeInsets.only(top: 5),
-                              // decoration: BoxDecoration(border: Border.all(width: 2)),
-                              child: ListView(
-                                scrollDirection: Axis.horizontal,
-                                children: getCategoryWidgets(model.lstCategory),
-                              ),
-                            ),
-                            ListTile(
-                              title: Center(child: Text('Items'.toUpperCase())),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Container(
-                                margin: EdgeInsets.only(top: 5),
-                                padding: EdgeInsets.only(top: 5),
-                                // decoration: BoxDecoration(border: Border.all(width: 2)),
-                                child: GridView.count(
-                                  crossAxisCount: 4,
-                                  children: getItemsWidgets(
-                                      model.lstItem, categoryName),
+                                      color: Colors.grey[600],
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Flexible(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Flexible(
-                                flex: 1,
-                                child: ListView(
-                                  children:
-                                      getCartItemsWidgets(model.order.itemList),
+                              title: Container(
+                                padding: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  color: model.titleString.isNotEmpty
+                                      ? Colors.yellow.shade600
+                                      : Colors.red,
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Center(
+                                  child: Text(model.titleString,
+                                      style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontWeight: FontWeight.bold)),
                                 ),
                               ),
-                            ],
+                              trailing: Container(
+                                padding: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  color: model.trailingString.isNotEmpty
+                                      ? Colors.yellow.shade600
+                                      : Colors.red,
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(model.trailingString,
+                                    style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Flexible(
+                            flex: 2,
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Text(
+                                    'Categories'.toUpperCase(),
+                                    style: GoogleFonts.staatliches(
+                                      color: Colors.grey[500],
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 5.0,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  height:
+                                      Config.getDeviceHeight(context) * 0.12,
+                                  padding: EdgeInsets.only(top: 5),
+                                  // decoration: BoxDecoration(border: Border.all(width: 2)),
+                                  child: ListView(
+                                    scrollDirection: Axis.horizontal,
+                                    children:
+                                        getCategoryWidgets(model.lstCategory),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Text(
+                                    'Items'.toUpperCase(),
+                                    style: GoogleFonts.staatliches(
+                                      color: Colors.grey[500],
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 5.0,
+                                    ),
+                                  ),
+                                ),
+                                Flexible(
+                                  flex: 2,
+                                  child: Container(
+                                    padding: EdgeInsets.only(top: 5),
+                                    // decoration: BoxDecoration(border: Border.all(width: 2)),
+                                    child: GridView.count(
+                                      crossAxisCount: 4,
+                                      children: getItemsWidgets(
+                                          model.lstItem, categoryName),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Flexible(
+                            flex: 1,
+                            child: Column(
+                              children: [
+                                Flexible(
+                                  flex: 1,
+                                  child: Container(
+                                    margin: EdgeInsets.all(8.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[100],
+                                      borderRadius: BorderRadius.circular(5),
+                                      shape: BoxShape.rectangle,
+                                      border: Border(
+                                        left: BorderSide(
+                                          color: Colors.grey[300],
+                                          width: 2,
+                                        ),
+                                        right: BorderSide(
+                                          color: Colors.grey[300],
+                                          width: 2,
+                                        ),
+                                        bottom: BorderSide(
+                                          color: Colors.grey[300],
+                                          width: 2,
+                                        ),
+                                        top: BorderSide(
+                                          color: Colors.grey[300],
+                                          width: 2,
+                                        ),
+                                      ),
+                                    ),
+                                    child: model.order.itemList.length > 0 ?
+                                    ListView(
+                                      children: getCartItemsWidgets(List.from(
+                                          model.order.itemList.reversed)),
+                                          ) :
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: Column(
+                                              children: [
+                                                Image(
+                                                  image: AssetImage(
+                                                      'assets/empty_list.png',
+                                                  ),
+                                                  height: 100,
+                                                  width: 100,
+                                                ),
+                                                Text(
+                                                  'Empty list'.toUpperCase(),
+                                                  style: GoogleFonts.aBeeZee(
+                                                    color: Colors.grey,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontStyle: FontStyle.italic,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: AppTheme.appBarColor,
-            child: Icon(Icons.done),
-            onPressed: () {
-              model.order.itemList.length > 0
-                  ? AppTheme.showAlertDialogOK(context,
-                      title: 'Success',
-                      message: 'Order saved.',
-                      onOK: () => _onFloatingButtonPressed())
-                  : AppTheme.showAlertDialogOK(context,
-                      title: 'Failed',
-                      message: 'Please add Items to punch order',
-                      onOK: () => Navigator.pop(context));
-            },
+              ),
+              DraggableFloatingActionButton(
+                backgroundColor: Colors.white,
+                elevation: 5,
+                tooltip: 'Submit Order',
+                appContext: context,
+                appBar: _appBar,
+                offset: new Offset(
+                  Config.getDeviceWidth(context) * 0.91,
+                  Config.getDeviceHeight(context) * 0.72,
+                ),
+                child: Icon(
+                  Icons.done_rounded,
+                  size: 35,
+                  color: Colors.red,
+                ),
+                onPressed: () {
+                  model.order.itemList.length > 0
+                      ? AppTheme.showAlertDialogOK(context,
+                          title: 'Success',
+                          message: 'Order saved.',
+                          onOK: () => _onFloatingButtonPressed())
+                      : AppTheme.showAlertDialogOK(context,
+                          title: 'Failed',
+                          message: 'Please add Items to punch order',
+                          onOK: () => Navigator.pop(context));
+                },
+              ),
+            ],
           ),
         ),
         onWillPop: _onWillPop);
@@ -212,29 +306,63 @@ class _NewSaleState extends State<NewSale> {
     List<Widget> widgets = [];
     lstCategory.forEach((category) {
       widgets.add(
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              categoryName = category.categoryName;
-            });
-          },
-          child: Card(
-            elevation: 4,
-            color: Colors.amberAccent,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: Text(
-                  category.categoryName,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: 'Ubuntu',
-                    letterSpacing: 1.0,
+        Card(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(40),
+          ),
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+              onTap: () {
+                setState(() {
+                  categoryName = category.categoryName;
+                });
+              },
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 16,
+                    backgroundColor: Colors.yellow.shade700,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 13,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.grey.shade700,
+                        radius: 9,
+                      ),
+                    ),
                   ),
-                ),
+                  Container(
+                    height: Config.getDeviceHeight(context) * 0.1,
+                    width: Config.getDeviceHeight(context) * 0.18,
+                    // decoration: BoxDecoration(
+                    //   // color: Colors.white,
+                    //   borderRadius: BorderRadius.circular(40),
+                    //   shape: BoxShape.rectangle,
+                    //   border: Border(
+                    //     left: BorderSide(
+                    //       color: Colors.red.shade700,
+                    //       width: 2.5,
+                    //     ),
+                    //   ),
+                    // ),
+                    child: Center(
+                      child: Text(
+                        category.categoryName.toUpperCase(),
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.ubuntuCondensed(
+                          color: Colors.red.shade700,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 1.2,
+                          wordSpacing: 1.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -252,27 +380,116 @@ class _NewSaleState extends State<NewSale> {
       }
       if (item.categoryName == categoryName)
         widgets.add(
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                this.model.order.addItem(item);
-              });
-            },
-            child: Card(
-              elevation: 4,
-              color: Colors.amberAccent,
-              child: Center(
-                child: Text(
-                  item.name,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: 'Ubuntu',
-                    letterSpacing: 1.0,
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            elevation: 3,
+            color: Colors.white,
+            child: InkWell(
+              onTap: () {
+                setState(() {
+                  this.model.order.addItem(item);
+                });
+              },
+              child: Stack(
+                children: [
+                  Positioned(
+                    left: 0,
+                    top: 0,
+                    child: Container(
+                      height: Config.getDeviceHeight(context) * 0.2,
+                      width: Config.getDeviceWidth(context) * 0.159,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10),
+                        ),
+                        image: DecorationImage(
+                          image: item.photo != null
+                              ? NetworkImage(item.photo)
+                              : AssetImage('assets/no_image1.jpg'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  item.photo == null
+                      ? Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'No Image'.toUpperCase(),
+                            style: GoogleFonts.anton(
+                              color: Colors.white70,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                      : Container(),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      height: Config.getDeviceHeight(context) * 0.094,
+                      width: Config.getDeviceWidth(context) * 0.158,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                  item.name.toUpperCase(),
+                                  textAlign: TextAlign.left,
+                                  // overflow: TextOverflow.fade,
+                                  style: GoogleFonts.ubuntuCondensed(
+                                    color: Colors.grey.shade800,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 0,
+                                    wordSpacing: 1.0,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.star,
+                                      size: 10,
+                                      color: Colors.yellow.shade900,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      size: 10,
+                                      color: Colors.yellow.shade900,
+                                    ),
+                                    Icon(
+                                      Icons.star_half_outlined,
+                                      size: 10,
+                                      color: Colors.yellow.shade900,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -328,19 +545,23 @@ class _NewSaleState extends State<NewSale> {
       List<Map<String, dynamic>> count = await db.rawQuery(
           'SELECT IFNULL(COUNT(id),0) AS count FROM ${SalesDetailTable.tableName} WHERE ${SalesDetailTable.salesMasterId} = ?',
           [model.salesMaster.localId]);
-      Map<String,dynamic> saleMasterData = NewSaleController.getSalesMasterData(model);
+      Map<String, dynamic> saleMasterData =
+          NewSaleController.getSalesMasterData(model);
+
       ///EDIT ORDER
       if (count[0]['count'] > 0) {
         setState(() {
           isNew = false;
         });
-        localId = await NewSaleController.editPreviousOrder(model.salesMaster, saleMasterData);
+        localId = await NewSaleController.editPreviousOrder(
+            model.salesMaster, saleMasterData);
       } else {
         ///NEW ORDER INSERTION
         setState(() {
           isNew = true;
         });
-        localId = await NewSaleController.newSaleOrder(saleMasterData, model.order, model.salesMaster.orderType);
+        localId = await NewSaleController.newSaleOrder(
+            saleMasterData, model.order, model.salesMaster.orderType);
       } //ELSE
       ///insert sales_details
       this.model.order.itemList.forEach((item) {
