@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/pages/settings_screen.dart';
 import 'package:food_app/pages/splash_screen.dart';
-import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 
 void main() => runApp(

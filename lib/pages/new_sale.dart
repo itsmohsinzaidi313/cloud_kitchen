@@ -1,14 +1,11 @@
 import 'package:draggable_floating_button/draggable_floating_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
 import 'package:food_app/controller/new_sale_controller.dart';
 import 'package:food_app/controller/order_controller.dart';
-import 'package:food_app/database/table_object/orders_table.dart';
 import 'package:food_app/database/table_object/sales_detail_table.dart';
-import 'package:food_app/database/table_object/sales_master_table.dart';
-import 'package:food_app/database/table_object/tables_table.dart';
-import 'package:food_app/models/generic_models/customer_order.dart';
 import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/item.dart';
 import 'package:food_app/models/objects/sales_detail.dart';
@@ -16,7 +13,6 @@ import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/new_sale_model.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
-import 'package:food_app/shared/lib.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -34,6 +30,7 @@ class NewSale extends StatefulWidget {
 class _NewSaleState extends State<NewSale> {
   final NewSaleModel model;
   bool isNew = false;
+  int _index = -1;
   double xPosition = 0.0;
   double yPosition = 0.0;
 
@@ -138,14 +135,65 @@ class _NewSaleState extends State<NewSale> {
                                   ),
                                 ),
                                 Container(
-                                  height:
-                                      Config.getDeviceHeight(context) * 0.12,
+                                  height: Config.getDeviceHeight(context) * 0.12,
                                   padding: EdgeInsets.only(top: 5),
                                   // decoration: BoxDecoration(border: Border.all(width: 2)),
-                                  child: ListView(
+                                  child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
-                                    children:
-                                        getCategoryWidgets(model.lstCategory),
+                                    itemCount: model.lstCategory.length,
+                                    itemBuilder: (context, index) {
+                                      return Card(
+                                        elevation: 2,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(40),
+                                        ),
+                                        color: _index == index ? Colors.white70 : Colors.white,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                categoryName = model.lstCategory[index].categoryName;
+                                                _index = index;
+                                              });
+                                            },
+                                            child: Row(
+                                              children: [
+                                                CircleAvatar(
+                                                  radius: 16,
+                                                  backgroundColor: Colors.yellow.shade700,
+                                                  child: CircleAvatar(
+                                                    backgroundColor: Colors.white,
+                                                    radius: 13,
+                                                    child: CircleAvatar(
+                                                      backgroundColor: Colors.grey.shade700,
+                                                      radius: 9,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  height: Config.getDeviceHeight(context) * 0.1,
+                                                  width: Config.getDeviceHeight(context) * 0.18,
+                                                  child: Center(
+                                                    child: Text(
+                                                      model.lstCategory[index].categoryName.toUpperCase(),
+                                                      textAlign: TextAlign.center,
+                                                      style: GoogleFonts.ubuntuCondensed(
+                                                        color: Colors.red.shade700,
+                                                        fontSize: 11,
+                                                        fontWeight: FontWeight.w700,
+                                                        letterSpacing: 1.2,
+                                                        wordSpacing: 1.0,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                                 Container(
@@ -174,68 +222,51 @@ class _NewSaleState extends State<NewSale> {
                               ],
                             ),
                           ),
-                          Flexible(
-                            flex: 1,
-                            child: Column(
-                              children: [
-                                Flexible(
-                                  flex: 1,
-                                  child: Container(
-                                    margin: EdgeInsets.all(8.0),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[100],
-                                      borderRadius: BorderRadius.circular(5),
-                                      shape: BoxShape.rectangle,
-                                      border: Border(
-                                        left: BorderSide(
-                                          color: Colors.grey[300],
-                                          width: 2,
-                                        ),
-                                        right: BorderSide(
-                                          color: Colors.grey[300],
-                                          width: 2,
-                                        ),
-                                        bottom: BorderSide(
-                                          color: Colors.grey[300],
-                                          width: 2,
-                                        ),
-                                        top: BorderSide(
-                                          color: Colors.grey[300],
-                                          width: 2,
-                                        ),
-                                      ),
-                                    ),
-                                    child: model.order.itemList.length > 0 ?
-                                    ListView(
+                          Expanded(
+                            child: Container(
+                              height: Config.getDeviceHeight(context),
+                              margin: EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[100],
+                                borderRadius: BorderRadius.circular(5),
+                                shape: BoxShape.rectangle,
+                                border: Border(
+                                  left: BorderSide(
+                                    color: Colors.grey[300],
+                                    width: 2,
+                                  ),
+                                  right: BorderSide(
+                                    color: Colors.grey[300],
+                                    width: 2,
+                                  ),
+                                  bottom: BorderSide(
+                                    color: Colors.grey[300],
+                                    width: 2,
+                                  ),
+                                  top: BorderSide(
+                                    color: Colors.grey[300],
+                                    width: 2,
+                                  ),
+                                ),
+                              ),
+                              child: model.order.itemList.length > 0
+                                  ? ListView(
                                       children: getCartItemsWidgets(List.from(
                                           model.order.itemList.reversed)),
-                                          ) :
-                                          Align(
-                                            alignment: Alignment.center,
-                                            child: Column(
-                                              children: [
-                                                Image(
-                                                  image: AssetImage(
-                                                      'assets/empty_list.png',
-                                                  ),
-                                                  height: 100,
-                                                  width: 100,
-                                                ),
-                                                Text(
-                                                  'Empty list'.toUpperCase(),
-                                                  style: GoogleFonts.aBeeZee(
-                                                    color: Colors.grey,
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontStyle: FontStyle.italic,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                    )
+                                  : Container(
+                                      alignment: Alignment.bottomCenter,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          // scale: 10,
+                                          image: AssetImage(
+                                            'assets/empty_cart.png',
                                           ),
+                                        ),
+                                      ),
+
                                     ),
-                                  ),
-                              ],
                             ),
                           ),
                         ],
@@ -245,7 +276,7 @@ class _NewSaleState extends State<NewSale> {
                 ),
               ),
               DraggableFloatingActionButton(
-                backgroundColor: Colors.white,
+                backgroundColor: Colors.yellow.shade700,
                 elevation: 5,
                 tooltip: 'Submit Order',
                 appContext: context,
@@ -257,7 +288,7 @@ class _NewSaleState extends State<NewSale> {
                 child: Icon(
                   Icons.done_rounded,
                   size: 35,
-                  color: Colors.red,
+                  color: Colors.yellowAccent.shade100,
                 ),
                 onPressed: () {
                   model.order.itemList.length > 0
@@ -302,75 +333,64 @@ class _NewSaleState extends State<NewSale> {
     }
   }
 
-  List<Widget> getCategoryWidgets(List<Category> lstCategory) {
-    List<Widget> widgets = [];
-    lstCategory.forEach((category) {
-      widgets.add(
-        Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(40),
-          ),
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: InkWell(
-              onTap: () {
-                setState(() {
-                  categoryName = category.categoryName;
-                });
-              },
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 16,
-                    backgroundColor: Colors.yellow.shade700,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 13,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.grey.shade700,
-                        radius: 9,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: Config.getDeviceHeight(context) * 0.1,
-                    width: Config.getDeviceHeight(context) * 0.18,
-                    // decoration: BoxDecoration(
-                    //   // color: Colors.white,
-                    //   borderRadius: BorderRadius.circular(40),
-                    //   shape: BoxShape.rectangle,
-                    //   border: Border(
-                    //     left: BorderSide(
-                    //       color: Colors.red.shade700,
-                    //       width: 2.5,
-                    //     ),
-                    //   ),
-                    // ),
-                    child: Center(
-                      child: Text(
-                        category.categoryName.toUpperCase(),
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.ubuntuCondensed(
-                          color: Colors.red.shade700,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 1.2,
-                          wordSpacing: 1.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-    });
-    return widgets;
-  }
+  // List<Widget> getCategoryWidgets(List<Category> lstCategory) {
+  //   List<Widget> widgets = [];
+  //   lstCategory.forEach((category) {
+  //     widgets.add(
+  //       Card(
+  //         elevation: 2,
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(40),
+  //         ),
+  //         // color: isCategoryTapped ? Colors.grey.shade300 : Colors.white,
+  //         child: Padding(
+  //           padding: const EdgeInsets.all(8.0),
+  //           child: InkWell(
+  //             onTap: () {
+  //               setState(() {
+  //                 categoryName = category.categoryName;
+  //               });
+  //             },
+  //             child: Row(
+  //               children: [
+  //                 CircleAvatar(
+  //                   radius: 16,
+  //                   backgroundColor: Colors.yellow.shade700,
+  //                   child: CircleAvatar(
+  //                     backgroundColor: Colors.white,
+  //                     radius: 13,
+  //                     child: CircleAvatar(
+  //                       backgroundColor: Colors.grey.shade700,
+  //                       radius: 9,
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 Container(
+  //                   height: Config.getDeviceHeight(context) * 0.1,
+  //                   width: Config.getDeviceHeight(context) * 0.18,
+  //                   child: Center(
+  //                     child: Text(
+  //                       category.categoryName.toUpperCase(),
+  //                       textAlign: TextAlign.center,
+  //                       style: GoogleFonts.ubuntuCondensed(
+  //                         color: Colors.red.shade700,
+  //                         fontSize: 11,
+  //                         fontWeight: FontWeight.w700,
+  //                         letterSpacing: 1.2,
+  //                         wordSpacing: 1.0,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     );
+  //   });
+  //   return widgets;
+  // }
 
   List<Widget> getItemsWidgets(List<Item> lstItem, String categoryName) {
     List<Widget> widgets = [];
@@ -378,7 +398,7 @@ class _NewSaleState extends State<NewSale> {
       if (categoryName.isEmpty) {
         categoryName = item.categoryName;
       }
-      if (item.categoryName == categoryName)
+      if (item.categoryName == categoryName) {
         widgets.add(
           Card(
             shape: RoundedRectangleBorder(
@@ -448,40 +468,51 @@ class _NewSaleState extends State<NewSale> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Expanded(
-                                flex: 3,
+                                flex: 2,
                                 child: Text(
                                   item.name.toUpperCase(),
                                   textAlign: TextAlign.left,
-                                  // overflow: TextOverflow.fade,
                                   style: GoogleFonts.ubuntuCondensed(
                                     color: Colors.grey.shade800,
-                                    fontSize: 12,
+                                    fontSize: 11,
                                     fontWeight: FontWeight.bold,
                                     letterSpacing: 0,
-                                    wordSpacing: 1.0,
+                                    wordSpacing: 0.5,
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.star,
-                                      size: 10,
-                                      color: Colors.yellow.shade900,
+                              Column(
+                                // mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    'PKR ${double.parse(item.salePrice).toInt().toString()}',
+                                    style: GoogleFonts.ubuntuCondensed(
+                                      color: Colors.grey.shade500,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                      wordSpacing: 1.0,
                                     ),
-                                    Icon(
-                                      Icons.star,
-                                      size: 10,
-                                      color: Colors.yellow.shade900,
-                                    ),
-                                    Icon(
-                                      Icons.star_half_outlined,
-                                      size: 10,
-                                      color: Colors.yellow.shade900,
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.star,
+                                        size: 10,
+                                        color: Colors.yellow.shade900,
+                                      ),
+                                      Icon(
+                                        Icons.star,
+                                        size: 10,
+                                        color: Colors.yellow.shade900,
+                                      ),
+                                      Icon(
+                                        Icons.star_half_outlined,
+                                        size: 10,
+                                        color: Colors.yellow.shade900,
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -494,6 +525,7 @@ class _NewSaleState extends State<NewSale> {
             ),
           ),
         );
+      }
     });
     return widgets;
   }
