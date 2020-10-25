@@ -30,9 +30,10 @@ class NewSale extends StatefulWidget {
 class _NewSaleState extends State<NewSale> {
   final NewSaleModel model;
   bool isNew = false;
-  int _index = -1;
+  int _index = 0;
   double xPosition = 0.0;
   double yPosition = 0.0;
+  String _element = '';
 
   _NewSaleState(this.model);
 
@@ -138,62 +139,9 @@ class _NewSaleState extends State<NewSale> {
                                   height: Config.getDeviceHeight(context) * 0.12,
                                   padding: EdgeInsets.only(top: 5),
                                   // decoration: BoxDecoration(border: Border.all(width: 2)),
-                                  child: ListView.builder(
+                                  child: ListView(
                                     scrollDirection: Axis.horizontal,
-                                    itemCount: model.lstCategory.length,
-                                    itemBuilder: (context, index) {
-                                      return Card(
-                                        elevation: 2,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(40),
-                                        ),
-                                        color: _index == index ? Colors.white70 : Colors.white,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                categoryName = model.lstCategory[index].categoryName;
-                                                _index = index;
-                                              });
-                                            },
-                                            child: Row(
-                                              children: [
-                                                CircleAvatar(
-                                                  radius: 16,
-                                                  backgroundColor: Colors.yellow.shade700,
-                                                  child: CircleAvatar(
-                                                    backgroundColor: Colors.white,
-                                                    radius: 13,
-                                                    child: CircleAvatar(
-                                                      backgroundColor: Colors.grey.shade700,
-                                                      radius: 9,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: Config.getDeviceHeight(context) * 0.1,
-                                                  width: Config.getDeviceHeight(context) * 0.18,
-                                                  child: Center(
-                                                    child: Text(
-                                                      model.lstCategory[index].categoryName.toUpperCase(),
-                                                      textAlign: TextAlign.center,
-                                                      style: GoogleFonts.ubuntuCondensed(
-                                                        color: Colors.red.shade700,
-                                                        fontSize: 11,
-                                                        fontWeight: FontWeight.w700,
-                                                        letterSpacing: 1.2,
-                                                        wordSpacing: 1.0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    },
+                                    children: getCategoryWidgets(model.lstCategory),
                                   ),
                                 ),
                                 Container(
@@ -276,7 +224,7 @@ class _NewSaleState extends State<NewSale> {
                 ),
               ),
               DraggableFloatingActionButton(
-                backgroundColor: Colors.yellow.shade700,
+                backgroundColor: Colors.red,
                 elevation: 5,
                 tooltip: 'Submit Order',
                 appContext: context,
@@ -288,7 +236,7 @@ class _NewSaleState extends State<NewSale> {
                 child: Icon(
                   Icons.done_rounded,
                   size: 35,
-                  color: Colors.yellowAccent.shade100,
+                  color: Colors.red.shade100,
                 ),
                 onPressed: () {
                   model.order.itemList.length > 0
@@ -333,72 +281,78 @@ class _NewSaleState extends State<NewSale> {
     }
   }
 
-  // List<Widget> getCategoryWidgets(List<Category> lstCategory) {
-  //   List<Widget> widgets = [];
-  //   lstCategory.forEach((category) {
-  //     widgets.add(
-  //       Card(
-  //         elevation: 2,
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(40),
-  //         ),
-  //         // color: isCategoryTapped ? Colors.grey.shade300 : Colors.white,
-  //         child: Padding(
-  //           padding: const EdgeInsets.all(8.0),
-  //           child: InkWell(
-  //             onTap: () {
-  //               setState(() {
-  //                 categoryName = category.categoryName;
-  //               });
-  //             },
-  //             child: Row(
-  //               children: [
-  //                 CircleAvatar(
-  //                   radius: 16,
-  //                   backgroundColor: Colors.yellow.shade700,
-  //                   child: CircleAvatar(
-  //                     backgroundColor: Colors.white,
-  //                     radius: 13,
-  //                     child: CircleAvatar(
-  //                       backgroundColor: Colors.grey.shade700,
-  //                       radius: 9,
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 Container(
-  //                   height: Config.getDeviceHeight(context) * 0.1,
-  //                   width: Config.getDeviceHeight(context) * 0.18,
-  //                   child: Center(
-  //                     child: Text(
-  //                       category.categoryName.toUpperCase(),
-  //                       textAlign: TextAlign.center,
-  //                       style: GoogleFonts.ubuntuCondensed(
-  //                         color: Colors.red.shade700,
-  //                         fontSize: 11,
-  //                         fontWeight: FontWeight.w700,
-  //                         letterSpacing: 1.2,
-  //                         wordSpacing: 1.0,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //     );
-  //   });
-  //   return widgets;
-  // }
+  List<Widget> getCategoryWidgets(List<Category> lstCategory) {
+    List<Widget> widgets = [];
+    lstCategory.forEach((category) {
+      if(_element.isEmpty){
+        setState(() {
+          _element = category.categoryName;
+        });
+      }
+      widgets.add(
+        Card(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(40),
+          ),
+          color: _element == category.categoryName ? Colors.white70 : Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+              onTap: () {
+                setState(() {
+                  categoryName = category.categoryName;
+                  _element = category.categoryName;
+                });
+              },
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 16,
+                    backgroundColor: Colors.yellow.shade700,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 13,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.grey.shade700,
+                        radius: 9,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: Config.getDeviceHeight(context) * 0.1,
+                    width: Config.getDeviceHeight(context) * 0.18,
+                    child: Center(
+                      child: Text(
+                        category.categoryName.toUpperCase(),
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.ubuntuCondensed(
+                          color: Colors.red.shade700,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 1.2,
+                          wordSpacing: 1.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    });
+    return widgets;
+  }
 
   List<Widget> getItemsWidgets(List<Item> lstItem, String categoryName) {
     List<Widget> widgets = [];
     lstItem.forEach((item) {
-      if (categoryName.isEmpty) {
-        categoryName = item.categoryName;
-      }
-      if (item.categoryName == categoryName) {
+      // if (categoryName.isEmpty) {
+      //   categoryName = item.categoryName;
+      // }
+      if (item.categoryName == _element) {
         widgets.add(
           Card(
             shape: RoundedRectangleBorder(
@@ -543,12 +497,37 @@ class _NewSaleState extends State<NewSale> {
           child: Card(
             elevation: 4,
             child: ListTile(
-              title: Text(item.name),
-              subtitle: Text(item.quantity),
+              leading: CircleAvatar(
+                backgroundColor: Colors.yellow.shade700,
+                radius: 16,
+                child: CircleAvatar(
+                  radius: 14,
+                  backgroundImage: item.photo != null ? NetworkImage(item.photo) : AssetImage('assets/no_image1.jpg'),
+                ),
+              ),
+              title: Text(
+                  item.name.toUpperCase(),
+                style: GoogleFonts.ubuntuCondensed(
+                  color: Colors.black87,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.5,
+                  wordSpacing: 0.5,
+                ),
+              ),
+              subtitle: Text(
+                ' ${double.parse(item.salePrice).toInt().toString()} x ${item.quantity} '
+                    '= ${(double.parse(item.salePrice).toInt() * int.parse(item.quantity)).toString()}',
+                style: TextStyle(
+                  color: Colors.grey.shade700,
+                  fontSize: 10,
+                ),
+              ),
               trailing: IconButton(
                 icon: Icon(
-                  Icons.close,
-                  color: Colors.red,
+                  Icons.delete_outline_rounded,
+                  color: Colors.yellow.shade800,
+                  size: 20,
                 ),
                 onPressed: () {
                   setState(() {
