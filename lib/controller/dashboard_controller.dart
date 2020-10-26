@@ -31,7 +31,7 @@ class DashboardController {
           subtitle: 'Application setting'),
       DashboardItem(
           img: 'assets/register.png',
-          name: 'Register',
+          name: 'Close Register',
           subtitle: 'Close your register'),
       DashboardItem(
           img: 'assets/logout.png', name: 'Logout', subtitle: 'You can rest'),

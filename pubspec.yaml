@@ -1,5 +1,5 @@
 name: food_app
-description: App like optp
+description: Cloud based POS solution.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
