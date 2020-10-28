@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_app/controller/login_controller.dart';
 import 'package:food_app/controller/order_controller.dart';
 import 'package:food_app/controller/order_type_controller.dart';
+import 'package:food_app/controller/report_controller.dart';
 import 'package:food_app/controller/shift_controller.dart';
 import 'package:food_app/models/view_models/dashboard_model.dart';
 import 'package:food_app/models/generic_models/dashboard_item.dart';
@@ -113,8 +114,11 @@ class _DashboardState extends State<Dashboard> {
     } else if (dashboardItem.name == 'Database') {
       Navigator.of(context)
           .push(new MaterialPageRoute(builder: (context) => SqlView()));
-    } else if (dashboardItem.name == 'Register') {
-      AppTheme.showAlertDialogYN(context,
+    } else if(dashboardItem.name == 'Reports'){
+      ReportController().launch(context);
+    }
+      else if (dashboardItem.name == 'Register') {
+        AppTheme.showAlertDialogYN(context,
           title: 'Close Register',
           message: 'Are you sure?',
           onYes: () {

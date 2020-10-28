@@ -12,6 +12,7 @@ import 'package:food_app/pages/new_sale.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/data_lists.dart';
 import 'package:food_app/shared/lib.dart';
+import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 
 class NewSaleController {
@@ -95,6 +96,7 @@ class NewSaleController {
   }
 
   static Map<String,dynamic> getSalesMasterData(NewSaleModel model) {
+
     Map<String, dynamic> saleMasterData = {
       // SalesMasterTable[0] :  ,
       SalesMasterTable.customerId: model.order.customerId,
@@ -117,7 +119,7 @@ class NewSaleController {
       SalesMasterTable.deliveryCharge: '0.0',
       SalesMasterTable.subTotalDiscountValue: '',
       SalesMasterTable.subTotalDiscountType: 'plain',
-      SalesMasterTable.saleDate: Config.getCurrentDate(),
+      SalesMasterTable.saleDate: Config.getCurrentShiftDate(Config.currentShift.openingBalanceDateTime),
       SalesMasterTable.dateTime: Config.getCurrentDateTimeDBFormat(),
       SalesMasterTable.orderTime: Config.getCurrentTime24Format(),
       SalesMasterTable.cookingStartTime: Config.getCurrentDateTimeDBFormat(),
