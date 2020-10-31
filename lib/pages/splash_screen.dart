@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/login_controller.dart';
 import 'package:food_app/database/project_database.dart';

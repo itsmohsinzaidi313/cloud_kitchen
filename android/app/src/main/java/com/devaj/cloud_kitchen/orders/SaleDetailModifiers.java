@@ -2,7 +2,7 @@ package com.devaj.cloud_kitchen.orders;
 
 import com.google.gson.annotations.SerializedName;
 
-class SaleDetailModifiers {
+public class SaleDetailModifiers {
     @SerializedName("id")
     private String id;
     @SerializedName("modifier_id")

@@ -1,10 +1,10 @@
 package com.devaj.cloud_kitchen.orders;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
-class SalesDetail {
+
+public class SalesDetail {
     @SerializedName("id")
     private String id;
     @SerializedName("food_menu_id")

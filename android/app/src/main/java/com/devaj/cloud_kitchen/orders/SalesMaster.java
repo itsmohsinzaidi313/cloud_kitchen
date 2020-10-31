@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-class SalesMaster {
+public class SalesMaster {
     @SerializedName("customer_id")
     private String customerId;
     @SerializedName("sale_no")

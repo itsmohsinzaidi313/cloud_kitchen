@@ -6,15 +6,14 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-
 import java.util.List;
 import java.util.Map;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodChannel;
+
 
 public class MainActivity extends FlutterActivity {
     private static final String ORDER_UPLOAD_CHANNEL = "com.devaj.cloudKitchen/orderService";

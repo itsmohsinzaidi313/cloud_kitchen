@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/bloc/dialog_message_bloc.dart';
-import 'package:food_app/bloc/dialog_message_event.dart';
+import 'package:food_app/controller/login_controller.dart';
 import 'package:food_app/controller/shift_controller.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/models/objects/user.dart';
@@ -9,7 +9,6 @@ import 'package:food_app/pages/sql_view_page.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/data_lists.dart';
-import 'package:food_app/shared/lib.dart';
 import 'package:logger/logger.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,7 +54,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _bloc.dispose();
   }
@@ -68,88 +66,60 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   initState() {
     super.initState();
-      Config.database
-          .query(ShiftTable.tableName,
-          columns: [ShiftTable.deviceKey],
-          orderBy: '${ShiftTable.localId} desc')
-          .then((value) {
-        setState(() {
-          try {
-            if (value.isNotEmpty) {
-              String dKey = value[0][ShiftTable.deviceKey] == null
-                  ? ''
-                  : value[0][ShiftTable.deviceKey];
-              if (dKey.isNotEmpty) {
-                _deviceKeyPresent = dKey == '' ? false : true;
-                deviceKey.text = dKey;
-                Config.authToken = dKey;
-                Config.installApi = dKey;
-                progressDialog =
-                    AppTheme
-                        .showProgressDialog(
-                      context,
-                      widget: StreamBuilder(
-                        initialData:
-                        Text('Loading...'),
-                        stream: _bloc.message,
-                        builder: (context,
-                            snapshot) {
-                          return snapshot.data;
-                        },
-                      ),
-                    );
-                progressDialog.show();
-                loadData(_bloc)
-                    .then((value) => _deviceKeyPresent = value)
-                    .whenComplete(() {
-                  // setState(() {
-                  // DataLists.instance.listDevices.where((element) => dKey == element.deviceKey);
-                  DataLists.instance.listDevices.forEach((element) {
-                    if (dKey == element.deviceKey) {
-                      Config.currentDevice = element;
-                      progressDialog.hide();
-                    }
-                  });
-                  // });
+    Config.database
+        .query(ShiftTable.tableName,
+            columns: [ShiftTable.deviceKey],
+            orderBy: '${ShiftTable.localId} desc')
+        .then((value) {
+      setState(() {
+        try {
+          if (value.isNotEmpty) {
+            String dKey = value[0][ShiftTable.deviceKey] == null
+                ? ''
+                : value[0][ShiftTable.deviceKey];
+            if (dKey.isNotEmpty) {
+              _deviceKeyPresent = dKey == '' ? false : true;
+              deviceKey.text = dKey;
+              Config.authToken = dKey;
+              Config.installApi = dKey;
+              progressDialog = AppTheme.showProgressDialog(
+                context,
+                widget: StreamBuilder(
+                  initialData: Text('Loading...'),
+                  stream: _bloc.message,
+                  builder: (context, snapshot) {
+                    return snapshot.data;
+                  },
+                ),
+              );
+              progressDialog.show();
+              LoginController.loadData(_bloc)
+                  .then((value) => _deviceKeyPresent = value)
+                  .whenComplete(() {
+                // setState(() {
+                // DataLists.instance.listDevices.where((element) => dKey == element.deviceKey);
+                DataLists.instance.listDevices.forEach((element) {
+                  if (dKey == element.deviceKey) {
+                    Config.currentDevice = element;
+                    progressDialog.hide();
+                  }
                 });
-              } else {
-                progressDialog.hide();
-                _deviceKeyPresent = false;
-              }
+                // });
+              });
+            } else {
+              progressDialog.hide();
+              _deviceKeyPresent = false;
             }
-          } catch (e) {
-            progressDialog.hide();
-            _log.e(e);
           }
-        });
-      }).catchError((onError) {
-        progressDialog.hide();
-        _deviceKeyPresent = false;
+        } catch (e) {
+          progressDialog.hide();
+          _log.e(e);
+        }
       });
-
-  }
-
-  Future<bool> loadData(DialogMessageBloc bloc) async {
-    bool value1 = await Lib.install(bloc);
-    if (value1) {
-      bool value2 = await DataLists.importToDatabase(Config.database, bloc);
-      if (value2) {
-        _log.w('Online data loaded');
-        return true;
-      } else {
-        _log.w('Online data load failed');
-        return false;
-      }
-    } else {
-      bool value2 = await DataLists.importToMemory(Config.database, bloc);
-      if (value2) {
-        _log.w('Offline data loaded');
-        return true;
-      } else {
-        _log.w('Offline data load failed');
-        return false;
-      }
-    }
+    }).catchError((onError) {
+      progressDialog.hide();
+      _deviceKeyPresent = false;
+    });
   }
 
   bool validateUser(email, pass) {
@@ -345,7 +315,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                                           deviceKey.text;
                                                       Config.installApi =
                                                           deviceKey.text;
-                                                      loadData(_bloc).then((value) {
+                                                      LoginController.loadData(
+                                                              _bloc)
+                                                          .then((value) {
                                                         if (value) {
                                                           DataLists.instance
                                                               .listDevices
