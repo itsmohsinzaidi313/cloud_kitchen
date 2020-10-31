@@ -13,7 +13,7 @@ void main() {
     runApp(
       MaterialApp(
         title: Config.appTitle,
-        debugShowCheckedModeBanner: false,
+        // debugShowCheckedModeBanner: false,
         initialRoute: '/splashScreen',
         routes: {
           '/': (context) => SettingsScreen(),

@@ -26,9 +26,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
   PaymentMethod selectedPayment;
   List<TextEditingController> controllers = [
     new TextEditingController(),
+    new TextEditingController(),
     new TextEditingController()
   ];
-  List<bool> check = [false, false];
+  List<bool> check = [false, false, false];
+  double discount = 0.0;
   String _type;
 
   @override
@@ -142,6 +144,66 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     ),
                   ),
                 ),
+                Container(
+                  margin: EdgeInsets.only(
+                    top: 20,
+                  ),
+                  child: Card(
+                    color: Colors.grey[100],
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.wallet_giftcard_rounded,
+                        color: Colors.grey,
+                      ),
+                      title: TextField(
+                        keyboardType: TextInputType.number,
+                        controller: controllers[2],
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.amberAccent, width: 1),
+                          ),
+                          hintText: 'Discount',
+                        ),
+                      ),
+                      trailing: Container(
+                        width: Config.getDeviceHeight(context) * 0.15,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.attach_money_outlined,
+                                ),
+                                onPressed: () {
+                                  if (controllers[2].text.isNotEmpty) {
+                                    discount = double.parse(controllers[2].text);
+                                    print('Discount by Cash: $discount');
+                                  }
+                                },
+                              ),
+                            ),
+                            Expanded(child: VerticalDivider()),
+                            Expanded(
+                              child: IconButton(
+                                icon: Text('%'),
+                                onPressed: () {
+                                  if (controllers[2].text.isNotEmpty) {
+                                    discount =
+                                        double.parse(model.salesMaster.dueAmount) *
+                                            (double.parse(controllers[2].text) / 100);
+                                    print('Discount by Discount: $discount');
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 getWidget(_type),
                 SizedBox(
                   width: double.infinity,
@@ -163,12 +225,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   SalesMasterTable.tableName,
                                   {
                                     SalesMasterTable.orderStatus: '3',
+                                    SalesMasterTable.totalDiscountAmount : discount.toString(),
+                                    SalesMasterTable.subTotalDiscountAmount : discount.toString(),
+                                    SalesMasterTable.subTotalWithDiscount :
+                                      (double.parse(model.salesMaster.dueAmount) - discount).toString(),
                                     SalesMasterTable.paidAmount:
                                         model.salesMaster.dueAmount
                                   },
                                   where: '${SalesMasterTable.localId} = ?',
                                   whereArgs: [model.salesMaster.localId]);
-                              if (model.salesMaster.orderType == SalesMaster.DINEIN) {
+                              if (model.salesMaster.orderType ==
+                                  SalesMaster.DINEIN) {
                                 db.update(OrdersTable.tableName,
                                     {OrdersTable.delStatus: OrdersTable.FREE},
                                     where: '${OrdersTable.saleId} = ?',
@@ -241,11 +308,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
               keyboardType: TextInputType.number,
               controller: controllers[0],
               decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.amberAccent, width: 1),
-                  ),
-                  hintText: 'Amount',
-                  errorText: check[0] ? 'Required' : null),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.amberAccent, width: 1),
+                ),
+                hintText: 'Amount',
+                errorText: check[0] ? 'Required' : null,
+              ),
             ),
           ),
         ),

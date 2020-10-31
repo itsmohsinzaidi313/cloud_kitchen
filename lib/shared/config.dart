@@ -95,6 +95,12 @@ class Config {
     return currentDateTime;
   }
 
+  static String convertDateTimeToDate(DateTime date) {
+    DateFormat formatDateTime = DateFormat("yyyy-MM-dd");
+    String currentDateTime = formatDateTime.format(date);
+    return currentDateTime;
+  }
+
   static String getCurrentDate() {
     DateTime dateTime = DateTime.now();
     DateFormat formatDateTime = DateFormat("yyyy-MM-dd");

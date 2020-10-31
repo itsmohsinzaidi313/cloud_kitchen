@@ -191,7 +191,7 @@ class Lib {
   static String codeGenerator(String prefix, int id) {
     String code = '$prefix/';
     // String deviceId = Config().currentShift.deviceKey;
-    String deviceId = '1';
+    String deviceId = Config.currentDevice.serverId;
     if (int.parse(deviceId) < 10) {
       deviceId = '0$deviceId/';
     }
