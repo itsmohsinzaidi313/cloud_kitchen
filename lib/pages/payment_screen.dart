@@ -225,7 +225,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   SalesMasterTable.tableName,
                                   {
                                     SalesMasterTable.orderStatus: '3',
-                                    SalesMasterTable.totalDiscountAmount :
+                                    SalesMasterTable.totalDiscountAmount : discount.toString(),
+                                    SalesMasterTable.subTotalDiscountAmount : discount.toString(),
+                                    SalesMasterTable.subTotalWithDiscount :
                                       (double.parse(model.salesMaster.dueAmount) - discount).toString(),
                                     SalesMasterTable.paidAmount:
                                         model.salesMaster.dueAmount

@@ -14,6 +14,7 @@ class ReportController{
     reportModel.salesMaster =   SalesMaster();
     reportModel.listOfSalesMaster = [];
     reportModel.listOfSalesDetails = [];
+    reportModel.viewType = 1;
     getSalesMasterTable().whenComplete(() => print('Done'));
   }
 

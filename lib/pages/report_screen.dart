@@ -1,5 +1,6 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:food_app/controller/report_controller.dart';
 import 'package:food_app/database/columns.dart';
 import 'package:food_app/models/objects/sales_detail.dart';
@@ -20,10 +21,11 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
-
   AutoCompleteTextField autoCompleteTextField;
   GlobalKey<AutoCompleteTextFieldState<SalesMaster>> key = GlobalKey();
   ReportModel model;
+  bool isDuplicateSlipView = false;
+
   _ReportScreenState(this.model);
 
   @override
@@ -53,7 +55,9 @@ class _ReportScreenState extends State<ReportScreen> {
                         child: Card(
                           elevation: 3,
                           child: InkWell(
-                            onTap: () {},
+                            onTap: () => setState(() {
+                              model.viewType = 1;
+                            }),
                             child: Container(
                               // height: Config.getDeviceHeight(context) * 0.4,
                               width: Config.getDeviceWidth(context) * 1.5,
@@ -86,7 +90,10 @@ class _ReportScreenState extends State<ReportScreen> {
                         child: Card(
                           elevation: 3,
                           child: InkWell(
-                            onTap: () {},
+                            onTap: () => setState(() {
+                              model.viewType = 2;
+                              isDuplicateSlipView = false;
+                            }),
                             child: Container(
                               // height: Config.getDeviceHeight(context) * 0.4,
                               width: Config.getDeviceWidth(context) * 1.5,
@@ -119,7 +126,42 @@ class _ReportScreenState extends State<ReportScreen> {
             ),
             Expanded(
               flex: 5,
-              child: getView(1),
+              child: SingleChildScrollView(
+                child: Container(
+                  height: Config.getDeviceHeight(context),
+                  width: Config.getDeviceWidth(context),
+                  child: Column(
+                    children: [
+                      !isDuplicateSlipView
+                          ? Container()
+                          : Expanded(
+                              flex: 1,
+                              child: getView(model.viewType),
+                            ),
+                      Expanded(
+                        flex: !isDuplicateSlipView ? 1 : 4,
+                        child: SingleChildScrollView(
+                          physics: ClampingScrollPhysics(),
+                          child: Container(
+                            width: Config.getDeviceWidth(context) * 0.9,
+                            height: Config.getDeviceHeight(context),
+                            padding: EdgeInsets.all(8.0),
+                            margin: EdgeInsets.only(
+                              bottom: 60,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: duplicateSlip(isDuplicateSlipView,
+                                model.listOfSalesDetails, model.salesMaster),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -127,11 +169,11 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  Widget getView(int viewType){
-
-    switch(viewType){
+  Widget getView(int viewType) {
+    switch (viewType) {
       case 1:
         return Container(
+          padding: EdgeInsets.all(8.0),
           margin: EdgeInsets.only(
             right: 5,
             top: 4,
@@ -147,7 +189,8 @@ class _ReportScreenState extends State<ReportScreen> {
                 children: [
                   Expanded(
                     child: Container(
-                      child: autoCompleteTextField = AutoCompleteTextField<SalesMaster>(
+                      child: autoCompleteTextField =
+                          AutoCompleteTextField<SalesMaster>(
                         clearOnSubmit: false,
                         style: TextStyle(
                           color: Colors.black,
@@ -159,23 +202,26 @@ class _ReportScreenState extends State<ReportScreen> {
                           hintStyle: TextStyle(color: Colors.grey),
                         ),
                         keyboardType: TextInputType.number,
-                        itemSubmitted: (item){
+                        itemSubmitted: (item) {
                           setState(() {
                             model.salesMaster = item;
-                            autoCompleteTextField.textField.controller.text = item.saleNo;
-                            print('${autoCompleteTextField.textField.controller.text}');
+                            autoCompleteTextField.textField.controller.text =
+                                item.saleNo;
+                            print(
+                                '${autoCompleteTextField.textField.controller.text}');
                           });
                         },
                         key: key,
                         suggestions: model.listOfSalesMaster,
-                        itemBuilder: (context, item){
+                        itemBuilder: (context, item) {
                           return row(item);
                         },
-                        itemFilter: (item, query){
+                        itemFilter: (item, query) {
                           return item.saleNo.toLowerCase().startsWith(
-                              Lib.codeGenerator('ORD', int.parse(query)).toLowerCase());
+                              Lib.codeGenerator('ORD', int.parse(query))
+                                  .toLowerCase());
                         },
-                        itemSorter: (a, b){
+                        itemSorter: (a, b) {
                           return a.saleNo.compareTo(b.saleNo);
                         },
                       ),
@@ -184,18 +230,166 @@ class _ReportScreenState extends State<ReportScreen> {
                   IconButton(
                     icon: Icon(Icons.search_rounded),
                     color: Colors.grey,
-                    onPressed: () async{
+                    onPressed: () async {
+                      model.listOfSalesDetails.clear();
                       int id = int.parse(model.salesMaster.localId);
                       ReportController.getSalesDetailsList(id).then((value) {
                         value.forEach((element) {
-                          model.listOfSalesDetails.add(SalesDetails.fromJson(element));
+                          model.listOfSalesDetails
+                              .add(SalesDetails.fromJson(element));
                         });
                       }).whenComplete(() {
-                        model.listOfSalesDetails.forEach((element) => print(element.menuName));
+                        // model.listOfSalesDetails.forEach((element)
+                        //     {
+                        //       print(
+                        //           '${element.menuName} : ${element.menuUnitPrice} x ${element.qty} = ${double.parse(element.menuUnitPrice) * double.parse(element.qty)}');
+                        //     });
+                        //   print('Discount: ${model.salesMaster.subTotalDiscountAmount}\nTotal Amount: ${model.salesMaster.subTotal}\n Net Amount: ${model.salesMaster.subTotalWithDiscount}');
+                        // duplicateSlip(isDuplicateSlipView,
+                        //     model.listOfSalesDetails, model.salesMaster);
+                        setState(() {
+                          isDuplicateSlipView = true;
+                        });
                       });
                     },
                   ),
                 ],
+              ),
+            ],
+          ),
+        );
+        break;
+
+      default:
+        return Container();
+        break;
+    }
+  }
+
+  Widget duplicateSlip(
+      bool view, List<SalesDetails> list, SalesMaster salesMaster) {
+    switch (view) {
+      case true:
+        return Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Order No:'),
+                  Text(
+                    salesMaster.saleNo,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Date:'),
+                  Text(
+                    salesMaster.saleDate,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                ],
+              ),
+              DataTable(
+                dividerThickness: 0.0,
+                showBottomBorder: true,
+                dataRowHeight: 20,
+                columns: <DataColumn>[
+                  DataColumn(
+                    label: Text(
+                      'Name',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'Unit Price',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'Qty',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'Total Price',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                ],
+                rows: getDataRowList(model.listOfSalesDetails),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Amount:'),
+                  Text(
+                    salesMaster.subTotal,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Discount:'),
+                  Text(
+                    salesMaster.totalDiscountAmount,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                ],
+              ),
+              Divider(
+                thickness: 3,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Net Amount:'),
+                  Text(
+                    salesMaster.subTotalWithDiscount,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+        break;
+
+      case false:
+        return Container(
+          child: Column(
+            children: [
+              FlatButton(
+                onPressed: () {
+                  DatePicker.showDatePicker(context,
+                      showTitleActions: true,
+                      minTime: DateTime(2000, 1, 1),
+                      maxTime: DateTime(2100, 1, 1),
+                      // theme: DatePickerTheme(
+                      //   containerHeight: 100.0,
+                      // ),
+                      onChanged: (date) {
+                    print('change $date');
+                  }, onConfirm: (date) {
+                    Config.convertDateTimeToDate(date);
+                    print(
+                        'Confirm DATE: ${Config.convertDateTimeToDate(date)}');
+                  }, currentTime: DateTime.now(), locale: LocaleType.en);
+                },
+                child: Text(
+                  'Pick Date',
+                  style: TextStyle(color: Colors.blue),
+                ),
               ),
             ],
           ),
@@ -218,7 +412,9 @@ class _ReportScreenState extends State<ReportScreen> {
             fontSize: 16,
           ),
         ),
-        SizedBox(width: 10 ,),
+        SizedBox(
+          width: 10,
+        ),
         Text(
           item.saleNo,
           style: TextStyle(
@@ -227,5 +423,19 @@ class _ReportScreenState extends State<ReportScreen> {
         ),
       ],
     );
+  }
+
+  List<DataRow> getDataRowList(List<SalesDetails> listOfSalesDetails) {
+    List<DataRow> rows = [];
+    listOfSalesDetails.forEach((element) {
+      rows.add(DataRow(cells: <DataCell>[
+        DataCell(Text(element.menuName)),
+        DataCell(Text(element.menuUnitPrice)),
+        DataCell(Text(element.qty)),
+        DataCell(Text(
+            '${double.parse(element.menuUnitPrice) * double.parse(element.qty)}')),
+      ]));
+    });
+    return rows;
   }
 }

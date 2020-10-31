@@ -6,7 +6,7 @@ import 'package:food_app/shared/config.dart';
 void main() => runApp(
       MaterialApp(
         title: Config.appTitle,
-        debugShowCheckedModeBanner: false,
+        // debugShowCheckedModeBanner: false,
         initialRoute: '/splashScreen',
         routes: {
           '/' : (context) => SettingsScreen(),
