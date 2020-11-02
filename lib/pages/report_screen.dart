@@ -1,8 +1,6 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:food_app/controller/report_controller.dart';
-import 'package:food_app/database/columns.dart';
 import 'package:food_app/models/objects/sales_detail.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/report_model.dart';
@@ -25,7 +23,7 @@ class _ReportScreenState extends State<ReportScreen> {
   GlobalKey<AutoCompleteTextFieldState<SalesMaster>> key = GlobalKey();
   ReportModel model;
   bool isDuplicateSlipView = false;
-
+  String fromDate = '', toDate = '';
   _ReportScreenState(this.model);
 
   @override
@@ -132,14 +130,16 @@ class _ReportScreenState extends State<ReportScreen> {
                   width: Config.getDeviceWidth(context),
                   child: Column(
                     children: [
-                      !isDuplicateSlipView
-                          ? Container()
-                          : Expanded(
+                      // !isDuplicateSlipView
+                      //     ? Container()
+                      //     :
+                    Expanded(
                               flex: 1,
                               child: getView(model.viewType),
                             ),
                       Expanded(
-                        flex: !isDuplicateSlipView ? 1 : 4,
+                        flex:4,
+                        // flex: !isDuplicateSlipView ? 1 : 4,
                         child: SingleChildScrollView(
                           physics: ClampingScrollPhysics(),
                           child: Container(
@@ -260,6 +260,49 @@ class _ReportScreenState extends State<ReportScreen> {
         );
         break;
 
+      case 2:
+        return Container(
+          padding: EdgeInsets.all(8.0),
+          margin: EdgeInsets.only(
+            right: 5,
+            top: 4,
+            bottom: 4,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Text('From: '),
+                  RaisedButton(
+                    onPressed: () async{
+                      fromDate = await _selectDate(context: context, firstDate: DateTime(2000,1,1));
+                      print('From DATE: $fromDate');
+                    },
+                    child: Text('Select date'),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text('To: '),
+                  RaisedButton(
+                    onPressed: () async {
+                      toDate = await _selectDate(context: context, firstDate: DateTime.parse(fromDate));
+                      print('To DATE: $toDate');
+                    },
+                    child: Text('Select date'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+        break;
       default:
         return Container();
         break;
@@ -364,42 +407,31 @@ class _ReportScreenState extends State<ReportScreen> {
           ),
         );
         break;
-
-      case false:
-        return Container(
-          child: Column(
-            children: [
-              FlatButton(
-                onPressed: () {
-                  DatePicker.showDatePicker(context,
-                      showTitleActions: true,
-                      minTime: DateTime(2000, 1, 1),
-                      maxTime: DateTime(2100, 1, 1),
-                      // theme: DatePickerTheme(
-                      //   containerHeight: 100.0,
-                      // ),
-                      onChanged: (date) {
-                    print('change $date');
-                  }, onConfirm: (date) {
-                    Config.convertDateTimeToDate(date);
-                    print(
-                        'Confirm DATE: ${Config.convertDateTimeToDate(date)}');
-                  }, currentTime: DateTime.now(), locale: LocaleType.en);
-                },
-                child: Text(
-                  'Pick Date',
-                  style: TextStyle(color: Colors.blue),
-                ),
-              ),
-            ],
-          ),
-        );
-        break;
+      //
+      // case false:
+      //   return Container();
+      //   break;
 
       default:
         return Container();
         break;
     }
+  }
+
+
+  Future<String> _selectDate({BuildContext context, DateTime firstDate}) async {
+    DateTime selectedDate = DateTime.now();
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: firstDate,
+        lastDate: DateTime(2100,1,1));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+        print(selectedDate);
+      });
+    return selectedDate.toString();
   }
 
   Widget row(SalesMaster item) {
