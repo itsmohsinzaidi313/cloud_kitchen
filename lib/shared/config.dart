@@ -16,6 +16,7 @@ class Config {
   static String _authToken;
   static set authToken(String value) => _authToken = value;
   static String get authToken => _authToken;
+
   static String _installApi;
 
   static String get installApi => _installApi;
@@ -34,7 +35,7 @@ class Config {
       'http://$serverIP/cloud-kitchen/api/closeRegister?auth=$authToken';
   static const int screenStartTime = 3;
 
-  static const int serviceCycleDelay = 5; // SECONDS
+  static const int serviceCycleDelay = 5; //SECONDS
 
   static User _currentUser;
   static set currentUser(user) => _currentUser = user;

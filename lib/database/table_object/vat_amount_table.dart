@@ -8,8 +8,8 @@ class VatAmountTable{
   static const String serverId = 'id';
   static const String name = 'name';
   static const String percentage = 'percentage';
-  static const String userId = 'company_id';
-  static const String companyId = 'user_id';
+  static const String userId = 'user_id';
+  static const String companyId = 'company_id';
   static const String delStatus = 'del_status';
 
   static const List<String> columnsName = [
@@ -31,4 +31,5 @@ class VatAmountTable{
     SqlStructure.text,
     SqlStructure.text
   ];
+
 }

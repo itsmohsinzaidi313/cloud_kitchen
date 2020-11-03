@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
+import 'package:food_app/controller/payment_controller.dart';
 import 'package:food_app/database/table_object/orders_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
+import 'package:food_app/models/generic_models/customer_order.dart';
 import 'package:food_app/models/objects/payment_method.dart';
 import 'package:food_app/models/objects/sales_master.dart';
+import 'package:food_app/models/objects/vat_amount.dart';
 import 'package:food_app/models/view_models/payment_view_model.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
@@ -190,9 +193,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 icon: Text('%'),
                                 onPressed: () {
                                   if (controllers[2].text.isNotEmpty) {
-                                    discount =
-                                        double.parse(model.salesMaster.dueAmount) *
-                                            (double.parse(controllers[2].text) / 100);
+                                    discount = PaymentController.getDiscountByPercentage(double.parse(model.salesMaster.dueAmount), double.parse(controllers[2].text));
                                     print('Discount by Discount: $discount');
                                   }
                                 },
@@ -217,20 +218,27 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           context,
                           title: 'Question',
                           message: 'Are you sure?',
-                          onYes: () {
+                          onYes: () async{
                             if (!check[0] || !check[1]) {
-                              // PaymentController.uploadOrder(model.map);
+
+                              VatAmount vatAmount = await VatAmount.getVatAmount(int.parse(Config.currentShift.companyId));
                               Database db = Config.database;
+                              String getDiscount = PaymentController.getDiscount(double.parse(model.salesMaster.dueAmount), discount).toString();
+
+                              String getAmountWithTax = (PaymentController.getAmountWithTax(double.parse(model.salesMaster.dueAmount),
+                                  double.parse(vatAmount.percentage)) - discount).toString();
+
                               db.update(
                                   SalesMasterTable.tableName,
                                   {
                                     SalesMasterTable.orderStatus: '3',
                                     SalesMasterTable.totalDiscountAmount : discount.toString(),
                                     SalesMasterTable.subTotalDiscountAmount : discount.toString(),
-                                    SalesMasterTable.subTotalWithDiscount :
-                                      (double.parse(model.salesMaster.dueAmount) - discount).toString(),
-                                    SalesMasterTable.paidAmount:
-                                        model.salesMaster.dueAmount
+                                    SalesMasterTable.subTotalWithDiscount : getDiscount,
+                                    SalesMasterTable.paidAmount: vatAmount != null ?
+                                        getAmountWithTax : getDiscount,
+                                    SalesMasterTable.totalPayable: vatAmount != null ?
+                                    getAmountWithTax : getDiscount
                                   },
                                   where: '${SalesMasterTable.localId} = ?',
                                   whereArgs: [model.salesMaster.localId]);

@@ -113,16 +113,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   // });
                 });
               } else {
+                dispose();
                 progressDialog.hide();
                 _deviceKeyPresent = false;
               }
             }
           } catch (e) {
+            dispose();
             progressDialog.hide();
+            _deviceKeyPresent = false;
             _log.e(e);
           }
         });
       }).catchError((onError) {
+        dispose();
         progressDialog.hide();
         _deviceKeyPresent = false;
       });
@@ -366,6 +370,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                                 .hide();
                                                           });
                                                         } else {
+                                                          dispose();
                                                           progressDialog.hide();
                                                           AppTheme.showAlertDialogOK(
                                                               context,
@@ -380,6 +385,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         }
                                                       });
                                                     } else {
+                                                      dispose();
                                                       progressDialog.hide();
                                                     }
                                                   }
