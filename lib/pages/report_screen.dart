@@ -26,7 +26,7 @@ class _ReportScreenState extends State<ReportScreen> {
   ReportModel model;
   bool isDuplicateSlipView = false, isReportView = false;
   String fromDate = 'Tap to select date', toDate = 'Tap to select date';
-  double totalDiscount = 0.0, totalSaleAmount = 0.0, netSale = 0.0;
+  double totalDiscount = 0.0, totalPaidAmount = 0.0, totalSubTotal = 0.0;
 
   _ReportScreenState(this.model);
 
@@ -373,16 +373,16 @@ class _ReportScreenState extends State<ReportScreen> {
                   tooltip: 'Search',
                   onPressed: () {
                     model.listOfSalesMaster.clear();
-                    totalDiscount = 0.0;
-                    totalSaleAmount = 0.0;
-                    netSale = 0.0;
+                    // totalDiscount = 0.0;
+                    // totalPaidAmount = 0.0;
+                    // totalSubTotal = 0.0;
                     model.salesMaster.getSalesByDate(fromDate, toDate).then((value) {
                       if(value != null){
                         value.forEach((element) {
                           model.listOfSalesMaster.add(element);
-                          // totalDiscount += double.parse(element.totalDiscountAmount);
-                          // totalSaleAmount += double.parse(element.subTotal);
-                          // netSale += double.parse(element.paidAmount);
+                          totalDiscount += double.parse(element.totalDiscountAmount);
+                          totalSubTotal += double.parse(element.subTotalWithDiscount);
+                          totalPaidAmount += double.parse(element.paidAmount);
                         });
                       } else{
                         print('Sales Master List Contains Nothing');
@@ -516,7 +516,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   ),
                   DataColumn(
                     label: Text(
-                      'Discount',
+                      'Paid Amount',
                       style: TextStyle(fontStyle: FontStyle.italic),
                     ),
                   ),
@@ -528,7 +528,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   ),
                   DataColumn(
                     label: Text(
-                      'Net Sale',
+                      'Discount',
                       style: TextStyle(fontStyle: FontStyle.italic),
                     ),
                   ),
@@ -538,9 +538,9 @@ class _ReportScreenState extends State<ReportScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Total Discount:'),
+                  Text('Total Paid Amount:'),
                   Text(
-                    totalDiscount.toString(),
+                    totalPaidAmount.toString(),
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
                 ],
@@ -550,7 +550,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 children: [
                   Text('Total Sub Total:'),
                   Text(
-                    totalSaleAmount.toString(),
+                    totalSubTotal.toString(),
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
                 ],
@@ -558,9 +558,9 @@ class _ReportScreenState extends State<ReportScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Total Net Sale:'),
+                  Text('Total Discount:'),
                   Text(
-                    netSale.toString(),
+                    totalDiscount.toString(),
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
                 ],
@@ -640,10 +640,10 @@ class _ReportScreenState extends State<ReportScreen> {
     List<DataRow> rows = [];
     listOfSalesMaster.forEach((element) {
       rows.add(DataRow(cells: <DataCell>[
-        DataCell(Text(element.saleDate)),
-        DataCell(Text(element.totalDiscountAmount)),
-        DataCell(Text(element.subTotal)),
+        DataCell(Text(element.dateTime)),
         DataCell(Text(element.paidAmount)),
+        DataCell(Text(element.subTotalWithDiscount)),
+        DataCell(Text(element.totalDiscountAmount)),
       ]));
     });
     return rows;

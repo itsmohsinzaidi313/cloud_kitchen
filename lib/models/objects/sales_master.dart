@@ -95,7 +95,7 @@ class SalesMaster {
         saleNo = json[SalesMasterTable.saleNo],
         totalItems = json[SalesMasterTable.totalItems],
         subTotal = json[SalesMasterTable.subTotal],
-        paidAmount = json[SalesMasterTable.paidAmount],
+        paidAmount = double.tryParse(json[SalesMasterTable.paidAmount].toString()).toStringAsFixed(2).toString(),
         dueAmount = json[SalesMasterTable.dueAmount],
         disc = json[SalesMasterTable.disc],
         discActual = json[SalesMasterTable.discActual],
@@ -106,9 +106,9 @@ class SalesMaster {
         tableId = json[SalesMasterTable.tableId],
         totalItemDiscountAmount =
             json[SalesMasterTable.totalItemDiscountAmount],
-        subTotalWithDiscount = json[SalesMasterTable.subTotalWithDiscount],
+        subTotalWithDiscount = double.tryParse(json[SalesMasterTable.subTotalWithDiscount].toString()).toStringAsFixed(2).toString(),
         subTotalDiscountAmount = json[SalesMasterTable.subTotalDiscountAmount],
-        totalDiscountAmount = json[SalesMasterTable.totalDiscountAmount],
+        totalDiscountAmount = double.tryParse(json[SalesMasterTable.totalDiscountAmount].toString()).toStringAsFixed(2).toString(),
         deliveryCharge = json[SalesMasterTable.deliveryCharge],
         subTotalDiscountValue = json[SalesMasterTable.subTotalDiscountValue],
         subTotalDiscountType = json[SalesMasterTable.subTotalDiscountType],
@@ -273,14 +273,14 @@ class SalesMaster {
   }
 
   Future<List<SalesMaster>> getSalesByDate(String fromDate, String toDate) async {
-    String query = "select ${SalesMasterTable.dateTime}, sum(cast(${SalesMasterTable.paidAmount} as decimal)) , sum(cast(${SalesMasterTable.subTotalWithDiscount} as decimal)) , sum(cast(${SalesMasterTable.totalDiscountAmount} as decimal)) from sales_master WHERE ${SalesMasterTable.orderStatus} = 3 AND datetime(${SalesMasterTable.dateTime}) >= datetime('$fromDate 00:00:00') AND datetime(${SalesMasterTable.dateTime}) <= datetime('$toDate 23:59:59') group by strftime('%Y-%m-%d', ${SalesMasterTable.dateTime})";
+    String query = "select ${SalesMasterTable.dateTime}, sum(cast(${SalesMasterTable.paidAmount} as decimal)) as ${SalesMasterTable.paidAmount}, sum(cast(${SalesMasterTable.subTotalWithDiscount} as decimal)) as ${SalesMasterTable.subTotalWithDiscount} , sum(cast(${SalesMasterTable.totalDiscountAmount} as decimal)) as ${SalesMasterTable.totalDiscountAmount} from sales_master WHERE ${SalesMasterTable.orderStatus} = 3 AND datetime(${SalesMasterTable.dateTime}) >= datetime('$fromDate 00:00:00') AND datetime(${SalesMasterTable.dateTime}) <= datetime('$toDate 23:59:59') group by strftime('%Y-%m-%d', ${SalesMasterTable.dateTime})";
 
     String query1 = "SELECT * FROM ${SalesMasterTable.tableName} WHERE ${SalesMasterTable.orderStatus} = 3 AND datetime(${SalesMasterTable.dateTime}) >= datetime('$fromDate 00:00:00') AND datetime(${SalesMasterTable.dateTime}) <= datetime('$toDate 23:59:59')";
 
 
 
     List<SalesMaster> salesList = [];
-    List<Map<String, dynamic>> salesMap = await Config.database.rawQuery(query );
+    List<Map<String, dynamic>> salesMap = await Config.database.rawQuery(query);
     salesMap.forEach((element) => salesList.add(SalesMaster.fromJson(element)));
     return salesList;
 

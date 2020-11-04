@@ -117,7 +117,7 @@ class _DashboardState extends State<Dashboard> {
     } else if(dashboardItem.name == 'Reports'){
       ReportController().launch(context);
     }
-      else if (dashboardItem.name == 'Register') {
+      else if (dashboardItem.name == 'Close Register') {
         AppTheme.showAlertDialogYN(context,
           title: 'Close Register',
           message: 'Are you sure?',
