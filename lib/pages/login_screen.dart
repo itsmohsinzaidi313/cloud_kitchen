@@ -338,6 +338,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                                 .hide();
                                                           });
                                                         } else {
+                                                          dispose();
                                                           progressDialog.hide();
                                                           AppTheme.showAlertDialogOK(
                                                               context,
@@ -352,6 +353,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         }
                                                       });
                                                     } else {
+                                                      dispose();
                                                       progressDialog.hide();
                                                     }
                                                   }

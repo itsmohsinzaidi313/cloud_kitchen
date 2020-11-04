@@ -195,50 +195,6 @@ class _ShiftScreen extends State<ShiftScreen> {
                           hintText: 'Closing Amount',
                           errorText: checkField ? errorMessage : null),
                     ),
-                    // trailing: RaisedButton(
-                    //   elevation: 2.0,
-                    //   onPressed: () {
-                    //     setState(() {
-                    //       checkField = closingAmount.text == '' ? true : false;
-                    //       errorMessage = 'Required.';
-                    //     });
-                    //
-                    //     if (!checkField) {
-                    //       double amount = double.parse(closingAmount.text);
-                    //       if (amount > 0) {
-                    //         Config.currentShift.closingBalance =
-                    //             closingAmount.text;
-                    //         Config.currentShift.closingBalanceDateTime =
-                    //             Config.getCurrentDateTimeDBFormat();
-                    //         Config.database.update(
-                    //             ShiftTable.tableName,
-                    //             {
-                    //               ShiftTable.closingBalance: closingAmount.text,
-                    //               ShiftTable.closingBalanceDateTime:
-                    //                   Config.getCurrentDateTimeDBFormat(),
-                    //               ShiftTable.registerStatus: '2'
-                    //             },
-                    //             where: '${ShiftTable.localId} = ?',
-                    //             whereArgs: [Config.currentShift.remoteId]);
-                    //         // Lib.closeRegister(Config.currentShift);
-                    //         LoginController().pushAndRemoveUntil(context);
-                    //       } else {
-                    //         checkField = true;
-                    //         errorMessage = 'Invalid Amount.';
-                    //       }
-                    //     }
-                    //   },
-                    //   color: AppTheme.listTextColor,
-                    //   child: Text(
-                    //     'SUBMIT',
-                    //     style: TextStyle(
-                    //       color: Colors.white,
-                    //       fontWeight: FontWeight.bold,
-                    //       // fontStyle: FontStyle.italic,
-                    //       letterSpacing: 2.0,
-                    //     ),
-                    //   ),
-                    // ),
                   ),
                 ),
               ),

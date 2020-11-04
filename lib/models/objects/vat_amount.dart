@@ -1,4 +1,5 @@
 import 'package:food_app/database/table_object/vat_amount_table.dart';
+import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -48,4 +49,13 @@ class VatAmount {
 
   Future<bool> insertIntoDatabase(Database db) async =>
       await Lib.insertIntoDatabase(db, VatAmountTable.tableName, getValues());
+
+  static Future<VatAmount> getVatAmount(int id) async {
+    List<VatAmount> vatList = [];
+    List<Map<String, dynamic>> vatAmount = await Config.database.query(VatAmountTable.tableName, where: '${VatAmountTable.companyId} = ?', whereArgs: [id], limit: 1);
+    vatAmount.forEach((element) {
+      vatList.add(VatAmount.fromJson(element));
+    });
+    return vatList[0];
+  }
 }

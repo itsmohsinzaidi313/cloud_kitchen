@@ -48,20 +48,6 @@ class CustomerOrder {
   List<Item> get itemList => _itemList;
   set setItemList(List<Item> value) => _itemList = value;
 
-  // void less(Item item) {
-  //   if (itemList.length > 0) {
-  //     for (int i = 0; i < itemList.length; i++) {
-  //       String prodId = itemList[i].code;
-  //       if (prodId == item.code) {
-  //         int productQty = int.parse(itemList[i].quantity);
-  //         if ((productQty - int.parse(itemList[i].quantity)) >= 0) {
-  //           itemList[i].less();
-  //         }
-  //         break;
-  //       }
-  //     }
-  //   }
-  // }
 
   void addItem(Item item) {
     if (!this.itemList.contains(item)) {

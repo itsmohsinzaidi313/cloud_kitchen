@@ -73,4 +73,19 @@ class PaymentController {
       log('Response Timeout', name: 'Request Timeout');
     }
   }
+
+  static double getDiscount(double totalAmount, double discount) {
+    double res = totalAmount - discount;
+    return res;
+  }
+
+  static double getDiscountByPercentage(double totalAmount, double percentage){
+    double res = totalAmount * (percentage / 100);
+    return res;
+  }
+
+  static double getAmountWithTax (double totalAmount, double tax){
+    double res = (totalAmount + (tax * totalAmount)/100);
+    return res;
+  }
 }
