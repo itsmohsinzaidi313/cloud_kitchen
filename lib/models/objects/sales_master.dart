@@ -273,11 +273,8 @@ class SalesMaster {
   }
 
   Future<List<SalesMaster>> getSalesByDate(String fromDate, String toDate) async {
+
     String query = "select ${SalesMasterTable.dateTime}, sum(cast(${SalesMasterTable.paidAmount} as decimal)) as ${SalesMasterTable.paidAmount}, sum(cast(${SalesMasterTable.subTotalWithDiscount} as decimal)) as ${SalesMasterTable.subTotalWithDiscount} , sum(cast(${SalesMasterTable.totalDiscountAmount} as decimal)) as ${SalesMasterTable.totalDiscountAmount} from sales_master WHERE ${SalesMasterTable.orderStatus} = 3 AND datetime(${SalesMasterTable.dateTime}) >= datetime('$fromDate 00:00:00') AND datetime(${SalesMasterTable.dateTime}) <= datetime('$toDate 23:59:59') group by strftime('%Y-%m-%d', ${SalesMasterTable.dateTime})";
-
-    String query1 = "SELECT * FROM ${SalesMasterTable.tableName} WHERE ${SalesMasterTable.orderStatus} = 3 AND datetime(${SalesMasterTable.dateTime}) >= datetime('$fromDate 00:00:00') AND datetime(${SalesMasterTable.dateTime}) <= datetime('$toDate 23:59:59')";
-
-
 
     List<SalesMaster> salesList = [];
     List<Map<String, dynamic>> salesMap = await Config.database.rawQuery(query);

@@ -12,10 +12,18 @@ class ReportController{
   ReportController(){
     reportModel = ReportModel();
     reportModel.salesMaster =   SalesMaster();
-    reportModel.listOfSalesMaster = [];
+    reportModel.listOfSalesMasterForSlip = [];
+    reportModel.listOfSalesMasterForSale = [];
     reportModel.listOfSalesDetails = [];
     reportModel.viewType = 1;
     getSalesMasterTable().whenComplete(() => print('Done'));
+    reportModel.isDuplicateSlipView = false;
+    reportModel.isReportView = false;
+    reportModel.fromDate = 'Tap to select date';
+    reportModel.toDate = 'Tap to select date';
+    reportModel.totalDiscount = 0.0;
+    reportModel.totalPaidAmount = 0.0;
+    reportModel.totalSubTotal = 0.0;
   }
 
   launch(BuildContext context) => Navigator.of(context).push(
@@ -29,8 +37,8 @@ class ReportController{
 
   Future getSalesMasterTable() async {
     List<Map<String, dynamic>> map = await Config.database.query(SalesMasterTable.tableName);
-    map.forEach((element) => reportModel.listOfSalesMaster.add(SalesMaster.fromJson(element)));
-    reportModel.listOfSalesMaster.forEach((element) => print('${element.saleNo}\n'));
+    map.forEach((element) => reportModel.listOfSalesMasterForSlip.add(SalesMaster.fromJson(element)));
+    reportModel.listOfSalesMasterForSlip.forEach((element) => print('${element.saleNo}\n'));
   }
 
 
