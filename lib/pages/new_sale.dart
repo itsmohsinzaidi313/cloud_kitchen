@@ -30,7 +30,6 @@ class NewSale extends StatefulWidget {
 class _NewSaleState extends State<NewSale> {
   final NewSaleModel model;
   bool isNew = false;
-  int _index = 0;
   double xPosition = 0.0;
   double yPosition = 0.0;
   String _element = '';
@@ -578,6 +577,7 @@ class _NewSaleState extends State<NewSale> {
       this.model.order.itemList.forEach((item) {
         insertIntoSalesDetails(db, item, localId);
       });
+      this.model.order.resetQty();
       if (isNew) {
         DashboardController(context).pushAndRemoveUntil(context);
       } else {

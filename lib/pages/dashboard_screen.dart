@@ -115,7 +115,7 @@ class _DashboardState extends State<Dashboard> {
       Navigator.of(context)
           .push(new MaterialPageRoute(builder: (context) => SqlView()));
     } else if(dashboardItem.name == 'Reports'){
-      ReportController().launch(context);
+      ReportController().launch(context: context);
     }
       else if (dashboardItem.name == 'Close Register') {
         AppTheme.showAlertDialogYN(context,

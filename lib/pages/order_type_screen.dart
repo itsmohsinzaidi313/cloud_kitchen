@@ -28,6 +28,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
   _OrderTypeScreenState(this.model);
 
   GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
+
   int _viewType = 0;
   bool customerExists = true;
   int customerId = 0;
@@ -36,6 +37,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
   String errorMsg;
   bool takeawaySearchButton = false;
   bool deliverySearchButton = false;
+  ImageProvider dineIn, takeAway, delivery;
 
   List<TextEditingController> controllers = [
     new TextEditingController(),
@@ -48,6 +50,25 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
   ];
 
   List<bool> check = [false, false, false, false, false, false, false];
+
+  @override
+  void initState() {
+    super.initState();
+    gridViewType = 1;
+    errorMsg = '';
+    dineIn = AssetImage('assets/dine_in.jpg');
+    takeAway = AssetImage('assets/takeaway.jpg');
+    delivery = AssetImage('assets/delivery.jpg');
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    precacheImage(dineIn, context);
+    precacheImage(takeAway, context);
+    precacheImage(delivery, context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +103,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                             decoration: BoxDecoration(
                               image: DecorationImage(
                                 fit: BoxFit.cover,
-                                image: AssetImage('assets/dine_in.jpg'),
+                                image: dineIn,
                                 colorFilter: new ColorFilter.mode(
                                     Colors.black.withOpacity(0.6),
                                     BlendMode.dstATop),
@@ -119,7 +140,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                             decoration: BoxDecoration(
                               image: DecorationImage(
                                 fit: BoxFit.cover,
-                                image: AssetImage('assets/takeaway.jpg'),
+                                image: takeAway,
                                 colorFilter: new ColorFilter.mode(
                                     Colors.black.withOpacity(0.6),
                                     BlendMode.dstATop),
@@ -156,7 +177,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                             decoration: BoxDecoration(
                               image: DecorationImage(
                                 fit: BoxFit.cover,
-                                image: AssetImage('assets/delivery.jpg'),
+                                image: delivery,
                                 colorFilter: new ColorFilter.mode(
                                     Colors.black.withOpacity(0.6),
                                     BlendMode.dstATop),
@@ -193,13 +214,6 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    gridViewType = 1;
-    errorMsg = '';
   }
 
   int gridViewType;

@@ -10,6 +10,7 @@ import 'package:food_app/models/objects/vat_amount.dart';
 import 'package:food_app/models/view_models/payment_view_model.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:sqflite/sqflite.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -35,6 +36,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   List<bool> check = [false, false, false];
   double discount = 0.0;
   String _type;
+  Color cashColor = Colors.grey, percentageColor = Colors.grey;
 
   @override
   void initState() {
@@ -56,56 +58,64 @@ class _PaymentScreenState extends State<PaymentScreen> {
       body: SingleChildScrollView(
         child: Center(
           child: Container(
-            padding: EdgeInsets.all(20.0),
-            margin: EdgeInsets.only(top: 30),
+            padding: EdgeInsets.all(15.0),
+            margin: EdgeInsets.only(top: 10, bottom: 20),
             decoration: BoxDecoration(
               color: Colors.white,
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.circular(10),
             ),
-            width: Config.getDeviceWidth(context) * 0.5,
+            width: Config.getDeviceWidth(context) * 0.43,
             child: Column(
               children: [
-                Text(
-                  'Payment'.toUpperCase(),
-                  style: TextStyle(
+                Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(10),
                     color: Colors.redAccent,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 3.0,
+                  ),
+                  child: Text(
+                    'Payment'.toUpperCase(),
+                    style: GoogleFonts.ubuntuCondensed(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 3.0,
+                      // backgroundColor: Colors.redAccent
+                    ),
                   ),
                 ),
                 SizedBox(
-                  height: 40,
+                  height: 30
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
                       'Net Amount: ',
-                      style: TextStyle(
+                      style: GoogleFonts.ubuntuCondensed(
                         color: Colors.black,
                         fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic,
-                        // letterSpacing: 2.0,
+                        fontWeight: FontWeight.normal,
+                        backgroundColor: Colors.grey[200],
+                        letterSpacing: 1.0,
                       ),
                     ),
                     Text(
                       // model.map['due_amount'],
-                      model.salesMaster.dueAmount,
-                      style: TextStyle(
-                        color: Colors.grey[400],
+                      'Rs. ${model.salesMaster.dueAmount}/=',
+                      style:  GoogleFonts.ubuntuCondensed(
+                        color: Colors.grey[500],
                         fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic,
-                        // letterSpacing: 2.0,
+                        fontWeight: FontWeight.normal,
+                        letterSpacing: 0.5,
                       ),
                     ),
                   ],
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 15
                 ),
                 Container(
                   width: double.infinity,
@@ -127,6 +137,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           return DropdownMenuItem<PaymentMethod>(
                             value: payment,
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Icon(
                                   Icons.style,
@@ -147,7 +158,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     ),
                   ),
                 ),
-                Container(
+                getWidget(_type),
+                _type != '0' ? Container(
                   margin: EdgeInsets.only(
                     top: 20,
                   ),
@@ -164,7 +176,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderSide:
-                                BorderSide(color: Colors.amberAccent, width: 1),
+                            BorderSide(color: Colors.amberAccent, width: 1),
                           ),
                           hintText: 'Discount',
                         ),
@@ -177,24 +189,45 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             Expanded(
                               child: IconButton(
                                 icon: Icon(
-                                  Icons.attach_money_outlined,
+                                    Icons.attach_money_outlined,
+                                    color: cashColor
                                 ),
                                 onPressed: () {
                                   if (controllers[2].text.isNotEmpty) {
-                                    discount = double.parse(controllers[2].text);
+                                    setState(() {
+                                      cashColor = Colors.redAccent;
+                                      percentageColor = Colors.grey[300];
+                                    });
+                                    discount =
+                                        double.parse(controllers[2].text);
                                     print('Discount by Cash: $discount');
                                   }
                                 },
                               ),
                             ),
-                            Expanded(child: VerticalDivider()),
+                            Expanded(child: VerticalDivider(color: Colors.grey[400],)),
                             Expanded(
                               child: IconButton(
-                                icon: Text('%'),
+                                icon: Text(
+                                  '%',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: percentageColor
+                                  ),
+                                ),
                                 onPressed: () {
                                   if (controllers[2].text.isNotEmpty) {
-                                    discount = PaymentController.getDiscountByPercentage(double.parse(model.salesMaster.dueAmount), double.parse(controllers[2].text));
-                                    print('Discount by Discount: $discount');
+                                    setState(() {
+                                      percentageColor = Colors.redAccent;
+                                      cashColor = Colors.grey[300];
+                                    });
+                                    discount = PaymentController
+                                        .getDiscountByPercentage(
+                                        double.parse(
+                                            model.salesMaster.dueAmount),
+                                        double.parse(controllers[2].text));
+                                    print('Discount by Percentage: $discount');
                                   }
                                 },
                               ),
@@ -204,67 +237,94 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ),
                     ),
                   ),
-                ),
-                getWidget(_type),
-                SizedBox(
-                  width: double.infinity,
-                  child: RaisedButton(
-                    elevation: 0.0,
-                    onPressed: () {
-                      setState(() {
-                        check[0] = controllers[0].text == '' ? true : false;
-                        check[1] = controllers[1].text == '' ? true : false;
-                        AppTheme.showAlertDialogYN(
-                          context,
-                          title: 'Question',
-                          message: 'Are you sure?',
-                          onYes: () async{
-                            if (!check[0] || !check[1]) {
+                ) : SizedBox(),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 20),
+                  child: SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: RaisedButton(
+                      elevation: 0.0,
+                      onPressed: () {
+                        setState(() {
+                          check[0] = controllers[0].text == '' ? true : false;
+                          check[1] = controllers[1].text == '' ? true : false;
+                          AppTheme.showAlertDialogYN(
+                            context,
+                            title: 'Question',
+                            message: 'Are you sure?',
+                            onYes: () async {
+                              if (!check[0] || !check[1]) {
+                                VatAmount vatAmount =
+                                    await VatAmount.getVatAmount(
+                                        int.parse(Config.currentShift.companyId));
+                                Database db = Config.database;
+                                String getDiscount =
+                                    PaymentController.getDiscount(
+                                            double.parse(
+                                                model.salesMaster.dueAmount),
+                                            discount)
+                                        .toString();
 
-                              VatAmount vatAmount = await VatAmount.getVatAmount(int.parse(Config.currentShift.companyId));
-                              Database db = Config.database;
-                              String getDiscount = PaymentController.getDiscount(double.parse(model.salesMaster.dueAmount), discount).toString();
+                                String getAmountWithTax =
+                                    (PaymentController.getAmountWithTax(
+                                                double.parse(
+                                                    model.salesMaster.dueAmount),
+                                                double.parse(
+                                                    vatAmount.percentage)) -
+                                            discount)
+                                        .toString();
 
-                              String getAmountWithTax = (PaymentController.getAmountWithTax(double.parse(model.salesMaster.dueAmount),
-                                  double.parse(vatAmount.percentage)) - discount).toString();
-
-                              db.update(
-                                  SalesMasterTable.tableName,
-                                  {
-                                    SalesMasterTable.orderStatus: '3',
-                                    SalesMasterTable.totalDiscountAmount : discount.toString(),
-                                    SalesMasterTable.subTotalDiscountAmount : discount.toString(),
-                                    SalesMasterTable.subTotalWithDiscount : getDiscount,
-                                    SalesMasterTable.paidAmount: vatAmount != null ?
-                                        getAmountWithTax : getDiscount,
-                                    SalesMasterTable.totalPayable: vatAmount != null ?
-                                    getAmountWithTax : getDiscount
-                                  },
-                                  where: '${SalesMasterTable.localId} = ?',
-                                  whereArgs: [model.salesMaster.localId]);
-                              if (model.salesMaster.orderType ==
-                                  SalesMaster.DINEIN) {
-                                db.update(OrdersTable.tableName,
-                                    {OrdersTable.delStatus: OrdersTable.FREE},
-                                    where: '${OrdersTable.saleId} = ?',
+                                db.update(
+                                    SalesMasterTable.tableName,
+                                    {
+                                      SalesMasterTable.orderStatus: '3',
+                                      SalesMasterTable.totalDiscountAmount:
+                                          discount.toString(),
+                                      SalesMasterTable.subTotalDiscountAmount:
+                                          discount.toString(),
+                                      SalesMasterTable.subTotalWithDiscount:
+                                          getDiscount,
+                                      SalesMasterTable.paidAmount:
+                                          vatAmount != null
+                                              ? getAmountWithTax
+                                              : getDiscount,
+                                      SalesMasterTable.dueAmount:
+                                      vatAmount != null
+                                          ? getAmountWithTax
+                                          : getDiscount,
+                                      SalesMasterTable.totalPayable:
+                                          vatAmount != null
+                                              ? getAmountWithTax
+                                              : getDiscount
+                                    },
+                                    where: '${SalesMasterTable.localId} = ?',
                                     whereArgs: [model.salesMaster.localId]);
+                                if (model.salesMaster.orderType ==
+                                    SalesMaster.DINEIN) {
+                                  db.update(OrdersTable.tableName,
+                                      {OrdersTable.delStatus: OrdersTable.FREE},
+                                      where: '${OrdersTable.saleId} = ?',
+                                      whereArgs: [model.salesMaster.localId]);
+                                }
+                                DashboardController(context)
+                                    .pushAndRemoveUntil(context);
                               }
-                              DashboardController(context)
-                                  .launchAndReplacement();
-                            }
-                          },
-                          onNo: () => Navigator.pop(context),
-                        );
-                      });
-                    },
-                    color: AppTheme.listTextColor,
-                    child: Text(
-                      'SUBMIT',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        // fontStyle: FontStyle.italic,
-                        letterSpacing: 2.0,
+                            },
+                            onNo: () => Navigator.pop(context),
+                          );
+                        });
+                      },
+                      color: AppTheme.listTextColor,
+                      child: Text(
+                        'SUBMIT',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          // fontStyle: FontStyle.italic,
+                          letterSpacing: 3.0,
+                          fontSize: 15,
+                        ),
                       ),
                     ),
                   ),
@@ -314,6 +374,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             leading: Icon(Icons.monetization_on, color: Colors.grey),
             title: TextField(
               keyboardType: TextInputType.number,
+              readOnly: true,
               controller: controllers[0],
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -328,7 +389,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       );
     } else {
       return SizedBox(
-        height: 40,
+        height: 10,
       );
     }
   }
