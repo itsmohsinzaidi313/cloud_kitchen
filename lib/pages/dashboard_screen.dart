@@ -32,6 +32,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
         backgroundColor: Colors.red,
         elevation: 0.0,
@@ -122,6 +123,7 @@ class _DashboardState extends State<Dashboard> {
           title: 'Close Register',
           message: 'Are you sure?',
           onYes: () {
+            Navigator.pop(context);
             ShiftController shiftController = ShiftController(0);
             shiftController.model.layoutType = 2;
             shiftController.launchShiftClosing(context);

@@ -12,6 +12,7 @@ class OrderModel {
   List<String> _takeawayAndDeliveryColumns;
   List<PaymentMethod> _paymentMethodList;
   int orderType;
+  String _leadingText, _titleText, _trailingText;
 
 
   List<PaymentMethod> get paymentMethodList => _paymentMethodList;
@@ -60,5 +61,23 @@ class OrderModel {
 
   set takeawayAndDeliveryColumns(List<String> value) {
     _takeawayAndDeliveryColumns = value;
+  }
+
+  get trailingText => _trailingText;
+
+  set trailingText(value) {
+    _trailingText = value;
+  }
+
+  get titleText => _titleText;
+
+  set titleText(value) {
+    _titleText = value;
+  }
+
+  String get leadingText => _leadingText;
+
+  set leadingText(String value) {
+    _leadingText = value;
   }
 }
