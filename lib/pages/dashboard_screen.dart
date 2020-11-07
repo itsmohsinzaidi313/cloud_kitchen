@@ -32,6 +32,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
         backgroundColor: Colors.red,
         elevation: 0.0,
@@ -115,13 +116,14 @@ class _DashboardState extends State<Dashboard> {
       Navigator.of(context)
           .push(new MaterialPageRoute(builder: (context) => SqlView()));
     } else if(dashboardItem.name == 'Reports'){
-      ReportController().launch(context);
+      ReportController().launch(context: context);
     }
       else if (dashboardItem.name == 'Close Register') {
         AppTheme.showAlertDialogYN(context,
           title: 'Close Register',
           message: 'Are you sure?',
           onYes: () {
+            Navigator.pop(context);
             ShiftController shiftController = ShiftController(0);
             shiftController.model.layoutType = 2;
             shiftController.launchShiftClosing(context);

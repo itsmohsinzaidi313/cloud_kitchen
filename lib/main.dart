@@ -16,6 +16,13 @@ void main() {
         title: Config.appTitle,
         // debugShowCheckedModeBanner: false,
         initialRoute: '/splashScreen',
+        theme: ThemeData(
+          brightness: Brightness.light,
+          primarySwatch: Colors.red[400],
+          primaryColor: Colors.redAccent,
+          accentColor: Colors.yellow[700],
+
+        ),
         routes: {
           '/': (context) => SettingsScreen(),
           '/splashScreen': (context) => SplashScreen(),

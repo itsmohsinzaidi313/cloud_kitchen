@@ -50,8 +50,8 @@ class CustomerOrder {
 
 
   void addItem(Item item) {
-    if (!this.itemList.contains(item)) {
-      this.itemList.add(item);
+    if (!this._itemList.contains(item)) {
+      this._itemList.add(item);
     } else {
       String qty = this
           .itemList
@@ -66,6 +66,14 @@ class CustomerOrder {
           .toList()[0]
           .quantity = qty2.toString();
     }
+  }
+
+  void resetQty(){
+    this._itemList.forEach((element) {
+      if(int.tryParse(element.quantity) > 1){
+        element.quantity = 1.toString();
+      }
+    });
   }
 
   void removeItem(Item item) {

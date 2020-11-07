@@ -40,19 +40,6 @@ class OrderController {
       'Delete',
       'Edit'
     ];
-    getDeliveryList();
-    if (orderType == 1) {
-      //DINE IN
-
-    } else if (orderType == 2) {
-      //TAKE AWAY
-
-    } else if (orderType == 3) {
-      //DELIVERY
-
-    } else {}
-
-    // getHoldingOrders();
   }
 
   void getDineInList() async {
@@ -144,7 +131,6 @@ class OrderController {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    // getSpacer(context: context, width: 0.01),
                     InkWell(
                       child: Column(
                         children: [
@@ -158,7 +144,6 @@ class OrderController {
                       ),
                       onTap: () => onOk(element),
                     ),
-                    // getSpacer(context: context, width: 0.01),
                     InkWell(
                       child: Column(
                         children: [
@@ -173,20 +158,6 @@ class OrderController {
                       onTap: () => NewSaleController().editOrder(
                           new SalesMaster.fromJson(element), _orderType, context),
                     ),
-                    // InkWell(
-                    //   child: Column(
-                    //     children: [
-                    //       Icon(
-                    //         Icons.update_rounded,
-                    //         color: Colors.green,
-                    //         size: 20,
-                    //       ),
-                    //       Text('Change\nTable', style: TextStyle(color: Colors.grey),textAlign: TextAlign.center,),
-                    //     ],
-                    //   ),
-                    //   onTap: () {},
-                    // ),
-                    // getSpacer(context: context, width: 0.01),
                     InkWell(
                       child: Column(
                         children: [
@@ -200,9 +171,6 @@ class OrderController {
                       ),
                       onTap: () => onNo(element),
                     ),
-                    // getSpacer(context: context, width: 0.01),
-
-                    // getSpacer(context: context, width: 0.01),
                   ],
                 ),
               ],
@@ -317,7 +285,6 @@ class OrderController {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  // getSpacer(context: context, width: 0.01),
                   InkWell(
                     child: Column(
                       children: [
@@ -331,7 +298,6 @@ class OrderController {
                     ),
                     onTap: () => onOk(element),
                   ),
-                  // getSpacer(context: context, width: 0.01),
                   InkWell(
                     child: Column(
                       children: [
@@ -344,22 +310,8 @@ class OrderController {
                       ],
                     ),
                     onTap: () => NewSaleController().editOrder(
-                        new SalesMaster.fromJson(element), _orderType, context),
+                        new SalesMaster.fromJson(element),  _orderType, context),
                   ),
-                  // InkWell(
-                  //   child: Column(
-                  //     children: [
-                  //       Icon(
-                  //         Icons.update_rounded,
-                  //         color: Colors.green,
-                  //         size: 20,
-                  //       ),
-                  //       Text('Change\nTable', style: TextStyle(color: Colors.grey),textAlign: TextAlign.center,),
-                  //     ],
-                  //   ),
-                  //   onTap: () {},
-                  // ),
-                  // getSpacer(context: context, width: 0.01),
                   InkWell(
                     child: Column(
                       children: [
@@ -373,9 +325,6 @@ class OrderController {
                     ),
                     onTap: () => onNo(element),
                   ),
-                  // getSpacer(context: context, width: 0.01),
-
-                  // getSpacer(context: context, width: 0.01),
                 ],
               ),
             ],
@@ -485,7 +434,6 @@ class OrderController {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  // getSpacer(context: context, width: 0.01),
                   InkWell(
                     child: Column(
                       children: [
@@ -499,7 +447,6 @@ class OrderController {
                     ),
                     onTap: () => onOk(element),
                   ),
-                  // getSpacer(context: context, width: 0.01),
                   InkWell(
                     child: Column(
                       children: [
@@ -512,22 +459,8 @@ class OrderController {
                       ],
                     ),
                     onTap: () => NewSaleController().editOrder(
-                        new SalesMaster.fromJson(element), _orderType, context),
+                        new SalesMaster.fromJson(element),  _orderType, context),
                   ),
-                  // InkWell(
-                  //   child: Column(
-                  //     children: [
-                  //       Icon(
-                  //         Icons.update_rounded,
-                  //         color: Colors.green,
-                  //         size: 20,
-                  //       ),
-                  //       Text('Change\nTable', style: TextStyle(color: Colors.grey),textAlign: TextAlign.center,),
-                  //     ],
-                  //   ),
-                  //   onTap: () {},
-                  // ),
-                  // getSpacer(context: context, width: 0.01),
                   InkWell(
                     child: Column(
                       children: [
@@ -541,9 +474,6 @@ class OrderController {
                     ),
                     onTap: () => onNo(element),
                   ),
-                  // getSpacer(context: context, width: 0.01),
-
-                  // getSpacer(context: context, width: 0.01),
                 ],
               ),
             ],
@@ -623,11 +553,4 @@ class OrderController {
       width: Config.getDeviceWidth(context) * width,
     );
   }
-// static void onOrderCancelled(String orderId) async {
-//   Database db = Config.database;
-//   Map<String, dynamic> update = {
-//     SalesMasterTable.isDelete: 1.toString(),
-//   };
-//   await SalesMaster().updateSpecificIntoDb(db, update, 'id', orderId);
-// }
 }

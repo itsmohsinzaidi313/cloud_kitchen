@@ -4,7 +4,10 @@ import 'package:food_app/models/objects/sales_master.dart';
 class ReportModel{
 
   SalesMaster salesMaster;
-  List<SalesMaster> listOfSalesMaster;
+  List<SalesMaster> listOfSalesMasterForSlip, listOfSalesMasterForSale;
   List<SalesDetails> listOfSalesDetails;
   int viewType;
+  bool isDuplicateSlipView, isReportView;
+  String fromDate, toDate;
+  double totalDiscount, totalPaidAmount, totalSubTotal;
 }
