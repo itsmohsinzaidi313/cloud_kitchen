@@ -7,6 +7,7 @@ import 'package:food_app/shared/config.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  //Screen orientation set to landscape
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight])
       .then((_) {
