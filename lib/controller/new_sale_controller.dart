@@ -136,7 +136,8 @@ class NewSaleController {
       // SalesMasterTable[35]  :  ,
       SalesMasterTable.companyId: Config.currentUser.companyId,
       SalesMasterTable.isDelete: 0.toString(),
-      SalesMasterTable.isUpload: '0'
+      SalesMasterTable.isUpload: '0',
+      SalesMasterTable.shift: Config.currentShift.shift
     };
     return saleMasterData;
   }

@@ -8,25 +8,29 @@ import 'package:food_app/pages/shift_screen.dart';
 import 'package:food_app/shared/config.dart';
 
 class ShiftController {
+
   ShiftModel model;
+
+  static const List<DropdownMenuItem<String>> dropdownList = [
+    DropdownMenuItem(
+      value: 'Morning',
+      child: Text('Morning'),
+    ),
+    DropdownMenuItem(
+      value: 'Evening',
+      child: Text('Evening'),
+    ),
+    DropdownMenuItem(
+      value: 'Night',
+      child: Text('Night'),
+    )
+  ];
+
   ShiftController(int layoutType) {
     model = new ShiftModel();
     model.layoutType = layoutType;
 
-    this.model.shiftList = [
-      DropdownMenuItem(
-        value: 'Morning',
-        child: Text('Morning'),
-      ),
-      DropdownMenuItem(
-        value: 'Evening',
-        child: Text('Evening'),
-      ),
-      DropdownMenuItem(
-        value: 'Night',
-        child: Text('Night'),
-      )
-    ];
+    this.model.shiftList = dropdownList;
   }
   void launchShiftClosing(BuildContext context) {
     this.model.layoutType = 2;

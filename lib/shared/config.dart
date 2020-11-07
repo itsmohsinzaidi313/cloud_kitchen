@@ -8,9 +8,9 @@ import 'package:sqflite/sqflite.dart';
 
 class Config {
   static const String appTitle = 'Cloud Kitchen';
-  static const DATABASE databaseVersion = DATABASE.CREATE;
+  static const DATABASE databaseVersion = DATABASE.STABLE;
   static const String databaseName = 'CloudKitchen.db';
-
+  static bool isLogout = true;
   static const String serverIP = '72.52.142.19';
   //1626065997
   static String _authToken;

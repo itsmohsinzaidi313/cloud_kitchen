@@ -2,6 +2,7 @@ import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:food_app/controller/report_controller.dart';
+import 'package:food_app/controller/shift_controller.dart';
 import 'package:food_app/models/objects/sales_detail.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/report_model.dart';
@@ -9,6 +10,7 @@ import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:intl/intl.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class ReportScreen extends StatefulWidget {
   ReportModel model;
@@ -24,11 +26,15 @@ class _ReportScreenState extends State<ReportScreen> {
   GlobalKey<AutoCompleteTextFieldState<SalesMaster>> key = GlobalKey();
 
   ReportModel model;
+  String _dropdown = 'Morning';
+  bool _isDropdownButtonPressed = false;
+  ProgressDialog _progress;
 
   _ReportScreenState(this.model);
 
   @override
   Widget build(BuildContext context) {
+    _progress = AppTheme.showProgressDialog(context, isDismissible: false, widget: Center(child: Text('Loading..'),));
     return Scaffold(
       appBar: AppTheme.appBarNormal(
           context: context,
@@ -58,7 +64,8 @@ class _ReportScreenState extends State<ReportScreen> {
                               model.viewType = 1;
                               model.isReportView = false;
                             }),
-                            child: ReportController.getDuplicateSlipButton(context: context),
+                            child: ReportController.getDuplicateSlipButton(
+                                context: context),
                           ),
                         ),
                       ),
@@ -70,7 +77,8 @@ class _ReportScreenState extends State<ReportScreen> {
                               model.viewType = 2;
                               model.isDuplicateSlipView = false;
                             }),
-                            child: ReportController.getGenerateReportButton(context: context),
+                            child: ReportController.getGenerateReportButton(
+                                context: context),
                           ),
                         ),
                       ),
@@ -94,12 +102,22 @@ class _ReportScreenState extends State<ReportScreen> {
                       ),
                       model.viewType == 1
                           ? _getView2(
-                          child: ReportController.getDuplicateSlipView(context: context, view: model.isDuplicateSlipView,
-                              list: model.listOfSalesDetails, salesMaster: model.salesMaster))
-                          : _getView2(child: ReportController.getReportView(context: context, view: model.isReportView,
-                          list: model.listOfSalesMasterForSale, totalDiscount: model.totalDiscount.toString(),
-                          totalSubTotal: model.totalSubTotal.toString(), totalPaidAmount: model.totalPaidAmount.toString()))
-                          // : getView2(child: reportView(isReportView)),
+                              child: ReportController.getDuplicateSlipView(
+                                  context: context,
+                                  view: model.isDuplicateSlipView,
+                                  list: model.listOfSalesDetails,
+                                  salesMaster: model.salesMaster))
+                          : _getView2(
+                              child: ReportController.getReportView(
+                                  context: context,
+                                  view: model.isReportView,
+                                  shift: model.shift,
+                                  list: model.listOfSalesMasterForSale,
+                                  totalDiscount: model.totalDiscount.toString(),
+                                  totalSubTotal: model.totalSubTotal.toString(),
+                                  totalPaidAmount:
+                                      model.totalPaidAmount.toString()))
+                      // : getView2(child: reportView(isReportView)),
                     ],
                   ),
                 ),
@@ -171,9 +189,9 @@ class _ReportScreenState extends State<ReportScreen> {
                           context: context,
                           selectedDate: DateTime.now(),
                           firstDate: DateTime(2000, 1, 1));
-                      model.fromDate =
-                          Config.convertDateTimeToDate(DateTime.parse(model.fromDate))
-                              .toString();
+                      model.fromDate = Config.convertDateTimeToDate(
+                              DateTime.parse(model.fromDate))
+                          .toString();
                       print('From DATE: $model.fromDate');
                     },
                     child: Text(
@@ -201,14 +219,14 @@ class _ReportScreenState extends State<ReportScreen> {
                     onPressed: () async {
                       model.toDate = await _selectDate(
                           context: context,
-                          selectedDate:
-                              DateTime.parse(model.fromDate).add(Duration(days: 1)),
-                          firstDate:
-                              DateTime.parse(model.fromDate).add(Duration(days: 1)));
+                          selectedDate: DateTime.parse(model.fromDate)
+                              .add(Duration(days: 1)),
+                          firstDate: DateTime.parse(model.fromDate)
+                              .add(Duration(days: 1)));
                       setState(() {
-                        model.toDate =
-                            Config.convertDateTimeToDate(DateTime.parse(model.toDate))
-                                .toString();
+                        model.toDate = Config.convertDateTimeToDate(
+                                DateTime.parse(model.toDate))
+                            .toString();
                       });
                     },
                     child: Text(
@@ -226,7 +244,29 @@ class _ReportScreenState extends State<ReportScreen> {
                   ),
                 ],
               ),
-              ReportController.getDateSearchIconButton(onPressed: _searchSelectedDate),
+              // DropdownButton<String>(
+              //   value: _dropdown,
+              //   underline: Container(
+              //     height: 2,
+              //     color: Colors.redAccent,
+              //   ),
+              //   icon: Icon(Icons.arrow_drop_down_circle, color: Colors.redAccent,),
+              //   iconSize: 24,
+              //   elevation: 16,
+              //   style: TextStyle(
+              //     color: Colors.grey[800],
+              //     letterSpacing: 1,
+              //   ),
+              //   onChanged: (newValue) {
+              //     setState(() {
+              //       _dropdown = newValue;
+              //       _isDropdownButtonPressed = true;
+              //     });
+              //   },
+              //   items: ShiftController.dropdownList,
+              // ),
+              ReportController.getDateSearchIconButton(
+                  onPressed: _searchSelectedDate),
             ],
           ),
         );
@@ -238,7 +278,7 @@ class _ReportScreenState extends State<ReportScreen> {
     }
   }
 
-  Widget _getView2({Widget child}){
+  Widget _getView2({Widget child}) {
     return Expanded(
       flex: 4,
       child: SingleChildScrollView(
@@ -259,7 +299,7 @@ class _ReportScreenState extends State<ReportScreen> {
       ),
     );
   }
-  
+
   Future<String> _selectDate(
       {BuildContext context, DateTime selectedDate, DateTime firstDate}) async {
     final DateTime picked = await showDatePicker(
@@ -287,107 +327,97 @@ class _ReportScreenState extends State<ReportScreen> {
     return selectedDate.toString();
   }
 
-  void _searchSelectedDate(){
+  void _searchSelectedDate() async {
     if (!model.fromDate.contains('Tap') && !model.toDate.contains('Tap')) {
+     await _progress.show();
       model.listOfSalesMasterForSale.clear();
       model.totalDiscount = 0.0;
       model.totalPaidAmount = 0.0;
       model.totalSubTotal = 0.0;
-      model.salesMaster
-          .getSalesByDate(model.fromDate, model.toDate)
-          .then((value) {
+      List<SalesMaster>  value = await model.salesMaster
+          .getSalesByDate(model.fromDate, model.toDate, _isDropdownButtonPressed ? _dropdown : '');
         if (value != null) {
           value.forEach((element) {
             model.listOfSalesMasterForSale.add(element);
-            model.totalDiscount +=
-                double.parse(element.totalDiscountAmount);
-            model.totalSubTotal +=
-                double.parse(element.subTotalWithDiscount);
+            model.totalDiscount += double.parse(element.totalDiscountAmount);
+            model.totalSubTotal += double.parse(element.subTotalWithDiscount);
             model.totalPaidAmount += double.parse(element.paidAmount);
+            // _isDropdownButtonPressed ? model.shift = _dropdown : model.shift = '';
           });
+          await _progress.hide();
+          setState(() {model.isReportView = true;});
         } else {
+          await _progress.hide();
           print('Sales List Contains Nothing');
         }
-      }).whenComplete(() {
-        setState(() {
-          model.isReportView = true;
-        });
-      });
+
     } else {
+      await _progress.hide();
       AppTheme.showAlertDialogOK(context,
           title: 'Invalid Date Selected',
-          message:
-          'Please select valid date to generate report',
+          message: 'Please select valid date to generate report',
           onOK: () => Navigator.pop(context));
     }
   }
 
-  Widget _getAutoCompleteTextField(){
-    return autoCompleteTextField =
-        AutoCompleteTextField<SalesMaster>(
-          clearOnSubmit: false,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-          ),
-          decoration: InputDecoration(
-            hintText: 'Search Sale',
-            suffixIcon: IconButton(
-              icon: Icon(Icons.cancel),
-              iconSize: 25,
-              color: Colors.yellow[700],
-              onPressed: () {
-                autoCompleteTextField
-                    .textField.controller.text = '';
-              },
-            ),
-            contentPadding: EdgeInsets.fromLTRB(10, 30, 10, 20),
-            hintStyle: TextStyle(color: Colors.grey),
-          ),
-          keyboardType: TextInputType.number,
-          itemSubmitted: (item) {
-            setState(() {
-              model.salesMaster = item;
-              autoCompleteTextField.textField.controller.text =
-                  item.saleNo;
-              model.listOfSalesDetails.clear();
-              int id = int.parse(model.salesMaster.localId);
-              ReportController.getSalesDetailsList(id: id)
-                  .then((value) {
-                if (value != null) {
-                  value.forEach((element) {
-                    model.listOfSalesDetails
-                        .add(SalesDetails.fromJson(element));
-                  });
-                } else {
-                  print('Sales Details Contains Nothing');
-                }
-              }).whenComplete(() {
-                setState(() {
-                  model.isDuplicateSlipView = true;
-                  model.isReportView = false;
-                });
+  Widget _getAutoCompleteTextField() {
+    return autoCompleteTextField = AutoCompleteTextField<SalesMaster>(
+      clearOnSubmit: false,
+      style: TextStyle(
+        color: Colors.black,
+        fontSize: 16,
+      ),
+      decoration: InputDecoration(
+        hintText: 'Search Sale',
+        suffixIcon: IconButton(
+          icon: Icon(Icons.cancel),
+          iconSize: 25,
+          color: Colors.yellow[700],
+          onPressed: () {
+            autoCompleteTextField.textField.controller.text = '';
+          },
+        ),
+        contentPadding: EdgeInsets.fromLTRB(10, 30, 10, 20),
+        hintStyle: TextStyle(color: Colors.grey),
+      ),
+      keyboardType: TextInputType.number,
+      itemSubmitted: (item) async{
+        setState(() async {
+          model.salesMaster = item;
+          autoCompleteTextField.textField.controller.text = item.saleNo;
+          model.listOfSalesDetails.clear();
+          int id = int.parse(model.salesMaster.localId);
+          await _progress.show();
+          List<Map<String, dynamic>> value = await ReportController.getSalesDetailsList(id: id);
+            if (value != null) {
+              value.forEach((element) {
+                model.listOfSalesDetails.add(SalesDetails.fromJson(element));
               });
-            });
-          },
-          key: key,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.digitsOnly,
-          ],
-          suggestions: model.listOfSalesMasterForSlip,
-          itemBuilder: (context, item) {
-            return ReportController.row(item: item);
-          },
-          itemFilter: (item, query) {
-            if (autoCompleteTextField
-                .textField.controller.text.isEmpty) query = '';
-            return item.saleNo.toLowerCase().startsWith(
-                Lib.codeGenerator('ORD', int.parse(query))
-                    .toLowerCase());
-          },
-          itemSorter: (a, b) {
-            return a.saleNo.compareTo(b.saleNo);
-          },
-        );
+              await _progress.hide();
+              setState(() {model.isDuplicateSlipView = true;
+                model.isReportView = false;});
+            } else {
+              await _progress.hide();
+              print('Sales Details Contains Nothing');
+            }
+        });
+      },
+      key: key,
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.digitsOnly,
+      ],
+      suggestions: model.listOfSalesMasterForSlip,
+      itemBuilder: (context, item) {
+        return ReportController.row(item: item);
+      },
+      itemFilter: (item, query) {
+        if (autoCompleteTextField.textField.controller.text.isEmpty) query = '';
+        return item.saleNo.toLowerCase().startsWith(
+            Lib.codeGenerator('ORD', int.parse(query)).toLowerCase());
+      },
+      itemSorter: (a, b) {
+        return a.saleNo.compareTo(b.saleNo);
+      },
+    );
   }
 }

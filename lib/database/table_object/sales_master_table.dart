@@ -43,6 +43,7 @@ class SalesMasterTable{
   static const String companyId = 'company_id';
   static const String isDelete = 'is_delete';
   static const String isUpload = 'is_upload';
+  static const String shift = 'shift';
 
   static const List<String> columnsName = [
     localId,
@@ -83,11 +84,13 @@ class SalesMasterTable{
     serverId,
     companyId,
     isDelete,
-    isUpload
+    isUpload,
+    shift
   ];
 
     static const List<String> columnsType = [
       SqlStructure.integer + SqlStructure.primaryKey,
+      SqlStructure.text,
       SqlStructure.text,
       SqlStructure.text,
       SqlStructure.text,

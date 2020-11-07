@@ -119,7 +119,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     future: getOrdersList(orderType),
                     initialData: Container(
                       child: SpinKitRing(
-                        color: Colors.yellow,
+                        color: Colors.yellow[800],
                       ),
                     ),
                     builder: (context, snapshot) => snapshot.data)),

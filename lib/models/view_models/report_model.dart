@@ -7,7 +7,7 @@ class ReportModel{
   List<SalesMaster> listOfSalesMasterForSlip, listOfSalesMasterForSale;
   List<SalesDetails> listOfSalesDetails;
   int viewType;
-  bool isDuplicateSlipView, isReportView;
-  String fromDate, toDate;
+  bool isDuplicateSlipView, isReportView, isReportViewByShift;
+  String fromDate, toDate, shift;
   double totalDiscount, totalPaidAmount, totalSubTotal;
 }

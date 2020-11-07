@@ -43,6 +43,7 @@ class SalesMaster {
   String companyId;
   String isDelete;
   String isUpdate;
+  String shift;
 
   static const String DINEIN = '1';
   static const String TAKEAWAY = '2';
@@ -129,7 +130,8 @@ class SalesMaster {
         serverId = json[SalesMasterTable.serverId],
         companyId = json[SalesMasterTable.companyId],
         isDelete = json[SalesMasterTable.isDelete],
-        isUpdate = json[SalesMasterTable.isUpload];
+        isUpdate = json[SalesMasterTable.isUpload],
+        shift = json[SalesMasterTable.shift];
 
   List<String> getList() {
     return [
@@ -171,7 +173,8 @@ class SalesMaster {
       this.serverId,
       this.companyId,
       this.isDelete,
-      this.isUpdate
+      this.isUpdate,
+      this.shift
     ];
   }
 
@@ -272,9 +275,13 @@ class SalesMaster {
     return '';
   }
 
-  Future<List<SalesMaster>> getSalesByDate(String fromDate, String toDate) async {
+  Future<List<SalesMaster>> getSalesByDate(String fromDate, String toDate, String shift) async {
 
-    String query = "select ${SalesMasterTable.dateTime}, sum(cast(${SalesMasterTable.paidAmount} as decimal)) as ${SalesMasterTable.paidAmount}, sum(cast(${SalesMasterTable.subTotalWithDiscount} as decimal)) as ${SalesMasterTable.subTotalWithDiscount} , sum(cast(${SalesMasterTable.totalDiscountAmount} as decimal)) as ${SalesMasterTable.totalDiscountAmount} from sales_master WHERE ${SalesMasterTable.orderStatus} = 3 AND datetime(${SalesMasterTable.dateTime}) >= datetime('$fromDate 00:00:00') AND datetime(${SalesMasterTable.dateTime}) <= datetime('$toDate 23:59:59') group by strftime('%Y-%m-%d', ${SalesMasterTable.dateTime})";
+    String queryByDate = "select ${SalesMasterTable.shift} ,${SalesMasterTable.dateTime}, sum(cast(${SalesMasterTable.paidAmount} as decimal)) as ${SalesMasterTable.paidAmount}, sum(cast(${SalesMasterTable.subTotalWithDiscount} as decimal)) as ${SalesMasterTable.subTotalWithDiscount} , sum(cast(${SalesMasterTable.totalDiscountAmount} as decimal)) as ${SalesMasterTable.totalDiscountAmount} from sales_master WHERE ${SalesMasterTable.orderStatus} = 3 AND datetime(${SalesMasterTable.dateTime}) >= datetime('$fromDate 00:00:00') AND datetime(${SalesMasterTable.dateTime}) <= datetime('$toDate 23:59:59') group by strftime('%Y-%m-%d', ${SalesMasterTable.dateTime})";
+
+    String queryByShift = "select ${SalesMasterTable.shift}, ${SalesMasterTable.dateTime}, sum(cast(${SalesMasterTable.paidAmount} as decimal)) as ${SalesMasterTable.paidAmount}, sum(cast(${SalesMasterTable.subTotalWithDiscount} as decimal)) as ${SalesMasterTable.subTotalWithDiscount} , sum(cast(${SalesMasterTable.totalDiscountAmount} as decimal)) as ${SalesMasterTable.totalDiscountAmount} from sales_master WHERE ${SalesMasterTable.orderStatus} = 3 AND datetime(${SalesMasterTable.dateTime}) >= datetime('$fromDate 00:00:00') AND datetime(${SalesMasterTable.dateTime}) <= datetime('$toDate 23:59:59') AND shift == '$shift' group by strftime('%Y-%m-%d', ${SalesMasterTable.dateTime})";
+
+    String query = shift.isNotEmpty ? queryByShift : queryByDate;
 
     List<SalesMaster> salesList = [];
     List<Map<String, dynamic>> salesMap = await Config.database.rawQuery(query);

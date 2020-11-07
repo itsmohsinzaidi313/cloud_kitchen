@@ -19,6 +19,7 @@ import 'package:food_app/database/table_object/vat_amount_table.dart';
 class Columns {
   static const List<List<String>> listOfAllColumns = [
     UserTable.columnsName, //0
+    DeviceTable.columnsName, //15
     ShiftTable.columnsName, //1
     CategoryTable.columnsName, //2
     ItemTable.columnsName, //3
@@ -33,7 +34,6 @@ class Columns {
     PaymentMethodTable.columnsName, //12
     VatAmountTable.columnsName, //13
     TablesTable.columnsName, //14
-    DeviceTable.columnsName, //15
     OrdersTable.columnsName, //16
   ];
 

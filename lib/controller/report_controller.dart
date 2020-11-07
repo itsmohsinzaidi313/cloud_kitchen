@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/database/table_object/sales_detail_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
@@ -7,6 +8,7 @@ import 'package:food_app/models/view_models/report_model.dart';
 import 'package:food_app/pages/report_screen.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grouped_list/grouped_list.dart';
 
 class ReportController {
   ReportModel reportModel;
@@ -35,11 +37,13 @@ class ReportController {
     getSalesMasterTable().whenComplete(() => print('Done'));
     reportModel.isDuplicateSlipView = false;
     reportModel.isReportView = false;
+    reportModel.isReportViewByShift = false;
     reportModel.fromDate = 'Tap to select date';
     reportModel.toDate = 'Tap to select date';
     reportModel.totalDiscount = 0.0;
     reportModel.totalPaidAmount = 0.0;
     reportModel.totalSubTotal = 0.0;
+    reportModel.shift = '';
   }
 
   launch({BuildContext context}) =>
@@ -56,8 +60,10 @@ class ReportController {
   }
 
   Future getSalesMasterTable() async {
-    List<Map<String, dynamic>> map =
-        await Config.database.query(SalesMasterTable.tableName);
+    List<Map<String, dynamic>> map = await Config.database.query(
+        SalesMasterTable.tableName,
+        where: '${SalesMasterTable.paidAmount} != ?',
+        whereArgs: ['0.0']);
     map.forEach((element) => reportModel.listOfSalesMasterForSlip
         .add(SalesMaster.fromJson(element)));
     reportModel.listOfSalesMasterForSlip
@@ -261,35 +267,36 @@ class ReportController {
     List<DataRow> rows = [];
     listOfSalesMaster.forEach((element) {
       rows.add(
-        DataRow(cells: <DataCell>[
-          DataCell(
-            getDataListRowBoldText(
-              element: element.dateTime,
+        DataRow(
+          cells: <DataCell>[
+            DataCell(
+              getDataListRowBoldText(
+                element: element.dateTime,
+              ),
             ),
-          ),
-          DataCell(
-            getDataListRowNormalText(
-              element: element.paidAmount,
+            DataCell(
+              getDataListRowNormalText(
+                element: element.paidAmount,
+              ),
             ),
-          ),
-          DataCell(
-            getDataListRowNormalText(
-              element: element.subTotalWithDiscount,
+            DataCell(
+              getDataListRowNormalText(
+                element: element.subTotalWithDiscount,
+              ),
             ),
-          ),
-          DataCell(
-            getDataListRowNormalText(
-              element: element.totalDiscountAmount,
+            DataCell(
+              getDataListRowNormalText(
+                element: element.totalDiscountAmount,
+              ),
             ),
-          ),
-        ]),
+          ],
+        ),
       );
     });
     return rows;
   }
 
-  static List<DataColumn> getDataColumnList(
-      {List<String> columnNames}) {
+  static List<DataColumn> getDataColumnList({List<String> columnNames}) {
     List<DataColumn> columns = [];
     columnNames.forEach((element) {
       columns.add(DataColumn(
@@ -298,7 +305,6 @@ class ReportController {
     });
     return columns;
   }
-
 
   static Widget getDuplicateSlipView(
       {BuildContext context,
@@ -333,14 +339,7 @@ class ReportController {
                   ),
                 ],
               ),
-              DataTable(
-                showBottomBorder: true,
-                dataRowHeight: 25,
-                columns: getDataColumnList(
-                    columnNames: _duplicateSlipDataColumnList),
-                rows: getDuplicateSlipDataRowList(listOfSalesDetails: list),
-              ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -383,6 +382,14 @@ class ReportController {
                 ),
               ),
               getDivider(),
+              SizedBox(height: 20),
+              DataTable(
+                showBottomBorder: true,
+                dataRowHeight: 25,
+                columns: getDataColumnList(
+                    columnNames: _duplicateSlipDataColumnList),
+                rows: getDuplicateSlipDataRowList(listOfSalesDetails: list),
+              ),
             ],
           ),
         );
@@ -394,83 +401,109 @@ class ReportController {
     }
   }
 
-  static Widget getReportView({BuildContext context, bool view, List<SalesMaster> list, String totalSubTotal, String totalDiscount, String totalPaidAmount}) {
-    switch (view) {
-      case true:
-        return Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              DataTable(
-                showBottomBorder: true,
-                dataRowHeight: 25,
-                columns: getDataColumnList(columnNames: _reportDataColumnList),
-                rows: getReportDataRowList(listOfSalesMaster: list),
+  static Widget getReportView(
+      {BuildContext context,
+      bool view,
+      String shift,
+      List<SalesMaster> list,
+      String totalSubTotal,
+      String totalDiscount,
+      String totalPaidAmount}) {
+    Widget _myWidget = Container(
+      child: Center(
+        child: Text('Empty. Right Now!'),
+      ),
+    );
+    if (view /*&& shift.isEmpty*/) {
+      _myWidget = Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                getTextWithBackground(text: 'Total Sub Total: '),
+                Text(
+                  'Rs. ${totalSubTotal.toString()}/=',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                getTextWithBackground(text: 'Total Discount: '),
+                Text(
+                  'Rs. ${totalDiscount.toString()}/=',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+              ],
+            ),
+            getDivider(),
+            SizedBox(height: 5),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 2),
+              decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                color: Colors.grey[200],
               ),
-              SizedBox(
-                height: 20
-              ),
-              Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   getTextWithBackground(
-                    text: 'Total Sub Total: '
-                  ),
+                      text: 'Total Paid Amount: ', color: Colors.black),
                   Text(
-                    'Rs. ${totalSubTotal.toString()}/=',
+                    'Rs. ${totalPaidAmount.toString()}/=',
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
                 ],
               ),
-              SizedBox(
-                height: 10
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  getTextWithBackground(
-                      text: 'Total Discount: '
-                  ),
-                  Text(
-                    'Rs. ${totalDiscount.toString()}/=',
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
-                ],
-              ),
-              getDivider(),
-              SizedBox(
-                height: 5
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 2),
-                decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  color: Colors.grey[200],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    getTextWithBackground(
-                        text: 'Total Paid Amount: ',
-                      color: Colors.black
-                    ),
-                    Text(
-                      'Rs. ${totalPaidAmount.toString()}/=',
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ),
-                  ],
-                ),
-              ),
-              getDivider(),
-            ],
-          ),
-        );
-        break;
+            ),
+            getDivider(),
+            SizedBox(height: 20),
+            DataTable(
+              showBottomBorder: true,
+              dataRowHeight: 25,
+              columns: getDataColumnList(columnNames: _reportDataColumnList),
+              rows: getReportDataRowList(listOfSalesMaster: list),
+            ),
 
-      default:
-        return Container();
-        break;
+          ],
+        ),
+      );
+    // } else if (view && shift.isNotEmpty) {
+    //   _myWidget = GroupedListView<SalesMaster, String>(
+    //     elements: list,
+    //     groupBy: (element) => element.shift,
+    //     groupSeparatorBuilder: (String groupByValue) => Text(groupByValue),
+    //     itemBuilder: (context, SalesMaster element) {
+    //       return Row(
+    //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    //         children: [
+    //           getDataListRowBoldText(
+    //             element: element.dateTime,
+    //           ),
+    //           getDataListRowNormalText(
+    //             element: element.paidAmount,
+    //           ),
+    //           getDataListRowNormalText(
+    //             element: element.subTotalWithDiscount,
+    //           ),
+    //           getDataListRowNormalText(
+    //             element: element.totalDiscountAmount,
+    //           ),
+    //         ],
+    //       );
+    //     },
+    //     itemComparator: (item1, item2) =>
+    //         item1.paidAmount.compareTo(item2.paidAmount),
+    //     useStickyGroupSeparators: true,
+    //     floatingHeader: true,
+    //     order: GroupedListOrder.ASC,
+    //   );
     }
+    return _myWidget;
   }
 }

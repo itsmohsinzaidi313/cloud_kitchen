@@ -265,7 +265,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                         ),
                         ListTile(
                           title: FlatButton(
-                            child: Text('Ok',
+                            child: Text('OK',
                                 style: TextStyle(color: Colors.white)),
                             color: isWaiterSelected ? Colors.red : null,
                             onPressed: isWaiterSelected
@@ -281,7 +281,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                                     if (!check[1]) {
                                       int persons =
                                           int.parse(controllers[1].text);
-                                      if (persons > 0) {
+                                      if (persons > 0 && int.parse(table.sitCapacity) >= persons) {
                                         NewSaleController().launchDineIn(
                                             context,
                                             _viewType.toString(),
@@ -294,8 +294,8 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                                       } else {
                                         setState(() {
                                           check[1] = true;
-                                          errorMsg = 'Invalid no of persons.';
-                                          isWaiterSelected = false;
+                                          errorMsg = 'Invalid Sit Capacity';
+                                          isWaiterSelected = true;
                                         });
                                       }
                                     }
@@ -453,7 +453,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                     ListTile(
                       title: FlatButton(
                         child:
-                            Text('Ok', style: TextStyle(color: Colors.white)),
+                            Text('OK', style: TextStyle(color: Colors.white)),
                         onPressed: takeawaySearchButton
                             ? () {
                                 setState(() {
@@ -679,7 +679,7 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
                     ListTile(
                       title: FlatButton(
                         child: Text(
-                          'Ok',
+                          'OK',
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: deliverySearchButton
@@ -766,8 +766,6 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
     List<User> listWaiters = model.listWaiters;
     if (viewType == 1) {
       listTables.forEach((element) {
-        // Color color = Colors.white;
-        // Color textColor = Colors.black;
         Icon icon = Icon(
           Icons.lock_open_rounded,
           size: 20,
@@ -790,15 +788,39 @@ class _OrderTypeScreenState extends State<OrderTypeScreen> {
               child: Stack(
                 children: [
                   Positioned(
-                    bottom: 2,
+                    top: 2,
                     left: 2,
                     child: Text(
                       element.name,
                       style: GoogleFonts.ubuntuCondensed(
-                        color: Colors.grey.shade800,
-                        fontSize: 14,
+                        color: Colors.grey.shade900,
+                        fontSize: 16,
                         letterSpacing: 1.0,
                         wordSpacing: 1.0,
+                        // fontWeight: FontWeight.w700
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 2,
+                    left: 2,
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Capacity: ',
+                        style: GoogleFonts.ubuntuCondensed(
+                            color: Colors.grey.shade700,
+                            fontSize: 15,
+                            letterSpacing: 1.0,
+                            wordSpacing: 1.0,
+                        ),
+                        children: <TextSpan>[
+                      TextSpan(
+                      text: element.sitCapacity,
+                        style: GoogleFonts.ubuntuCondensed(
+                            color: Colors.grey.shade500,
+                            fontSize: 15,
+                            fontWeight: FontWeight.normal),),
+                        ],
                       ),
                     ),
                   ),

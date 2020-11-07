@@ -20,6 +20,7 @@ class Types {
   ///LIST OF [COLUMN_TYPES] LIST
   static const List<List<String>> listOfAllColumnTypes = [
     UserTable.columnsType, //0
+    DeviceTable.columnsType, //15
     ShiftTable.columnsType, //1
     CategoryTable.columnsType, //2
     ItemTable.columnsType, //3
@@ -34,7 +35,6 @@ class Types {
     PaymentMethodTable.columnsType, //12
     VatAmountTable.columnsType, //13
     TablesTable.columnsType, //14
-    DeviceTable.columnsType, //15
     OrdersTable.columnsType //16
   ];
 

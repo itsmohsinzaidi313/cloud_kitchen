@@ -121,7 +121,8 @@ class _ShiftScreen extends State<ShiftScreen> {
                               items: this.model.shiftList,
                             ),
                           ],
-                        )),
+                        ),
+                    ),
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextFormField(

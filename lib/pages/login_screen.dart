@@ -66,60 +66,62 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   initState() {
     super.initState();
-    Config.database
-        .query(ShiftTable.tableName,
+      if(Config.isLogout){
+        Config.database
+            .query(ShiftTable.tableName,
             columns: [ShiftTable.deviceKey],
             orderBy: '${ShiftTable.localId} desc')
-        .then((value) {
-      setState(() {
-        try {
-          if (value.isNotEmpty) {
-            String dKey = value[0][ShiftTable.deviceKey] == null
-                ? ''
-                : value[0][ShiftTable.deviceKey];
-            if (dKey.isNotEmpty) {
-              _deviceKeyPresent = dKey == '' ? false : true;
-              deviceKey.text = dKey;
-              Config.authToken = dKey;
-              Config.installApi = dKey;
-              progressDialog = AppTheme.showProgressDialog(
-                context,
-                widget: StreamBuilder(
-                  initialData: Text('Loading...'),
-                  stream: _bloc.message,
-                  builder: (context, snapshot) {
-                    return snapshot.data;
-                  },
-                ),
-              );
-              progressDialog.show();
-              LoginController.loadData(_bloc)
-                  .then((value) => _deviceKeyPresent = value)
-                  .whenComplete(() {
-                // setState(() {
-                // DataLists.instance.listDevices.where((element) => dKey == element.deviceKey);
-                DataLists.instance.listDevices.forEach((element) {
-                  if (dKey == element.deviceKey) {
-                    Config.currentDevice = element;
-                    progressDialog.hide();
-                  }
-                });
-                // });
-              });
-            } else {
+            .then((value) {
+          setState(() {
+            try {
+              if (value.isNotEmpty) {
+                String dKey = value[0][ShiftTable.deviceKey] == null
+                    ? ''
+                    : value[0][ShiftTable.deviceKey];
+                if (dKey.isNotEmpty) {
+                  _deviceKeyPresent = dKey == '' ? false : true;
+                  deviceKey.text = dKey;
+                  Config.authToken = dKey;
+                  Config.installApi = dKey;
+                  progressDialog = AppTheme.showProgressDialog(
+                    context,
+                    widget: StreamBuilder(
+                      initialData: Text('Loading...'),
+                      stream: _bloc.message,
+                      builder: (context, snapshot) {
+                        return snapshot.data;
+                      },
+                    ),
+                  );
+                  progressDialog.show();
+                  LoginController.loadData(_bloc)
+                      .then((value) => _deviceKeyPresent = value)
+                      .whenComplete(() {
+                    // setState(() {
+                    // DataLists.instance.listDevices.where((element) => dKey == element.deviceKey);
+                    DataLists.instance.listDevices.forEach((element) {
+                      if (dKey == element.deviceKey) {
+                        Config.currentDevice = element;
+                        progressDialog.hide();
+                      }
+                    });
+                    // });
+                  });
+                } else {
+                  progressDialog.hide();
+                  _deviceKeyPresent = false;
+                }
+              }
+            } catch (e) {
               progressDialog.hide();
-              _deviceKeyPresent = false;
+              _log.e(e);
             }
-          }
-        } catch (e) {
+          });
+        }).catchError((onError) {
           progressDialog.hide();
-          _log.e(e);
-        }
-      });
-    }).catchError((onError) {
-      progressDialog.hide();
-      _deviceKeyPresent = false;
-    });
+          _deviceKeyPresent = false;
+        });
+      }
   }
 
   bool validateUser(email, pass) {
@@ -430,6 +432,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                               right: 5,
                                               child: IconButton(
                                                 icon: _icon,
+                                                color: Colors.grey,
                                                 onPressed: _toggle,
                                               ),
                                             ),

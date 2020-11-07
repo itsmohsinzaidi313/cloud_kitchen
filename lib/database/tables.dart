@@ -20,6 +20,7 @@ class Tables {
   //LIST OF TABLES MAME
   static const List<String> listOfAllTables = [
     UserTable.tableName, //0
+    DeviceTable.tableName, //15
     ShiftTable.tableName, //1
     CategoryTable.tableName, //2
     ItemTable.tableName, //3
@@ -34,7 +35,6 @@ class Tables {
     PaymentMethodTable.tableName, //12
     VatAmountTable.tableName, //13
     TablesTable.tableName, //14
-    DeviceTable.tableName, //15
     OrdersTable.tableName //16
   ];
 

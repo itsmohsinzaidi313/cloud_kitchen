@@ -18,10 +18,12 @@ void main() {
         initialRoute: '/splashScreen',
         theme: ThemeData(
           brightness: Brightness.light,
-          primarySwatch: Colors.red[400],
+          primarySwatch: Colors.red,
           primaryColor: Colors.redAccent,
-          accentColor: Colors.yellow[700],
-
+          accentColor: Colors.yellow[800],
+          iconTheme: IconThemeData(
+              color: Colors.white,
+          ),
         ),
         routes: {
           '/': (context) => SettingsScreen(),
