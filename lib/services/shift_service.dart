@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:flutter/services.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/models/objects/shift.dart';
@@ -10,7 +11,6 @@ import 'package:http/http.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ShiftService extends ServiceCommon {
-
   static final ShiftService shiftService =
       ShiftService._instance(Config.database);
 
@@ -87,8 +87,8 @@ class ShiftService extends ServiceCommon {
             }
           } else {
             String message = decodedJson['message'];
-            if(message == 'A register is already opened with the user, please close the previous one to open another') {
-              
+            if (message.contains('register is already open')) {
+              _db.update(ShiftTable.tableName, {ShiftTable.isUpload: '1'});
             }
           }
         }
