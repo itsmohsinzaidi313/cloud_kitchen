@@ -26,7 +26,7 @@ void main() {
           ),
         ),
         routes: {
-          '/': (context) => SettingsScreen(),
+          // '/': (context) => SettingsScreen(),
           '/splashScreen': (context) => SplashScreen(),
         },
       ),

@@ -78,6 +78,7 @@ class DataLists {
   static Future<bool> importToDatabase(
       Database db, DialogMessageBloc bloc) async {
     try {
+
       await importListToDatabase(
               tableName: UserTable.tableName,
               bloc: bloc,
@@ -253,12 +254,12 @@ class DataLists {
   static Future<bool> importToMemory(
       Database db, DialogMessageBloc bloc) async {
     try {
+
       int count = 1;
       List<Map<String, dynamic>> listMap = await db.query(UserTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listUsers.add(new User.fromJson(element));
-        dialogUpdatedMessage =
-            'Loading Users ... $count/${listMap.length} ';
+        dialogUpdatedMessage = 'Loading Users ... $count/${listMap.length} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -274,7 +275,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listCategories.add(new Category.fromJson(element));
         dialogUpdatedMessage =
-            'Loading Categories ... $count/${listMap.length } ';
+            'Loading Categories ... $count/${listMap.length} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -288,8 +289,7 @@ class DataLists {
       List<Map<String, dynamic>> listMap = await db.query(ItemTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listItem.add(new Item.fromJson(element));
-        dialogUpdatedMessage =
-        'Loading Items ... $count/${listMap.length } ';
+        dialogUpdatedMessage = 'Loading Items ... $count/${listMap.length} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -305,7 +305,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listCompany.add(new Company.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Companies ... $count/${listMap.length } ';
+            'Loading Companies ... $count/${listMap.length} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -322,7 +322,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listCustomers.add(new Customer.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Customers ... $count/${listMap.length } ';
+            'Loading Customers ... $count/${listMap.length} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -338,8 +338,7 @@ class DataLists {
           await db.query(TablesTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listTables.add(new Table.fromJson(element));
-        dialogUpdatedMessage =
-        'Loading Tables ... $count/${listMap.length } ';
+        dialogUpdatedMessage = 'Loading Tables ... $count/${listMap.length} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -356,7 +355,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listVatAmount.add(new VatAmount.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Vat Amounts ... $count/${listMap.length } ';
+            'Loading Vat Amounts ... $count/${listMap.length} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -372,8 +371,7 @@ class DataLists {
           await db.query(OutletTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listOutlet.add(new Outlet.fromJson(element));
-        dialogUpdatedMessage =
-        'Loading Outlets ... $count/${listMap.length } ';
+        dialogUpdatedMessage = 'Loading Outlets ... $count/${listMap.length} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -390,7 +388,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listModifiers.add(new Modifier.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Modifiers ... $count/${listMap.length } ';
+            'Loading Modifiers ... $count/${listMap.length} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -408,7 +406,7 @@ class DataLists {
         DataLists.instance.listItemModifiers
             .add(new ItemModifier.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Item Modifiers ... $count/${listMap.length } ';
+            'Loading Item Modifiers ... $count/${listMap.length} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -426,7 +424,7 @@ class DataLists {
         DataLists.instance.listPaymentMethods
             .add(new PaymentMethod.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Payment Methods ... $count/${listMap.length } ';
+            'Loading Payment Methods ... $count/${listMap.length} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -444,7 +442,7 @@ class DataLists {
         DataLists.instance.listExpenseCategories
             .add(new ExpenseCategory.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Expense Categories ... $count/${listMap.length } ';
+            'Loading Expense Categories ... $count/${listMap.length} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -460,8 +458,7 @@ class DataLists {
           await db.query(DeviceTable.tableName);
       listMap.forEach((element) {
         DataLists.instance.listDevices.add(new Device.fromJson(element));
-        dialogUpdatedMessage =
-        'Loading Devices ... $count/${listMap.length } ';
+        dialogUpdatedMessage = 'Loading Devices ... $count/${listMap.length} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -477,7 +474,7 @@ class DataLists {
       listMap.forEach((element) {
         DataLists.instance.listRegisters.add(new Register.fromJson(element));
         dialogUpdatedMessage =
-        'Loading Registers ... $count/${listMap.length } ';
+            'Loading Registers ... $count/${listMap.length} ';
         Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
         count++;
       });
@@ -530,40 +527,39 @@ class DataLists {
     return true;
   }
 
-  // static String getDataTypeOfListElement(int count){
-  //   var varType = DataLists.instance.getInList()[count].runtimeType.toString();
-  //   String startVar = 'List<';
-  //   String endVar = '>';
-  //   int startIndex = varType.indexOf(startVar);
-  //   int endIndex = varType.indexOf(endVar);
-  //   String _type = varType.substring(startIndex + startVar.length, endIndex );
-  //   return _type;
-  // }
-  //
-  // static MyObject getAnyObject(String type, Map<String, dynamic> map){
-  //   MyObject myObject;
-  //   if(type == 'Item') {
-  //     myObject = Item.fromJson(map);
-  //   }
-  //   return myObject;
-  // }
+// static String getDataTypeOfListElement(int count){
+//   var varType = DataLists.instance.getInList()[count].runtimeType.toString();
+//   String startVar = 'List<';
+//   String endVar = '>';
+//   int startIndex = varType.indexOf(startVar);
+//   int endIndex = varType.indexOf(endVar);
+//   String _type = varType.substring(startIndex + startVar.length, endIndex );
+//   return _type;
+// }
+//
+// static MyObject getAnyObject(String type, Map<String, dynamic> map){
+//   MyObject myObject;
+//   if(type == 'Item') {
+//     myObject = Item.fromJson(map);
+//   }
+//   return myObject;
+// }
 
-
-  // static Future<bool> importListToMemory(
-  //     {String tableName,
-  //     String objectNameOfList,
-  //     List anyList,
-  //     DialogMessageBloc bloc,
-  //     Function func(Map<String, dynamic> map)}) async {
-  //   Database db = Config.database;
-  //   int count = 1;
-  //   List<Map<String, dynamic>> listMap = await db.query(UserTable.tableName);
-  //   listMap.forEach((element) {
-  //     anyList.add(func(element));
-  //     dialogUpdatedMessage =
-  //         'Loading Register ... $count/${instance.listUsers.length } ';
-  //     Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
-  //     count++;
-  //   });
-  // }
+// static Future<bool> importListToMemory(
+//     {String tableName,
+//     String objectNameOfList,
+//     List anyList,
+//     DialogMessageBloc bloc,
+//     Function func(Map<String, dynamic> map)}) async {
+//   Database db = Config.database;
+//   int count = 1;
+//   List<Map<String, dynamic>> listMap = await db.query(UserTable.tableName);
+//   listMap.forEach((element) {
+//     anyList.add(func(element));
+//     dialogUpdatedMessage =
+//         'Loading Register ... $count/${instance.listUsers.length } ';
+//     Lib.dialogMessageUpdate(newMessage: dialogUpdatedMessage, bloc: bloc);
+//     count++;
+//   });
+// }
 }

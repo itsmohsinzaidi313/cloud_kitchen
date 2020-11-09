@@ -8,11 +8,11 @@ class DialogMessageBloc{
   String _message = 'message';
   Widget _widget;
 
-  final _dialogMessageEventController = StreamController<DialogMessageEvent>();
+  final _dialogMessageEventController = StreamController<DialogMessageEvent>.broadcast();
   Sink<DialogMessageEvent> get dialogMessageEventSink =>
       _dialogMessageEventController.sink;
 
-  final _dialogMessageStateController = StreamController<Widget>();
+  final _dialogMessageStateController = StreamController<Widget>.broadcast();
   StreamSink<Widget> get _inMessage =>
       _dialogMessageStateController.sink;
   Stream<Widget> get message => _dialogMessageStateController.stream;

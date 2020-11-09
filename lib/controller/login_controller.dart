@@ -28,19 +28,31 @@ class LoginController {
           (route) => false);
 
   static Future<bool> loadData(DialogMessageBloc bloc) async {
-    bool value1 = await Lib.install(bloc);
-    if (value1) {
-      bool value2 = await DataLists.importToDatabase(Config.database, bloc);
-      if (value2) {
-        Config.log.w('Online data loaded');
-        return true;
+
+    DataLists.instance.getInList().forEach((element) {
+      if (element.isNotEmpty) element.clear();
+    });
+    ///Manually data loading
+    if(Config.activeStatus == 'Online'){
+      bool value1 = await Lib.install(bloc);
+      if(value1){
+        Config.currentDevice = DataLists.instance.listDevices.where((element) => element.deviceKey == Config.authToken).first;
+        bool value2 = await DataLists.importToDatabase(Config.database, bloc);
+        if (value2) {
+          Config.log.w('Online data loaded');
+          return true;
+        } else {
+          Config.log.w('Online data load failed');
+          return false;
+        }
       } else {
-        Config.log.w('Online data load failed');
+        Config.log.w('Cannot access server');
         return false;
       }
-    } else {
+    }else {
       bool value2 = await DataLists.importToMemory(Config.database, bloc);
       if (value2) {
+        Config.currentDevice = DataLists.instance.listDevices.where((element) => element.deviceKey == Config.authToken).first;
         Config.log.w('Offline data loaded');
         return true;
       } else {
@@ -48,5 +60,26 @@ class LoginController {
         return false;
       }
     }
+    ///For automatic data load
+    // bool value1 = await Lib.install(bloc);
+    // if (value1 && Config.activeStatus == 'Online') {
+    //   bool value2 = await DataLists.importToDatabase(Config.database, bloc);
+    //   if (value2) {
+    //     Config.log.w('Online data loaded');
+    //     return true;
+    //   } else {
+    //     Config.log.w('Online data load failed');
+    //     return false;
+    //   }
+    // } else {
+    //   bool value2 = await DataLists.importToMemory(Config.database, bloc);
+    //   if (value2) {
+    //     Config.log.w('Offline data loaded');
+    //     return true;
+    //   } else {
+    //     Config.log.w('Offline data load failed');
+    //     return false;
+    //   }
+    // }
   }
 }

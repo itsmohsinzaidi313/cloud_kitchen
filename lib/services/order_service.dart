@@ -4,9 +4,11 @@ import 'dart:developer';
 
 import 'package:food_app/database/table_object/sales_detail_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
+import 'package:food_app/models/objects/customer.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/services/common.dart';
 import 'package:food_app/shared/config.dart';
+import 'package:food_app/shared/lib.dart';
 import 'package:http/http.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -64,6 +66,10 @@ class OrderService extends ServiceCommon {
                 where: '${SalesMasterTable.localId} = ?',
                 whereArgs: [salesMaster.localId]);
           } else {
+            if(result['message'].toString().contains('Customer does not exist')){
+              List<Customer> listCustomer = await Customer().getCustomerById(_db, int.parse(salesMaster.customerId));
+              await Lib.uploadCustomer(listCustomer[0]) ? log('Customer uploaded Successfully', name: 'Order Service', time: DateTime.now()) : log('Customer upload unsuccessful', name: 'Order Service', time: DateTime.now());
+            }
             log(json.toString(), name: 'Order Service', time: DateTime.now());
           }
         }

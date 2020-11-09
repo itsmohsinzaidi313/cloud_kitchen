@@ -3,15 +3,18 @@ import 'package:food_app/bloc/dialog_message_bloc.dart';
 import 'package:food_app/controller/login_controller.dart';
 import 'package:food_app/controller/shift_controller.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
+import 'package:food_app/models/objects/shift.dart';
 import 'package:food_app/models/objects/user.dart';
 import 'package:food_app/models/view_models/login_model.dart';
 import 'package:food_app/pages/sql_view_page.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/data_lists.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:logger/logger.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 
 class LoginScreen extends StatefulWidget {
   final LoginModel loginModel;
@@ -34,15 +37,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final DialogMessageBloc _bloc = new DialogMessageBloc();
 
-  bool _autoValidate = false;
+  bool _autoValidate = false, _isSwitched = true;
   bool _obscureText = true;
   bool isLoading = false;
   bool isLogin = false;
   bool _deviceKeyPresent = false;
   bool _deviceKeyCheck = false;
   Icon _icon = Icon(Icons.visibility_off);
-
   String errorEmail = 'Invalid Email', errorPassword = 'Invalid Password';
+  Color activeColor = Colors.yellow[700];
 
   void _toggle() {
     setState(() {
@@ -66,62 +69,77 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   initState() {
     super.initState();
-      if(Config.isLogout){
-        Config.database
-            .query(ShiftTable.tableName,
-            columns: [ShiftTable.deviceKey],
-            orderBy: '${ShiftTable.localId} desc')
-            .then((value) {
-          setState(() {
-            try {
-              if (value.isNotEmpty) {
-                String dKey = value[0][ShiftTable.deviceKey] == null
-                    ? ''
-                    : value[0][ShiftTable.deviceKey];
-                if (dKey.isNotEmpty) {
-                  _deviceKeyPresent = dKey == '' ? false : true;
-                  deviceKey.text = dKey;
-                  Config.authToken = dKey;
-                  Config.installApi = dKey;
-                  progressDialog = AppTheme.showProgressDialog(
-                    context,
-                    widget: StreamBuilder(
-                      initialData: Text('Loading...'),
-                      stream: _bloc.message,
-                      builder: (context, snapshot) {
-                        return snapshot.data;
-                      },
-                    ),
-                  );
-                  progressDialog.show();
-                  LoginController.loadData(_bloc)
-                      .then((value) => _deviceKeyPresent = value)
-                      .whenComplete(() {
-                    // setState(() {
-                    // DataLists.instance.listDevices.where((element) => dKey == element.deviceKey);
+      _verifyingDeviceKey();
+  }
+
+  void _verifyingDeviceKey(){
+    if(Config.currentDevice != null){
+      deviceKey.text = Config.currentDevice.deviceKey;
+      _deviceKeyPresent = true;
+    }
+    if(Config.isLogin){
+      Config.database
+          .query(ShiftTable.tableName,
+          columns: [ShiftTable.deviceKey],
+          orderBy: '${ShiftTable.localId} desc')
+          .then((value) {
+        setState(() {
+          try {
+            if (value.isNotEmpty) {
+              String dKey = value[0][ShiftTable.deviceKey] == null
+                  ? ''
+                  : value[0][ShiftTable.deviceKey];
+              if (dKey.isNotEmpty) {
+                _deviceKeyPresent = dKey == '' ? false : true;
+                deviceKey.text = dKey;
+                Config.authToken = dKey;
+                Config.installApi = dKey;
+                progressDialog = AppTheme.showProgressDialog(
+                  context,
+                  widget: StreamBuilder(
+                    initialData: Text('Loading...'),
+                    stream: _bloc.message,
+                    builder: (context, snapshot) {
+                      return snapshot.data;
+                    },
+                  ),
+                );
+                progressDialog.show();
+                LoginController.loadData(_bloc)
+                    .then((value) {
+                  if(value) _deviceKeyPresent = value;
+                  else{
+                    progressDialog.hide();
+                    Toast.show('Cannot Access Server!', context);
+                    _bloc.dispose();
+                  }
+                }).whenComplete(() {
+                  if(DataLists.instance.listDevices.isNotEmpty){
                     DataLists.instance.listDevices.forEach((element) {
                       if (dKey == element.deviceKey) {
                         Config.currentDevice = element;
                         progressDialog.hide();
                       }
                     });
-                    // });
-                  });
-                } else {
-                  progressDialog.hide();
-                  _deviceKeyPresent = false;
-                }
+                  }else{
+                    Toast.show('Cannot Access Server!', context);
+                  }
+                });
+              } else {
+                progressDialog.hide();
+                _deviceKeyPresent = false;
               }
-            } catch (e) {
-              progressDialog.hide();
-              _log.e(e);
             }
-          });
-        }).catchError((onError) {
-          progressDialog.hide();
-          _deviceKeyPresent = false;
+          } catch (e) {
+            progressDialog.hide();
+            _log.e(e);
+          }
         });
-      }
+      }).catchError((onError) {
+        // progressDialog.hide();
+        _deviceKeyPresent = false;
+      });
+    }
   }
 
   bool validateUser(email, pass) {
@@ -181,6 +199,20 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  void _onSwitchTap(bool value){
+    setState(() {
+      _isSwitched = value;
+      if(_isSwitched){
+        activeColor = Colors.yellow[700];
+        Config.activeStatus = 'Online';
+      }  else{
+        activeColor = Colors.grey;
+        Config.activeStatus = 'Offline';
+      }
+      print(_isSwitched);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -202,20 +234,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            // Colors.yellowAccent,
-                            // Colors.yellow,
-                            // Colors.amberAccent,
                             Colors.amber,
                             Colors.redAccent,
-                            // Colors.indigo,
-                            // Colors.indigoAccent,
-                            // Colors.redAccent,
                           ],
                           begin: Alignment.topRight,
                           end: Alignment.bottomLeft,
                         ),
-                        // borderRadius: new BorderRadius.horizontal(
-                        //     right: new Radius.circular(250)),
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.horizontal(
                           right:
@@ -256,7 +280,30 @@ class _LoginScreenState extends State<LoginScreen> {
                                   key: _formKey,
                                   autovalidate: _autoValidate,
                                   child: Column(
+                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: <Widget>[
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            Config.activeStatus,
+                                            style: GoogleFonts.ubuntuCondensed(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 13,
+                                              letterSpacing: 1.0,
+                                              color: activeColor
+                                            ),
+                                          ),
+                                          Switch(
+                                            value: _isSwitched,
+                                            onChanged: _onSwitchTap,
+                                            activeTrackColor: Colors.yellowAccent[600],
+                                            activeColor: Colors.yellow[700],
+                                            inactiveTrackColor: Colors.grey[200],
+                                            inactiveThumbColor: Colors.grey,
+                                          ),
+                                        ],
+                                      ),
                                       Row(
                                         children: [
                                           Expanded(
@@ -340,7 +387,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                                 .hide();
                                                           });
                                                         } else {
-                                                          dispose();
+                                                          _bloc.dispose();
                                                           progressDialog.hide();
                                                           AppTheme.showAlertDialogOK(
                                                               context,
@@ -355,7 +402,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         }
                                                       });
                                                     } else {
-                                                      dispose();
+                                                      _bloc.dispose();
                                                       progressDialog.hide();
                                                     }
                                                   }
@@ -446,12 +493,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               SizedBox(
                                 height: 30,
                               ),
-                              // isLoading
-                              //     ? AppTheme.circularProgressIndicator(
-                              //         Colors.redAccent)
-                              //     : SizedBox(
-                              //         height: 0,
-                              //       ),
                               Container(
                                 height: 50,
                                 decoration: BoxDecoration(

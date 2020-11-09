@@ -117,7 +117,7 @@ class Customer {
   Future<List<Customer>> getCustomerById(Database db, int id) async {
     List<Customer> customerList = [];
     List<Map<String, dynamic>> customerMap = await db.query(CustomerTable.tableName,
-        columns: [CustomerTable.name, CustomerTable.phone],
+        // columns: [CustomerTable.name, CustomerTable.phone],
         where: '${CustomerTable.localId} = $id');
     customerMap.forEach((customer) {
       customerList.add(Customer.fromJson(customer));

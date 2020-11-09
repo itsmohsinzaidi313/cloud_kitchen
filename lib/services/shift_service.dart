@@ -57,6 +57,7 @@ class ShiftService extends ServiceCommon {
                 ShiftTable.tableName,
                 {
                   '${ShiftTable.serverId}': decodedJson['id'],
+                  '${ShiftTable.registerStatus}' : '1',
                   '${ShiftTable.isUpload}': '1'
                 },
                 where: '${ShiftTable.localId} = ?',
@@ -78,7 +79,7 @@ class ShiftService extends ServiceCommon {
                   bool status2 = decodedJson2['status'];
                   if (status2) {
                     await _db.update(
-                        ShiftTable.tableName, {ShiftTable.isUpload: '2'},
+                        ShiftTable.tableName, {ShiftTable.registerStatus: '2',ShiftTable.isUpload: '2'},
                         where: '${ShiftTable.localId} = ?',
                         whereArgs: [shift.remoteId]);
                   }
@@ -88,7 +89,7 @@ class ShiftService extends ServiceCommon {
           } else {
             String message = decodedJson['message'];
             if (message.contains('register is already open')) {
-              _db.update(ShiftTable.tableName, {ShiftTable.isUpload: '1'});
+              _db.update(ShiftTable.tableName, {ShiftTable.registerStatus: '1', ShiftTable.isUpload: '1'});
             }
           }
         }

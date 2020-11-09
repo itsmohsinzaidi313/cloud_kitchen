@@ -134,6 +134,9 @@ class _DashboardState extends State<Dashboard> {
           title: 'Logout',
           message: 'Are you sure?',
           onYes: () {
+            setState(() {
+              Config.isLogin = false;
+            });
             LoginController().pushAndRemoveUntil(context);
           },
           onNo: () => Navigator.pop(context));

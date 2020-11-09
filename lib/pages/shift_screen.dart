@@ -273,7 +273,7 @@ class _ShiftScreen extends State<ShiftScreen> {
         break;
       case 2:
         return FloatingActionButton(
-          onPressed: () {
+          onPressed: () async {
             try {
               setState(() {
                 checkField = closingAmount.text == '' ? true : false;
@@ -290,7 +290,7 @@ class _ShiftScreen extends State<ShiftScreen> {
                   Config.currentShift.registerStatus = '2';
 
                   ///UPDATING SHIFT IN THE DATABASE
-                  Config.database
+                  await Config.database
                       .update(
                           ShiftTable.tableName,
                           {
@@ -306,12 +306,17 @@ class _ShiftScreen extends State<ShiftScreen> {
                       .then((value) {
                     if (value > 0) {
                       Lib.closeRegister(Config.currentShift);
+
                       AppTheme.showAlertDialogOK(context,
                           title: 'Success',
                           message:
                               'Shift# ${Config.currentShift.registerNo} closed successfully.',
-                          onOK: () =>
-                              LoginController().pushAndRemoveUntil(context));
+                          onOK: () {
+                            setState(() {
+                              Config.isLogin = false;
+                            });
+                            LoginController().pushAndRemoveUntil(context);
+                          });
                     } else {
                       AppTheme.showAlertDialogOK(context,
                           title: 'Error',

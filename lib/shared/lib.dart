@@ -164,13 +164,13 @@ class Lib {
         Map<String, dynamic> result = jsonDecode(response.body);
         bool status = result['status'];
         if (status) {
+          Map<String, dynamic> map = {
+            ShiftTable.closingBalance: shift.closingBalance,
+            ShiftTable.closingBalanceDateTime: shift.closingBalanceDateTime,
+            ShiftTable.registerStatus: '2'
+          };
           int rowsUpdated = await Config.database.update(
-              ShiftTable.tableName,
-              {
-                ShiftTable.closingBalance: shift.closingBalance,
-                ShiftTable.closingBalanceDateTime: shift.closingBalanceDateTime,
-                ShiftTable.registerStatus: '2'
-              },
+              ShiftTable.tableName, map,
               where: '${ShiftTable.localId} = ?',
               whereArgs: [shift.remoteId]);
           if (rowsUpdated > 0)
@@ -178,6 +178,7 @@ class Lib {
           else
             return false;
         } else {
+          print(result['message']);
           return false;
         }
       } else {
