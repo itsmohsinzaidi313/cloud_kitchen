@@ -96,7 +96,11 @@ class SalesMaster {
         saleNo = json[SalesMasterTable.saleNo],
         totalItems = json[SalesMasterTable.totalItems],
         subTotal = json[SalesMasterTable.subTotal],
-        paidAmount = double.tryParse(json[SalesMasterTable.paidAmount].toString()).toStringAsFixed(2).toString(),
+
+        paidAmount = json[SalesMasterTable.paidAmount] != null ?
+                    double.tryParse(json[SalesMasterTable.paidAmount].toString()).toStringAsFixed(2).toString()
+                    : json[SalesMasterTable.paidAmount].toString(),
+
         dueAmount = json[SalesMasterTable.dueAmount],
         disc = json[SalesMasterTable.disc],
         discActual = json[SalesMasterTable.discActual],
@@ -105,11 +109,17 @@ class SalesMaster {
         paymentMethodId = json[SalesMasterTable.paymentMethodId],
         closeTime = json[SalesMasterTable.closeTime],
         tableId = json[SalesMasterTable.tableId],
-        totalItemDiscountAmount =
-            json[SalesMasterTable.totalItemDiscountAmount],
-        subTotalWithDiscount = double.tryParse(json[SalesMasterTable.subTotalWithDiscount].toString()).toStringAsFixed(2).toString(),
+        totalItemDiscountAmount = json[SalesMasterTable.totalItemDiscountAmount],
+
+        subTotalWithDiscount = json[SalesMasterTable.subTotalWithDiscount] != null ?
+                    double.tryParse(json[SalesMasterTable.subTotalWithDiscount].toString()).toStringAsFixed(2).toString() : json[SalesMasterTable.subTotalWithDiscount].toString(),
+
         subTotalDiscountAmount = json[SalesMasterTable.subTotalDiscountAmount],
-        totalDiscountAmount = double.tryParse(json[SalesMasterTable.totalDiscountAmount].toString()).toStringAsFixed(2).toString(),
+
+        totalDiscountAmount = json[SalesMasterTable.totalDiscountAmount] != null ?
+                    double.tryParse(json[SalesMasterTable.totalDiscountAmount].toString()).toStringAsFixed(2).toString() :
+                    json[SalesMasterTable.totalDiscountAmount].toString(),
+
         deliveryCharge = json[SalesMasterTable.deliveryCharge],
         subTotalDiscountValue = json[SalesMasterTable.subTotalDiscountValue],
         subTotalDiscountType = json[SalesMasterTable.subTotalDiscountType],

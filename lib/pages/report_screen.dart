@@ -11,6 +11,7 @@ import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:intl/intl.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:toast/toast.dart';
 
 class ReportScreen extends StatefulWidget {
   ReportModel model;
@@ -34,7 +35,11 @@ class _ReportScreenState extends State<ReportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _progress = AppTheme.showProgressDialog(context, isDismissible: false, widget: Center(child: Text('Loading..'),));
+    _progress = AppTheme.showProgressDialog(context,
+        // isDismissible: false,
+        widget: Center(
+          child: Text('Loading..'),
+        ));
     return Scaffold(
       appBar: AppTheme.appBarNormal(
           context: context,
@@ -329,28 +334,31 @@ class _ReportScreenState extends State<ReportScreen> {
 
   void _searchSelectedDate() async {
     if (!model.fromDate.contains('Tap') && !model.toDate.contains('Tap')) {
-     await _progress.show();
+      await _progress.show();
       model.listOfSalesMasterForSale.clear();
       model.totalDiscount = 0.0;
       model.totalPaidAmount = 0.0;
       model.totalSubTotal = 0.0;
-      List<SalesMaster>  value = await model.salesMaster
-          .getSalesByDate(model.fromDate, model.toDate, _isDropdownButtonPressed ? _dropdown : '');
-        if (value != null) {
-          value.forEach((element) {
-            model.listOfSalesMasterForSale.add(element);
-            model.totalDiscount += double.parse(element.totalDiscountAmount);
-            model.totalSubTotal += double.parse(element.subTotalWithDiscount);
-            model.totalPaidAmount += double.parse(element.paidAmount);
-            // _isDropdownButtonPressed ? model.shift = _dropdown : model.shift = '';
-          });
-          await _progress.hide();
-          setState(() {model.isReportView = true;});
-        } else {
-          await _progress.hide();
-          print('Sales List Contains Nothing');
-        }
-
+      List<SalesMaster> value = await model.salesMaster.getSalesByDate(
+          model.fromDate,
+          model.toDate,
+          _isDropdownButtonPressed ? _dropdown : '');
+      if (value != null) {
+        value.forEach((element) {
+          model.listOfSalesMasterForSale.add(element);
+          model.totalDiscount += double.parse(element.totalDiscountAmount);
+          model.totalSubTotal += double.parse(element.subTotalWithDiscount);
+          model.totalPaidAmount += double.parse(element.paidAmount);
+          // _isDropdownButtonPressed ? model.shift = _dropdown : model.shift = '';
+        });
+        await _progress.hide();
+        setState(() {
+          model.isReportView = true;
+        });
+      } else {
+        await _progress.hide();
+        print('Sales List Contains Nothing');
+      }
     } else {
       await _progress.hide();
       AppTheme.showAlertDialogOK(context,
@@ -361,63 +369,73 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   Widget _getAutoCompleteTextField() {
-    return autoCompleteTextField = AutoCompleteTextField<SalesMaster>(
-      clearOnSubmit: false,
-      style: TextStyle(
-        color: Colors.black,
-        fontSize: 16,
-      ),
-      decoration: InputDecoration(
-        hintText: 'Search Sale',
-        suffixIcon: IconButton(
-          icon: Icon(Icons.cancel),
-          iconSize: 25,
-          color: Colors.yellow[700],
-          onPressed: () {
-            autoCompleteTextField.textField.controller.text = '';
-          },
+    AutoCompleteTextField _autoCompleteTextField;
+    try{
+       _autoCompleteTextField = AutoCompleteTextField<SalesMaster>(
+        clearOnSubmit: false,
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 16,
         ),
-        contentPadding: EdgeInsets.fromLTRB(10, 30, 10, 20),
-        hintStyle: TextStyle(color: Colors.grey),
-      ),
-      keyboardType: TextInputType.number,
-      itemSubmitted: (item) async{
-        setState(() async {
-          model.salesMaster = item;
-          autoCompleteTextField.textField.controller.text = item.saleNo;
-          model.listOfSalesDetails.clear();
+        decoration: InputDecoration(
+          hintText: 'Search Sale',
+          suffixIcon: IconButton(
+            icon: Icon(Icons.cancel),
+            iconSize: 25,
+            color: Colors.yellow[700],
+            onPressed: () {
+              _autoCompleteTextField.textField.controller.text = '';
+            },
+          ),
+          contentPadding: EdgeInsets.fromLTRB(10, 30, 10, 20),
+          hintStyle: TextStyle(color: Colors.grey),
+        ),
+        keyboardType: TextInputType.number,
+        itemSubmitted: (item) async {
+          setState(() {
+            model.salesMaster = item;
+            _autoCompleteTextField.textField.controller.text = item.saleNo;
+            model.listOfSalesDetails.clear();
+          });
           int id = int.parse(model.salesMaster.localId);
           await _progress.show();
-          List<Map<String, dynamic>> value = await ReportController.getSalesDetailsList(id: id);
-            if (value != null) {
-              value.forEach((element) {
-                model.listOfSalesDetails.add(SalesDetails.fromJson(element));
-              });
-              await _progress.hide();
-              setState(() {model.isDuplicateSlipView = true;
-                model.isReportView = false;});
-            } else {
-              await _progress.hide();
-              print('Sales Details Contains Nothing');
-            }
-        });
-      },
-      key: key,
-      inputFormatters: <TextInputFormatter>[
-        FilteringTextInputFormatter.digitsOnly,
-      ],
-      suggestions: model.listOfSalesMasterForSlip,
-      itemBuilder: (context, item) {
-        return ReportController.row(item: item);
-      },
-      itemFilter: (item, query) {
-        if (autoCompleteTextField.textField.controller.text.isEmpty) query = '';
-        return item.saleNo.toLowerCase().startsWith(
-            Lib.codeGenerator('ORD', int.parse(query)).toLowerCase());
-      },
-      itemSorter: (a, b) {
-        return a.saleNo.compareTo(b.saleNo);
-      },
-    );
+          List<Map<String, dynamic>> value =
+              await ReportController.getSalesDetailsList(id: id);
+          if (value != null) {
+            value.forEach((element) {
+              model.listOfSalesDetails.add(SalesDetails.fromJson(element));
+            });
+            await _progress.hide();
+            setState(() {
+              model.isDuplicateSlipView = true;
+              model.isReportView = false;
+            });
+          } else {
+            await _progress.hide();
+            print('Sales Details Contains Nothing');
+          }
+        },
+        key: key,
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.digitsOnly,
+        ],
+        suggestions: model.listOfSalesMasterForSlip,
+        itemBuilder: (context, item) {
+          return ReportController.row(item: item);
+        },
+        itemFilter: (item, query) {
+          if (_autoCompleteTextField.textField.controller.text.isEmpty)
+            query = '';
+          return item.saleNo.toLowerCase().startsWith(
+              Lib.codeGenerator('ORD', int.parse(query)).toLowerCase());
+        },
+        itemSorter: (a, b) {
+          return a.saleNo.compareTo(b.saleNo);
+        },
+      );
+    } catch(e){
+      AppTheme.showToast(e.toString(), context);
+    }
+    return _autoCompleteTextField;
   }
 }

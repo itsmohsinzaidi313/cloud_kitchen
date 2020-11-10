@@ -1,3 +1,4 @@
+import 'package:food_app/database/table_object/register_table.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqlite_api.dart';
@@ -18,6 +19,7 @@ class Register {
   String registerNo;
   String deviceKey;
   String remoteId;
+  String isUpload;
 
   Register(
       {this.id,
@@ -34,24 +36,24 @@ class Register {
       this.companyId,
       this.registerNo,
       this.deviceKey,
-      this.remoteId});
+      this.remoteId, this.isUpload});
 
   Register.fromJson(Map<String, dynamic> json)
-      : this.id = json['id'],
-        this.openingBalance = json['opening_balance'],
-        this.closingBalance = json['closing_balance'],
-        this.openingBalanceDateTime = json['opening_balance_date_time'],
-        this.closingBalanceDateTime = json['closing_balance_date_time'],
-        this.salePaidAmount = json['sale_paid_amount'],
-        this.customerDueReceive = json['customer_due_receive'],
-        this.paymentMethodsSale = json['payment_methods_sale'],
-        this.registerStatus = json['register_status'],
-        this.userId = json['user_id'],
-        this.outletId = json['outlet_id'],
-        this.companyId = json['company_id'],
-        this.registerNo = json['register_no'],
-        this.deviceKey = json['device_key'],
-        this.remoteId = json['remote_id'];
+      : this.id = json[RegisterTable.id],
+        this.openingBalance = json[RegisterTable.openingBalance],
+        this.closingBalance = json[RegisterTable.closingBalance],
+        this.openingBalanceDateTime = json[RegisterTable.openingBalanceDateTime],
+        this.closingBalanceDateTime = json[RegisterTable.closingBalanceDateTime],
+        this.salePaidAmount = json[RegisterTable.salePaidAmount],
+        this.customerDueReceive = json[RegisterTable.customerDueReceive],
+        this.paymentMethodsSale = json[RegisterTable.paymentMethodsSale],
+        this.registerStatus = json[RegisterTable.registerStatus],
+        this.userId = json[RegisterTable.userId],
+        this.outletId = json[RegisterTable.outletId],
+        this.companyId = json[RegisterTable.companyId],
+        this.registerNo = json[RegisterTable.registerNo],
+        this.deviceKey = json[RegisterTable.deviceKey],
+        this.remoteId = json[RegisterTable.remoteId], this.isUpload = json[RegisterTable.isUpload];
 
   List<String> getList() => [
         Lib.codeGenerator('REG', int.parse(this.remoteId)),
@@ -68,7 +70,8 @@ class Register {
         this.companyId,
         this.registerNo,
         this.deviceKey,
-        this.id
+        this.id,
+        this.isUpload
       ];
 
   Map<String, dynamic> getValues() {

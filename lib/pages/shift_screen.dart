@@ -306,7 +306,6 @@ class _ShiftScreen extends State<ShiftScreen> {
                       .then((value) {
                     if (value > 0) {
                       Lib.closeRegister(Config.currentShift);
-
                       AppTheme.showAlertDialogOK(context,
                           title: 'Success',
                           message:

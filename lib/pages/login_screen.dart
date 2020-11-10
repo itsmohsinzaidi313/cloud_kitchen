@@ -110,8 +110,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   if(value) _deviceKeyPresent = value;
                   else{
                     progressDialog.hide();
-                    Toast.show('Cannot Access Server!', context);
-                    _bloc.dispose();
+                    AppTheme.showToast('Cannot Access Server!', context);
+                    // _bloc.dispose();
                   }
                 }).whenComplete(() {
                   if(DataLists.instance.listDevices.isNotEmpty){
@@ -122,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       }
                     });
                   }else{
-                    Toast.show('Cannot Access Server!', context);
+                    AppTheme.showToast('Cannot Access Server!', context);
                   }
                 });
               } else {
@@ -387,7 +387,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                                 .hide();
                                                           });
                                                         } else {
-                                                          _bloc.dispose();
+                                                          // _bloc.dispose();
                                                           progressDialog.hide();
                                                           AppTheme.showAlertDialogOK(
                                                               context,
@@ -402,7 +402,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         }
                                                       });
                                                     } else {
-                                                      _bloc.dispose();
+                                                      // _bloc.dispose();
                                                       progressDialog.hide();
                                                     }
                                                   }

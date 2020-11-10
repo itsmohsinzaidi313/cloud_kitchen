@@ -326,7 +326,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       .pushAndRemoveUntil(context);
                                 } else{
                                   Navigator.pop(context);
-                                  Toast.show('Invalid Payment Method!', context, backgroundColor: Colors.redAccent, textColor: Colors.white, duration: 2);
+                                  AppTheme.showToast('Invalid Payment Method!', context);
                                 }
                               },
                               onNo: () => Navigator.pop(context),

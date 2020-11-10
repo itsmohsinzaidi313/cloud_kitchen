@@ -167,7 +167,8 @@ class Lib {
           Map<String, dynamic> map = {
             ShiftTable.closingBalance: shift.closingBalance,
             ShiftTable.closingBalanceDateTime: shift.closingBalanceDateTime,
-            ShiftTable.registerStatus: '2'
+            ShiftTable.registerStatus: '2',
+            ShiftTable.isUpload: '2'
           };
           int rowsUpdated = await Config.database.update(
               ShiftTable.tableName, map,

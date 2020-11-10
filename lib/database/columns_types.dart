@@ -2,6 +2,8 @@ import 'package:food_app/database/table_object/category_table.dart';
 import 'package:food_app/database/table_object/company_table.dart';
 import 'package:food_app/database/table_object/customer_table.dart';
 import 'package:food_app/database/table_object/device_table.dart';
+import 'package:food_app/database/table_object/error_detail.dart';
+import 'package:food_app/database/table_object/error_master.dart';
 import 'package:food_app/database/table_object/expense_categories_table.dart';
 import 'package:food_app/database/table_object/item_modifier_table.dart';
 import 'package:food_app/database/table_object/item_table.dart';
@@ -11,6 +13,8 @@ import 'package:food_app/database/table_object/outlet_table.dart';
 import 'package:food_app/database/table_object/payment_method_table.dart';
 import 'package:food_app/database/table_object/sales_detail_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
+import 'package:food_app/database/table_object/setting_detail.dart';
+import 'package:food_app/database/table_object/setting_master.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/database/table_object/tables_table.dart';
 import 'package:food_app/database/table_object/user_table.dart';
@@ -35,15 +39,19 @@ class Types {
     PaymentMethodTable.columnsType, //12
     VatAmountTable.columnsType, //13
     TablesTable.columnsType, //14
-    OrdersTable.columnsType //16
+    OrdersTable.columnsType, //16
+    SettingMasterTable.columnsType, //17
+    SettingDetailTable.columnsType, //18
+    ErrorMasterTable.columnsType, //19
+    ErrorDetailTable.columnsType //20
   ];
 
-  static const String TEXT = 'TEXT';
-  static const String INTEGER = 'INTEGER';
-  static const String BLOB = 'BLOB';
-  static const String REAL = 'REAL';
-  static const String NUMERIC = 'NUMERIC';
-  static const String PRIMARY_KEY = ' PRIMARY KEY';
+  // static const String TEXT = 'TEXT';
+  // static const String INTEGER = 'INTEGER';
+  // static const String BLOB = 'BLOB';
+  // static const String REAL = 'REAL';
+  // static const String NUMERIC = 'NUMERIC';
+  // static const String PRIMARY_KEY = ' PRIMARY KEY';
 
   ///USER TABLE TYPES
   // static const List<String> users = [

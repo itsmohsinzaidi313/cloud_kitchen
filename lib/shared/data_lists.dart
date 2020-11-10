@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:food_app/bloc/dialog_message_bloc.dart';
 import 'package:food_app/database/table_object/category_table.dart';
 import 'package:food_app/database/table_object/company_table.dart';
@@ -23,10 +21,10 @@ import 'package:food_app/models/objects/expense_category.dart';
 import 'package:food_app/models/objects/item.dart';
 import 'package:food_app/models/objects/item_modifier.dart';
 import 'package:food_app/models/objects/modifier.dart';
-import 'package:food_app/models/objects/my_object.dart';
 import 'package:food_app/models/objects/outlet.dart';
 import 'package:food_app/models/objects/payment_method.dart';
 import 'package:food_app/models/objects/register.dart';
+import 'package:food_app/models/objects/shift.dart';
 import 'package:food_app/models/objects/user.dart';
 import 'package:food_app/models/objects/vat_amount.dart';
 import 'package:food_app/models/objects/table.dart';
@@ -235,6 +233,9 @@ class DataLists {
       return false;
     }
     try {
+      DataLists.instance.listRegisters.forEach((element) {
+        element.isUpload = '0';
+      });
       await importListToDatabase(
               tableName: ShiftTable.tableName,
               bloc: bloc,
