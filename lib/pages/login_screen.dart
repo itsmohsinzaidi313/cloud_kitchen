@@ -3,6 +3,7 @@ import 'package:food_app/bloc/dialog_message_bloc.dart';
 import 'package:food_app/controller/login_controller.dart';
 import 'package:food_app/controller/shift_controller.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
+import 'package:food_app/models/objects/setting_detail.dart';
 import 'package:food_app/models/objects/shift.dart';
 import 'package:food_app/models/objects/user.dart';
 import 'package:food_app/models/view_models/login_model.dart';
@@ -40,7 +41,8 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _autoValidate = false, _isSwitched = true;
   bool _obscureText = true;
   bool isLoading = false;
-  bool isLogin = false;
+
+  // bool isLogin = false;
   bool _deviceKeyPresent = false;
   bool _deviceKeyCheck = false;
   Icon _icon = Icon(Icons.visibility_off);
@@ -69,148 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   initState() {
     super.initState();
-      _verifyingDeviceKey();
-  }
-
-  void _verifyingDeviceKey(){
-    if(Config.currentDevice != null){
-      deviceKey.text = Config.currentDevice.deviceKey;
-      _deviceKeyPresent = true;
-    }
-    if(Config.isLogin){
-      Config.database
-          .query(ShiftTable.tableName,
-          columns: [ShiftTable.deviceKey],
-          orderBy: '${ShiftTable.localId} desc')
-          .then((value) {
-        setState(() {
-          try {
-            if (value.isNotEmpty) {
-              String dKey = value[0][ShiftTable.deviceKey] == null
-                  ? ''
-                  : value[0][ShiftTable.deviceKey];
-              if (dKey.isNotEmpty) {
-                _deviceKeyPresent = dKey == '' ? false : true;
-                deviceKey.text = dKey;
-                Config.authToken = dKey;
-                Config.installApi = dKey;
-                progressDialog = AppTheme.showProgressDialog(
-                  context,
-                  widget: StreamBuilder(
-                    initialData: Text('Loading...'),
-                    stream: _bloc.message,
-                    builder: (context, snapshot) {
-                      return snapshot.data;
-                    },
-                  ),
-                );
-                progressDialog.show();
-                LoginController.loadData(_bloc)
-                    .then((value) {
-                  if(value) _deviceKeyPresent = value;
-                  else{
-                    progressDialog.hide();
-                    AppTheme.showToast('Cannot Access Server!', context);
-                    // _bloc.dispose();
-                  }
-                }).whenComplete(() {
-                  if(DataLists.instance.listDevices.isNotEmpty){
-                    DataLists.instance.listDevices.forEach((element) {
-                      if (dKey == element.deviceKey) {
-                        Config.currentDevice = element;
-                        progressDialog.hide();
-                      }
-                    });
-                  }else{
-                    AppTheme.showToast('Cannot Access Server!', context);
-                  }
-                });
-              } else {
-                progressDialog.hide();
-                _deviceKeyPresent = false;
-              }
-            }
-          } catch (e) {
-            progressDialog.hide();
-            _log.e(e);
-          }
-        });
-      }).catchError((onError) {
-        // progressDialog.hide();
-        _deviceKeyPresent = false;
-      });
-    }
-  }
-
-  bool validateUser(email, pass) {
-    List<User> listUser = DataLists.instance.listUsers;
-    bool valid = false;
-    for (int i = 0; i < listUser.length; i++) {
-      if (listUser[i].emailAddress == email && listUser[i].password == pass) {
-        Config.currentUser = listUser[i];
-        print(Config.currentUser.serverId);
-        setState(() {
-          valid = true;
-        });
-        break;
-      }
-    }
-    return valid;
-  }
-
-  Future getSharedPreferences() async {
-    _sharedPreferences = await SharedPreferences.getInstance();
-    bool isLogin = _sharedPreferences.getBool('isLogin') ?? false;
-    if (isLogin == true) {
-      Navigator.pushReplacementNamed(context, '/r', arguments: {
-        'id': _sharedPreferences.getInt('userId'),
-      });
-    }
-  }
-
-  Future setSharedPreferences(user) async {
-    _sharedPreferences = await SharedPreferences.getInstance();
-    await _sharedPreferences.setBool('isLogin', true);
-    await _sharedPreferences.setInt('userId', user[0]['id']);
-  }
-
-  void onButtonTap() {
-    if (false) {
-      Navigator.of(context)
-          .push(new MaterialPageRoute(builder: (context) => SqlView()));
-    } else {
-      setState(() {
-        if (_formKey.currentState.validate()) {
-          isLoading = true;
-          _formKey.currentState.save();
-          email.text = email.text.trim();
-          password.text = password.text.trim();
-          Config.authToken = deviceKey.text;
-          validateUser(email.text, password.text)
-              ? ShiftController(1).launch(context)
-              : _scaffoldKey.currentState.showSnackBar(
-                  SnackBar(content: Text('Invalid email or password')));
-          // }
-        } else {
-          isLoading = false;
-          _autoValidate = true;
-        }
-      });
-    }
-  }
-
-  void _onSwitchTap(bool value){
-    setState(() {
-      _isSwitched = value;
-      if(_isSwitched){
-        activeColor = Colors.yellow[700];
-        Config.activeStatus = 'Online';
-      }  else{
-        activeColor = Colors.grey;
-        Config.activeStatus = 'Offline';
-      }
-      print(_isSwitched);
-    });
+    _verifyingDeviceKey();
   }
 
   @override
@@ -280,26 +141,28 @@ class _LoginScreenState extends State<LoginScreen> {
                                   key: _formKey,
                                   autovalidate: _autoValidate,
                                   child: Column(
-                                     crossAxisAlignment: CrossAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     children: <Widget>[
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
                                         children: [
                                           Text(
                                             Config.activeStatus,
                                             style: GoogleFonts.ubuntuCondensed(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 13,
-                                              letterSpacing: 1.0,
-                                              color: activeColor
-                                            ),
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 13,
+                                                letterSpacing: 1.0,
+                                                color: activeColor),
                                           ),
                                           Switch(
                                             value: _isSwitched,
                                             onChanged: _onSwitchTap,
-                                            activeTrackColor: Colors.yellowAccent[600],
+                                            activeTrackColor:
+                                                Colors.yellowAccent[600],
                                             activeColor: Colors.yellow[700],
-                                            inactiveTrackColor: Colors.grey[200],
+                                            inactiveTrackColor:
+                                                Colors.grey[200],
                                             inactiveThumbColor: Colors.grey,
                                           ),
                                         ],
@@ -338,74 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           FlatButton(
                                             child: Text('SUBMIT'),
                                             onPressed: !_deviceKeyPresent
-                                                ? () {
-                                                    ProgressDialog
-                                                        progressDialog =
-                                                        AppTheme
-                                                            .showProgressDialog(
-                                                      context,
-                                                      widget: StreamBuilder(
-                                                        initialData:
-                                                            Text('Loading...'),
-                                                        stream: _bloc.message,
-                                                        builder: (context,
-                                                            snapshot) {
-                                                          return snapshot.data;
-                                                        },
-                                                      ),
-                                                    );
-                                                    progressDialog.show();
-                                                    _deviceKeyCheck =
-                                                        deviceKey.text == ''
-                                                            ? false
-                                                            : true;
-                                                    if (_deviceKeyCheck) {
-                                                      Config.authToken =
-                                                          deviceKey.text;
-                                                      Config.installApi =
-                                                          deviceKey.text;
-                                                      LoginController.loadData(
-                                                              _bloc)
-                                                          .then((value) {
-                                                        if (value) {
-                                                          DataLists.instance
-                                                              .listDevices
-                                                              .forEach(
-                                                                  (element) {
-                                                            if (deviceKey
-                                                                    .text ==
-                                                                element
-                                                                    .deviceKey) {
-                                                              setState(() {
-                                                                Config.currentDevice =
-                                                                    element;
-                                                                _deviceKeyPresent =
-                                                                    true;
-                                                              });
-                                                            }
-                                                            progressDialog
-                                                                .hide();
-                                                          });
-                                                        } else {
-                                                          // _bloc.dispose();
-                                                          progressDialog.hide();
-                                                          AppTheme.showAlertDialogOK(
-                                                              context,
-                                                              title:
-                                                                  'Attention',
-                                                              message:
-                                                                  'Unable to load data.\nMake sure you have an internet connection\nand try again.',
-                                                              onOK: () =>
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop());
-                                                        }
-                                                      });
-                                                    } else {
-                                                      // _bloc.dispose();
-                                                      progressDialog.hide();
-                                                    }
-                                                  }
+                                                ? _onSubmit
                                                 : null,
                                           )
                                         ],
@@ -545,5 +341,208 @@ class _LoginScreenState extends State<LoginScreen> {
         },
       ),
     );
+  }
+
+  void _verifyingDeviceKey() {
+    if (Config.currentDevice != null) {
+      deviceKey.text = Config.currentDevice.deviceKey;
+      _deviceKeyPresent = true;
+    }
+    if (Config.isLogin) {
+      Config.database
+          .query(ShiftTable.tableName,
+              columns: [ShiftTable.deviceKey],
+              orderBy: '${ShiftTable.localId} desc')
+          .then((value) {
+        setState(() {
+          try {
+            if (value.isNotEmpty) {
+              String dKey = value[0][ShiftTable.deviceKey] == null
+                  ? ''
+                  : value[0][ShiftTable.deviceKey];
+              if (dKey.isNotEmpty) {
+                _deviceKeyPresent = dKey == '' ? false : true;
+                deviceKey.text = dKey;
+                Config.authToken = dKey;
+                Config.installApi = dKey;
+                progressDialog = AppTheme.showProgressDialog(
+                  context,
+                  widget: StreamBuilder(
+                    initialData: Text('Loading...'),
+                    stream: _bloc.message,
+                    builder: (context, snapshot) {
+                      return snapshot.data;
+                    },
+                  ),
+                );
+                progressDialog.show();
+                LoginController.loadData(_bloc).then((value) {
+                  if (value)
+                    _deviceKeyPresent = value;
+                  else {
+                    progressDialog.hide();
+                    AppTheme.showToast('Cannot Access Server!', context);
+                    // _bloc.dispose();
+                  }
+                }).whenComplete(() {
+                  if (DataLists.instance.listDevices.isNotEmpty) {
+                    DataLists.instance.listDevices.forEach((element) {
+                      if (dKey == element.deviceKey) {
+                        Config.currentDevice = element;
+                        progressDialog.hide();
+                      }
+                    });
+                  } else {
+                    AppTheme.showToast('Cannot Access Server!', context);
+                  }
+                });
+              } else {
+                progressDialog.hide();
+                _deviceKeyPresent = false;
+              }
+            }
+          } catch (e) {
+            progressDialog.hide();
+            _log.e(e);
+          }
+        });
+      }).catchError((onError) {
+        // progressDialog.hide();
+        _deviceKeyPresent = false;
+      });
+    }
+  }
+
+  void _onSubmit() {
+    ProgressDialog progressDialog = AppTheme.showProgressDialog(
+      context,
+      widget: StreamBuilder(
+        initialData: Text('Loading...'),
+        stream: _bloc.message,
+        builder: (context, snapshot) {
+          return snapshot.data;
+        },
+      ),
+    );
+    progressDialog.show();
+    _deviceKeyCheck = deviceKey.text == '' ? false : true;
+    if (_deviceKeyCheck) {
+      Config.authToken = deviceKey.text;
+      Config.installApi = deviceKey.text;
+      LoginController.loadData(_bloc).then((value) {
+        if (value) {
+          DataLists.instance.listDevices.forEach((element) {
+            if (deviceKey.text == element.deviceKey) {
+              setState(() {
+                Config.currentDevice = element;
+                _deviceKeyPresent = true;
+              });
+            }
+            progressDialog.hide();
+          });
+        } else {
+          // _bloc.dispose();
+          progressDialog.hide();
+          AppTheme.showAlertDialogOK(context,
+              title: 'Attention',
+              message:
+                  'Unable to load data.\nMake sure you have an internet connection\nand try again.',
+              onOK: () => Navigator.of(context).pop());
+        }
+      });
+    } else {
+      // _bloc.dispose();
+      progressDialog.hide();
+    }
+  }
+
+  User validateUser(email, pass) {
+    List<User> listUser = DataLists.instance.listUsers;
+    // bool valid = false;
+    User user;
+    for (int i = 0; i < listUser.length; i++) {
+      if (listUser[i].emailAddress == email && listUser[i].password == pass) {
+        Config.currentUser = listUser[i];
+        print(Config.currentUser.serverId);
+        setState(() {
+          user = listUser[i];
+        });
+        break;
+      }
+    }
+    return user;
+  }
+
+  Future getSharedPreferences() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    bool isLogin = _sharedPreferences.getBool('isLogin') ?? false;
+    if (isLogin == true) {
+      Navigator.pushReplacementNamed(context, '/r', arguments: {
+        'id': _sharedPreferences.getInt('userId'),
+      });
+    }
+  }
+
+  Future setSharedPreferences(user) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    await _sharedPreferences.setBool('isLogin', true);
+    await _sharedPreferences.setInt('userId', user[0]['id']);
+  }
+
+  void onButtonTap() async {
+    ProgressDialog progressDialog1 = AppTheme.showProgressDialog(context,widget: Center(child: Text('Loading..'),));
+    progressDialog1.show();
+    if (_formKey.currentState.validate()) {
+      setState(() {
+        isLoading = true;
+        _formKey.currentState.save();
+        email.text = email.text.trim();
+        password.text = password.text.trim();
+        Config.authToken = deviceKey.text;
+      });
+
+      User user = validateUser(email.text, password.text);
+      if (user != null) {
+        int status = _isSwitched ? 1 : 0;
+        int res = await SettingDetail().insertSettingDetail(
+            settingDetail: SettingDetail(
+                userId: int.tryParse(user.serverId),
+                loginStatus: 0,
+                shiftId: 0,
+                connectionStatus: status));
+        if (res > 0) {
+          progressDialog1.hide();
+          ShiftController(1).launch(context);
+        } else {
+          progressDialog1.hide();
+          print('Setting did not inserted');
+        }
+      } else {
+        progressDialog1.hide();
+        _scaffoldKey.currentState
+            .showSnackBar(SnackBar(content: Text('Invalid email or password')));
+      }
+      // }
+    } else {
+      progressDialog1.hide();
+      setState(() {
+        isLoading = false;
+        _autoValidate = true;
+      });
+    }
+  }
+
+  void _onSwitchTap(bool value) {
+    setState(() {
+      _isSwitched = value;
+      if (_isSwitched) {
+        activeColor = Colors.yellow[700];
+        Config.activeStatus = 'Online';
+      } else {
+        activeColor = Colors.grey;
+        Config.activeStatus = 'Offline';
+      }
+      print(_isSwitched);
+    });
   }
 }

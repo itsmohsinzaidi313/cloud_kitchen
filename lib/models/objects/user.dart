@@ -1,4 +1,6 @@
 import 'package:food_app/database/table_object/user_table.dart';
+import 'package:food_app/models/objects/setting_detail.dart';
+import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -88,4 +90,14 @@ class User {
 
   Future<bool> insertIntoDatabase(Database db) async =>
       await Lib.insertIntoDatabase(db, UserTable.tableName, getValues());
+
+  Future<User> getSpecificUser(int userId) async{
+    User user;
+     List<Map<String, dynamic>> userMap = await Config.database.query(UserTable.tableName,
+        where: '${UserTable.serverId} = ?', whereArgs: [userId]);
+     if(userMap.length > 0 ){
+       user = User.fromJson(userMap[0]);
+     } else user = null;
+     return user;
+  }
 }

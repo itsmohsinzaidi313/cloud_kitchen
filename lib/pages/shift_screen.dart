@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
 import 'package:food_app/controller/login_controller.dart';
+import 'package:food_app/database/table_object/setting_detail_table.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
+import 'package:food_app/models/objects/setting_detail.dart';
 import 'package:food_app/models/objects/shift.dart';
 import 'package:food_app/models/view_models/shift_model.dart';
 import 'package:food_app/shared/app_theme.dart';
@@ -245,13 +247,28 @@ class _ShiftScreen extends State<ShiftScreen> {
                               Config.currentShift.toMap(Config.currentShift))
                           .then((value) {
                         if (value > 0) {
-                          AppTheme.showAlertDialogOK(context,
-                              title: 'Success',
-                              message:
+                          Config.database.update(SettingDetailTable.tableName, {
+                            SettingDetailTable.shiftId : value,
+                            SettingDetailTable.registerStatus : 0
+                          }, where: '${SettingDetailTable.userId} = ?', whereArgs: [Config.currentUser.serverId]).then((value) {
+                            if(value > 0){
+                              AppTheme.showAlertDialogOK(context,
+                                  title: 'Success',
+                                  message:
                                   'Shift# ${Config.currentShift.registerNo} opened successfully.',
-                              onOK: () => DashboardController(context)
-                                  .pushAndRemoveUntil(context));
+                                  onOK: () => DashboardController(context)
+                                      .pushAndRemoveUntil(context));
+                            } else{
+                              print('SettingDetail did not updated');
+                              AppTheme.showAlertDialogOK(context,
+                                  title: 'Error',
+                                  message:
+                                  'Shift does not open. Try again!',
+                                  onOK: () => Navigator.of(context).pop());
+                            }
+                          });
                         } else {
+                          print('Shift did not inserted');
                           AppTheme.showAlertDialogOK(context,
                               title: 'Error',
                               message:
@@ -305,17 +322,29 @@ class _ShiftScreen extends State<ShiftScreen> {
                               '${ShiftTable.localId} = ${Config.currentShift.remoteId}')
                       .then((value) {
                     if (value > 0) {
-                      Lib.closeRegister(Config.currentShift);
-                      AppTheme.showAlertDialogOK(context,
-                          title: 'Success',
-                          message:
+                      Config.database.update(SettingDetailTable.tableName, {
+                        SettingDetailTable.shiftId : value,
+                        SettingDetailTable.registerStatus : 0
+                      }, where: '${SettingDetailTable.userId} = ?', whereArgs: [Config.currentUser.serverId]).then((value) {
+                        if(value > 0){
+                          Lib.closeRegister(Config.currentShift);
+                          AppTheme.showAlertDialogOK(context,
+                              title: 'Success',
+                              message:
                               'Shift# ${Config.currentShift.registerNo} closed successfully.',
-                          onOK: () {
-                            setState(() {
-                              Config.isLogin = false;
-                            });
-                            LoginController().pushAndRemoveUntil(context);
-                          });
+                              onOK: () {
+                                setState(() {
+                                  Config.isLogin = false;
+                                });
+                                LoginController().pushAndRemoveUntil(context);
+                              });
+                        } else{
+                          AppTheme.showAlertDialogOK(context,
+                              title: 'Error',
+                              message: 'Something went wrong. Please Try Again!',
+                              onOK: () => Navigator.of(context).pop());
+                        }
+                      });
                     } else {
                       AppTheme.showAlertDialogOK(context,
                           title: 'Error',

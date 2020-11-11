@@ -6,17 +6,14 @@ class SettingMasterTable{
 
   static const String id = 'id';
   static const String title = 'title';
-  static const String userId = 'user_id';
 
   static const List<String> columnsName = [
     id,
-    title,
-    userId
+    title
   ];
 
   static const List<String> columnsType = [
     SqlStructure.integer + SqlStructure.primaryKey,
-    SqlStructure.text,
-    SqlStructure.integer
+    SqlStructure.text
   ];
 }

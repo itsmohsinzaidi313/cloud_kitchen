@@ -1,7 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:food_app/controller/dashboard_controller.dart';
 import 'package:food_app/controller/login_controller.dart';
 import 'package:food_app/database/project_database.dart';
+import 'package:food_app/database/table_object/user_table.dart';
+import 'package:food_app/models/objects/setting_detail.dart';
+import 'package:food_app/models/objects/shift.dart';
+import 'package:food_app/models/objects/user.dart';
 import 'package:food_app/shared/config.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -18,7 +23,34 @@ class _SplashScreenState extends State<SplashScreen> {
     ProjectDatabase().database.then((db) => Config.database = db);
     Timer(
           Duration(seconds: 3),
-          () => LoginController().launch(context));
+          () => _whichScreenToGo());
+  }
+
+  void _whichScreenToGo() async{
+      SettingDetail settingDetail = await SettingDetail()
+          .getUserSettingByDesc();
+      if (settingDetail != null) {
+        Config.settingDetail = settingDetail;
+        User user = await User().getSpecificUser(settingDetail.userId);
+        if(user != null){
+          Config.currentUser = user;
+          Shift shift = await Shift().getSpecificShift(settingDetail.shiftId);
+          if(shift != null){
+            Config.currentShift = shift;
+            DashboardController(context).launchAndReplacement();
+          }
+          else{
+            print('Shift Found NaN');
+            LoginController().launch(context);
+          }
+        } else{
+          print('User Found NaN');
+          LoginController().launch(context);
+        }
+      } else{
+        print('Setting Found NaN');
+        LoginController().launch(context);
+      }
   }
 
   @override

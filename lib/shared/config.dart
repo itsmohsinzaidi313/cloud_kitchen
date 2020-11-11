@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/models/objects/device.dart';
+import 'package:food_app/models/objects/setting_detail.dart';
 import 'package:food_app/models/objects/shift.dart';
 import 'package:food_app/models/objects/user.dart';
 import 'package:intl/intl.dart';
@@ -48,6 +49,10 @@ class Config {
   static Device _currentDevice;
   static set currentDevice(device) => _currentDevice = device;
   static Device get currentDevice => _currentDevice;
+
+  static SettingDetail _settingDetail;
+  static set settingDetail(detail) => _settingDetail = detail;
+  static SettingDetail get settingDetail => _settingDetail;
 
   static double getDeviceWidth(BuildContext context) =>
       MediaQuery.of(context).size.width;
