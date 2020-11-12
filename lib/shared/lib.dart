@@ -4,8 +4,10 @@ import 'dart:developer';
 import 'package:food_app/bloc/dialog_message_bloc.dart';
 import 'package:food_app/bloc/dialog_message_event.dart';
 import 'package:food_app/database/table_object/customer_table.dart';
+import 'package:food_app/database/table_object/device_table.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
 import 'package:food_app/models/objects/customer.dart';
+import 'package:food_app/models/objects/device.dart';
 import 'package:food_app/models/objects/shift.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/install_api.dart';
@@ -123,7 +125,7 @@ class Lib {
         bool status = result['status'];
         if (status) {
           Config.currentShift.registerNo =
-              codeGenerator('REG', int.parse(shift.remoteId));
+              await codeGenerator('REG', int.parse(shift.remoteId));
           Config.currentShift.id = result['id'];
           int id =
               await Shift().insertSpecificIntoDatabase(Config.database, shift);
@@ -193,7 +195,8 @@ class Lib {
   static String codeGenerator(String prefix, int id) {
     String code = '$prefix/';
     // String deviceId = Config().currentShift.deviceKey;
-    String deviceId = Config.currentDevice.serverId;
+    String deviceId;
+    deviceId = Config.currentDevice.serverId;
     if (int.parse(deviceId) < 10) {
       deviceId = '0$deviceId/';
     }

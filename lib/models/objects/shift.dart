@@ -141,11 +141,21 @@ class Shift {
 
   Future<Shift> getSpecificShift(int shiftId) async{
     Shift shift;
-    List<Map<String, dynamic>> shiftMap = await Config.database.query(ShiftTable.tableName,where: '${ShiftTable.localId} = ?',
-    whereArgs: [shiftId]);
+    List<Map<String, dynamic>> shiftMap = await Config.database.query(ShiftTable.tableName, where: '${ShiftTable.localId} = ? AND ${ShiftTable.registerStatus} = ?',
+    whereArgs: [shiftId, 1]);
     if(shiftMap.length > 0) {
       shift = Shift.fromJson(shiftMap[0]);
     } else shift = null;
     return shift;
+  }
+
+  Future<Shift> getShiftByUserId(int userId) async{
+    Shift _shift;
+    List<Map<String, dynamic>> shiftMap = await Config.database.query(ShiftTable.tableName, where: '${ShiftTable.userId} = ?',
+        whereArgs: [userId]);
+    if(shiftMap.length > 0){
+      _shift = Shift.fromJson(shiftMap[0]);
+    } else _shift = null;
+    return _shift;
   }
 }

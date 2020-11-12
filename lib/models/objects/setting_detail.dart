@@ -56,6 +56,15 @@ class SettingDetail {
     } else settingDetail = null;
     return settingDetail;
   }
+
+  Future<SettingDetail> getUserSettingById(int userId) async{
+    SettingDetail settingDetail;
+    List<Map<String, dynamic>> resultMap = await Config.database.rawQuery('SELECT * FROM ${SettingDetailTable.tableName} WHERE ${SettingDetailTable.userId} = $userId');
+    if(resultMap.length > 0){
+      settingDetail = SettingDetail.fromJson(resultMap[0]);
+    } else settingDetail = null;
+    return settingDetail;
+  }
 }
 
 

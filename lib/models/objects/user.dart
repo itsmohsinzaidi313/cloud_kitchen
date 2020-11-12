@@ -100,4 +100,13 @@ class User {
      } else user = null;
      return user;
   }
+
+  Future<User> getUserByLogin(String username, String password) async{
+    User user;
+    List<Map<String, dynamic>> userMap = await Config.database.rawQuery("SELECT * FROM ${UserTable.tableName} WHERE ${UserTable.emailAddress} = '$username' AND ${UserTable.password} = '$password'");
+    if(userMap.length > 0 ){
+      user = User.fromJson(userMap[0]);
+    } else user = null;
+    return user;
+  }
 }

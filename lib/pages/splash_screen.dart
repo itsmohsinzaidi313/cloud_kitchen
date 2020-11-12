@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
 import 'package:food_app/controller/login_controller.dart';
+import 'package:food_app/controller/shift_controller.dart';
 import 'package:food_app/database/project_database.dart';
 import 'package:food_app/database/table_object/user_table.dart';
 import 'package:food_app/models/objects/setting_detail.dart';
@@ -34,14 +35,20 @@ class _SplashScreenState extends State<SplashScreen> {
         User user = await User().getSpecificUser(settingDetail.userId);
         if(user != null){
           Config.currentUser = user;
-          Shift shift = await Shift().getSpecificShift(settingDetail.shiftId);
-          if(shift != null){
-            Config.currentShift = shift;
-            DashboardController(context).launchAndReplacement();
-          }
-          else{
-            print('Shift Found NaN');
-            LoginController().launch(context);
+          if(settingDetail.registerStatus == 1){
+            ShiftController(1).launch(context);
+          } else if (settingDetail.registerStatus == 0){
+            Shift shift = await Shift().getSpecificShift(settingDetail.shiftId);
+            if(shift != null){
+              Config.currentShift = shift;
+              DashboardController(context).launchAndReplacement();
+            }
+            else{
+              print('Shift Found NaN');
+              LoginController().launch(context);
+            }
+          } else{
+            ShiftController(1).launch(context);
           }
         } else{
           print('User Found NaN');

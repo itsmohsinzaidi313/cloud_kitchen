@@ -1,4 +1,5 @@
 import 'package:food_app/database/table_object/device_table.dart';
+import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -55,4 +56,13 @@ class Device {
 
   Future<bool> insertIntoDatabase(Database db) async =>
       await Lib.insertIntoDatabase(db, DeviceTable.tableName, getValues());
+
+  Future<Device> getDeviceById(int outletId) async{
+    Device _device;
+    List<Map<String, dynamic>> deviceMap = await Config.database.rawQuery('SELECT * FROM ${DeviceTable.tableName} WHERE ${DeviceTable.outletId} = $outletId');
+    if(deviceMap.length > 0){
+      _device = Device.fromJson(deviceMap[0]);
+    } else _device = null;
+    return _device;
+  }
 }

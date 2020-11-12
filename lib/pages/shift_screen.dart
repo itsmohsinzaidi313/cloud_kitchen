@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/dashboard_controller.dart';
 import 'package:food_app/controller/login_controller.dart';
+import 'package:food_app/database/table_object/device_table.dart';
 import 'package:food_app/database/table_object/setting_detail_table.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
-import 'package:food_app/models/objects/setting_detail.dart';
+import 'package:food_app/models/objects/device.dart';
 import 'package:food_app/models/objects/shift.dart';
 import 'package:food_app/models/view_models/shift_model.dart';
 import 'package:food_app/shared/app_theme.dart';
@@ -216,16 +217,22 @@ class _ShiftScreen extends State<ShiftScreen> {
   Widget floatingButtonLayoutController(int layoutType) {
     switch (layoutType) {
       case 1:
-        return FloatingActionButton(
-          onPressed: () {
+        return FloatingActionButton (
+          onPressed: ()  {
             setState(() {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
-                DataLists.instance.listDevices.forEach((d) {
-                  Config.currentDevice = d;
+                // DataLists.instance.listDevices.forEach((d) {
+                //   Config.currentDevice = d;
+                Config.database.rawQuery('SELECT * FROM ${DeviceTable.tableName} WHERE ${DeviceTable.outletId} = ${Config.currentUser.outletId}').then((value) {
+                  if(value != null){
+                    Config.currentDevice = Device.fromJson(value[0]);
+                    // deviceId = Config.currentDevice.serverId;
+                  }
+                }).whenComplete(() {
                   Config.currentShift = Shift(
                       shift: _dropdown,
-                      deviceKey: Config.authToken,
+                      deviceKey: Config.authToken ?? Config.currentDevice.deviceKey,
                       openingBalance: openingAmount.text.trim(),
                       userId: Config.currentUser.serverId,
                       openingBalanceDateTime:
@@ -241,7 +248,7 @@ class _ShiftScreen extends State<ShiftScreen> {
                     if (value > 0) {
                       Config.currentShift.remoteId = value.toString();
                       Config.currentShift.registerNo =
-                          Lib.codeGenerator('REG', int.parse(value.toString()));
+                           Lib.codeGenerator('REG', int.parse(value.toString()));
                       Config.database
                           .insert(ShiftTable.tableName,
                               Config.currentShift.toMap(Config.currentShift))
@@ -279,6 +286,7 @@ class _ShiftScreen extends State<ShiftScreen> {
                     }
                   });
                 });
+                // });
               } else {
                 _autoValidate = true;
               }
@@ -324,7 +332,8 @@ class _ShiftScreen extends State<ShiftScreen> {
                     if (value > 0) {
                       Config.database.update(SettingDetailTable.tableName, {
                         SettingDetailTable.shiftId : value,
-                        SettingDetailTable.registerStatus : 0
+                        SettingDetailTable.registerStatus : 1,
+                        SettingDetailTable.loginStatus : 1
                       }, where: '${SettingDetailTable.userId} = ?', whereArgs: [Config.currentUser.serverId]).then((value) {
                         if(value > 0){
                           Lib.closeRegister(Config.currentShift);
@@ -339,13 +348,17 @@ class _ShiftScreen extends State<ShiftScreen> {
                                 LoginController().pushAndRemoveUntil(context);
                               });
                         } else{
+                          print('SettingDetail did not updated');
                           AppTheme.showAlertDialogOK(context,
                               title: 'Error',
-                              message: 'Something went wrong. Please Try Again!',
+                              message:
+                              'Shift does not close. Try again!',
                               onOK: () => Navigator.of(context).pop());
                         }
                       });
                     } else {
+                      print('Shift did not inserted');
+
                       AppTheme.showAlertDialogOK(context,
                           title: 'Error',
                           message: 'Something went wrong. Please Try Again!',

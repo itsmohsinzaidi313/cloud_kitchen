@@ -4,6 +4,7 @@ import 'package:food_app/controller/order_controller.dart';
 import 'package:food_app/controller/order_type_controller.dart';
 import 'package:food_app/controller/report_controller.dart';
 import 'package:food_app/controller/shift_controller.dart';
+import 'package:food_app/database/table_object/setting_detail_table.dart';
 import 'package:food_app/models/view_models/dashboard_model.dart';
 import 'package:food_app/models/generic_models/dashboard_item.dart';
 import 'package:food_app/pages/settings_screen.dart';
@@ -134,10 +135,18 @@ class _DashboardState extends State<Dashboard> {
           title: 'Logout',
           message: 'Are you sure?',
           onYes: () {
-            setState(() {
-              Config.isLogin = false;
+            Config.database.update(SettingDetailTable.tableName, {
+              SettingDetailTable.loginStatus : 1
+            }, where: '${SettingDetailTable.userId} = ?', whereArgs: [Config.currentUser.serverId]).then((value) {
+              if(value > 0){
+                setState(() {
+                  Config.isLogin = false;
+                });
+                LoginController().pushAndRemoveUntil(context);
+              } else{
+                print('Setting Detail not updated');
+              }
             });
-            LoginController().pushAndRemoveUntil(context);
           },
           onNo: () => Navigator.pop(context));
     } else if (dashboardItem.name == 'Setting') {

@@ -59,4 +59,6 @@ class ShiftController {
 
   Future<void> onAmountEntered(BuildContext context) async =>
       DashboardController(context).launch();
+
+
 }

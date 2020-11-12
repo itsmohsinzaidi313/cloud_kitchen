@@ -138,9 +138,9 @@ class _NewSaleState extends State<NewSale> {
                                   height: Config.getDeviceHeight(context) * 0.12,
                                   padding: EdgeInsets.only(top: 5),
                                   // decoration: BoxDecoration(border: Border.all(width: 2)),
-                                  child: ListView(
-                                    scrollDirection: Axis.horizontal,
-                                    children: getCategoryWidgets(model.lstCategory),
+                                    child: ListView(
+                                      scrollDirection: Axis.horizontal,
+                                      children: getCategoryWidgets(model.lstCategory),
                                   ),
                                 ),
                                 Container(

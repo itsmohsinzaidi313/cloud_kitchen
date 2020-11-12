@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/bloc/dialog_message_bloc.dart';
+import 'package:food_app/controller/dashboard_controller.dart';
 import 'package:food_app/controller/login_controller.dart';
 import 'package:food_app/controller/shift_controller.dart';
+import 'package:food_app/database/table_object/setting_detail_table.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
+import 'package:food_app/database/table_object/user_table.dart';
+import 'package:food_app/models/objects/device.dart';
 import 'package:food_app/models/objects/setting_detail.dart';
 import 'package:food_app/models/objects/shift.dart';
 import 'package:food_app/models/objects/user.dart';
@@ -38,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final DialogMessageBloc _bloc = new DialogMessageBloc();
 
-  bool _autoValidate = false, _isSwitched = true;
+  bool _autoValidate = false;
   bool _obscureText = true;
   bool isLoading = false;
 
@@ -76,6 +80,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (deviceKey.text.isNotEmpty) {
+      setState(() {
+        _deviceKeyPresent = true;
+      });
+    }
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
@@ -156,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 color: activeColor),
                                           ),
                                           Switch(
-                                            value: _isSwitched,
+                                            value: Config.isSwitched,
                                             onChanged: _onSwitchTap,
                                             activeTrackColor:
                                                 Colors.yellowAccent[600],
@@ -344,27 +353,33 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _verifyingDeviceKey() {
-    if (Config.currentDevice != null) {
-      deviceKey.text = Config.currentDevice.deviceKey;
-      _deviceKeyPresent = true;
-    }
-    if (Config.isLogin) {
-      Config.database
-          .query(ShiftTable.tableName,
-              columns: [ShiftTable.deviceKey],
-              orderBy: '${ShiftTable.localId} desc')
-          .then((value) {
-        setState(() {
-          try {
-            if (value.isNotEmpty) {
-              String dKey = value[0][ShiftTable.deviceKey] == null
-                  ? ''
-                  : value[0][ShiftTable.deviceKey];
-              if (dKey.isNotEmpty) {
-                _deviceKeyPresent = dKey == '' ? false : true;
+    bool _isFirstTime;
+    setSharedPreferences().whenComplete(() {
+      getSharedPreferences().then((value) {
+        if(value == null) setSharedPreferences();
+        else if (value) _isFirstTime = value;
+        else _isFirstTime = value;
+      });
+    });
+
+    Config.database
+        .query(ShiftTable.tableName,
+            columns: [ShiftTable.deviceKey],
+            orderBy: '${ShiftTable.localId} desc')
+        .then((value) {
+        try {
+          if (value.isNotEmpty) {
+            String dKey = value[0][ShiftTable.deviceKey] == null
+                ? ''
+                : value[0][ShiftTable.deviceKey];
+            if (dKey.isNotEmpty) {
+              setState(() {
                 deviceKey.text = dKey;
                 Config.authToken = dKey;
+                _deviceKeyPresent = true;
                 Config.installApi = dKey;
+              });
+              if (_isFirstTime) {
                 progressDialog = AppTheme.showProgressDialog(
                   context,
                   widget: StreamBuilder(
@@ -388,7 +403,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (DataLists.instance.listDevices.isNotEmpty) {
                     DataLists.instance.listDevices.forEach((element) {
                       if (dKey == element.deviceKey) {
-                        Config.currentDevice = element;
+                       setState(() {
+                         Config.currentDevice = element;
+                       });
                         progressDialog.hide();
                       }
                     });
@@ -396,21 +413,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     AppTheme.showToast('Cannot Access Server!', context);
                   }
                 });
-              } else {
-                progressDialog.hide();
-                _deviceKeyPresent = false;
               }
+            } else {
+              progressDialog.hide();
+              setState(() {
+                _deviceKeyPresent = false;
+              });
             }
-          } catch (e) {
-            progressDialog.hide();
-            _log.e(e);
           }
-        });
-      }).catchError((onError) {
-        // progressDialog.hide();
+        } catch (e) {
+          progressDialog.hide();
+          _log.e(e);
+        }
+    }).catchError((onError) {
+      // progressDialog.hide();
+      setState(() {
         _deviceKeyPresent = false;
       });
-    }
+    });
+    // }
   }
 
   void _onSubmit() {
@@ -425,10 +446,14 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
     progressDialog.show();
-    _deviceKeyCheck = deviceKey.text == '' ? false : true;
+    setState(() {
+      _deviceKeyCheck = deviceKey.text == '' ? false : true;
+    });
     if (_deviceKeyCheck) {
-      Config.authToken = deviceKey.text;
-      Config.installApi = deviceKey.text;
+      setState(() {
+        Config.authToken = deviceKey.text;
+        Config.installApi = deviceKey.text;
+      });
       LoginController.loadData(_bloc).then((value) {
         if (value) {
           DataLists.instance.listDevices.forEach((element) {
@@ -438,6 +463,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 _deviceKeyPresent = true;
               });
             }
+            setSharedPreferences();
             progressDialog.hide();
           });
         } else {
@@ -456,42 +482,60 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  User validateUser(email, pass) {
+  Future<User> validateUser(email, pass) async{
+    User _user;
     List<User> listUser = DataLists.instance.listUsers;
-    // bool valid = false;
-    User user;
-    for (int i = 0; i < listUser.length; i++) {
-      if (listUser[i].emailAddress == email && listUser[i].password == pass) {
-        Config.currentUser = listUser[i];
+    if(listUser.isEmpty){
+      User user1 = await User().getUserByLogin(email,pass);
+      if(user1 != null){
+        Config.currentUser = user1;
+        Device device = await Device().getDeviceById(int.tryParse(user1.outletId));
+          if(device != null){
+            Config.currentDevice = device;
+          } else {
+          print('Device found NaN');
+        }
         print(Config.currentUser.serverId);
-        setState(() {
-          user = listUser[i];
-        });
-        break;
+          setState(() {
+            _user = user1;
+          });
       }
     }
-    return user;
-  }
-
-  Future getSharedPreferences() async {
-    _sharedPreferences = await SharedPreferences.getInstance();
-    bool isLogin = _sharedPreferences.getBool('isLogin') ?? false;
-    if (isLogin == true) {
-      Navigator.pushReplacementNamed(context, '/r', arguments: {
-        'id': _sharedPreferences.getInt('userId'),
-      });
+    else{
+      for (int i = 0; i < listUser.length; i++) {
+        if (listUser[i].emailAddress == email && listUser[i].password == pass) {
+          Config.currentUser = listUser[i];
+          print(Config.currentUser.serverId);
+          setState(() {
+            _user = listUser[i];
+          });
+          break;
+        }
+      }
     }
+    return _user;
   }
 
-  Future setSharedPreferences(user) async {
+  Future<bool> getSharedPreferences() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    await _sharedPreferences.setBool('isLogin', true);
-    await _sharedPreferences.setInt('userId', user[0]['id']);
+    bool isFirstTime = _sharedPreferences.getBool('isFirstTime');
+    if (isFirstTime) return isFirstTime;
+    return false;
+  }
+
+  Future setSharedPreferences() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    bool value = (await getSharedPreferences() ?? false) ? true : false;
+    await _sharedPreferences.setBool('isFirstTime', value);
+    // await _sharedPreferences.setInt('userId', user[0]['id']);
   }
 
   void onButtonTap() async {
-    ProgressDialog progressDialog1 = AppTheme.showProgressDialog(context,widget: Center(child: Text('Loading..'),));
-    progressDialog1.show();
+    ProgressDialog progressDialog1 = AppTheme.showProgressDialog(context,
+        widget: Center(
+          child: Text('Loading..'),
+        ));
+    await progressDialog1.show();
     if (_formKey.currentState.validate()) {
       setState(() {
         isLoading = true;
@@ -501,30 +545,57 @@ class _LoginScreenState extends State<LoginScreen> {
         Config.authToken = deviceKey.text;
       });
 
-      User user = validateUser(email.text, password.text);
+      User user = await validateUser(email.text, password.text);
       if (user != null) {
-        int status = _isSwitched ? 1 : 0;
-        int res = await SettingDetail().insertSettingDetail(
-            settingDetail: SettingDetail(
-                userId: int.tryParse(user.serverId),
-                loginStatus: 0,
-                shiftId: 0,
-                connectionStatus: status));
-        if (res > 0) {
-          progressDialog1.hide();
-          ShiftController(1).launch(context);
+        int status = Config.isSwitched ? 1 : 0;
+        SettingDetail settingDetail = await SettingDetail()
+            .getUserSettingById(int.tryParse(user.serverId));
+        if (settingDetail != null && settingDetail.registerStatus == 0) {
+          settingDetail.loginStatus = 0;
+          int res1 = await SettingDetail().updateSettingDetail(
+              settingDetail: settingDetail,
+              where: '${SettingDetailTable.id} = ?',
+              whereArgs: [settingDetail.id]);
+          if (res1 > 0) {
+            Shift().getShiftByUserId(settingDetail.userId).then((value) async{
+              if(value != null){
+
+                Config.currentShift = value;
+                await progressDialog1.hide();
+                DashboardController(context).launchAndReplacement();
+              } else {
+                await progressDialog1.hide();
+                print('No Shift Found..');
+              }
+            });
+
+          } else {
+            await progressDialog1.hide();
+            print('Setting did not inserted');
+          }
         } else {
-          progressDialog1.hide();
-          print('Setting did not inserted');
+          int res = await SettingDetail().insertSettingDetail(
+              settingDetail: SettingDetail(
+                  userId: int.tryParse(user.serverId),
+                  loginStatus: 0,
+                  shiftId: 0,
+                  connectionStatus: status));
+          if (res > 0) {
+            await progressDialog1.hide();
+            ShiftController(1).launch(context);
+          } else {
+            await progressDialog1.hide();
+            print('Setting did not inserted');
+          }
         }
       } else {
-        progressDialog1.hide();
+        await progressDialog1.hide();
         _scaffoldKey.currentState
             .showSnackBar(SnackBar(content: Text('Invalid email or password')));
       }
       // }
     } else {
-      progressDialog1.hide();
+      await progressDialog1.hide();
       setState(() {
         isLoading = false;
         _autoValidate = true;
@@ -534,15 +605,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _onSwitchTap(bool value) {
     setState(() {
-      _isSwitched = value;
-      if (_isSwitched) {
+      Config.isSwitched = value;
+      if (Config.isSwitched) {
         activeColor = Colors.yellow[700];
         Config.activeStatus = 'Online';
       } else {
         activeColor = Colors.grey;
         Config.activeStatus = 'Offline';
       }
-      print(_isSwitched);
+      print(Config.isSwitched);
     });
   }
 }

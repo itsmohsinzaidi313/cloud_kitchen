@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/database/table_object/category_table.dart';
+import 'package:food_app/database/table_object/item_table.dart';
 import 'package:food_app/database/table_object/orders_table.dart';
 import 'package:food_app/database/table_object/sales_detail_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
 import 'package:food_app/database/table_object/tables_table.dart';
 import 'package:food_app/models/generic_models/customer_order.dart';
+import 'package:food_app/models/objects/category.dart';
 import 'package:food_app/models/objects/item.dart';
 import 'package:food_app/models/objects/sales_detail.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/new_sale_model.dart';
 import 'package:food_app/pages/new_sale.dart';
+import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
-import 'package:food_app/shared/data_lists.dart';
 import 'package:food_app/shared/lib.dart';
-import 'package:intl/intl.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sqflite/sqflite.dart';
 
 class NewSaleController {
@@ -24,16 +27,16 @@ class NewSaleController {
 
   NewSaleController() {
     model = new NewSaleModel();
-    model.lstCategory = DataLists.instance.listCategories;
-    model.lstItem = DataLists.instance.listItem;
+    model.lstCategory = [];
+    model.lstItem = [];
     model.order = new CustomerOrder();
   }
 
   void launch(BuildContext context) => Navigator.of(context)
       .push(new MaterialPageRoute(builder: (context) => new NewSale(model)));
 
-  void launchDineIn(BuildContext context, String orderType, String tableId,
-      String waiterId, List<String> titleStrings) {
+  Future<void> launchDineIn(BuildContext context, String orderType, String tableId,
+      String waiterId, List<String> titleStrings) async{
     this.model.salesMaster = SalesMaster();
     this.model.salesMaster.orderType = orderType;
     this.model.order.tableId = tableId;
@@ -44,12 +47,13 @@ class NewSaleController {
     this.model.titleString = 'Table: ${titleStrings[1]}';
     this.model.trailingString = 'Waiter: ${titleStrings[2]}';
 
+    await setCategoryAndItemsList(context);
     Navigator.of(context)
         .push(new MaterialPageRoute(builder: (context) => new NewSale(model)));
   }
 
-  void launchTakeaway(BuildContext context, String orderType, String customerId,
-      List<String> titleStrings) {
+  Future<void> launchTakeaway(BuildContext context, String orderType, String customerId,
+      List<String> titleStrings) async{
     this.model.salesMaster = SalesMaster();
     this.model.salesMaster.orderType = orderType;
     this.model.order.customerId = customerId;
@@ -58,11 +62,13 @@ class NewSaleController {
     this.model.titleString = 'Contact: ${titleStrings[1]}';
     this.model.trailingString = titleStrings[2];
 
+    await setCategoryAndItemsList(context);
+
     Navigator.of(context)
         .push(new MaterialPageRoute(builder: (context) => new NewSale(model)));
   }
 
-  void launchDelivery(BuildContext context, String orderType, String customerId,
+  Future<void> launchDelivery(BuildContext context, String orderType, String customerId,
       List<String> titleStrings) async {
     this.model.salesMaster = SalesMaster();
     this.model.salesMaster.orderType = orderType;
@@ -72,6 +78,7 @@ class NewSaleController {
     this.model.titleString = 'Phone: ${titleStrings[1]}';
     this.model.trailingString = titleStrings[2];
 
+    await setCategoryAndItemsList(context);
     Navigator.of(context)
         .push(new MaterialPageRoute(builder: (context) => new NewSale(model)));
   }
@@ -188,5 +195,40 @@ class NewSaleController {
             whereArgs: [customerOrder.tableId]);
     }
     return localId;
+  }
+
+  static Future<List<Category>> getCategoriesList() async{
+    List<Category> _category = [];
+    List<Map<String, dynamic>> categoryMap = await Config.database.query(CategoryTable.tableName);
+    if(categoryMap.length > 0){
+      categoryMap.forEach((element) {
+        _category.add(Category.fromJson(element));
+      });
+    }
+    return _category;
+  }
+
+  static Future<List<Item>> getItemsList() async{
+    List<Item> _items = [];
+    List<Map<String, dynamic>> itemMap = await Config.database.query(ItemTable.tableName);
+    if(itemMap.length > 0){
+      itemMap.forEach((element) {
+        _items.add(Item.fromJson(element));
+      });
+    }
+    return _items;
+  }
+
+  Future<void> setCategoryAndItemsList(BuildContext context)async{
+    ProgressDialog _progressDialog = AppTheme.showProgressDialog(context, widget: Center(child: Text('Loading..'),),);
+    await _progressDialog.show();
+    if(model.lstCategory.isEmpty){
+      model.lstCategory = await getCategoriesList();
+    }
+    if(model.lstItem.isEmpty)
+    {
+      model.lstItem = await getItemsList();
+    }
+    await _progressDialog.hide();
   }
 }

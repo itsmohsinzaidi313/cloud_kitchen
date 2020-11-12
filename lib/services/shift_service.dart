@@ -31,7 +31,7 @@ class ShiftService extends ServiceCommon {
           ShiftTable.tableName,
           where: '${ShiftTable.isUpload} = ?',
           whereArgs: ['0'],
-          orderBy: '${ShiftTable.localId} asc');
+          orderBy: '${ShiftTable.localId} desc');
 
       for (int i = 0; i < shiftRows.length; i++) {
         Shift shift = new Shift.fromJson(shiftRows[i]);

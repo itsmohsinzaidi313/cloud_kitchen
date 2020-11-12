@@ -17,6 +17,7 @@ class Config {
   static set authToken(String value) => _authToken = value;
   static String get authToken => _authToken;
   static String activeStatus = 'Online';
+  static bool isSwitched = true;
   static bool isLogin = true;
   static String _installApi;
 
