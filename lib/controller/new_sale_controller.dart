@@ -14,6 +14,7 @@ import 'package:food_app/models/view_models/new_sale_model.dart';
 import 'package:food_app/pages/new_sale.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
+import 'package:food_app/shared/data_lists.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sqflite/sqflite.dart';
@@ -88,12 +89,14 @@ class NewSaleController {
           new MaterialPageRoute(builder: (context) => new NewSale(this.model)));
 
   void editOrder(SalesMaster salesMaster, int orderType, BuildContext context) async {
+    await setCategoryAndItemsList(context);
     List<Item> updatedList = await SalesDetails()
         .getOrderWhereMasterId(Config.database, salesMaster);
     this.model.order.setItemList = updatedList;
     this.model.salesMaster = salesMaster;
     this.model.order.customerId = salesMaster.customerId;
     this.model.order.tableId = salesMaster.tableId;
+    this.model.order.waiterId = salesMaster.waiterId;
     this.model.orderType = orderType;
     this.model.leadingString = '';
     this.model.titleString = '';
@@ -224,11 +227,15 @@ class NewSaleController {
     await _progressDialog.show();
     if(model.lstCategory.isEmpty){
       model.lstCategory = await getCategoriesList();
+      DataLists.instance.listCategories = model.lstCategory;
     }
     if(model.lstItem.isEmpty)
     {
       model.lstItem = await getItemsList();
+      DataLists.instance.listItem = model.lstItem;
     }
     await _progressDialog.hide();
   }
+
+
 }

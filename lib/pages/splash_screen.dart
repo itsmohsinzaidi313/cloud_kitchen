@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Shift shift = await Shift().getSpecificShift(settingDetail.shiftId);
             if(shift != null){
               Config.currentShift = shift;
-              DashboardController(context).launchAndReplacement();
+              DashboardController(context).pushAndRemoveUntil(context);
             }
             else{
               print('Shift Found NaN');

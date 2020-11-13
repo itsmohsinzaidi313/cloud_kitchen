@@ -427,7 +427,7 @@ class _ReportScreenState extends State<ReportScreen> {
           if (_autoCompleteTextField.textField.controller.text.isEmpty)
             query = '';
           return item.saleNo.toLowerCase().startsWith(
-              Lib.codeGenerator('ORD', int.parse(query)).toLowerCase());
+              Lib.codeGenerator('ORD', int.tryParse(query) ?? 0).toLowerCase());
         },
         itemSorter: (a, b) {
           return a.saleNo.compareTo(b.saleNo);

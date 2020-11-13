@@ -2,17 +2,23 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:food_app/database/table_object/payment_method_table.dart';
 import 'package:food_app/database/table_object/sales_detail_table.dart';
 import 'package:food_app/database/table_object/sales_master_table.dart';
+import 'package:food_app/models/objects/payment_method.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/payment_view_model.dart';
 import 'package:food_app/pages/payment_screen.dart';
+import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/data_lists.dart';
 import 'package:http/http.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class PaymentController {
   PaymentViewModel model;
+  ProgressDialog _progress;
+
   PaymentController(SalesMaster salesMaster/*Map<String, dynamic> map*/) {
     model = new PaymentViewModel();
     model.paymentMethodList = DataLists.instance.listPaymentMethods;
@@ -20,8 +26,15 @@ class PaymentController {
     model.salesMaster = salesMaster;
   }
 
-  void launch(BuildContext context) => Navigator.of(context)
+  Future<void> launch(BuildContext context) async {
+    _progress = AppTheme.showProgressDialog(context, widget: Center(child: Text('Loading...'),));
+    await _progress.show();
+    model.paymentMethodList = await getPaymentMethod();
+    DataLists.instance.listPaymentMethods = model.paymentMethodList;
+    await _progress.hide();
+  Navigator.of(context)
       .push(new MaterialPageRoute(builder: (context) => PaymentScreen(model)));
+}
 
   static dynamic uploadOrder(Map<String, dynamic> element) async {
     Config.database.update(
@@ -87,5 +100,16 @@ class PaymentController {
   static double getAmountWithTax (double totalAmount, double tax){
     double res = (totalAmount + (tax * totalAmount)/100);
     return res;
+  }
+
+  Future<List<PaymentMethod>> getPaymentMethod() async{
+    List<PaymentMethod> _payment = [];
+    List<Map<String, dynamic>> paymentMap = await Config.database.query(PaymentMethodTable.tableName);
+    if(paymentMap.length > 0){
+      paymentMap.forEach((element) {
+        _payment.add(PaymentMethod.fromJson(element));
+      });
+    }
+    return _payment;
   }
 }

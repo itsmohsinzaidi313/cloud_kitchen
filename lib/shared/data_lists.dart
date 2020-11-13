@@ -41,12 +41,12 @@ class DataLists {
   final List<User> listUsers = [];
   final List<VatAmount> listVatAmount = [];
   final List<Table> listTables = [];
-  final List<Category> listCategories = [];
+  List<Category> listCategories = [];
   final List<Modifier> listModifiers = [];
-  final List<Item> listItem = [];
+  List<Item> listItem = [];
   final List<ItemModifier> listItemModifiers = [];
   final List<Customer> listCustomers = [];
-  final List<PaymentMethod> listPaymentMethods = [];
+  List<PaymentMethod> listPaymentMethods = [];
   final List<ExpenseCategory> listExpenseCategories = [];
   final List<Device> listDevices = [];
   final List<Register> listRegisters = [];

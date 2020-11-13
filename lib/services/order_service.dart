@@ -41,9 +41,11 @@ class OrderService extends ServiceCommon {
         detailRows.forEach(
             (element) => details.add(Map<String, dynamic>.from(element)));
         details.forEach((element) => element.remove(SalesDetailTable.isUpload));
+
         List<Map<String, dynamic>> masterJson = [];
 
         Map<String, dynamic> map = salesMaster.getValuesForUpload();
+        map.remove(SalesMasterTable.shift);
         map.remove(SalesMasterTable.isDelete);
         map.remove(SalesMasterTable.isUpload);
         map['sale_details'] = details;
