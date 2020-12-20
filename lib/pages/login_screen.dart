@@ -518,7 +518,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<bool> getSharedPreferences() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    bool isFirstTime = _sharedPreferences.getBool('isFirstTime');
+    bool isFirstTime = _sharedPreferences.getBool('isFirstTime') ?? false;
     if (isFirstTime) return isFirstTime;
     return false;
   }

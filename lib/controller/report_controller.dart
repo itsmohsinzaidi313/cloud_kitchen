@@ -6,6 +6,7 @@ import 'package:food_app/models/objects/sales_detail.dart';
 import 'package:food_app/models/objects/sales_master.dart';
 import 'package:food_app/models/view_models/report_model.dart';
 import 'package:food_app/pages/report_screen.dart';
+import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grouped_list/grouped_list.dart';
@@ -414,7 +415,7 @@ class ReportController {
         child: Text('Empty. Right Now!'),
       ),
     );
-    if (view /*&& shift.isEmpty*/) {
+    if (view && shift.isEmpty) {
       _myWidget = Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -460,8 +461,7 @@ class ReportController {
                   ),
                 ],
               ),
-            ),
-            getDivider(),
+            ),            getDivider(),
             SizedBox(height: 20),
             DataTable(
               showBottomBorder: true,
@@ -469,40 +469,63 @@ class ReportController {
               columns: getDataColumnList(columnNames: _reportDataColumnList),
               rows: getReportDataRowList(listOfSalesMaster: list),
             ),
-
           ],
         ),
       );
-    // } else if (view && shift.isNotEmpty) {
-    //   _myWidget = GroupedListView<SalesMaster, String>(
-    //     elements: list,
-    //     groupBy: (element) => element.shift,
-    //     groupSeparatorBuilder: (String groupByValue) => Text(groupByValue),
-    //     itemBuilder: (context, SalesMaster element) {
-    //       return Row(
-    //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //         children: [
-    //           getDataListRowBoldText(
-    //             element: element.dateTime,
-    //           ),
-    //           getDataListRowNormalText(
-    //             element: element.paidAmount,
-    //           ),
-    //           getDataListRowNormalText(
-    //             element: element.subTotalWithDiscount,
-    //           ),
-    //           getDataListRowNormalText(
-    //             element: element.totalDiscountAmount,
-    //           ),
-    //         ],
-    //       );
-    //     },
-    //     itemComparator: (item1, item2) =>
-    //         item1.paidAmount.compareTo(item2.paidAmount),
-    //     useStickyGroupSeparators: true,
-    //     floatingHeader: true,
-    //     order: GroupedListOrder.ASC,
-    //   );
+    } else if (view && shift.isNotEmpty) {
+      _myWidget = GroupedListView<SalesMaster, String>(
+        elements: list,
+        groupBy: (element) => element.dateTime,
+        groupSeparatorBuilder: (String groupByValue) => Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                groupByValue,
+                style: GoogleFonts.ubuntu(
+                  color: Colors.white,
+                  backgroundColor: AppTheme.appBarColor,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
+                  wordSpacing: 1.0,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+          ],
+        ),
+        itemBuilder: (context, SalesMaster element) {
+          return Container(
+            color: Colors.grey[100],
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  getDataListRowBoldText(
+                    element: element.shift,
+                  ),
+                  getDataListRowNormalText(
+                    element: element.paidAmount,
+                  ),
+                  getDataListRowNormalText(
+                    element: element.subTotalWithDiscount,
+                  ),
+                  getDataListRowNormalText(
+                    element: element.totalDiscountAmount,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+        itemComparator: (item1, item2) =>
+            item1.paidAmount.compareTo(item2.paidAmount),
+        useStickyGroupSeparators: true,
+        floatingHeader: true,
+        order: GroupedListOrder.DESC,
+      );
     }
     return _myWidget;
   }

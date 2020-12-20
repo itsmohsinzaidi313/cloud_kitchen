@@ -249,27 +249,27 @@ class _ReportScreenState extends State<ReportScreen> {
                   ),
                 ],
               ),
-              // DropdownButton<String>(
-              //   value: _dropdown,
-              //   underline: Container(
-              //     height: 2,
-              //     color: Colors.redAccent,
-              //   ),
-              //   icon: Icon(Icons.arrow_drop_down_circle, color: Colors.redAccent,),
-              //   iconSize: 24,
-              //   elevation: 16,
-              //   style: TextStyle(
-              //     color: Colors.grey[800],
-              //     letterSpacing: 1,
-              //   ),
-              //   onChanged: (newValue) {
-              //     setState(() {
-              //       _dropdown = newValue;
-              //       _isDropdownButtonPressed = true;
-              //     });
-              //   },
-              //   items: ShiftController.dropdownList,
-              // ),
+              DropdownButton<String>(
+                value: _dropdown,
+                underline: Container(
+                  height: 2,
+                  color: Colors.redAccent,
+                ),
+                icon: Icon(Icons.arrow_drop_down_circle, color: Colors.redAccent,),
+                iconSize: 24,
+                elevation: 16,
+                style: TextStyle(
+                  color: Colors.grey[800],
+                  letterSpacing: 1,
+                ),
+                onChanged: (newValue) {
+                  setState(() {
+                    _dropdown = newValue;
+                    _isDropdownButtonPressed = true;
+                  });
+                },
+                items: ShiftController.dropdownList,
+              ),
               ReportController.getDateSearchIconButton(
                   onPressed: _searchSelectedDate),
             ],
@@ -343,13 +343,14 @@ class _ReportScreenState extends State<ReportScreen> {
           model.fromDate,
           model.toDate,
           _isDropdownButtonPressed ? _dropdown : '');
-      if (value != null) {
+      if (value
+          != null) {
         value.forEach((element) {
           model.listOfSalesMasterForSale.add(element);
           model.totalDiscount += double.parse(element.totalDiscountAmount);
           model.totalSubTotal += double.parse(element.subTotalWithDiscount);
           model.totalPaidAmount += double.parse(element.paidAmount);
-          // _isDropdownButtonPressed ? model.shift = _dropdown : model.shift = '';
+          _isDropdownButtonPressed ? model.shift = _dropdown : model.shift = '';
         });
         await _progress.hide();
         setState(() {

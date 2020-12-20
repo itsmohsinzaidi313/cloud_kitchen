@@ -69,7 +69,7 @@ class ShiftService extends ServiceCommon {
             } else{
               // log(decodedJson['status'], name: decodedJson['message']);
               String message = decodedJson['message'];
-              if (message.contains('register is already open')) {
+              if (message.contains('register is already open') || message.contains('A register was already opened')) {
                 await _db.update(ShiftTable.tableName, {ShiftTable.registerStatus: '1', ShiftTable.isUpload: '1'},
                     where: '${ShiftTable.localId} = ?', whereArgs: [shift.remoteId]) > 0 ? print('Open Register Updated..') :
                 print('Open Register Does not Updated..');
