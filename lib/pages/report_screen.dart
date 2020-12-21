@@ -11,7 +11,6 @@ import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/lib.dart';
 import 'package:intl/intl.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:toast/toast.dart';
 
 class ReportScreen extends StatefulWidget {
   ReportModel model;
@@ -255,7 +254,10 @@ class _ReportScreenState extends State<ReportScreen> {
                   height: 2,
                   color: Colors.redAccent,
                 ),
-                icon: Icon(Icons.arrow_drop_down_circle, color: Colors.redAccent,),
+                icon: Icon(
+                  Icons.arrow_drop_down_circle,
+                  color: Colors.redAccent,
+                ),
                 iconSize: 24,
                 elevation: 16,
                 style: TextStyle(
@@ -343,8 +345,7 @@ class _ReportScreenState extends State<ReportScreen> {
           model.fromDate,
           model.toDate,
           _isDropdownButtonPressed ? _dropdown : '');
-      if (value
-          != null) {
+      if (value != null) {
         value.forEach((element) {
           model.listOfSalesMasterForSale.add(element);
           model.totalDiscount += double.parse(element.totalDiscountAmount);
@@ -371,8 +372,8 @@ class _ReportScreenState extends State<ReportScreen> {
 
   Widget _getAutoCompleteTextField() {
     AutoCompleteTextField _autoCompleteTextField;
-    try{
-       _autoCompleteTextField = AutoCompleteTextField<SalesMaster>(
+    try {
+      _autoCompleteTextField = AutoCompleteTextField<SalesMaster>(
         clearOnSubmit: false,
         style: TextStyle(
           color: Colors.black,
@@ -434,7 +435,7 @@ class _ReportScreenState extends State<ReportScreen> {
           return a.saleNo.compareTo(b.saleNo);
         },
       );
-    } catch(e){
+    } catch (e) {
       AppTheme.showToast(e.toString(), context);
     }
     return _autoCompleteTextField;

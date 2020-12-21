@@ -50,8 +50,8 @@ class ReportController {
   launch({BuildContext context}) =>
       Navigator.of(context).push(new MaterialPageRoute(
           builder: (context) => new ReportScreen(
-                model: reportModel,
-              )));
+            model: reportModel,
+          )));
 
   static Future<List<Map<String, dynamic>>> getSalesDetailsList(
       {int id}) async {
@@ -255,7 +255,7 @@ class ReportController {
         DataCell(
           getDataListRowNormalText(
             element:
-                '${double.parse(element.menuUnitPrice) * double.parse(element.qty)}',
+            '${double.parse(element.menuUnitPrice) * double.parse(element.qty)}',
           ),
         ),
       ]));
@@ -309,9 +309,9 @@ class ReportController {
 
   static Widget getDuplicateSlipView(
       {BuildContext context,
-      bool view,
-      List<SalesDetails> list,
-      SalesMaster salesMaster}) {
+        bool view,
+        List<SalesDetails> list,
+        SalesMaster salesMaster}) {
     switch (view) {
       case true:
         return Container(
@@ -404,12 +404,12 @@ class ReportController {
 
   static Widget getReportView(
       {BuildContext context,
-      bool view,
-      String shift,
-      List<SalesMaster> list,
-      String totalSubTotal,
-      String totalDiscount,
-      String totalPaidAmount}) {
+        bool view,
+        String shift,
+        List<SalesMaster> list,
+        String totalSubTotal,
+        String totalDiscount,
+        String totalPaidAmount}) {
     Widget _myWidget = Container(
       child: Center(
         child: Text('Empty. Right Now!'),
