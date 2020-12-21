@@ -45,7 +45,7 @@ public class RegisterService extends Service {
 //                Call<List<Post>> getCall = jsonPlaceholder.getPosts();
 //                getCall.enqueue(new Callback<List<Post>>() {
 //                    @Override
-//                    public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+//                    public void onResponse(Call<List<Post>> call, ServerResponse<List<Post>> response) {
 //                        if(!response.isSuccessful()) {
 //                            Log.d("Retrofit", "Code: " + response.code());
 //                            return;

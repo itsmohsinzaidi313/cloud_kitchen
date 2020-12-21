@@ -5,13 +5,11 @@ import 'package:food_app/controller/login_controller.dart';
 import 'package:food_app/controller/shift_controller.dart';
 import 'package:food_app/database/table_object/setting_detail_table.dart';
 import 'package:food_app/database/table_object/shift_table.dart';
-import 'package:food_app/database/table_object/user_table.dart';
 import 'package:food_app/models/objects/device.dart';
 import 'package:food_app/models/objects/setting_detail.dart';
 import 'package:food_app/models/objects/shift.dart';
 import 'package:food_app/models/objects/user.dart';
 import 'package:food_app/models/view_models/login_model.dart';
-import 'package:food_app/pages/sql_view_page.dart';
 import 'package:food_app/shared/app_theme.dart';
 import 'package:food_app/shared/config.dart';
 import 'package:food_app/shared/data_lists.dart';
@@ -19,7 +17,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:logger/logger.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:toast/toast.dart';
 
 class LoginScreen extends StatefulWidget {
   final LoginModel loginModel;
@@ -356,9 +353,12 @@ class _LoginScreenState extends State<LoginScreen> {
     bool _isFirstTime;
     setSharedPreferences().whenComplete(() {
       getSharedPreferences().then((value) {
-        if(value == null) setSharedPreferences();
-        else if (value) _isFirstTime = value;
-        else _isFirstTime = value;
+        if (value == null)
+          setSharedPreferences();
+        else if (value)
+          _isFirstTime = value;
+        else
+          _isFirstTime = value;
       });
     });
 
@@ -367,64 +367,64 @@ class _LoginScreenState extends State<LoginScreen> {
             columns: [ShiftTable.deviceKey],
             orderBy: '${ShiftTable.localId} desc')
         .then((value) {
-        try {
-          if (value.isNotEmpty) {
-            String dKey = value[0][ShiftTable.deviceKey] == null
-                ? ''
-                : value[0][ShiftTable.deviceKey];
-            if (dKey.isNotEmpty) {
-              setState(() {
-                deviceKey.text = dKey;
-                Config.authToken = dKey;
-                _deviceKeyPresent = true;
-                Config.installApi = dKey;
-              });
-              if (_isFirstTime) {
-                progressDialog = AppTheme.showProgressDialog(
-                  context,
-                  widget: StreamBuilder(
-                    initialData: Text('Loading...'),
-                    stream: _bloc.message,
-                    builder: (context, snapshot) {
-                      return snapshot.data;
-                    },
-                  ),
-                );
-                progressDialog.show();
-                LoginController.loadData(_bloc).then((value) {
-                  if (value)
-                    _deviceKeyPresent = value;
-                  else {
-                    progressDialog.hide();
-                    AppTheme.showToast('Cannot Access Server!', context);
-                    // _bloc.dispose();
-                  }
-                }).whenComplete(() {
-                  if (DataLists.instance.listDevices.isNotEmpty) {
-                    DataLists.instance.listDevices.forEach((element) {
-                      if (dKey == element.deviceKey) {
-                       setState(() {
-                         Config.currentDevice = element;
-                       });
-                        progressDialog.hide();
-                      }
-                    });
-                  } else {
-                    AppTheme.showToast('Cannot Access Server!', context);
-                  }
-                });
-              }
-            } else {
-              progressDialog.hide();
-              setState(() {
-                _deviceKeyPresent = false;
+      try {
+        if (value.isNotEmpty) {
+          String dKey = value[0][ShiftTable.deviceKey] == null
+              ? ''
+              : value[0][ShiftTable.deviceKey];
+          if (dKey.isNotEmpty) {
+            setState(() {
+              deviceKey.text = dKey;
+              Config.authToken = dKey;
+              _deviceKeyPresent = true;
+              Config.installApi = dKey;
+            });
+            if (_isFirstTime) {
+              progressDialog = AppTheme.showProgressDialog(
+                context,
+                widget: StreamBuilder(
+                  initialData: Text('Loading...'),
+                  stream: _bloc.message,
+                  builder: (context, snapshot) {
+                    return snapshot.data;
+                  },
+                ),
+              );
+              progressDialog.show();
+              LoginController.loadData(_bloc).then((value) {
+                if (value)
+                  _deviceKeyPresent = value;
+                else {
+                  progressDialog.hide();
+                  AppTheme.showToast('Cannot Access Server!', context);
+                  // _bloc.dispose();
+                }
+              }).whenComplete(() {
+                if (DataLists.instance.listDevices.isNotEmpty) {
+                  DataLists.instance.listDevices.forEach((element) {
+                    if (dKey == element.deviceKey) {
+                      setState(() {
+                        Config.currentDevice = element;
+                      });
+                      progressDialog.hide();
+                    }
+                  });
+                } else {
+                  AppTheme.showToast('Cannot Access Server!', context);
+                }
               });
             }
+          } else {
+            progressDialog.hide();
+            setState(() {
+              _deviceKeyPresent = false;
+            });
           }
-        } catch (e) {
-          progressDialog.hide();
-          _log.e(e);
         }
+      } catch (e) {
+        progressDialog.hide();
+        _log.e(e);
+      }
     }).catchError((onError) {
       // progressDialog.hide();
       setState(() {
@@ -482,26 +482,26 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<User> validateUser(email, pass) async{
+  Future<User> validateUser(email, pass) async {
     User _user;
     List<User> listUser = DataLists.instance.listUsers;
-    if(listUser.isEmpty){
-      User user1 = await User().getUserByLogin(email,pass);
-      if(user1 != null){
+    if (listUser.isEmpty) {
+      User user1 = await User().getUserByLogin(email, pass);
+      if (user1 != null) {
         Config.currentUser = user1;
-        Device device = await Device().getDeviceById(int.tryParse(user1.outletId));
-          if(device != null){
-            Config.currentDevice = device;
-          } else {
+        Device device =
+            await Device().getDeviceById(int.tryParse(user1.outletId));
+        if (device != null) {
+          Config.currentDevice = device;
+        } else {
           print('Device found NaN');
         }
         print(Config.currentUser.serverId);
-          setState(() {
-            _user = user1;
-          });
+        setState(() {
+          _user = user1;
+        });
       }
-    }
-    else{
+    } else {
       for (int i = 0; i < listUser.length; i++) {
         if (listUser[i].emailAddress == email && listUser[i].password == pass) {
           Config.currentUser = listUser[i];
@@ -557,9 +557,8 @@ class _LoginScreenState extends State<LoginScreen> {
               where: '${SettingDetailTable.id} = ?',
               whereArgs: [settingDetail.id]);
           if (res1 > 0) {
-            Shift().getShiftByUserId(settingDetail.userId).then((value) async{
-              if(value != null){
-
+            Shift().getShiftByUserId(settingDetail.userId).then((value) async {
+              if (value != null) {
                 Config.currentShift = value;
                 await progressDialog1.hide();
                 DashboardController(context).launchAndReplacement();
@@ -568,7 +567,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 print('No Shift Found..');
               }
             });
-
           } else {
             await progressDialog1.hide();
             print('Setting did not inserted');

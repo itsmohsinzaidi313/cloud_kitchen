@@ -6,6 +6,8 @@ import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.util.TimerTask;
+
 import androidx.core.app.NotificationCompat;
 
 public class OrdersService extends Service {
@@ -25,6 +27,18 @@ public class OrdersService extends Service {
                 Log.e("Order Service", e.getMessage());
             }
         }
+    }
+    TimerTask timerTask = new TimerTask() {
+        @Override
+        public void run() {
+            
+        }
+    };
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override

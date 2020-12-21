@@ -6,5 +6,5 @@ import retrofit2.http.POST;
 
 interface RegisterApi {
     @POST
-    Call<Response> createPost(@Body RegisterOpen registerOpen);
+    Call<ServerResponse> createPost(@Body RegisterOpen registerOpen);
 }
